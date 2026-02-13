@@ -32,8 +32,8 @@ The backend must be running at http://localhost:3000 for API calls to work.
 
 ## Workflow
 ```bash
-git checkout main
-git pull origin main
+git checkout develop
+git pull origin develop
 git checkout -b feature/ticket-name
 # work...
 git add .
