@@ -1,4 +1,4 @@
-import { useLogin } from "../hooks/useLogin";
+import { useLogin } from '../hooks/useLogin';
 
 export const Login = (): React.JSX.Element => {
   const {
@@ -32,7 +32,7 @@ export const Login = (): React.JSX.Element => {
         />
         {error && <p role="alert">{error}</p>}
         <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
+          {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
     </div>

@@ -1,8 +1,8 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/AuthProvider";
-import { ProtectedRoute } from "./routes/ProtectedRoute";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import { Login } from "./features/user/components/Login";
+import { AuthProvider } from './context/AuthProvider';
+import { Login } from './features/user/components/Login';
+import { ProtectedRoute } from './routes/ProtectedRoute';
 
 // Páginas temporales
 const Landing = () => <h1>Landing Page</h1>;

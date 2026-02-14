@@ -1,5 +1,5 @@
-import type { UserInfo } from "../../../../domain/models/UserInfo";
-import type { GetUserInfoDTO } from "../dtos/GetUserInfoDTO";
+import type { UserInfo } from '../../../../domain/models/UserInfo';
+import type { GetUserInfoDTO } from '../dtos/GetUserInfoDTO';
 
 export class UserInfoFromDTO {
   static fromDTO(dto: GetUserInfoDTO): UserInfo {

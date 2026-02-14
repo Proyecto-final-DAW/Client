@@ -1,5 +1,6 @@
-import { createContext } from "react";
-import type { UserInfo } from "../features/user/core/domain/models/UserInfo";
+import { createContext } from 'react';
+
+import type { UserInfo } from '../features/user/core/domain/models/UserInfo';
 
 export interface AuthContextType {
   token: string | null;
@@ -10,5 +11,5 @@ export interface AuthContextType {
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined,
+  undefined
 );

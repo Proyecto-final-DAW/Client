@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { userInfoRepository } from "../ui/adapter";
-import { useAuth } from "../../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../../../hooks/useAuth';
+import { userInfoRepository } from '../ui/adapter';
 
 export const useLogin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -20,9 +21,9 @@ export const useLogin = () => {
     try {
       const { token, user } = await userInfoRepository.login(email, password);
       setSession(token, user);
-      navigate("/dashboard", { replace: true });
+      navigate('/dashboard', { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
