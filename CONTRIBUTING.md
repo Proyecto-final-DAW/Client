@@ -36,6 +36,18 @@ Every push and every PR run:
 
 ---
 
+## Merge policy (mandatory)
+
+We don't use GitHub branch protection (org limits). **You must follow this manually:**
+
+1. **Do not merge** while CI or Security checks are still running or have failed. Wait until all workflows are green.
+2. **One approval is enough** — you need exactly one approval from **someone else** (a teammate). The list in [.github/REVIEWERS](.github/REVIEWERS) is who gets requested; any one of them can approve.
+3. **You cannot approve your own PR.** If you opened the PR, you must wait for one of your colleagues to approve it. Only after that can the PR be merged (by you or by them).
+
+Whoever merges is responsible for ensuring all conditions are met.
+
+---
+
 ## Before pushing
 
 ```bash
