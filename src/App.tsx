@@ -1,13 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider";
-import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
+
+import { Login } from "./features/user/components/Login";
 
 // Páginas temporales
 const Landing = () => <h1>Landing Page</h1>;
-const Login = () => <h1>Login</h1>;
 const Dashboard = () => <h1>Dashboard</h1>;
 
-function App() {
+export const App = (): React.JSX.Element => {
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -22,6 +23,4 @@ function App() {
       </BrowserRouter>
     </AuthProvider>
   );
-}
-
-export default App;
+};

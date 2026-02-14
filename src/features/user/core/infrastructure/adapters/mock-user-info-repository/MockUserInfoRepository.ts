@@ -6,6 +6,7 @@ export class MockUserInfoRepository implements UserInfoRepository {
     await new Promise((resolve) => setTimeout(resolve, 100));
     return {
       message: "Mock login successful",
+      token: "mock-jwt-token",
       user: {
         id: "1",
         name: "Mock User",

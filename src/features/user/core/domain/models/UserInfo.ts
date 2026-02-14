@@ -7,5 +7,6 @@ export interface UserInfo {
 
 export type LoginResponse = {
   message: string;
+  token: string;
   user: UserInfo;
 };
