@@ -2,6 +2,10 @@
 
 Web application for new gym users (React client).
 
+## Contributing
+
+Before developing, read [CONTRIBUTING.md](CONTRIBUTING.md): **required extensions** (VS Code/Cursor) and rules for your PR to pass CI.
+
 ## Prerequisites
 
 - **Node.js v22.19+** → https://nodejs.org
