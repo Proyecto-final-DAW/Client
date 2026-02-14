@@ -9,6 +9,7 @@ Web application for new gym users (React client).
 - **Git v2.51+** → https://git-scm.com
 
 ## Installation
+
 ```bash
 git clone https://github.com/tmllabres/Proyecto-Final-DAW-client.git
 cd Proyecto-Final-DAW-client
@@ -17,11 +18,13 @@ npm install
 ```
 
 On PowerShell if `cp` doesn't work:
+
 ```powershell
 copy .env.example .env
 ```
 
 ## Run
+
 ```bash
 npm run dev
 ```
@@ -31,6 +34,7 @@ Open in browser: http://localhost:5173
 The backend must be running at http://localhost:3000 for API calls to work.
 
 ## Workflow
+
 ```bash
 git checkout main
 git pull origin main
