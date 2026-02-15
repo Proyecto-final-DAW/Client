@@ -1,30 +1,26 @@
-import { useState } from "react";
-import type { ReactNode } from "react";
-import { AuthContext } from "./AuthContext";
-import type { User } from "./AuthContext";
+import { useState } from 'react';
+import type { ReactNode } from 'react';
 
-export const AuthProvider = ({ children }: { children: ReactNode; }) => {
-   const [token, setToken] = useState<string | null>(null);
-   const [user, setUser] = useState<User | null>(null);
+import type { UserInfo } from '../features/user/core/domain/models/UserInfo';
+import { AuthContext } from './AuthContext';
 
-   const login = (newToken: string, newUser: User) => {
-      setToken(newToken);
-      setUser(newUser);
-   };
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<UserInfo | null>(null);
 
-   const register = (newToken: string, newUser: User) => {
-      setToken(newToken);
-      setUser(newUser);
-   };
+  const setSession = (newToken: string, newUser: UserInfo) => {
+    setToken(newToken);
+    setUser(newUser);
+  };
 
-   const logout = () => {
-      setToken(null);
-      setUser(null);
-   };
+  const logout = () => {
+    setToken(null);
+    setUser(null);
+  };
 
-   return (
-      <AuthContext.Provider value={{ token, user, login, register, logout }}>
-         {children}
-      </AuthContext.Provider>
-   );
+  return (
+    <AuthContext.Provider value={{ token, user, setSession, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
