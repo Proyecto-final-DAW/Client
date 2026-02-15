@@ -40,15 +40,12 @@ The backend must be running at http://localhost:3000 for API calls to work.
 ## Workflow
 
 ```bash
-git checkout main
-git pull origin main
-git checkout -b feature/ticket-name   # o fix/ticket-name para correcciones
-# work...
+git checkout develop
+git pull origin develop
+git checkout -b feature/ticket-name
 git add .
 git commit -m "feat: change description"
 git push origin feature/ticket-name
 ```
 
 Open PR on GitHub → wait for approval → merge.
-
-**Nombres de PR:** usamos **MINOR** para nuevas funcionalidades y **PATCH** para correcciones (fixes). Ejemplos: `MINOR: add login` / `PATCH: fix redirect`. Detalles en [CONTRIBUTING.md](CONTRIBUTING.md).

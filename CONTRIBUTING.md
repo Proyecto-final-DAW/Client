@@ -40,15 +40,15 @@ Every push and every PR run:
 
 We use **MINOR** and **PATCH** in PR titles (and optionally in branch names) to distinguish the type of change:
 
-| Prefijo  | Uso              | Ejemplo                    |
-|----------|------------------|----------------------------|
-| **MINOR** | Nueva funcionalidad (feature) | `MINOR: add user login form` |
-| **PATCH** | Corrección (fix, bugfix)     | `PATCH: fix login redirect` |
+| Prefix   | Use                    | Example                        |
+|----------|------------------------|--------------------------------|
+| **MINOR** | New feature            | `MINOR: add user login form`   |
+| **PATCH** | Fix, bugfix            | `PATCH: fix login redirect`    |
 
-- **MINOR** → cambios que añaden comportamiento nuevo (features).
-- **PATCH** → cambios que corrigen errores o ajustan algo existente (fixes).
+- **MINOR** → changes that add new behaviour (features).
+- **PATCH** → changes that fix bugs or adjust something existing (fixes).
 
-Ejemplos de títulos de PR: `MINOR: descripción` o `PATCH: descripción`.
+Example PR titles: `MINOR: description` or `PATCH: description`.
 
 ---
 
