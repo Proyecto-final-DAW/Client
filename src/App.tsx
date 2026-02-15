@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { AuthProvider } from './context/AuthProvider';
-import { Login } from './features/user/components/Login';
+import { Login } from './features/user/ui/components/Login';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 
 // Páginas temporales

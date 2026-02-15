@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../../../hooks/useAuth';
-import { userInfoRepository } from '../ui/adapter';
+import { useAuth } from '../../../../context/hooks/useAuth';
+import { userInfoRepository } from '../adapter';
 
 export const useLogin = () => {
   const [email, setEmail] = useState('');
