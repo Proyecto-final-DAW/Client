@@ -1,23 +1,65 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-export default defineConfig([
-  globalIgnores(['dist']),
+import perfectionist from "eslint-plugin-perfectionist";
+import prettier from "eslint-plugin-prettier";
+import typescriptEslint from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const prettierConfig = JSON.parse(
+  readFileSync(join(__dirname, ".prettierrc"), "utf-8"),
+);
+
+export default [
   {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs.flat.recommended,
-      reactRefresh.configs.vite,
+    files: ["src/**/*.{js,jsx,ts,tsx}"],
+    ignores: [
+      "node_modules",
+      "dist",
+      "build",
+      "coverage",
+      "*.min.js",
+      "*.bundle.js",
+      "vite.config.ts",
+      "tsconfig.json",
+      "tsconfig.app.json",
+      "tsconfig.node.json",
+      "eslint.config.js",
     ],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+      },
+    },
+    plugins: {
+      "@typescript-eslint": typescriptEslint,
+      prettier: prettier,
+      perfectionist: perfectionist,
+    },
+    rules: {
+      "prettier/prettier": ["error", prettierConfig],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { varsIgnorePattern: "^_" },
+      ],
+      "no-unused-vars": "off",
+      "perfectionist/sort-imports": [
+        "error",
+        {
+          type: "natural",
+          order: "asc",
+          groups: [
+            ["builtin", "external"],
+            ["internal", "parent", "sibling", "index"],
+          ],
+        },
+      ],
+      "@typescript-eslint/no-explicit-any": "error",
+      "no-console": "warn",
     },
   },
-])
+];
