@@ -6,18 +6,18 @@ import type { UserInfoRepository } from '../../../application/ports/UserInfoRepo
 import type { LoginResponse } from '../../../domain/models/UserInfo';
 
 export class APIUserInfoRepository implements UserInfoRepository {
-  async login(email: string, password: string): Promise<LoginResponse> {
-    try {
-      const response = await axios.post(API_ENDPOINTS.login, {
-        email,
-        password,
-      });
-      return response.data as LoginResponse;
-    } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al iniciar sesión';
-      throw new Error(serverMessage);
-    }
-  }
+   async login(email: string, password: string): Promise<LoginResponse> {
+      try {
+         const response = await axios.post(API_ENDPOINTS.login, {
+            email,
+            password,
+         });
+         return response.data as LoginResponse;
+      } catch (error) {
+         const err = error as AxiosError<APIErrorResponse>;
+         const serverMessage =
+            err.response?.data?.message || 'Error al iniciar sesión';
+         throw new Error(serverMessage);
+      }
+   }
 }
