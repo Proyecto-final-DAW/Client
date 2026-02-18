@@ -5,9 +5,9 @@ import { MockUserInfoRepository } from '../core/infrastructure/adapters/mock-use
 export const ACTIVE_ADAPTER: 'api' | 'mock' = 'mock';
 
 export const REPOSITORIES = {
-   api: new APIUserInfoRepository(),
-   mock: new MockUserInfoRepository(),
+  api: new APIUserInfoRepository(),
+  mock: new MockUserInfoRepository(),
 };
 
 export const userInfoRepository: UserInfoRepository =
-   REPOSITORIES[ACTIVE_ADAPTER];
+  REPOSITORIES[ACTIVE_ADAPTER];
