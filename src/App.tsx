@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { AuthProvider } from './context/AuthProvider';
+import OnboardingView from './features/onboarding/ui/OnboardingView';
 import { Login } from './features/user/ui/components/Login';
 import { ProtectedRoute } from './routes/ProtectedRoute';
-import OnboardingView from './features/onboarding/ui/OnboardingView';
 
 const Landing = () => <h1>Landing Page</h1>;
 const Dashboard = () => <h1>Dashboard</h1>;

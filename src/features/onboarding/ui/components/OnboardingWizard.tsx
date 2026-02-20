@@ -1,4 +1,6 @@
 import { useState } from 'react';
+
+import type { OnboardingPort } from '../../core/application/ports/OnboardingPort';
 import type {
   OnboardingFormData,
   FormErrors,
@@ -6,13 +8,11 @@ import type {
 import { INITIAL_FORM_DATA } from '../../core/domain/models/OnboardingFormData';
 import type { OnboardingResponse } from '../../core/domain/models/OnboardingResponse';
 import { validateStep } from '../../core/domain/validators/OnboardingValidator';
-import type { OnboardingPort } from '../../core/application/ports/OnboardingPort';
-
+import StepActivity from './StepActivity';
+import StepBody from './StepBody';
+import StepGoal from './StepGoal';
 import Stepper from './Stepper';
 import StepPersonal from './StepPersonal';
-import StepBody from './StepBody';
-import StepActivity from './StepActivity';
-import StepGoal from './StepGoal';
 
 const TOTAL_STEPS = 4;
 

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import type { OnboardingFormData } from '../../core/domain/models/OnboardingFormData';
 import type { OnboardingResponse } from '../../core/domain/models/OnboardingResponse';
 import { onboardingService } from '../adapter';
