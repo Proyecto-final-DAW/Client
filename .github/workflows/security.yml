@@ -6,6 +6,10 @@ on:
       - main
       - develop
 
+concurrency:
+  group: security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   pull-requests: write
@@ -30,16 +34,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run ESLint
+      - name: ESLint
         run: npm run lint -- --max-warnings=0
 
-      - name: Run TypeScript type checks
+      - name: TypeScript
         run: npx tsc --noEmit
 
-      - name: Audit NPM dependencies
-        run: npm audit --audit-level=moderate
+      - name: NPM audit
+        run: npm audit --audit-level=moderate --omit=dev
 
-      - name: Run Semgrep static analysis
-        run: |
-          pip install semgrep
-          semgrep scan --config=auto
+      - name: Semgrep
+        run: docker run --rm -v "${{ github.workspace }}:/src" -w /src semgrep/semgrep semgrep scan --config=auto
