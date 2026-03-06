@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Landing } from './features/user/ui/components/landing/Landing';
+
 import { AuthProvider } from './context/AuthProvider';
+import { Landing } from './features/user/ui/components/landing/Landing';
 import { Login } from './features/user/ui/components/Login';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 
