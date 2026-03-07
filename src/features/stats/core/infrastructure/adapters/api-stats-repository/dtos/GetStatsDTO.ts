@@ -1,10 +1,10 @@
 export interface GetStatsDTO {
   stats: {
-    fuerza: number;
-    resistencia: number;
-    estamina: number;
-    agilidad: number;
-    tenacidad: number;
+    strength: number;
+    resistance: number;
+    stamina: number;
+    agility: number;
+    tenacity: number;
     vigor: number;
   };
   level: number;

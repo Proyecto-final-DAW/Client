@@ -1,45 +1,57 @@
-export const STAT_CONFIG: Record<
-  string,
-  { name: string; icon: string; colorVar: string }
-> = {
-  fuerza: {
-    name: 'Fuerza',
-    icon: '💪',
-    colorVar: '--stat-fuerza',
+import {
+  ArrowPathRoundedSquareIcon,
+  BoltIcon,
+  FireIcon,
+  HeartIcon,
+  ShieldCheckIcon,
+  SparklesIcon,
+} from '@heroicons/react/24/outline';
+import type { ComponentType, SVGProps } from 'react';
+
+type StatConfigEntry = {
+  name: string;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
+  colorVar: string;
+};
+
+export const STAT_CONFIG: Record<string, StatConfigEntry> = {
+  strength: {
+    name: 'Strength',
+    icon: BoltIcon,
+    colorVar: '--stat-strength',
   },
-  resistencia: {
-    name: 'Resistencia',
-    icon: '🛡️',
-    colorVar: '--stat-resistencia',
+  resistance: {
+    name: 'Resistance',
+    icon: ShieldCheckIcon,
+    colorVar: '--stat-resistance',
   },
-  estamina: {
-    name: 'Estamina',
-    icon: '⚡',
-    colorVar: '--stat-estamina',
+  stamina: {
+    name: 'Stamina',
+    icon: HeartIcon,
+    colorVar: '--stat-stamina',
   },
-  agilidad: {
-    name: 'Agilidad',
-    icon: '🏃',
-    colorVar: '--stat-agilidad',
+  agility: {
+    name: 'Agility',
+    icon: ArrowPathRoundedSquareIcon,
+    colorVar: '--stat-agility',
   },
-  tenacidad: {
-    name: 'Tenacidad',
-    icon: '🔥',
-    colorVar: '--stat-tenacidad',
+  tenacity: {
+    name: 'Tenacity',
+    icon: FireIcon,
+    colorVar: '--stat-tenacity',
   },
   vigor: {
     name: 'Vigor',
-    icon: '🍎',
+    icon: SparklesIcon,
     colorVar: '--stat-vigor',
   },
 };
 
-// Orden en el que se muestran las barras en el panel
 export const STAT_ORDER = [
-  'fuerza',
-  'resistencia',
-  'estamina',
-  'agilidad',
-  'tenacidad',
+  'strength',
+  'resistance',
+  'stamina',
+  'agility',
+  'tenacity',
   'vigor',
 ] as const;

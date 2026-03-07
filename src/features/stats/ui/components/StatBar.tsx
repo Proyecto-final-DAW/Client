@@ -10,7 +10,6 @@ export const StatBar = ({ pilar }: StatBarProps) => {
 
   return (
     <div className="flex items-center gap-3">
-      {/* Icono */}
       <div
         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-lg"
         style={{
@@ -20,9 +19,7 @@ export const StatBar = ({ pilar }: StatBarProps) => {
         {pilar.icon}
       </div>
 
-      {/* Info + Barra */}
       <div className="min-w-0 flex-1">
-        {/* Header: nombre y valor */}
         <div className="mb-1.5 flex items-baseline justify-between">
           <span className="text-sm font-bold text-foreground">
             {pilar.name}
@@ -35,14 +32,12 @@ export const StatBar = ({ pilar }: StatBarProps) => {
           </span>
         </div>
 
-        {/* Track */}
         <div
           className="h-[5px] w-full overflow-hidden rounded-full"
           style={{
             backgroundColor: `color-mix(in srgb, ${color} 12%, var(--muted))`,
           }}
         >
-          {/* Fill */}
           <div
             className="h-full rounded-full transition-[width] duration-700 ease-out"
             style={{

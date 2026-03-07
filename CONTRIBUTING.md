@@ -40,10 +40,10 @@ Every push and every PR run:
 
 We use **MINOR** and **PATCH** in PR titles (and optionally in branch names) to distinguish the type of change:
 
-| Prefix   | Use                    | Example                        |
-|----------|------------------------|--------------------------------|
-| **MINOR** | New feature            | `MINOR: add user login form`   |
-| **PATCH** | Fix, bugfix            | `PATCH: fix login redirect`    |
+| Prefix    | Use         | Example                      |
+| --------- | ----------- | ---------------------------- |
+| **MINOR** | New feature | `MINOR: add user login form` |
+| **PATCH** | Fix, bugfix | `PATCH: fix login redirect`  |
 
 - **MINOR** → changes that add new behaviour (features).
 - **PATCH** → changes that fix bugs or adjust something existing (fixes).
