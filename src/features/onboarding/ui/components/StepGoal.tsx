@@ -50,7 +50,7 @@ export default function StepGoal({ data, errors, onChange }: StepGoalProps) {
 
       <SelectableCardGroup
         options={goalOptions}
-        selected={data.goal}
+        selected={data.goal ?? null}
         onSelect={(value) => onChange('goal', value)}
         error={errors.goal}
       />

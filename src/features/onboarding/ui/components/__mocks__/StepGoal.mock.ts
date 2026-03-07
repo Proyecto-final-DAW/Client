@@ -1,20 +1,17 @@
-// __mocks__/StepGoal.mock.ts
 import type {
   OnboardingFormData,
   FormErrors,
-} from '../../core/domain/models/OnboardingFormData';
+} from '../../../core/domain/models/OnboardingFormData';
 
 export const defaultProps = {
-  data: {
-    goal: '',
-  } as Partial<OnboardingFormData>,
+  data: { goal: null } as Partial<OnboardingFormData>,
   errors: {} as FormErrors,
-  onChange: vi.fn(),
+  onChange: (_field: keyof OnboardingFormData, _value: string) => {},
 };
 
 export const selectedProps = {
   ...defaultProps,
-  data: { goal: 'lose_fat' } as Partial<OnboardingFormData>,
+  data: { goal: 'lose_fat' as const } as Partial<OnboardingFormData>,
 };
 
 export const errorProps = {
