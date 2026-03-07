@@ -1,17 +1,17 @@
 {
-   // Imports
-   "typescript.preferences.importModuleSpecifier": "shortest",
-   "typescript.preferences.importModuleSpecifierEnding": "minimal",
-   // Code formatting
-   "editor.formatOnSave": true,
-   "editor.defaultFormatter": "esbenp.prettier-vscode",
-   "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": "explicit",
-      "source.fixAll.format": "explicit"
-   },
-   // Unix line endings
-   "files.eol": "\n",
-   "[typescriptreact]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-   }
+  // Imports
+  "typescript.preferences.importModuleSpecifier": "shortest",
+  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  // Code formatting
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.format": "explicit"
+  },
+  // Unix line endings
+  "files.eol": "\n",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

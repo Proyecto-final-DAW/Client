@@ -1,3 +1,5 @@
+import { UserIcon } from '@heroicons/react/24/outline';
+
 import type {
   OnboardingFormData,
   FormErrors,
@@ -8,6 +10,11 @@ interface StepBodyProps {
   errors: FormErrors;
   onChange: (field: keyof OnboardingFormData, value: string) => void;
 }
+
+const sexOptions = [
+  { value: 'male', label: 'Hombre', color: 'text-blue-400' },
+  { value: 'female', label: 'Mujer', color: 'text-pink-400' },
+] as const;
 
 export default function StepBody({ data, errors, onChange }: StepBodyProps) {
   return (
@@ -73,19 +80,22 @@ export default function StepBody({ data, errors, onChange }: StepBodyProps) {
           Necesario para el cálculo metabólico, no define tu identidad.
         </p>
         <div className="grid grid-cols-2 gap-3">
-          {(
-            [
-              { value: 'male', label: 'Hombre', icon: '♂' },
-              { value: 'female', label: 'Mujer', icon: '♀' },
-            ] as const
-          ).map((option) => (
+          {sexOptions.map((option) => (
             <button
               key={option.value}
               type="button"
               onClick={() => onChange('sex', option.value)}
-              className={`py-4 rounded-xl border text-center font-semibold transition-all duration-200 ${data.sex === option.value ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400' : 'bg-zinc-800/50 border-zinc-700 text-zinc-400 hover:border-zinc-500'}`}
+              className={`py-4 rounded-xl border text-center font-semibold transition-all duration-200 ${
+                data.sex === option.value
+                  ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400'
+                  : 'bg-zinc-800/50 border-zinc-700 text-zinc-400 hover:border-zinc-500'
+              }`}
             >
-              <span className="text-2xl block mb-1">{option.icon}</span>
+              <UserIcon
+                className={`w-6 h-6 mx-auto mb-1 ${
+                  data.sex === option.value ? 'text-emerald-400' : option.color
+                }`}
+              />
               <span className="text-sm">{option.label}</span>
             </button>
           ))}

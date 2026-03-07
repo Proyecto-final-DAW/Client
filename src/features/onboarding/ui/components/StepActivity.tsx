@@ -61,7 +61,7 @@ export default function StepActivity({
 
       <SelectableCardGroup
         options={activityOptions}
-        selected={data.activityLevel}
+        selected={data.activityLevel ?? null}
         onSelect={(value) => onChange('activityLevel', value)}
         error={errors.activityLevel}
       />

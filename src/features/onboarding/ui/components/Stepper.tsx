@@ -1,3 +1,5 @@
+import { CheckIcon } from '@heroicons/react/24/solid';
+
 interface StepperProps {
   currentStep: number;
   totalSteps: number;
@@ -39,7 +41,11 @@ export default function Stepper({ currentStep, totalSteps }: StepperProps) {
                     }
                   `}
                 >
-                  {isCompleted ? '✓' : step}
+                  {isCompleted ? (
+                    <CheckIcon className="w-5 h-5 text-zinc-900" />
+                  ) : (
+                    step
+                  )}
                 </div>
                 <span
                   className={`
@@ -60,7 +66,7 @@ export default function Stepper({ currentStep, totalSteps }: StepperProps) {
               {step < totalSteps && (
                 <div
                   className={`
-                    flex-1 h-0.5 mx-2 transition-colors duration-300
+                    flex-1 h-0.5 mx-2 mb-5 transition-colors duration-300
                     ${isCompleted ? 'bg-emerald-500' : 'bg-zinc-700'}
                   `}
                 />
