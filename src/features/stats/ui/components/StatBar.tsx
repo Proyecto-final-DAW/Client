@@ -7,16 +7,17 @@ interface StatBarProps {
 export const StatBar = ({ pilar }: StatBarProps) => {
   const percentage = (pilar.value / pilar.max) * 100;
   const color = `var(${pilar.colorVar})`;
+  const Icon = pilar.icon;
 
   return (
     <div className="flex items-center gap-3">
       <div
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-lg"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
         style={{
           backgroundColor: `color-mix(in srgb, ${color} 15%, transparent)`,
         }}
       >
-        {pilar.icon}
+        <Icon className="h-5 w-5" style={{ color }} />
       </div>
 
       <div className="min-w-0 flex-1">
