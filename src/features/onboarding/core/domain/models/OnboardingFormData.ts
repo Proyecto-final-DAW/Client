@@ -11,9 +11,9 @@ export interface OnboardingFormData {
   birthDate: string;
   weight: string;
   height: string;
-  sex?: 'male' | 'female' | null;
-  activityLevel?: ActivityLevel | null;
-  goal?: Goal | null;
+  sex?: 'male' | 'female';
+  activityLevel?: ActivityLevel;
+  goal?: Goal;
 }
 
 export type FormErrors = Partial<Record<keyof OnboardingFormData, string>>;
@@ -23,7 +23,7 @@ export const INITIAL_FORM_DATA: OnboardingFormData = {
   birthDate: '',
   weight: '',
   height: '',
-  sex: null,
-  activityLevel: null,
-  goal: null,
+  sex: undefined,
+  activityLevel: undefined,
+  goal: undefined,
 };

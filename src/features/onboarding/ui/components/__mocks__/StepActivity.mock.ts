@@ -4,17 +4,17 @@ import type {
 } from '../../../core/domain/models/OnboardingFormData';
 
 export const defaultProps = {
-  data: {} as Partial<OnboardingFormData>,
+  data: { activityLevel: undefined } as Partial<OnboardingFormData>,
   errors: {} as FormErrors,
   onChange: (_field: keyof OnboardingFormData, _value: string) => {},
 };
 
 export const selectedProps = {
   ...defaultProps,
-  data: { goal: 'lose_fat' as const } as Partial<OnboardingFormData>,
+  data: { activityLevel: 'moderate' as const } as Partial<OnboardingFormData>,
 };
 
 export const errorProps = {
   ...defaultProps,
-  errors: { goal: 'Selecciona un objetivo' } as FormErrors,
+  errors: { activityLevel: 'Selecciona un nivel de actividad' } as FormErrors,
 };
