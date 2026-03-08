@@ -44,7 +44,13 @@ export default [
       "prettier/prettier": ["error", prettierConfig],
       "@typescript-eslint/no-unused-vars": [
         "error",
-        { varsIgnorePattern: "^_" },
+        {
+          varsIgnorePattern: "^_",
+          // argsIgnorePattern allows function parameters prefixed with _ to be
+          // intentionally unused (e.g. _token in mock implementations that must
+          // satisfy an interface but don't need the parameter)
+          argsIgnorePattern: "^_",
+        },
       ],
       "no-unused-vars": "off",
       "perfectionist/sort-imports": [

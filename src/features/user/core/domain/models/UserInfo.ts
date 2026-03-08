@@ -1,8 +1,9 @@
 export interface UserInfo {
-  id: string;
+  id: number;
   name: string;
   email: string;
   password: string;
+  onboarding_completed: boolean;
 }
 
 export type LoginResponse = {

@@ -8,6 +8,7 @@ export class UserInfoFromDTO {
       name: dto.name,
       email: dto.email,
       password: dto.password,
+      onboarding_completed: dto.onboarding_completed,
     };
   }
 }

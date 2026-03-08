@@ -1,6 +1,7 @@
 export interface GetUserInfoDTO {
-  id: string;
+  id: number;
   name: string;
   email: string;
   password: string;
+  onboarding_completed: boolean;
 }
