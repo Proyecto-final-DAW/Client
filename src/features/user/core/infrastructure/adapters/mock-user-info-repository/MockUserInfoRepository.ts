@@ -8,10 +8,11 @@ export class MockUserInfoRepository implements UserInfoRepository {
       message: 'Mock login successful',
       token: 'mock-jwt-token',
       user: {
-        id: '1',
+        id: 1,
         name: 'Mock User',
         email,
         password,
+        onboarding_completed: false,
       },
     };
   }

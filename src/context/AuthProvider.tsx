@@ -13,13 +13,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(newUser);
   };
 
+  const updateUser = (newUser: UserInfo) => {
+    setUser(newUser);
+  };
+
   const logout = () => {
     setToken(null);
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, setSession, logout }}>
+    <AuthContext.Provider
+      value={{ token, user, setSession, updateUser, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
