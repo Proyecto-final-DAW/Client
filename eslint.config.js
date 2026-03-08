@@ -46,9 +46,6 @@ export default [
         "error",
         {
           varsIgnorePattern: "^_",
-          // argsIgnorePattern allows function parameters prefixed with _ to be
-          // intentionally unused (e.g. _token in mock implementations that must
-          // satisfy an interface but don't need the parameter)
           argsIgnorePattern: "^_",
         },
       ],
