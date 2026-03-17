@@ -27,8 +27,7 @@ export class OnboardingApiAdapter implements OnboardingPort {
     const payload = toPayload(data);
 
     try {
-      const response = await axios.put(API_ENDPOINTS.onboarding, {
-        data: payload,
+      const response = await axios.put(API_ENDPOINTS.onboarding, payload, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
