@@ -4,9 +4,12 @@ import type { GetExercisesDTO } from '../dtos/GetExercisesDTO';
 export class ExercisesFromDTO {
   static fromDTO(dto: GetExercisesDTO): Exercise {
     return {
+      id: dto.id,
       name: dto.name,
-      gifUrl: dto.gifUrl,
       target: dto.target,
+      equipment: dto.equipment,
+      difficulty: dto.difficulty,
+      imageUrl: dto.imageUrl,
     };
   }
 

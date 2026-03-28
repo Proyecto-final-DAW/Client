@@ -2,8 +2,18 @@ import { MUSCLE_OPTIONS, useExerciseSearch } from '../hooks/useExerciseSearch';
 import { ExerciseCard } from './ExerciseCard';
 
 export const ExerciseSearch = () => {
-  const { search, setSearch, muscle, setMuscle, exercises, loading, error } =
-    useExerciseSearch();
+  const {
+    search,
+    setSearch,
+    muscle,
+    setMuscle,
+    exercises,
+    loading,
+    error,
+    page,
+    totalPages,
+    goToPage,
+  } = useExerciseSearch();
 
   return (
     <div className="flex flex-col gap-6">
@@ -51,11 +61,47 @@ export const ExerciseSearch = () => {
       )}
 
       {!loading && !error && exercises.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {exercises.map((exercise) => (
-            <ExerciseCard key={exercise.name} exercise={exercise} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {exercises.map((exercise) => (
+              <ExerciseCard key={exercise.id} exercise={exercise} />
+            ))}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2">
+              <button
+                onClick={() => goToPage(page - 1)}
+                disabled={page === 1}
+                className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed text-white rounded-lg transition-colors text-sm"
+              >
+                Anterior
+              </button>
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => goToPage(p)}
+                  className={`w-8 h-8 rounded-lg text-sm transition-colors ${
+                    p === page
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+
+              <button
+                onClick={() => goToPage(page + 1)}
+                disabled={page === totalPages}
+                className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed text-white rounded-lg transition-colors text-sm"
+              >
+                Siguiente
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

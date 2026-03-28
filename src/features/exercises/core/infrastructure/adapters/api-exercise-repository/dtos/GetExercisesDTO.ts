@@ -1,5 +1,8 @@
 export interface GetExercisesDTO {
+  id: string;
   name: string;
-  gifUrl: string;
   target: string;
+  equipment: string;
+  difficulty: string;
+  imageUrl: string;
 }

@@ -16,8 +16,8 @@ export const App = (): React.JSX.Element => {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/exercises" element={<ExercisesView />} />
           <Route element={<ProtectedRoute />}>
-            <Route path="/exercises" element={<ExercisesView />} />
             <Route path="/onboarding" element={<OnboardingView />} />
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
