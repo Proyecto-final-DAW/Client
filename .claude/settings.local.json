@@ -11,7 +11,8 @@
       "WebFetch(domain:exercisedb.notion.site)",
       "WebSearch",
       "WebFetch(domain:edb-docs.up.railway.app)",
-      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}, Content-Type: %{content_type}, Size: %{size_download}\" \"http://localhost:3000/exercises/image/0025\")"
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}, Content-Type: %{content_type}, Size: %{size_download}\" \"http://localhost:3000/exercises/image/0025\")",
+      "Bash(npx eslint:*)"
     ],
     "additionalDirectories": [
       "c:\\Users\\tmlla\\Desktop\\Proyecto Final\\Server\\src\\services",
