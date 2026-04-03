@@ -23,14 +23,15 @@ export const DashboardLayout = (): React.JSX.Element => {
   const clickAuth = () => {
     if (isLoggedIn) {
       logout();
+      navigate('/');
       return;
     }
 
-    navigate('/Login');
+    navigate('/login');
   };
 
   const menuItems: MenuItem[] = [
-    { to: '/', label: 'Inicio', icon: HomeIcon },
+    { to: '/dashboard', label: 'Inicio', icon: HomeIcon },
     { to: '/rutinas', label: 'Rutinas', icon: ClipboardDocumentListIcon },
     { to: '/progreso', label: 'Progreso', icon: ChartBarIcon },
     { to: '/dieta', label: 'Dieta', icon: HeartIcon },
@@ -55,11 +56,16 @@ export const DashboardLayout = (): React.JSX.Element => {
         <aside className="w-64 bg-zinc-950 text-zinc-100 p-4 flex flex-col">
           {isLoggedIn && (
             <div className="mb-6 flex items-center gap-3 rounded-xl bg-zinc-900 p-3">
-              {
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-700">
+              {user?.profileImage ? (
+                <img
+                  src="{user.profileImage}"
+                  className="h-12 w-12 rounded-full object-cover"
+                />
+              ) : (
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-900">
                   <UserCircleIcon className="h-8 w-8 text-zinc-400" />
                 </div>
-              }
+              )}
 
               <div className="min-w-0">
                 <p className="text-xs text-zinc-100">Bienvenido</p>
@@ -80,7 +86,7 @@ export const DashboardLayout = (): React.JSX.Element => {
                   className={({ isActive }) =>
                     ` flex items-center gap-3 rounded-lg px-4 py-3 transition ${
                       isActive
-                        ? 'bg-emerald-500 text-zinc-100'
+                        ? 'bg-emerald-500 text-zinc-950'
                         : 'text-zinc-100 hover:bg-zinc-800'
                     }`
                   }
@@ -92,7 +98,7 @@ export const DashboardLayout = (): React.JSX.Element => {
             })}
           </nav>
         </aside>
-        <main className="flex-1 p-6 bg-zinc-100">
+        <main className="flex-1 p-6 bg-zinc-800">
           <Outlet />
         </main>
       </div>

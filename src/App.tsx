@@ -8,6 +8,10 @@ import { DashboardLayout } from './layouts/DashboardLayout';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 
 const Dashboard = () => <h1>Dashboard</h1>;
+const Rutinas = () => <h1>Rutinas</h1>;
+const Progreso = () => <h1>Progreso</h1>;
+const Dieta = () => <h1>Dieta</h1>;
+const Perfil = () => <h1>Perfil</h1>;
 
 export const App = (): React.JSX.Element => {
   return (
@@ -20,9 +24,13 @@ export const App = (): React.JSX.Element => {
 
           <Route element={<ProtectedRoute />}>
             <Route path="/onboarding" element={<OnboardingView />} />
-          </Route>
-          <Route element={<DashboardLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route element={<DashboardLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/Rutinas" element={<Rutinas />} />
+              <Route path="/Progreso" element={<Progreso />} />
+              <Route path="/Dieta" element={<Dieta />} />
+              <Route path="/Perfil" element={<Perfil />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
