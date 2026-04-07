@@ -103,7 +103,7 @@
 ### `GET /exercises` — Buscar ejercicios
 
 | Param    | Tipo   | Default | Descripcion                    |
-|----------|--------|---------|--------------------------------|
+| -------- | ------ | ------- | ------------------------------ |
 | `search` | string | -       | Nombre del ejercicio           |
 | `muscle` | string | -       | Grupo muscular (ver abajo)     |
 | `page`   | number | 1       | Pagina                         |
