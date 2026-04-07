@@ -17,6 +17,6 @@
   animation: slideInLeft 3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-img[src*="Logo"] {
+img[src*='Logo'] {
   image-rendering: pixelated;
 }
