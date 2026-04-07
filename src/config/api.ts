@@ -13,6 +13,7 @@ axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_BASE_URL;
 
 export const API_ENDPOINTS = {
+  register: `${API_BASE_URL}/users/auth/register`,
   login: `${API_BASE_URL}/users/auth/login`,
   onboarding: `${API_BASE_URL}/users/onboarding`,
   getExercises: `${API_BASE_URL}/exercises`,

@@ -6,6 +6,12 @@ export interface UserInfo {
   onboarding_completed: boolean;
 }
 
+export type RegisterResponse = {
+  message: string;
+  token: string;
+  user: UserInfo;
+};
+
 export type LoginResponse = {
   message: string;
   token: string;
