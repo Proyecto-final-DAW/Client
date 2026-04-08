@@ -25,7 +25,7 @@ export const useProfile = () => {
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [passwordSuccess, setPasswordSuccess] = useState(false);
 
-  const successTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const successTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   const fetchProfile = useCallback(async () => {
     if (!token) return;
