@@ -9,7 +9,7 @@ const renderGrid = (
   grid: string[],
   color: string,
   accent: string | undefined,
-  svgProps: SVGProps<SVGSVGElement>,
+  svgProps: SVGProps<SVGSVGElement>
 ) => {
   const h = grid.length;
   const w = grid[0].length;
@@ -20,7 +20,14 @@ const renderGrid = (
       const c = row[x];
       if (c === '#') {
         rects.push(
-          <rect key={`${x}-${y}`} x={x} y={y} width={1} height={1} fill={color} />,
+          <rect
+            key={`${x}-${y}`}
+            x={x}
+            y={y}
+            width={1}
+            height={1}
+            fill={color}
+          />
         );
       } else if (c === 'o') {
         rects.push(
@@ -32,11 +39,18 @@ const renderGrid = (
             height={1}
             fill={color}
             fillOpacity={0.45}
-          />,
+          />
         );
       } else if (c === '*' && accent) {
         rects.push(
-          <rect key={`${x}-${y}`} x={x} y={y} width={1} height={1} fill={accent} />,
+          <rect
+            key={`${x}-${y}`}
+            x={x}
+            y={y}
+            width={1}
+            height={1}
+            fill={accent}
+          />
         );
       } else if (c === '+' && accent) {
         rects.push(
@@ -48,7 +62,7 @@ const renderGrid = (
             height={1}
             fill={accent}
             fillOpacity={0.55}
-          />,
+          />
         );
       }
     }
