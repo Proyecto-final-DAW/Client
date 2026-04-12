@@ -23,45 +23,55 @@ export default function SelectableCardGroup({
               key={option.value}
               type="button"
               onClick={() => onSelect(option.value)}
-              className={`
-                w-full text-left p-4 rounded-xl border transition-all duration-200
-                ${
-                  isSelected
-                    ? 'bg-emerald-500/10 border-emerald-500 shadow-lg shadow-emerald-500/5'
-                    : 'bg-zinc-800/50 border-zinc-700 hover:border-zinc-500'
-                }
-              `}
+              className={`relative w-full text-left px-4 py-3 border-2 transition-all duration-150 ${
+                isSelected
+                  ? 'bg-green-500/10 border-green-500/70 shadow-[0_0_18px_rgba(34,197,94,0.25)]'
+                  : 'bg-[#12121a] border-[#1e1e2e] hover:border-[#3f3f46]'
+              }`}
             >
+              {isSelected && (
+                <>
+                  <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-green-500/70" />
+                  <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-green-500/70" />
+                  <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-green-500/70" />
+                  <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-green-500/70" />
+                </>
+              )}
               <div className="flex items-center gap-3">
-                <span className="text-2xl">{option.icon}</span>
-                <div>
+                <span className="text-2xl shrink-0">{option.icon}</span>
+                <div className="min-w-0 flex-1">
                   <div
-                    className={`font-semibold text-sm ${isSelected ? 'text-emerald-400' : 'text-zinc-200'}`}
+                    className={`font-['Press_Start_2P'] text-[9px] sm:text-[10px] tracking-wider ${isSelected ? 'text-green-400' : 'text-[#e4e4e7]'}`}
                   >
                     {option.title}
                   </div>
-                  <div className="text-xs text-zinc-400 mt-0.5">
+                  <div className="font-['VT323'] text-sm sm:text-base text-[#a1a1aa] mt-1 tracking-wide leading-tight">
                     {option.description}
                   </div>
                 </div>
-                <div className="ml-auto">
-                  <div
-                    className={`
-                      w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200
-                      ${isSelected ? 'border-emerald-500 bg-emerald-500' : 'border-zinc-600'}
-                    `}
-                  >
-                    {isSelected && (
-                      <span className="text-zinc-900 text-xs font-bold">✓</span>
-                    )}
-                  </div>
+                <div
+                  className={`shrink-0 flex h-5 w-5 items-center justify-center border-2 ${
+                    isSelected
+                      ? 'border-green-500 bg-green-500 text-[#0a0a0f]'
+                      : 'border-[#3f3f46] bg-[#0d0d14]'
+                  }`}
+                >
+                  {isSelected && (
+                    <span className="font-['Press_Start_2P'] text-[9px] leading-none">
+                      ✓
+                    </span>
+                  )}
                 </div>
               </div>
             </button>
           );
         })}
       </div>
-      {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
+      {error && (
+        <p className="font-['VT323'] text-base text-red-400 mt-3 tracking-wide leading-none">
+          ✕ {error}
+        </p>
+      )}
     </div>
   );
 }

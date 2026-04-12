@@ -1,4 +1,4 @@
-import { UserIcon } from '@heroicons/react/24/outline';
+import { UserIcon } from '@heroicons/react/24/solid';
 
 import type {
   OnboardingFormData,
@@ -12,15 +12,20 @@ interface StepBodyProps {
 }
 
 const sexOptions = [
-  { value: 'male', label: 'Hombre', color: 'text-blue-400' },
-  { value: 'female', label: 'Mujer', color: 'text-pink-400' },
+  { value: 'male', label: 'HOMBRE', color: '#3b82f6' },
+  { value: 'female', label: 'MUJER', color: '#ec4899' },
 ] as const;
+
+const inputBase =
+  'w-full bg-[#12121a] border-2 px-3 py-2.5 font-["Press_Start_2P"] text-[9px] sm:text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] focus:outline-none transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
 
 export default function StepBody({ data, errors, onChange }: StepBodyProps) {
   return (
     <div>
-      <h2 className="text-2xl font-bold text-zinc-100 mb-2">Tu cuerpo</h2>
-      <p className="text-zinc-400 text-sm mb-8">
+      <h2 className="font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
+        TU <span className="text-green-400">CUERPO</span>
+      </h2>
+      <p className="font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-8 tracking-wide leading-tight">
         Estos datos nos permiten calcular tu metabolismo basal.
       </p>
 
@@ -28,9 +33,9 @@ export default function StepBody({ data, errors, onChange }: StepBodyProps) {
         <div>
           <label
             htmlFor="weight"
-            className="block text-sm font-medium text-zinc-300 mb-2"
+            className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider"
           >
-            Peso (kg)
+            PESO (KG)
           </label>
           <input
             id="weight"
@@ -41,19 +46,21 @@ export default function StepBody({ data, errors, onChange }: StepBodyProps) {
             placeholder="75"
             value={data.weight}
             onChange={(e) => onChange('weight', e.target.value)}
-            className={`w-full px-4 py-3 rounded-xl bg-zinc-800 border text-zinc-100 placeholder-zinc-500 outline-none transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${errors.weight ? 'border-red-500 focus:border-red-400' : 'border-zinc-700 focus:border-emerald-500'}`}
+            className={`${inputBase} ${errors.weight ? 'border-red-500/70 focus:border-red-400' : 'border-[#1e1e2e] focus:border-green-500/70'}`}
           />
           {errors.weight && (
-            <p className="text-red-400 text-sm mt-1.5">{errors.weight}</p>
+            <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
+              ✕ {errors.weight}
+            </p>
           )}
         </div>
 
         <div>
           <label
             htmlFor="height"
-            className="block text-sm font-medium text-zinc-300 mb-2"
+            className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider"
           >
-            Altura (cm)
+            ALTURA (CM)
           </label>
           <input
             id="height"
@@ -64,44 +71,50 @@ export default function StepBody({ data, errors, onChange }: StepBodyProps) {
             placeholder="175"
             value={data.height}
             onChange={(e) => onChange('height', e.target.value)}
-            className={`w-full px-4 py-3 rounded-xl bg-zinc-800 border text-zinc-100 placeholder-zinc-500 outline-none transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${errors.height ? 'border-red-500 focus:border-red-400' : 'border-zinc-700 focus:border-emerald-500'}`}
+            className={`${inputBase} ${errors.height ? 'border-red-500/70 focus:border-red-400' : 'border-[#1e1e2e] focus:border-green-500/70'}`}
           />
           {errors.height && (
-            <p className="text-red-400 text-sm mt-1.5">{errors.height}</p>
+            <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
+              ✕ {errors.height}
+            </p>
           )}
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-2">
-          Sexo biológico
+        <label className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider">
+          SEXO BIOLOGICO
         </label>
-        <p className="text-zinc-500 text-xs mb-3">
+        <p className="font-['VT323'] text-sm text-[#71717a] mb-3 tracking-wide leading-tight">
           Necesario para el cálculo metabólico, no define tu identidad.
         </p>
         <div className="grid grid-cols-2 gap-3">
-          {sexOptions.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => onChange('sex', option.value)}
-              className={`py-4 rounded-xl border text-center font-semibold transition-all duration-200 ${
-                data.sex === option.value
-                  ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400'
-                  : 'bg-zinc-800/50 border-zinc-700 text-zinc-400 hover:border-zinc-500'
-              }`}
-            >
-              <UserIcon
-                className={`w-6 h-6 mx-auto mb-1 ${
-                  data.sex === option.value ? 'text-emerald-400' : option.color
+          {sexOptions.map((option) => {
+            const isSelected = data.sex === option.value;
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => onChange('sex', option.value)}
+                className={`relative py-5 border-2 text-center font-['Press_Start_2P'] text-[10px] transition-all duration-150 ${
+                  isSelected
+                    ? 'bg-green-500/10 border-green-500/70 text-green-400 shadow-[0_0_16px_rgba(34,197,94,0.3)]'
+                    : 'bg-[#12121a] border-[#1e1e2e] text-[#a1a1aa] hover:border-[#3f3f46]'
                 }`}
-              />
-              <span className="text-sm">{option.label}</span>
-            </button>
-          ))}
+              >
+                <UserIcon
+                  className="h-6 w-6 mx-auto mb-2"
+                  style={{ color: isSelected ? '#4ade80' : option.color }}
+                />
+                {option.label}
+              </button>
+            );
+          })}
         </div>
         {errors.sex && (
-          <p className="text-red-400 text-sm mt-2">{errors.sex}</p>
+          <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
+            ✕ {errors.sex}
+          </p>
         )}
       </div>
     </div>

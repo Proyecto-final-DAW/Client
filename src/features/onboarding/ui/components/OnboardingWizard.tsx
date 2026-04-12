@@ -2,7 +2,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   CheckIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/solid';
 
 import type { OnboardingPort } from '../../core/application/ports/OnboardingPort';
 import type { OnboardingResponse } from '../../core/domain/models/OnboardingResponse';
@@ -49,61 +49,96 @@ export default function OnboardingWizard(props: OnboardingWizardProps) {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
-      <div className="w-full max-w-lg">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold text-emerald-400">GymQuest</h1>
-          <p className="text-zinc-500 text-sm mt-1">
-            Configura tu perfil para personalizar tu experiencia
-          </p>
-        </div>
+    <div className="relative min-h-screen bg-[#0a0a0f] text-[#e4e4e7] overflow-hidden">
+      {/* Fixed background image */}
+      <div
+        className="fixed inset-0 pointer-events-none z-0"
+        style={{
+          backgroundImage: "url('/images/5.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          backgroundRepeat: 'no-repeat',
+          imageRendering: 'pixelated',
+        }}
+      />
+      {/* Frosted glass layer */}
+      <div
+        className="fixed inset-0 pointer-events-none z-0 backdrop-blur-sm"
+        style={{
+          background:
+            'linear-gradient(to bottom, rgba(5,5,9,0.68) 0%, rgba(5,5,9,0.75) 100%)',
+        }}
+      />
 
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8">
-          <Stepper currentStep={currentStep} totalSteps={totalSteps} />
+      <main className="relative z-10 flex items-center justify-center px-4 sm:px-6 py-10 sm:py-14 min-h-screen">
+        <div className="w-full max-w-xl">
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="font-['Press_Start_2P'] text-lg sm:text-2xl md:text-3xl text-white leading-relaxed [text-shadow:3px_3px_0_#000,-1px_-1px_0_#000,1px_-1px_0_#000,-1px_1px_0_#000,0_0_22px_rgba(0,0,0,1)]">
+              FORJA TU
+              <span className="block text-green-400 mt-2 sm:mt-3 [text-shadow:3px_3px_0_#000,-1px_-1px_0_#000,1px_-1px_0_#000,-1px_1px_0_#000,0_0_30px_rgba(34,197,94,1),0_0_55px_rgba(34,197,94,0.55)]">
+                LEYENDA
+              </span>
+            </h1>
+            <p className="mt-4 font-['VT323'] text-base sm:text-lg text-[#a1a1aa] tracking-wide">
+              Configura tu perfil de héroe
+            </p>
+          </div>
 
-          <div className="min-h-[300px]">{renderStep()}</div>
+          <div className="relative border-2 border-green-500/60 bg-[#0d0d14] px-6 sm:px-8 pt-8 pb-10 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(34,197,94,0.35),0_20px_50px_rgba(0,0,0,0.8)]">
+            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-green-500/60" />
+            <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-green-500/60" />
+            <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-green-500/60" />
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-green-500/60" />
 
-          {submitError && (
-            <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl">
-              <p className="text-red-400 text-sm">{submitError}</p>
-            </div>
-          )}
+            <Stepper currentStep={currentStep} totalSteps={totalSteps} />
 
-          <div className="flex gap-3 mt-8">
-            {currentStep > 1 && (
+            <div className="min-h-[320px]">{renderStep()}</div>
+
+            {submitError && (
+              <p
+                role="alert"
+                className="font-['VT323'] text-base sm:text-lg text-red-400 mt-4 leading-none tracking-wide border-2 border-red-500/40 bg-red-500/10 px-3 py-1"
+              >
+                ✕ {submitError}
+              </p>
+            )}
+
+            <div className="flex gap-3 mt-8">
+              {currentStep > 1 && (
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  disabled={isSubmitting}
+                  className="inline-flex items-center gap-2 font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] hover:text-green-400 border-2 border-[#1e1e2e] hover:border-green-500/50 px-4 py-3 transition-colors disabled:opacity-50"
+                >
+                  <ArrowLeftIcon className="h-3 w-3" />
+                  ATRAS
+                </button>
+              )}
               <button
                 type="button"
-                onClick={handlePrev}
+                onClick={handleNext}
                 disabled={isSubmitting}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl border border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-zinc-200 transition-colors disabled:opacity-50"
+                className="flex-1 inline-flex items-center justify-center gap-2 font-['Press_Start_2P'] text-[10px] sm:text-xs bg-green-500 hover:bg-green-400 disabled:bg-[#1e1e2e] disabled:text-[#52525b] text-[#0a0a0f] px-6 py-3.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 disabled:border-b-0 disabled:active:mt-0 shadow-[0_0_16px_rgba(34,197,94,0.35)] disabled:shadow-none"
               >
-                <ArrowLeftIcon className="w-4 h-4" />
-                Anterior
+                {isSubmitting ? (
+                  'GUARDANDO...'
+                ) : currentStep === totalSteps ? (
+                  <>
+                    FINALIZAR
+                    <CheckIcon className="h-3 w-3" />
+                  </>
+                ) : (
+                  <>
+                    SIGUIENTE
+                    <ArrowRightIcon className="h-3 w-3" />
+                  </>
+                )}
               </button>
-            )}
-            <button
-              type="button"
-              onClick={handleNext}
-              disabled={isSubmitting}
-              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold transition-all bg-emerald-500 text-zinc-900 hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? (
-                'Guardando...'
-              ) : currentStep === totalSteps ? (
-                <>
-                  Finalizar
-                  <CheckIcon className="w-4 h-4" />
-                </>
-              ) : (
-                <>
-                  Siguiente
-                  <ArrowRightIcon className="w-4 h-4" />
-                </>
-              )}
-            </button>
+            </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

@@ -5,57 +5,53 @@ interface StepperProps {
   totalSteps: number;
 }
 
-const stepLabels = ['Personal', 'Cuerpo', 'Actividad', 'Objetivo'];
+const stepLabels = ['PERSONAL', 'CUERPO', 'ACTIVIDAD', 'OBJETIVO'];
 
 export default function Stepper({ currentStep, totalSteps }: StepperProps) {
   return (
     <div className="w-full mb-8">
-      <div className="flex justify-between items-center mb-3">
-        <span className="text-sm text-zinc-400">
-          Paso {currentStep} de {totalSteps}
+      <div className="flex justify-between items-center mb-4">
+        <span className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] tracking-wider">
+          PASO {currentStep}/{totalSteps}
         </span>
-        <span className="text-sm text-emerald-400 font-medium">
+        <span className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-green-400 tracking-wider">
           {Math.round((currentStep / totalSteps) * 100)}%
         </span>
       </div>
 
-      <div className="flex items-center gap-0">
+      <div className="flex items-start gap-0">
         {Array.from({ length: totalSteps }, (_, i) => {
           const step = i + 1;
           const isCompleted = step < currentStep;
           const isActive = step === currentStep;
 
           return (
-            <div key={step} className="flex items-center flex-1">
+            <div key={step} className="flex items-start flex-1">
               <div className="flex flex-col items-center">
                 <div
                   className={`
-                    w-10 h-10 rounded-full flex items-center justify-center
-                    text-sm font-bold transition-all duration-300
+                    relative flex h-9 w-9 items-center justify-center border-2
+                    font-['Press_Start_2P'] text-[10px] transition-colors duration-200
                     ${
                       isCompleted
-                        ? 'bg-emerald-500 text-zinc-900'
+                        ? 'bg-green-500 border-green-700 text-[#0a0a0f] shadow-[0_0_14px_rgba(34,197,94,0.45)]'
                         : isActive
-                          ? 'bg-zinc-800 text-emerald-400 ring-2 ring-emerald-500'
-                          : 'bg-zinc-800 text-zinc-500'
+                          ? 'bg-[#12121a] border-green-500 text-green-400 shadow-[0_0_16px_rgba(34,197,94,0.45)]'
+                          : 'bg-[#12121a] border-[#1e1e2e] text-[#52525b]'
                     }
                   `}
                 >
-                  {isCompleted ? (
-                    <CheckIcon className="w-5 h-5 text-zinc-900" />
-                  ) : (
-                    step
-                  )}
+                  {isCompleted ? <CheckIcon className="h-4 w-4" /> : step}
                 </div>
                 <span
                   className={`
-                    text-xs mt-2 transition-colors duration-300
+                    font-['Press_Start_2P'] text-[7px] sm:text-[8px] mt-2 tracking-wider text-center
                     ${
                       isCompleted
-                        ? 'text-emerald-400'
+                        ? 'text-green-400'
                         : isActive
-                          ? 'text-zinc-200'
-                          : 'text-zinc-600'
+                          ? 'text-[#e4e4e7]'
+                          : 'text-[#52525b]'
                     }
                   `}
                 >
@@ -66,8 +62,8 @@ export default function Stepper({ currentStep, totalSteps }: StepperProps) {
               {step < totalSteps && (
                 <div
                   className={`
-                    flex-1 h-0.5 mx-2 mb-5 transition-colors duration-300
-                    ${isCompleted ? 'bg-emerald-500' : 'bg-zinc-700'}
+                    flex-1 h-0.5 mx-2 mt-4 transition-colors duration-200
+                    ${isCompleted ? 'bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.6)]' : 'bg-[#1e1e2e]'}
                   `}
                 />
               )}

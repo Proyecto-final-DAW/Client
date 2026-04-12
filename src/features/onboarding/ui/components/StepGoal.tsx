@@ -14,26 +14,26 @@ interface StepGoalProps {
 const goalOptions: SelectableOption[] = [
   {
     value: 'lose_fat',
-    title: 'Perder grasa',
-    description: 'Quiero bajar de peso y definir mi cuerpo',
+    title: 'PERDER GRASA',
+    description: 'Bajar de peso y definir el cuerpo.',
     icon: '🔥',
   },
   {
     value: 'gain_muscle',
-    title: 'Ganar músculo',
-    description: 'Quiero ganar masa muscular y fuerza',
+    title: 'GANAR MUSCULO',
+    description: 'Aumentar masa muscular y fuerza.',
     icon: '💪',
   },
   {
     value: 'maintain',
-    title: 'Mantenerse',
-    description: 'Quiero mantener mi forma actual',
+    title: 'MANTENERSE',
+    description: 'Conservar la forma actual.',
     icon: '⚖️',
   },
   {
     value: 'health',
-    title: 'Mejorar salud',
-    description: 'Quiero sentirme mejor y crear un hábito',
+    title: 'MEJORAR SALUD',
+    description: 'Sentirse mejor y crear un hábito.',
     icon: '❤️',
   },
 ];
@@ -41,11 +41,11 @@ const goalOptions: SelectableOption[] = [
 export default function StepGoal({ data, errors, onChange }: StepGoalProps) {
   return (
     <div>
-      <h2 className="text-2xl font-bold text-zinc-100 mb-2">
-        ¿Cuál es tu objetivo?
+      <h2 className="font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
+        ¿CUAL ES TU <span className="text-green-400">OBJETIVO?</span>
       </h2>
-      <p className="text-zinc-400 text-sm mb-8">
-        Esto determina tu plan nutricional y de entrenamiento.
+      <p className="font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-8 tracking-wide leading-tight">
+        Determina tu plan nutricional y de entrenamiento.
       </p>
 
       <SelectableCardGroup
