@@ -17,7 +17,7 @@ export class MockOnboardingAdapter implements OnboardingPort {
         weight: parseFloat(data.weight),
         height: parseFloat(data.height),
         activity_level: data.activityLevel!,
-        goal: data.goal!,
+        goal: data.goals[0]!,
         daily_calories: 2000,
         protein_grams: 150,
         fat_grams: 65,
