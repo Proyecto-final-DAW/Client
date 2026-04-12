@@ -372,3 +372,135 @@ export const UserPlusIcon = ({ color, accent, ...p }: PixelIconProps) =>
 
 export const PlayIcon = ({ color, ...p }: PixelIconProps) =>
   renderGrid(PLAY, color, undefined, p);
+
+const MAP = [
+  '................',
+  '................',
+  '................',
+  '.##############.',
+  '##oooooooooooo##',
+  '##oo########oo##',
+  '##o*oooooooo*o##',
+  '##o*oo*##*oo*o##',
+  '##o*o*####*o*o##',
+  '##o*oo*##*oo*o##',
+  '##o*oooooooo*o##',
+  '##oo########oo##',
+  '##oooooooooooo##',
+  '.##############.',
+  '................',
+  '................',
+];
+
+const HOURGLASS = [
+  '................',
+  '.##############.',
+  '.#oooooooooooo#.',
+  '..############..',
+  '..##oooooooo##..',
+  '...##oooooo##...',
+  '....##oooo##....',
+  '.....##oo##.....',
+  '.....##oo##.....',
+  '....##oooo##....',
+  '...##oooooo##...',
+  '..##oooooooo##..',
+  '..############..',
+  '.#oooooooooooo#.',
+  '.##############.',
+  '................',
+];
+
+const TROPHY = [
+  '................',
+  '...##########...',
+  '.##############.',
+  '##oo########oo##',
+  '##oo########oo##',
+  '##oooooooooooo##',
+  '##oooooooooooo##',
+  '.##oooooooooo##.',
+  '..############..',
+  '....########....',
+  '......####......',
+  '......####......',
+  '....########....',
+  '...##########...',
+  '################',
+  '################',
+];
+
+const POTION = [
+  '................',
+  '......####......',
+  '......#oo#......',
+  '......#oo#......',
+  '.....######.....',
+  '.....######.....',
+  '....########....',
+  '...##oooooo##...',
+  '..##oo****oo##..',
+  '..##o******o##..',
+  '..##oo****oo##..',
+  '..##o******o##..',
+  '..##oo****oo##..',
+  '...##oooooo##...',
+  '....########....',
+  '................',
+];
+
+const CHEST = [
+  '................',
+  '................',
+  '..############..',
+  '.##############.',
+  '.##oo######oo##.',
+  '.##oooooooooo##.',
+  '.##oo##**##oo##.',
+  '.##oo##**##oo##.',
+  '################',
+  '.##oooooooooo##.',
+  '.##oo######oo##.',
+  '.##oooo##oooo##.',
+  '.##oo######oo##.',
+  '.##oooooooooo##.',
+  '.##############.',
+  '................',
+];
+
+const HELMET = [
+  '................',
+  '....########....',
+  '...##oooooo##...',
+  '..##oooooooo##..',
+  '.##oo######oo##.',
+  '.##oo######oo##.',
+  '.##oo######oo##.',
+  '.##oooooooooo##.',
+  '.##oooooooooo##.',
+  '.##oo##oo##oo##.',
+  '.##oo##oo##oo##.',
+  '.##oooooooooo##.',
+  '.##oo######oo##.',
+  '.##############.',
+  '..############..',
+  '................',
+];
+
+export const MapIcon = ({ color, accent, ...p }: PixelIconProps) =>
+  renderGrid(MAP, color, accent ?? '#7c2d12', p);
+
+export const HourglassIcon = ({ color, accent, ...p }: PixelIconProps) =>
+  renderGrid(HOURGLASS, color, accent, p);
+
+export const TrophyIcon = ({ color, accent, ...p }: PixelIconProps) =>
+  renderGrid(TROPHY, color, accent, p);
+
+export const PotionIcon = ({ color, accent, ...p }: PixelIconProps) =>
+  renderGrid(POTION, color, accent ?? '#ef4444', p);
+
+export const ChestIcon = ({ color, accent, ...p }: PixelIconProps) =>
+  renderGrid(CHEST, color, accent ?? '#fde68a', p);
+
+export const HelmetIcon = ({ color, accent, ...p }: PixelIconProps) =>
+  renderGrid(HELMET, color, accent, p);
