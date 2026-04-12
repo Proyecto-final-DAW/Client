@@ -54,9 +54,9 @@ export default function OnboardingWizard(props: OnboardingWizardProps) {
       <div
         className="fixed inset-0 pointer-events-none z-0"
         style={{
-          backgroundImage: "url('/images/5.png')",
+          backgroundImage: "url('/images/5.webp')",
           backgroundSize: 'cover',
-          backgroundPosition: 'center center',
+          backgroundPosition: 'center 42%',
           backgroundRepeat: 'no-repeat',
           imageRendering: 'pixelated',
         }}
