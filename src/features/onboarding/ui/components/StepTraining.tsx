@@ -1,0 +1,137 @@
+import type {
+  OnboardingFormData,
+  FormErrors,
+} from '../../core/domain/models/OnboardingFormData';
+
+interface StepTrainingProps {
+  data: OnboardingFormData;
+  errors: FormErrors;
+  onChange: (field: keyof OnboardingFormData, value: string) => void;
+}
+
+type Choice = { value: string; label: string; sub?: string };
+
+const experienceChoices: Choice[] = [
+  { value: 'beginner', label: 'NOVATO', sub: '< 6 meses' },
+  { value: 'intermediate', label: 'INTERMEDIO', sub: '6m - 2 años' },
+  { value: 'advanced', label: 'VETERANO', sub: '2+ años' },
+];
+
+const equipmentChoices: Choice[] = [
+  { value: 'full_gym', label: 'GIMNASIO', sub: 'Máquinas y pesas' },
+  { value: 'home_weights', label: 'CASA + PESAS', sub: 'Mancuernas / barras' },
+  { value: 'bodyweight', label: 'PESO CORPORAL', sub: 'Sin material' },
+];
+
+const daysChoices: Choice[] = [
+  { value: '2-3', label: '2-3' },
+  { value: '4-5', label: '4-5' },
+  { value: '6+', label: '6+' },
+];
+
+type GroupProps = {
+  label: string;
+  field: keyof OnboardingFormData;
+  value: string | undefined;
+  choices: Choice[];
+  error?: string;
+  cols?: number;
+  onChange: (field: keyof OnboardingFormData, value: string) => void;
+};
+
+const ChoiceGroup = ({
+  label,
+  field,
+  value,
+  choices,
+  error,
+  cols = 3,
+  onChange,
+}: GroupProps) => (
+  <div className="mb-4 last:mb-0">
+    <label className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider">
+      {label}
+    </label>
+    <div
+      className="grid gap-2"
+      style={{ gridTemplateColumns: `repeat(${cols}, minmax(0,1fr))` }}
+    >
+      {choices.map((c) => {
+        const selected = value === c.value;
+        return (
+          <button
+            key={c.value}
+            type="button"
+            onClick={() => onChange(field, c.value)}
+            className={`px-2 py-3 border-2 text-center transition-all duration-150 ${
+              selected
+                ? 'bg-green-500/10 border-green-500/70 shadow-[0_0_12px_rgba(34,197,94,0.25)]'
+                : 'bg-[#12121a] border-[#1e1e2e] hover:border-[#3f3f46]'
+            }`}
+          >
+            <div
+              className={`font-['Press_Start_2P'] text-[8px] sm:text-[9px] tracking-wider ${selected ? 'text-green-400' : 'text-[#e4e4e7]'}`}
+            >
+              {c.label}
+            </div>
+            {c.sub && (
+              <div className="font-['VT323'] text-xs sm:text-sm text-[#71717a] mt-1 leading-none">
+                {c.sub}
+              </div>
+            )}
+          </button>
+        );
+      })}
+    </div>
+    {error && (
+      <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
+        ✕ {error}
+      </p>
+    )}
+  </div>
+);
+
+export default function StepTraining({
+  data,
+  errors,
+  onChange,
+}: StepTrainingProps) {
+  return (
+    <div>
+      <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
+        TU <span className="text-green-400">ENTRENAMIENTO</span>
+      </h2>
+      <p className="text-center font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
+        Cómo, cuándo y con qué entrenas.
+      </p>
+
+      <ChoiceGroup
+        label="EXPERIENCIA"
+        field="experienceLevel"
+        value={data.experienceLevel}
+        choices={experienceChoices}
+        error={errors.experienceLevel}
+        cols={3}
+        onChange={onChange}
+      />
+      <ChoiceGroup
+        label="EQUIPAMIENTO"
+        field="equipment"
+        value={data.equipment}
+        choices={equipmentChoices}
+        error={errors.equipment}
+        cols={3}
+        onChange={onChange}
+      />
+      <ChoiceGroup
+        label="DIAS POR SEMANA"
+        field="daysPerWeek"
+        value={data.daysPerWeek}
+        choices={daysChoices}
+        error={errors.daysPerWeek}
+        cols={3}
+        onChange={onChange}
+      />
+    </div>
+  );
+}

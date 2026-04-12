@@ -19,11 +19,11 @@ export default function StepPersonal({
 }: StepPersonalProps) {
   return (
     <div>
-      <h2 className="font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
+      <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
         ¿COMO TE <span className="text-green-400">LLAMAS?</span>
       </h2>
-      <p className="font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-8 tracking-wide leading-tight">
-        Empecemos por conocerte un poco.
+      <p className="text-center font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
+        Empecemos por conocerte.
       </p>
 
       <div className="mb-6">

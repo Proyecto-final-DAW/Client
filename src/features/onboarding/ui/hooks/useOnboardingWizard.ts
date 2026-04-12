@@ -9,7 +9,7 @@ import { INITIAL_FORM_DATA } from '../../core/domain/models/OnboardingFormData';
 import type { OnboardingResponse } from '../../core/domain/models/OnboardingResponse';
 import { validateStep } from '../../core/domain/validators/OnboardingValidator';
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 6;
 
 interface UseOnboardingWizardProps {
   token: string;
@@ -29,7 +29,10 @@ export function useOnboardingWizard({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  function handleChange(field: keyof OnboardingFormData, value: string) {
+  function handleChange(
+    field: keyof OnboardingFormData,
+    value: string | string[]
+  ) {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors((prev) => {

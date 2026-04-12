@@ -1,10 +1,9 @@
-export type ActivityLevel =
-  | 'sedentary'
-  | 'light'
-  | 'moderate'
-  | 'active'
-  | 'very_active';
+export type ActivityLevel = 'sedentary' | 'light' | 'active' | 'very_active';
 export type Goal = 'lose_fat' | 'gain_muscle' | 'maintain' | 'health';
+export type ExperienceLevel = 'beginner' | 'intermediate' | 'advanced';
+export type Equipment = 'full_gym' | 'home_weights' | 'bodyweight';
+export type DaysPerWeek = '2-3' | '4-5' | '6+';
+export type Injury = 'none' | 'knee' | 'back' | 'shoulder' | 'other';
 
 export interface OnboardingFormData {
   name: string;
@@ -13,7 +12,11 @@ export interface OnboardingFormData {
   height: string;
   sex?: 'male' | 'female';
   activityLevel?: ActivityLevel;
-  goal?: Goal;
+  goals: Goal[];
+  experienceLevel?: ExperienceLevel;
+  equipment?: Equipment;
+  daysPerWeek?: DaysPerWeek;
+  injury?: Injury;
 }
 
 export type FormErrors = Partial<Record<keyof OnboardingFormData, string>>;
@@ -25,5 +28,9 @@ export const INITIAL_FORM_DATA: OnboardingFormData = {
   height: '',
   sex: undefined,
   activityLevel: undefined,
-  goal: undefined,
+  goals: [],
+  experienceLevel: undefined,
+  equipment: undefined,
+  daysPerWeek: undefined,
+  injury: undefined,
 };

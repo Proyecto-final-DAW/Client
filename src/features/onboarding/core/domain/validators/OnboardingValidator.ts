@@ -73,7 +73,23 @@ export function validateStep3(data: OnboardingFormData): FormErrors {
 
 export function validateStep4(data: OnboardingFormData): FormErrors {
   const errors: FormErrors = {};
-  if (!data.goal) errors.goal = 'Selecciona tu objetivo';
+  if (!data.goals || data.goals.length === 0)
+    errors.goals = 'Selecciona al menos un objetivo';
+  return errors;
+}
+
+export function validateStep5(data: OnboardingFormData): FormErrors {
+  const errors: FormErrors = {};
+  if (!data.experienceLevel)
+    errors.experienceLevel = 'Selecciona tu experiencia';
+  if (!data.equipment) errors.equipment = 'Selecciona tu equipamiento';
+  if (!data.daysPerWeek) errors.daysPerWeek = 'Selecciona los días por semana';
+  return errors;
+}
+
+export function validateStep6(data: OnboardingFormData): FormErrors {
+  const errors: FormErrors = {};
+  if (!data.injury) errors.injury = 'Selecciona una opción';
   return errors;
 }
 
@@ -90,6 +106,10 @@ export function validateStep(
       return validateStep3(data);
     case 4:
       return validateStep4(data);
+    case 5:
+      return validateStep5(data);
+    case 6:
+      return validateStep6(data);
     default:
       return {};
   }

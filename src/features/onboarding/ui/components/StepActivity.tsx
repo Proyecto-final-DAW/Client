@@ -15,31 +15,25 @@ const activityOptions: SelectableOption[] = [
   {
     value: 'sedentary',
     title: 'SEDENTARIO',
-    description: 'Oficina o estudio, sin ejercicio regular.',
+    description: 'Sin ejercicio regular.',
     icon: '🪑',
   },
   {
     value: 'light',
     title: 'LIGERAMENTE ACTIVO',
-    description: 'Ejercicio ligero 1-3 días/semana (caminar, yoga).',
+    description: 'Ejercicio 1-3 días por semana.',
     icon: '🚶',
-  },
-  {
-    value: 'moderate',
-    title: 'MODERADAMENTE ACTIVO',
-    description: 'Ejercicio moderado 3-5 días/semana (gimnasio, deporte).',
-    icon: '🏃',
   },
   {
     value: 'active',
     title: 'ACTIVO',
-    description: 'Ejercicio intenso 6-7 días por semana.',
+    description: 'Ejercicio 3-5 días por semana.',
     icon: '💪',
   },
   {
     value: 'very_active',
     title: 'MUY ACTIVO',
-    description: 'Trabajo físico diario + ejercicio intenso.',
+    description: 'Ejercicio 6-7 días por semana y trabajo físico diario.',
     icon: '🔥',
   },
 ];
@@ -51,11 +45,11 @@ export default function StepActivity({
 }: StepActivityProps) {
   return (
     <div>
-      <h2 className="font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
+      <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
         TU NIVEL DE <span className="text-green-400">ACTIVIDAD</span>
       </h2>
-      <p className="font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-8 tracking-wide leading-tight">
-        ¿Cómo es tu día a día? Calculamos cuántas calorías gastas.
+      <p className="text-center font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
+        ¿Cómo es tu día a día?
       </p>
 
       <SelectableCardGroup

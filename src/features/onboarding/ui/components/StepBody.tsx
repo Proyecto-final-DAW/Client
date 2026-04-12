@@ -22,11 +22,11 @@ const inputBase =
 export default function StepBody({ data, errors, onChange }: StepBodyProps) {
   return (
     <div>
-      <h2 className="font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
+      <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
         TU <span className="text-green-400">CUERPO</span>
       </h2>
-      <p className="font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-8 tracking-wide leading-tight">
-        Estos datos nos permiten calcular tu metabolismo basal.
+      <p className="text-center font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
+        Para calcular tu metabolismo basal.
       </p>
 
       <div className="grid grid-cols-2 gap-4 mb-6">
