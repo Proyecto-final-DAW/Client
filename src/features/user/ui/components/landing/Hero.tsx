@@ -1,5 +1,3 @@
-import type { ComponentType, SVGProps } from 'react';
-
 import {
   BoltIcon,
   HeartIcon,
@@ -7,6 +5,7 @@ import {
   SparklesIcon,
   StarIcon,
 } from '@heroicons/react/24/solid';
+import type { ComponentType, SVGProps } from 'react';
 
 type HeroIconCmp = ComponentType<SVGProps<SVGSVGElement>>;
 
@@ -134,9 +133,7 @@ export const Hero = (): React.JSX.Element => {
             ))}
           </div>
         </div>
-
       </div>
-
     </section>
   );
 };
