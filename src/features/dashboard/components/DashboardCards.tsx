@@ -4,7 +4,7 @@ import {
   FireIcon,
 } from '@heroicons/react/24/outline';
 
-type DashboardData = {
+interface Props {
   streak: number;
   lastWorkout: {
     daysAgo: number;
@@ -16,18 +16,14 @@ type DashboardData = {
     consistency: number;
     technique: number;
   };
-};
+}
 
-type Props = {
-  data: DashboardData;
-};
-
-export const DashboardCards = ({ data }: Props): React.JSX.Element => {
+export const DashboardCards = (props: Props): React.JSX.Element => {
   const globalLevel =
-    (data.stats.consistency +
-      data.stats.endurance +
-      data.stats.strength +
-      data.stats.technique) /
+    (props.stats.consistency +
+      props.stats.endurance +
+      props.stats.strength +
+      props.stats.technique) /
     4;
   return (
     <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -38,9 +34,11 @@ export const DashboardCards = ({ data }: Props): React.JSX.Element => {
             <div className="mt-3 flex items-center gap-3">
               <FireIcon className="h-8 w-8 text-orange-500" />
               <div>
-                <p className="text-xl font-bold text-zinc-100">{data.streak}</p>
+                <p className="text-xl font-bold text-zinc-100">
+                  {props.streak}
+                </p>
                 <p className="text-sm text-zinc-100">
-                  ¡{data.streak} días seguidos!
+                  ¡{props.streak} días seguidos!
                 </p>
               </div>
             </div>
@@ -56,10 +54,10 @@ export const DashboardCards = ({ data }: Props): React.JSX.Element => {
             <CalendarDaysIcon className="h-8 w-8 text-zinc-100" />
             <div>
               <p className="text-xl font-bold text-zinc-100">
-                Hace {data.lastWorkout.daysAgo} días
+                Hace {props.lastWorkout.daysAgo} días
               </p>
               <p className="text-sm text-zinc-100">
-                {data.lastWorkout.routine}
+                {props.lastWorkout.routine}
               </p>
             </div>
           </div>
