@@ -89,7 +89,8 @@ export function validateStep5(data: OnboardingFormData): FormErrors {
 
 export function validateStep6(data: OnboardingFormData): FormErrors {
   const errors: FormErrors = {};
-  if (!data.injury) errors.injury = 'Selecciona una opción';
+  if (!data.injuries || data.injuries.length === 0)
+    errors.injuries = 'Selecciona al menos una opción';
   return errors;
 }
 

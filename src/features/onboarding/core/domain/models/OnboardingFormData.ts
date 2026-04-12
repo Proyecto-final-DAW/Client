@@ -16,7 +16,7 @@ export interface OnboardingFormData {
   experienceLevel?: ExperienceLevel;
   equipment?: Equipment;
   daysPerWeek?: DaysPerWeek;
-  injury?: Injury;
+  injuries: Injury[];
 }
 
 export type FormErrors = Partial<Record<keyof OnboardingFormData, string>>;
@@ -32,5 +32,5 @@ export const INITIAL_FORM_DATA: OnboardingFormData = {
   experienceLevel: undefined,
   equipment: undefined,
   daysPerWeek: undefined,
-  injury: undefined,
+  injuries: [],
 };
