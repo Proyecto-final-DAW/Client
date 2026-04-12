@@ -1,5 +1,3 @@
-import type { ComponentType, SVGProps } from 'react';
-
 import {
   AcademicCapIcon,
   BeakerIcon,
@@ -8,6 +6,7 @@ import {
   MapIcon,
   TrophyIcon,
 } from '@heroicons/react/24/solid';
+import type { ComponentType, SVGProps } from 'react';
 
 type HeroIconCmp = ComponentType<SVGProps<SVGSVGElement>>;
 
@@ -63,7 +62,10 @@ export const Carousel = (): React.JSX.Element => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="font-['Press_Start_2P'] text-sm sm:text-lg md:text-xl text-[#e4e4e7] leading-relaxed [text-shadow:2px_2px_0_#000,0_0_10px_rgba(0,0,0,0.8)]">
-            ELIGE TU <span className="text-green-500 [text-shadow:2px_2px_0_#000,0_0_12px_rgba(34,197,94,0.5)]">HABILIDAD</span>
+            ELIGE TU{' '}
+            <span className="text-green-500 [text-shadow:2px_2px_0_#000,0_0_12px_rgba(34,197,94,0.5)]">
+              HABILIDAD
+            </span>
           </h2>
           <p className="mt-4 text-[#71717a] text-[9px] sm:text-[11px] font-['Press_Start_2P'] tracking-wide leading-loose max-w-md mx-auto">
             Herramientas para principiantes y avanzados.
