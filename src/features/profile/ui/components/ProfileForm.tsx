@@ -165,7 +165,9 @@ export const ProfileForm = ({
       <FormFeedback
         error={error}
         success={
-          success ? 'Perfil actualizado. Las calorias se han recalculado.' : null
+          success
+            ? 'Perfil actualizado. Las calorias se han recalculado.'
+            : null
         }
       />
 

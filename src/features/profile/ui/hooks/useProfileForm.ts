@@ -74,7 +74,9 @@ interface UseProfileFormParams {
 }
 
 export const useProfileForm = ({ profile, onSubmit }: UseProfileFormParams) => {
-  const [form, setForm] = useState<ProfileFormState>(() => toFormState(profile));
+  const [form, setForm] = useState<ProfileFormState>(() =>
+    toFormState(profile)
+  );
 
   const handleChange = (field: keyof ProfileFormState, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
