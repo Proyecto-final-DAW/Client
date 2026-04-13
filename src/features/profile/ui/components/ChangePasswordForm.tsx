@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
 import type { ChangePasswordData } from '../../core/domain/models/ProfileData';
+import { FormFeedback } from './FormFeedback';
+import { PasswordField } from './PasswordField';
 
 interface ChangePasswordFormProps {
   onSubmit: (data: ChangePasswordData) => Promise<void>;
@@ -37,12 +39,6 @@ export const ChangePasswordForm = ({
     await onSubmit({ currentPassword, newPassword });
   };
 
-  const inputClass =
-    'w-full px-4 py-3 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 outline-none transition-colors focus:border-emerald-500';
-  const labelClass = 'block text-sm font-medium text-zinc-300 mb-2';
-
-  const displayError = localError || error;
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -52,64 +48,35 @@ export const ChangePasswordForm = ({
         Cambiar contrasena
       </h3>
 
-      <div className="mb-4">
-        <label htmlFor="current-password" className={labelClass}>
-          Contrasena actual
-        </label>
-        <input
-          id="current-password"
-          type="password"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
-          required
-          autoComplete="current-password"
-          className={inputClass}
-        />
-      </div>
+      <PasswordField
+        id="current-password"
+        label="Contrasena actual"
+        value={currentPassword}
+        onChange={setCurrentPassword}
+        autoComplete="current-password"
+      />
+      <PasswordField
+        id="new-password"
+        label="Nueva contrasena"
+        value={newPassword}
+        onChange={setNewPassword}
+        autoComplete="new-password"
+      />
+      <PasswordField
+        id="confirm-password"
+        label="Confirmar contrasena"
+        value={confirmPassword}
+        onChange={setConfirmPassword}
+        autoComplete="new-password"
+        className="mb-6"
+      />
 
-      <div className="mb-4">
-        <label htmlFor="new-password" className={labelClass}>
-          Nueva contrasena
-        </label>
-        <input
-          id="new-password"
-          type="password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-          autoComplete="new-password"
-          className={inputClass}
-        />
-      </div>
-
-      <div className="mb-6">
-        <label htmlFor="confirm-password" className={labelClass}>
-          Confirmar contrasena
-        </label>
-        <input
-          id="confirm-password"
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-          autoComplete="new-password"
-          className={inputClass}
-        />
-      </div>
-
-      {displayError && (
-        <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 p-3">
-          <p className="text-sm text-red-400">{displayError}</p>
-        </div>
-      )}
-
-      {success && (
-        <div className="mb-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3">
-          <p className="text-sm text-emerald-400">
-            Contrasena actualizada. Redirigiendo al login...
-          </p>
-        </div>
-      )}
+      <FormFeedback
+        error={localError || error}
+        success={
+          success ? 'Contrasena actualizada. Redirigiendo al login...' : null
+        }
+      />
 
       <button
         type="submit"

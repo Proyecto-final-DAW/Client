@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import type {
   ProfileData,
   ProfileUpdateData,
@@ -8,6 +6,8 @@ import {
   ACTIVITY_LEVEL_OPTIONS,
   GOAL_OPTIONS,
 } from '../../core/domain/models/ProfileData';
+import { useProfileForm } from '../hooks/useProfileForm';
+import { FormFeedback } from './FormFeedback';
 
 interface ProfileFormProps {
   profile: ProfileData;
@@ -17,6 +17,10 @@ interface ProfileFormProps {
   success: boolean;
 }
 
+const inputClass =
+  'w-full px-4 py-3 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 outline-none transition-colors focus:border-emerald-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
+const labelClass = 'block text-sm font-medium text-zinc-300 mb-2';
+
 export const ProfileForm = ({
   profile,
   onSubmit,
@@ -24,66 +28,10 @@ export const ProfileForm = ({
   error,
   success,
 }: ProfileFormProps) => {
-  const [form, setForm] = useState({
-    name: profile.name,
-    weight: profile.weight != null ? String(profile.weight) : '',
-    height: profile.height != null ? String(profile.height) : '',
-    age: profile.age != null ? String(profile.age) : '',
-    activity_level: profile.activity_level ?? '',
-    goal: profile.goal ?? '',
-    sleep_hours: profile.sleep_hours != null ? String(profile.sleep_hours) : '',
+  const { form, handleChange, handleSubmit } = useProfileForm({
+    profile,
+    onSubmit,
   });
-
-  const handleChange = (field: string, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const data: ProfileUpdateData = {};
-
-    if (form.name.trim() && form.name.trim() !== profile.name) {
-      data.name = form.name.trim();
-    }
-    if (
-      form.weight &&
-      Number(form.weight) > 0 &&
-      Number(form.weight) !== profile.weight
-    ) {
-      data.weight = Number(form.weight);
-    }
-    if (
-      form.height &&
-      Number(form.height) > 0 &&
-      Number(form.height) !== profile.height
-    ) {
-      data.height = Number(form.height);
-    }
-    if (form.age && Number(form.age) > 0 && Number(form.age) !== profile.age) {
-      data.age = Number(form.age);
-    }
-    if (form.activity_level && form.activity_level !== profile.activity_level) {
-      data.activity_level = form.activity_level;
-    }
-    if (form.goal && form.goal !== profile.goal) {
-      data.goal = form.goal;
-    }
-    if (
-      form.sleep_hours &&
-      Number(form.sleep_hours) > 0 &&
-      Number(form.sleep_hours) !== profile.sleep_hours
-    ) {
-      data.sleep_hours = Number(form.sleep_hours);
-    }
-
-    if (Object.keys(data).length > 0) {
-      await onSubmit(data);
-    }
-  };
-
-  const inputClass =
-    'w-full px-4 py-3 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 outline-none transition-colors focus:border-emerald-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
-  const labelClass = 'block text-sm font-medium text-zinc-300 mb-2';
 
   return (
     <form
@@ -214,19 +162,12 @@ export const ProfileForm = ({
         />
       </div>
 
-      {error && (
-        <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 p-3">
-          <p className="text-sm text-red-400">{error}</p>
-        </div>
-      )}
-
-      {success && (
-        <div className="mb-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3">
-          <p className="text-sm text-emerald-400">
-            Perfil actualizado. Las calorias se han recalculado.
-          </p>
-        </div>
-      )}
+      <FormFeedback
+        error={error}
+        success={
+          success ? 'Perfil actualizado. Las calorias se han recalculado.' : null
+        }
+      />
 
       <button
         type="submit"
