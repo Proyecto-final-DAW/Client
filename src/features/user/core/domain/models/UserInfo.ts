@@ -4,6 +4,7 @@ export interface UserInfo {
   email: string;
   password: string;
   onboarding_completed: boolean;
+  profileImage?: string;
 }
 
 export type LoginResponse = {
