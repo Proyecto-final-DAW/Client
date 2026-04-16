@@ -15,4 +15,7 @@ axios.defaults.baseURL = API_BASE_URL;
 export const API_ENDPOINTS = {
   login: `${API_BASE_URL}/users/auth/login`,
   onboarding: `${API_BASE_URL}/users/onboarding`,
+  getExercises: `${API_BASE_URL}/exercises`,
+  profile: `${API_BASE_URL}/profile/me`,
+  changePassword: `${API_BASE_URL}/profile/me/password`,
 };
