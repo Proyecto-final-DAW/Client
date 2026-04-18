@@ -1,49 +1,12 @@
-import {
-  ArrowTrendingUpIcon,
-  ClipboardDocumentListIcon,
-  PlayIcon,
-  UserPlusIcon,
-} from '@heroicons/react/24/solid';
-import type { ComponentType, SVGProps } from 'react';
-import { Link } from 'react-router-dom';
-
 import { Carousel } from './Carousel';
+import { CtaSection } from './CtaSection';
 import { Hero } from './Hero';
-
-type HeroIconCmp = ComponentType<SVGProps<SVGSVGElement>>;
-
-type Step = {
-  step: string;
-  title: string;
-  desc: string;
-  Icon: HeroIconCmp;
-};
-
-const STEPS: Step[] = [
-  {
-    step: '01',
-    title: 'CREAR PERFIL',
-    desc: 'Nivel, objetivos y equipamiento.',
-    Icon: UserPlusIcon,
-  },
-  {
-    step: '02',
-    title: 'RECIBIR PLAN',
-    desc: 'Rutina semanal al instante.',
-    Icon: ClipboardDocumentListIcon,
-  },
-  {
-    step: '03',
-    title: 'SUBIR DE NIVEL',
-    desc: 'Entrena y evoluciona tus stats.',
-    Icon: ArrowTrendingUpIcon,
-  },
-];
+import { LandingNav } from './LandingNav';
+import { QuestLogSection } from './QuestLogSection';
 
 export const Landing = (): React.JSX.Element => {
   return (
     <div className="relative bg-[#0a0a0f] min-h-screen text-[#e4e4e7] scroll-smooth">
-      {/* Full-page background image — absolute so it scrolls with the page */}
       <div
         className="absolute inset-0 pointer-events-none z-0"
         style={{
@@ -54,7 +17,6 @@ export const Landing = (): React.JSX.Element => {
           imageRendering: 'pixelated',
         }}
       />
-      {/* Frosted glass layer — blurs and tints the background image */}
       <div
         className="absolute inset-0 pointer-events-none z-0 backdrop-blur-sm"
         style={{
@@ -62,113 +24,14 @@ export const Landing = (): React.JSX.Element => {
             'linear-gradient(to bottom, rgba(5,5,9,0.68) 0%, rgba(5,5,9,0.75) 100%)',
         }}
       />
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/85 backdrop-blur-md border-b-2 border-[#1e1e2e]">
-        <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14 h-24 flex items-center justify-between">
-          <Link to="/">
-            <img
-              src="/images/Logo.png"
-              alt="GymQuest"
-              className="h-28 w-auto -my-6 drop-shadow-lg object-contain"
-            />
-          </Link>
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Link
-              to="/login"
-              className="font-['Press_Start_2P'] text-[8px] sm:text-[10px] text-[#a1a1aa] hover:text-green-400 border-2 border-[#1e1e2e] hover:border-green-500/50 px-3 sm:px-4 py-2 sm:py-2.5 transition-colors"
-            >
-              CONTINUAR
-            </Link>
-            <Link
-              to="/login?mode=register"
-              className="font-['Press_Start_2P'] text-[8px] sm:text-[10px] bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-3 sm:px-5 py-2 sm:py-2.5 border-b-[3px] border-green-700 hover:border-green-600 active:border-b-0 active:mt-[3px] transition-all duration-150 shadow-[0_0_12px_rgba(34,197,94,0.3)]"
-            >
-              ▶ INICIAR
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <LandingNav />
 
       <div className="relative z-10">
         <Hero />
-
         <Carousel />
-
-        <section className="py-16 sm:py-24">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            <h2 className="font-['Press_Start_2P'] text-sm sm:text-lg text-center mb-12 sm:mb-16 text-[#e4e4e7] [text-shadow:2px_2px_0_#000,0_0_10px_rgba(0,0,0,0.8)]">
-              <span className="text-green-500 [text-shadow:2px_2px_0_#000,0_0_10px_rgba(34,197,94,0.5)]">
-                QUEST
-              </span>{' '}
-              LOG
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 items-stretch">
-              {STEPS.map((s, i) => {
-                const Icon = s.Icon;
-                return (
-                  <div key={s.step} className="relative flex">
-                    <div className="group flex h-full w-full flex-col items-center border-2 border-[#1e1e2e] bg-[#12121a]/85 backdrop-blur-md p-6 sm:p-7 text-center relative hover:border-green-500/40 transition-colors">
-                      <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-green-500/40" />
-                      <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-green-500/40" />
-                      <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-green-500/40" />
-                      <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-green-500/40" />
-
-                      {i < STEPS.length - 1 && (
-                        <div className="hidden md:block absolute top-1/2 -translate-y-1/2 -right-[18px] text-green-500/70 font-['Press_Start_2P'] text-base">
-                          ▸
-                        </div>
-                      )}
-
-                      <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-sm border-2 border-green-500/30 bg-green-500/10 group-hover:bg-green-500/20 transition-colors">
-                        <Icon className="h-8 w-8 text-green-400" />
-                      </div>
-                      <div className="font-['Press_Start_2P'] text-green-500 text-[10px] sm:text-xs mb-3 tracking-widest">
-                        {s.step}
-                      </div>
-                      <div className="font-['Press_Start_2P'] text-[9px] sm:text-[11px] text-[#e4e4e7] mb-3 leading-relaxed">
-                        {s.title}
-                      </div>
-                      <p className="font-['Press_Start_2P'] text-[8px] sm:text-[10px] text-[#71717a] leading-loose tracking-wide mt-auto">
-                        {s.desc}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        <section className="py-16 sm:py-24">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-            <div className="border-2 border-[#1e1e2e] bg-[#12121a]/85 backdrop-blur-md p-8 sm:p-12 relative">
-              <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-green-500/40" />
-              <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-green-500/40" />
-              <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-green-500/40" />
-              <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-green-500/40" />
-
-              <div className="mx-auto mb-4 inline-flex h-16 w-16 items-center justify-center rounded-sm border-2 border-green-500/40 bg-green-500/10">
-                <PlayIcon className="h-9 w-9 text-green-400" />
-              </div>
-              <h2 className="font-['Press_Start_2P'] text-sm sm:text-lg md:text-xl text-[#e4e4e7] mb-2 leading-relaxed [text-shadow:2px_2px_0_#000,0_0_10px_rgba(0,0,0,0.8)]">
-                ¿LISTO PARA
-              </h2>
-              <h2 className="font-['Press_Start_2P'] text-sm sm:text-lg md:text-xl text-green-500 mb-6 leading-relaxed [text-shadow:2px_2px_0_#000,0_0_12px_rgba(34,197,94,0.5)]">
-                TU QUEST?
-              </h2>
-              <p className="font-['Press_Start_2P'] text-[9px] sm:text-[11px] text-[#71717a] leading-loose tracking-wide mb-8">
-                Únete gratis y empieza a entrenar hoy.
-              </p>
-              <Link
-                to="/login?mode=register"
-                className="inline-block font-['Press_Start_2P'] text-[10px] sm:text-xs bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-8 sm:px-10 py-3.5 sm:py-4 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_16px_rgba(34,197,94,0.35)]"
-              >
-                ▶ EMPEZAR AVENTURA
-              </Link>
-            </div>
-          </div>
-        </section>
+        <QuestLogSection />
+        <CtaSection />
 
         <footer className="border-t-2 border-[#1e1e2e]/60 py-6 sm:py-8 bg-[#0a0a0f]/30 backdrop-blur-sm">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between">
