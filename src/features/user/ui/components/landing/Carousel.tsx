@@ -1,57 +1,83 @@
-import { useEffect, useState } from 'react';
+import {
+  AcademicCapIcon,
+  BeakerIcon,
+  ChartBarIcon,
+  ClockIcon,
+  MapIcon,
+  TrophyIcon,
+} from '@heroicons/react/24/solid';
+import type { ComponentType, SVGProps } from 'react';
 
-type Quote = {
-  text: string;
-  author: string;
-  role?: string;
+import { FeatureCard } from './FeatureCard';
+
+type HeroIconCmp = ComponentType<SVGProps<SVGSVGElement>>;
+
+type Feature = {
+  Icon: HeroIconCmp;
+  title: string;
+  subtitle: string;
+  description: string;
 };
 
-const QUOTES: Quote[] = [
+const FEATURES: Feature[] = [
   {
-    text: 'Invertimos con paciencia y disciplina, priorizando la continuidad.',
-    author: 'Benwar Enterprises',
-    role: 'Filosofía',
+    Icon: MapIcon,
+    title: 'PLAN',
+    subtitle: 'Personalizado',
+    description: 'IA genera tu rutina según nivel, objetivos y equipamiento.',
   },
   {
-    text: 'Cuidamos los negocios como si fueran propios: discreción, ética y largo plazo.',
-    author: 'Equipo Benwar',
-    role: 'Enfoque',
+    Icon: ClockIcon,
+    title: 'TRACK',
+    subtitle: 'En vivo',
+    description: 'Registra sets, reps y peso. Tu RM se calcula solo.',
   },
   {
-    text: 'Empresas sólidas, humanas y rentables. Sin prisas, con compromiso.',
-    author: 'Benwar',
-    role: 'Principios',
+    Icon: ChartBarIcon,
+    title: 'STATS',
+    subtitle: 'Progreso',
+    description: 'Gráficos de fuerza, peso corporal y volumen semanal.',
+  },
+  {
+    Icon: BeakerIcon,
+    title: 'FOOD',
+    subtitle: 'Nutrición',
+    description: 'Macros calculados según tu objetivo y actividad.',
+  },
+  {
+    Icon: TrophyIcon,
+    title: 'RPG',
+    subtitle: 'Sistema',
+    description: 'Stats de FUE, RES, VEL y FLX que suben con tu esfuerzo.',
+  },
+  {
+    Icon: AcademicCapIcon,
+    title: 'FORM',
+    subtitle: 'Técnica',
+    description: 'GIFs y guías paso a paso para cada ejercicio.',
   },
 ];
 
 export const Carousel = (): React.JSX.Element => {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      setIndex((i) => (i + 1) % QUOTES.length);
-    }, 4500);
-
-    return () => {
-      window.clearInterval(id);
-    };
-  }, []);
-  const q = QUOTES[index];
-
   return (
-    <section className="py-16">
-      <div className="max-w-4xl mx-auto px-4">
-        <div
-          key={index}
-          className="relative rounded-2xl bg-white p-8 shadow-sm border 
-          w-[5in] h-[2in] animate-slideInLeft"
-        >
-          <p className="text-xl leading-relaxed">“{q.text}”</p>
+    <section id="features" className="py-16 sm:py-24 scroll-mt-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-12 sm:mb-16">
+          <h2 className="font-['Press_Start_2P'] text-sm sm:text-lg md:text-xl text-[#e4e4e7] leading-relaxed [text-shadow:2px_2px_0_#000,0_0_10px_rgba(0,0,0,0.8)]">
+            ELIGE TU{' '}
+            <span className="text-green-500 [text-shadow:2px_2px_0_#000,0_0_12px_rgba(34,197,94,0.5)]">
+              HABILIDAD
+            </span>
+          </h2>
+          <p className="mt-4 text-[#71717a] text-[9px] sm:text-[11px] font-['Press_Start_2P'] tracking-wide leading-loose max-w-md mx-auto">
+            Herramientas para principiantes y avanzados.
+          </p>
+        </div>
 
-          <div className="mt-6">
-            <p className="font-semibold">{q.author}</p>
-            {q.role ? <p className="text-sm opacity-70">{q.role}</p> : null}
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          {FEATURES.map((f) => (
+            <FeatureCard key={f.title} {...f} />
+          ))}
         </div>
       </div>
     </section>
