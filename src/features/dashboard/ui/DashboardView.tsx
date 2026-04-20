@@ -1,5 +1,5 @@
-import { useCards } from '../hooks/useCards';
-import { DashboardCards } from './DashboardCards';
+import { DashboardCards } from './components/DashboardCards';
+import { useCards } from './hooks/useCards';
 
 export const Dashboard = (): React.JSX.Element | null => {
   const { cards, loading, error } = useCards();
