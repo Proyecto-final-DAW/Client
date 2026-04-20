@@ -4,10 +4,12 @@ import { PixelCorners } from '../landing/PixelCorners';
 
 interface LoginFormCardProps extends PropsWithChildren {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  title?: string;
 }
 export const LoginFormCard = ({
   onSubmit,
   children,
+  title = 'LOGIN',
 }: LoginFormCardProps): React.JSX.Element => {
   return (
     <form
@@ -17,7 +19,7 @@ export const LoginFormCard = ({
     >
       <PixelCorners size="md" className="border-green-500/60" />
       <div className="text-center text-sm sm:text-base font-['Press_Start_2P'] text-green-500 mb-12 tracking-widest">
-        ─ LOGIN ─
+        ─ {title} ─
       </div>
       {children}
     </form>
