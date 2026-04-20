@@ -28,10 +28,11 @@ export const App = (): React.JSX.Element => {
             <Route path="/onboarding" element={<OnboardingView />} />
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/Rutinas" element={<RoutinesView />} />
-              <Route path="/Progreso" element={<Progreso />} />
-              <Route path="/Dieta" element={<Dieta />} />
-              <Route path="/Perfil" element={<Perfil />} />
+
+              <Route path="/routines" element={<RoutinesView />} />
+              <Route path="/progress" element={<Progreso />} />
+              <Route path="/diet" element={<Dieta />} />
+              <Route path="/my-profile" element={<Perfil />} />
             </Route>
 
             <Route path="/profile" element={<ProfileView />} />
