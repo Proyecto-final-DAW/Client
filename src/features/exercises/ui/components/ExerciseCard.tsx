@@ -3,6 +3,7 @@ import type { Exercise } from '../../core/domain/models/Exercise';
 
 interface ExerciseCardProps {
   exercise: Exercise;
+  onSelect?: (exercise: Exercise) => void;
 }
 
 const DIFFICULTY_LABEL: Record<string, string> = {
@@ -17,7 +18,7 @@ const DIFFICULTY_COLORS: Record<string, string> = {
   expert: 'text-red-400 border-red-400',
 };
 
-export const ExerciseCard = ({ exercise }: ExerciseCardProps) => {
+export const ExerciseCard = ({ exercise, onSelect }: ExerciseCardProps) => {
   const diffColor =
     DIFFICULTY_COLORS[exercise.difficulty] ?? 'text-gray-400 border-gray-400';
   const diffLabel =
@@ -25,7 +26,10 @@ export const ExerciseCard = ({ exercise }: ExerciseCardProps) => {
   const imgSrc = `${API_BASE_URL}${exercise.imageUrl}`;
 
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden flex flex-col hover:border-blue-500 transition-colors duration-200">
+    <div
+      onClick={() => onSelect?.(exercise)}
+      className="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden flex flex-col hover:border-blue-500 transition-colors duration-200"
+    >
       <img
         src={imgSrc}
         alt={exercise.name}

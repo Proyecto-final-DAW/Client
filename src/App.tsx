@@ -4,11 +4,11 @@ import { AuthProvider } from './context/AuthProvider';
 import { ExercisesView } from './features/exercises/ui/ExercisesView';
 import OnboardingView from './features/onboarding/ui/OnboardingView';
 import { ProfileView } from './features/profile/ui/ProfileView';
+import { RoutinesView } from './features/routines/ui/components/RoutinesView';
 import { Landing } from './features/user/ui/components/landing/Landing';
 import { Login } from './features/user/ui/components/Login';
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { ProtectedRoute } from './routes/ProtectedRoute';
-import { Rutinas } from './Rutinas';
 
 const Dashboard = () => <h1>Dashboard</h1>;
 const Progreso = () => <h1>Progreso</h1>;
@@ -28,7 +28,7 @@ export const App = (): React.JSX.Element => {
             <Route path="/onboarding" element={<OnboardingView />} />
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/Rutinas" element={<Rutinas />} />
+              <Route path="/Rutinas" element={<RoutinesView />} />
               <Route path="/Progreso" element={<Progreso />} />
               <Route path="/Dieta" element={<Dieta />} />
               <Route path="/Perfil" element={<Perfil />} />
