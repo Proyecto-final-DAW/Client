@@ -8,6 +8,7 @@ export const useLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [clientError, setClientError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const { setSession } = useAuth();
@@ -29,13 +30,39 @@ export const useLogin = () => {
     }
   };
 
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setClientError(null);
+    if (!email.trim()) {
+      setClientError('INGRESA TU EMAIL');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setClientError('EMAIL INVALIDO');
+      return;
+    }
+    if (!password) {
+      setClientError('INGRESA TU PASSWORD');
+      return;
+    }
+    if (password.length < 8) {
+      setClientError('PASSWORD MINIMO 8 CARACTERES');
+      return;
+    }
+    void handleSubmit(e);
+  };
+
+  const displayError = clientError ?? error;
+
   return {
     email,
     setEmail,
     password,
     setPassword,
     error,
+    clientError,
+    displayError,
     loading,
-    handleSubmit,
+    onSubmit,
   };
 };
