@@ -26,6 +26,7 @@ export const ConfirmDialog = ({
 
         <div className="mt-6 flex justify-end gap-2">
           <button
+            type="button"
             onClick={onCancel}
             className="rounded-lg bg-gray-700 px-4 py-2 text-sm text-gray-300 hover:bg-gray-600"
           >
@@ -33,6 +34,7 @@ export const ConfirmDialog = ({
           </button>
 
           <button
+            type="button"
             onClick={onConfirm}
             className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-400"
           >

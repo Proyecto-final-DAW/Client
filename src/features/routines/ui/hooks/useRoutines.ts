@@ -1,146 +1,105 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import type { Exercise } from '../../../exercises/core/domain/models/Exercise';
+import { useAuth } from '../../../../context/hooks/useAuth';
 import type { Routine } from '../../core/domain/models/Routine';
-import { useRoutineList } from './useRoutineList';
+import { routineRepository } from '../adapter';
 
 export const useRoutines = () => {
-  const {
-    routines: fetchedRoutines,
-    loading,
-    error,
-    refetch,
-  } = useRoutineList();
+  const { token } = useAuth();
+  const authToken = token ?? undefined;
 
-  const [routines, setRoutines] = useState<Routine[]>([]);
-  const [selectedRoutineId, setSelectedRoutineId] = useState<number>(0);
-  const [newRoutineName, setNewRoutineName] = useState('');
+  const [fetchedRoutines, setFetchedRoutines] = useState<Routine[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedRoutineId, setSelectedRoutineId] = useState<string>('');
+
+  const fetchRoutines = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const result = await routineRepository.getRoutines(authToken);
+      setFetchedRoutines(result);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Error al cargar las rutinas';
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    setRoutines(fetchedRoutines);
+    void fetchRoutines();
+  }, [authToken]);
 
-    if (fetchedRoutines.length > 0) {
-      setSelectedRoutineId((currentSelectedId) => {
-        const stillExists = fetchedRoutines.some(
-          (routine) => routine.id === currentSelectedId
-        );
+  useEffect(() => {
+    setSelectedRoutineId((currentSelectedId) => {
+      const stillExists = fetchedRoutines.some(
+        (routine) => routine.id === currentSelectedId
+      );
 
-        return stillExists ? currentSelectedId : fetchedRoutines[0].id;
-      });
-    } else {
-      setSelectedRoutineId(0);
-    }
+      if (stillExists) return currentSelectedId;
+
+      return fetchedRoutines.length > 0 ? fetchedRoutines[0].id : '';
+    });
   }, [fetchedRoutines]);
 
-  const selectedRoutine =
-    routines.find((routine) => routine.id === selectedRoutineId) ?? null;
+  const selectedRoutine = useMemo(
+    () =>
+      fetchedRoutines.find((routine) => routine.id === selectedRoutineId) ??
+      null,
+    [fetchedRoutines, selectedRoutineId]
+  );
 
-  const selectRoutine = (routineId: number) => {
+  const selectRoutine = (routineId: string) => {
     setSelectedRoutineId(routineId);
   };
 
-  const createRoutine = () => {
-    const trimmedName = newRoutineName.trim();
+  const createRoutine = async (name: string) => {
+    const trimmedName = name.trim();
 
     if (!trimmedName) return;
 
-    const newRoutine: Routine = {
-      id: Date.now(),
-      name: trimmedName,
-      exercises: [],
-    };
+    setError(null);
 
-    setRoutines((prev) => [...prev, newRoutine]);
-    setSelectedRoutineId(newRoutine.id);
-    setNewRoutineName('');
-  };
-
-  const deleteRoutine = (routineId: number) => {
-    setRoutines((prev) => {
-      const remainingRoutines = prev.filter(
-        (routine) => routine.id !== routineId
+    try {
+      const createdRoutine = await routineRepository.createRoutine(
+        trimmedName,
+        authToken
       );
 
-      if (routineId === selectedRoutineId) {
-        setSelectedRoutineId(
-          remainingRoutines.length > 0 ? remainingRoutines[0].id : 0
-        );
-      }
-
-      return remainingRoutines;
-    });
+      await fetchRoutines();
+      setSelectedRoutineId(createdRoutine.id);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Error al crear la rutina';
+      setError(message);
+    }
   };
 
-  const addExerciseToRoutine = (routineId: number, exercise: Exercise) => {
-    setRoutines((prev) =>
-      prev.map((routine) => {
-        if (routine.id !== routineId) return routine;
+  const deleteRoutine = async (routineId: string) => {
+    setError(null);
 
-        const alreadyExists = routine.exercises.some(
-          (currentExercise) => currentExercise.id === exercise.id
-        );
-
-        if (alreadyExists) return routine;
-
-        return {
-          ...routine,
-          exercises: [...routine.exercises, exercise],
-        };
-      })
-    );
-  };
-
-  const removeExercise = (exerciseId: string) => {
-    setRoutines((prev) =>
-      prev.map((routine) =>
-        routine.id === selectedRoutineId
-          ? {
-              ...routine,
-              exercises: routine.exercises.filter(
-                (exercise) => exercise.id !== exerciseId
-              ),
-            }
-          : routine
-      )
-    );
-  };
-
-  const reorderExercises = (fromIndex: number, toIndex: number) => {
-    if (fromIndex === toIndex) return;
-
-    setRoutines((prev) =>
-      prev.map((routine) => {
-        if (routine.id !== selectedRoutineId) return routine;
-
-        const reordered = [...routine.exercises];
-        const [moved] = reordered.splice(fromIndex, 1);
-
-        if (!moved) return routine;
-
-        reordered.splice(toIndex, 0, moved);
-
-        return {
-          ...routine,
-          exercises: reordered,
-        };
-      })
-    );
+    try {
+      await routineRepository.deleteRoutine(routineId, authToken);
+      await fetchRoutines();
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Error al eliminar la rutina';
+      setError(message);
+    }
   };
 
   return {
-    routines,
+    routines: fetchedRoutines,
     selectedRoutine,
     selectedRoutineId,
-    newRoutineName,
-    setNewRoutineName,
     loading,
     error,
-    refetch,
+    refetch: fetchRoutines,
     createRoutine,
     deleteRoutine,
     selectRoutine,
-    removeExercise,
-    reorderExercises,
-    addExerciseToRoutine,
   };
 };

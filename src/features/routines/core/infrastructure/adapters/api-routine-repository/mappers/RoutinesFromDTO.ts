@@ -1,12 +1,13 @@
+import { ExercisesFromDTO } from '../../../../../../exercises/core/infrastructure/adapters/api-exercise-repository/mappers/ExercisesFromDTO';
 import type { Routine } from '../../../../domain/models/Routine';
 import type { GetRoutineDTO } from '../dtos/GetRoutineDTO';
 
-export class RoutineFromDTO {
+export class RoutinesFromDTO {
   static fromDTO(dto: GetRoutineDTO): Routine {
     return {
       id: dto.id,
       name: dto.name,
-      exercises: dto.exercises,
+      exercises: ExercisesFromDTO.fromDTOList(dto.exercises),
     };
   }
 

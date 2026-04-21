@@ -1,7 +1,7 @@
-import type { Exercise } from '../../../../../../exercises/core/domain/models/Exercise';
+import type { GetExercisesDTO } from '../../../../../../exercises/core/infrastructure/adapters/api-exercise-repository/dtos/GetExercisesDTO';
 
 export interface GetRoutineDTO {
-  id: number;
+  id: string;
   name: string;
-  exercises: Exercise[];
+  exercises: GetExercisesDTO[];
 }

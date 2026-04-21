@@ -4,7 +4,7 @@ import { AuthProvider } from './context/AuthProvider';
 import { ExercisesView } from './features/exercises/ui/ExercisesView';
 import OnboardingView from './features/onboarding/ui/OnboardingView';
 import { ProfileView } from './features/profile/ui/ProfileView';
-import { RoutinesView } from './features/routines/ui/components/RoutinesView';
+import { RoutinesView } from './features/routines/ui/RoutinesView';
 import { Landing } from './features/user/ui/components/landing/Landing';
 import { Login } from './features/user/ui/components/Login';
 import { DashboardLayout } from './layouts/DashboardLayout';
