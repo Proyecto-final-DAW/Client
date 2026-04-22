@@ -18,6 +18,7 @@ export const API_ENDPOINTS = {
   profile: `${API_BASE_URL}/profile/me`,
   changePassword: `${API_BASE_URL}/profile/me/password`,
   statsInit: `${API_BASE_URL}/stats/init`,
+  dashboardCards: `${API_BASE_URL}/users/cards`,
 };
 
 export const API_URLS = {
