@@ -7,12 +7,6 @@ export interface UserInfo {
   profileImage?: string;
 }
 
-export type RegisterResponse = {
-  message: string;
-  token: string;
-  user: UserInfo;
-};
-
 export type LoginResponse = {
   message: string;
   token: string;

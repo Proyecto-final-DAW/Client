@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../../../context/hooks/useAuth';
-import { userInfoRepository } from '../adapter';
+import { userRepository } from '../adapter';
 
 export const useRegister = () => {
   const [name, setName] = useState('');
@@ -14,14 +14,12 @@ export const useRegister = () => {
   const { setSession } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
+  const handleSubmit = async () => {
     setLoading(true);
 
     try {
-      const { token, user } = await userInfoRepository.register(
-        name,
+      const { token, user } = await userRepository.register(
+        name.trim(),
         email,
         password
       );
@@ -36,6 +34,7 @@ export const useRegister = () => {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError(null);
     setClientError(null);
 
     if (!name.trim()) {
@@ -59,7 +58,7 @@ export const useRegister = () => {
       return;
     }
 
-    void handleSubmit(e);
+    void handleSubmit();
   };
 
   const displayError = clientError ?? error;
@@ -71,11 +70,8 @@ export const useRegister = () => {
     setEmail,
     password,
     setPassword,
-    error,
-    clientError,
     displayError,
     loading,
-    handleSubmit,
     onSubmit,
   };
 };
