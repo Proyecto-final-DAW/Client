@@ -1,13 +1,13 @@
 import { useRegister } from '../hooks/useRegister';
 import { LoginBackground } from './login-sections/LoginBackground';
-import { LoginEmailField } from './login-sections/LoginEmailField';
 import { LoginErrorAlert } from './login-sections/LoginErrorAlert';
-import { LoginFormCard } from './login-sections/LoginFormCard';
-import { LoginPasswordField } from './login-sections/LoginPasswordField';
-import { RegisterLoginLink } from './register-sections/RegisterLoginLink';
 import { RegisterNameField } from './register-sections/RegisterNameField';
-import { RegisterTitle } from './register-sections/RegisterTitle';
+import { AuthSwitchLink } from './shared/AuthSwitchLink';
+import { AuthTitle } from './shared/AuthTitle';
+import { EmailField } from './shared/EmailField';
+import { FormCard } from './shared/FormCard';
 import { Nav } from './shared/Nav';
+import { PasswordField } from './shared/PasswordField';
 
 export const Register = (): React.JSX.Element => {
   const {
@@ -27,11 +27,11 @@ export const Register = (): React.JSX.Element => {
       <Nav backTo="/" />
       <main className="relative z-10 flex items-center justify-center px-4 sm:px-6 py-8 min-h-[calc(100vh-6rem)]">
         <div className="w-full max-w-sm">
-          <RegisterTitle />
-          <LoginFormCard onSubmit={onSubmit} title="REGISTRO">
+          <AuthTitle topText="EMPIEZA TU" highlightText="AVENTURA" />
+          <FormCard onSubmit={onSubmit} title="REGISTRO">
             <RegisterNameField value={name} onChange={setName} />
-            <LoginEmailField value={email} onChange={setEmail} />
-            <LoginPasswordField
+            <EmailField value={email} onChange={setEmail} />
+            <PasswordField
               value={password}
               onChange={setPassword}
               autoComplete="new-password"
@@ -44,8 +44,12 @@ export const Register = (): React.JSX.Element => {
             >
               {loading ? 'CARGANDO...' : '▶ REGISTRAR'}
             </button>
-          </LoginFormCard>
-          <RegisterLoginLink />
+          </FormCard>
+          <AuthSwitchLink
+            question="¿YA TIENES CUENTA?"
+            cta="INICIA SESIÓN"
+            to="/login"
+          />
         </div>
       </main>
     </div>

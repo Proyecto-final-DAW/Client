@@ -2,11 +2,11 @@ import type { PropsWithChildren } from 'react';
 
 import { PixelCorners } from '../landing/PixelCorners';
 
-interface LoginFormCardProps extends PropsWithChildren {
+interface FormCardProps extends PropsWithChildren {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  title?: string;
+  title: string;
 }
-export const LoginFormCard = (props: LoginFormCardProps): React.JSX.Element => {
+export const FormCard = (props: FormCardProps): React.JSX.Element => {
   return (
     <form
       onSubmit={props.onSubmit}

@@ -1,12 +1,12 @@
 import { useLogin } from '../hooks/useLogin';
 import { LoginBackground } from './login-sections/LoginBackground';
-import { LoginEmailField } from './login-sections/LoginEmailField';
 import { LoginErrorAlert } from './login-sections/LoginErrorAlert';
-import { LoginFormCard } from './login-sections/LoginFormCard';
-import { LoginPasswordField } from './login-sections/LoginPasswordField';
-import { LoginRegisterLink } from './login-sections/LoginRegisterLink';
-import { LoginTitle } from './login-sections/LoginTitle';
+import { AuthSwitchLink } from './shared/AuthSwitchLink';
+import { AuthTitle } from './shared/AuthTitle';
+import { EmailField } from './shared/EmailField';
+import { FormCard } from './shared/FormCard';
 import { Nav } from './shared/Nav';
+import { PasswordField } from './shared/PasswordField';
 
 export const Login = (): React.JSX.Element => {
   const {
@@ -25,10 +25,10 @@ export const Login = (): React.JSX.Element => {
       <Nav backTo="/" />
       <main className="relative z-10 flex items-center justify-center px-4 sm:px-6 py-8 min-h-[calc(100vh-6rem)]">
         <div className="w-full max-w-sm">
-          <LoginTitle />
-          <LoginFormCard onSubmit={onSubmit}>
-            <LoginEmailField value={email} onChange={setEmail} />
-            <LoginPasswordField value={password} onChange={setPassword} />
+          <AuthTitle topText="CONTINUA TU" highlightText="AVENTURA" />
+          <FormCard onSubmit={onSubmit} title="LOGIN">
+            <EmailField value={email} onChange={setEmail} />
+            <PasswordField value={password} onChange={setPassword} />
             <LoginErrorAlert error={displayError} />
             <button
               type="submit"
@@ -37,8 +37,12 @@ export const Login = (): React.JSX.Element => {
             >
               {loading ? 'CARGANDO...' : '▶ ENTRAR'}
             </button>
-          </LoginFormCard>
-          <LoginRegisterLink />
+          </FormCard>
+          <AuthSwitchLink
+            question="¿NUEVO EN EL REINO?"
+            cta="REGISTRATE"
+            to="/register"
+          />
         </div>
       </main>
     </div>
