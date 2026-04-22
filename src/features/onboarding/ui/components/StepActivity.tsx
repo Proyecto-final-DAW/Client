@@ -13,25 +13,25 @@ interface StepActivityProps {
 
 const activityOptions: SelectableOption[] = [
   {
-    value: 'sedentary',
+    value: 'SEDENTARY',
     title: 'SEDENTARIO',
     description: 'Sin ejercicio regular.',
     icon: '🪑',
   },
   {
-    value: 'light',
+    value: 'LIGHT',
     title: 'LIGERAMENTE ACTIVO',
     description: 'Ejercicio 1-3 días por semana.',
     icon: '🚶',
   },
   {
-    value: 'active',
+    value: 'ACTIVE',
     title: 'ACTIVO',
     description: 'Ejercicio 3-5 días por semana.',
     icon: '💪',
   },
   {
-    value: 'very_active',
+    value: 'VERY_ACTIVE',
     title: 'MUY ACTIVO',
     description: 'Ejercicio 6-7 días por semana y trabajo físico diario.',
     icon: '🔥',

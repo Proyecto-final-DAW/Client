@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
+import type { MacrosPort } from '../../core/application/ports/MacrosPort';
 import type { OnboardingPort } from '../../core/application/ports/OnboardingPort';
+import type { StatsInitPort } from '../../core/application/ports/StatsInitPort';
 import type {
   OnboardingFormData,
   FormErrors,
@@ -15,6 +17,8 @@ interface UseOnboardingWizardProps {
   userId: number;
   token: string;
   onboardingService: OnboardingPort;
+  statsInitService: StatsInitPort;
+  macrosService: MacrosPort;
   onComplete: (userData: OnboardingResponse['user']) => void;
 }
 
@@ -22,6 +26,8 @@ export function useOnboardingWizard({
   userId,
   token,
   onboardingService,
+  statsInitService,
+  macrosService,
   onComplete,
 }: UseOnboardingWizardProps) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -74,6 +80,11 @@ export function useOnboardingWizard({
         userId,
         token
       );
+      // Post-onboarding side effects: non-fatal, do not block navigation.
+      await Promise.allSettled([
+        statsInitService.initStats(token),
+        macrosService.calculateMacros(formData, userId, token),
+      ]);
       onComplete(response.user);
     } catch (error) {
       setSubmitError(

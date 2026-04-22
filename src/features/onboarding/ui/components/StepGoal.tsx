@@ -19,25 +19,25 @@ type GoalOption = {
 
 const goalOptions: GoalOption[] = [
   {
-    value: 'lose_fat',
+    value: 'LOSE_FAT',
     title: 'PERDER GRASA',
     description: 'Bajar de peso y definir el cuerpo.',
     icon: '🔥',
   },
   {
-    value: 'gain_muscle',
+    value: 'GAIN_MUSCLE',
     title: 'GANAR MUSCULO',
     description: 'Aumentar masa muscular y fuerza.',
     icon: '💪',
   },
   {
-    value: 'maintain',
+    value: 'MAINTAIN',
     title: 'MANTENERSE',
     description: 'Conservar la forma actual.',
     icon: '⚖️',
   },
   {
-    value: 'health',
+    value: 'HEALTH',
     title: 'MEJORAR SALUD',
     description: 'Sentirse mejor y crear un hábito.',
     icon: '❤️',
