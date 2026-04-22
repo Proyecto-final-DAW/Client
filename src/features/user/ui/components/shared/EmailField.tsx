@@ -1,11 +1,9 @@
-interface LoginEmailFieldProps {
+interface EmailFieldProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-export const LoginEmailField = (
-  props: LoginEmailFieldProps
-): React.JSX.Element => {
+export const EmailField = (props: EmailFieldProps): React.JSX.Element => {
   return (
     <label className="block mb-10">
       <span className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider">

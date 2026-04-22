@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 
-interface LoginNavProps {
+interface NavProps {
   backTo?: string;
 }
 
-export const LoginNav = (props: LoginNavProps): React.JSX.Element => {
+export const Nav = (props: NavProps): React.JSX.Element => {
   return (
     <nav className="relative z-10 border-b-2 border-[#1e1e2e] bg-[#0a0a0f]/60 backdrop-blur-md">
       <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14 h-24 flex items-center justify-between">

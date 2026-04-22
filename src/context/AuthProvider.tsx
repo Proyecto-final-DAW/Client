@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import type { ReactNode } from 'react';
 
+import type { User } from '../features/user/core/domain/models/User';
 import type { UserInfo } from '../features/user/core/domain/models/UserInfo';
 import { AuthContext } from './AuthContext';
 
@@ -16,21 +16,32 @@ const loadFromStorage = <T,>(key: string): T | null => {
   }
 };
 
+const normalizeAuthUser = (user: User | UserInfo): UserInfo => ({
+  ...user,
+  onboarding_completed:
+    'onboarding_completed' in user ? user.onboarding_completed : false,
+  profileImage: 'profileImage' in user ? user.profileImage : undefined,
+});
+
 export const AuthProvider = (props: {
-  children: ReactNode;
+  children: React.ReactNode;
 }): React.JSX.Element => {
   const [token, setToken] = useState<string | null>(() =>
     localStorage.getItem(STORAGE_KEY_TOKEN)
   );
   const [user, setUser] = useState<UserInfo | null>(() =>
-    loadFromStorage<UserInfo>(STORAGE_KEY_USER)
+    (() => {
+      const stored = loadFromStorage<User | UserInfo>(STORAGE_KEY_USER);
+      return stored ? normalizeAuthUser(stored) : null;
+    })()
   );
 
-  const setSession = (newToken: string, newUser: UserInfo) => {
+  const setSession = (newToken: string, newUser: User | UserInfo) => {
+    const normalized = normalizeAuthUser(newUser);
     setToken(newToken);
-    setUser(newUser);
+    setUser(normalized);
     localStorage.setItem(STORAGE_KEY_TOKEN, newToken);
-    localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(newUser));
+    localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(normalized));
   };
 
   const updateUser = (newUser: UserInfo) => {
