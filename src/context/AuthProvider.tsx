@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import type { ReactNode } from 'react';
 
 import type { User } from '../features/user/core/domain/models/User';
 import type { UserInfo } from '../features/user/core/domain/models/UserInfo';
@@ -24,7 +23,9 @@ const normalizeAuthUser = (user: User | UserInfo): UserInfo => ({
   profileImage: 'profileImage' in user ? user.profileImage : undefined,
 });
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = (props: {
+  children: React.ReactNode;
+}): React.JSX.Element => {
   const [token, setToken] = useState<string | null>(() =>
     localStorage.getItem(STORAGE_KEY_TOKEN)
   );
@@ -59,7 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{ token, user, setSession, updateUser, logout }}
     >
-      {children}
+      {props.children}
     </AuthContext.Provider>
   );
 };

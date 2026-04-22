@@ -4,14 +4,11 @@ import { useState } from 'react';
 interface LoginPasswordFieldProps {
   value: string;
   onChange: (value: string) => void;
-  autoComplete?: 'current-password' | 'new-password';
 }
 
-export const LoginPasswordField = ({
-  value,
-  onChange,
-  autoComplete = 'current-password',
-}: LoginPasswordFieldProps): React.JSX.Element => {
+export const LoginPasswordField = (
+  props: LoginPasswordFieldProps
+): React.JSX.Element => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -23,9 +20,9 @@ export const LoginPasswordField = ({
         <input
           type={showPassword ? 'text' : 'password'}
           placeholder="••••••••"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          autoComplete={autoComplete}
+          value={props.value}
+          onChange={(e) => props.onChange(e.target.value)}
+          autoComplete="current-password"
           className="w-full bg-[#12121a] border-2 border-[#1e1e2e] focus:border-green-500/70 focus:outline-none pl-3 pr-11 py-2.5 font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] transition-colors"
         />
         <button

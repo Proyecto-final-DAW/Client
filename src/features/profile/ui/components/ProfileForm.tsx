@@ -21,16 +21,10 @@ const inputClass =
   'w-full px-4 py-3 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 outline-none transition-colors focus:border-emerald-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
 const labelClass = 'block text-sm font-medium text-zinc-300 mb-2';
 
-export const ProfileForm = ({
-  profile,
-  onSubmit,
-  updating,
-  error,
-  success,
-}: ProfileFormProps) => {
+export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
   const { form, handleChange, handleSubmit } = useProfileForm({
-    profile,
-    onSubmit,
+    profile: props.profile,
+    onSubmit: props.onSubmit,
   });
 
   return (
@@ -58,7 +52,7 @@ export const ProfileForm = ({
       <div className="mb-4">
         <label className={labelClass}>Email</label>
         <p className="px-4 py-3 rounded-xl bg-zinc-800/50 text-zinc-500 text-sm">
-          {profile.email}
+          {props.profile.email}
         </p>
       </div>
 
@@ -163,9 +157,9 @@ export const ProfileForm = ({
       </div>
 
       <FormFeedback
-        error={error}
+        error={props.error}
         success={
-          success
+          props.success
             ? 'Perfil actualizado. Las calorias se han recalculado.'
             : null
         }
@@ -173,10 +167,10 @@ export const ProfileForm = ({
 
       <button
         type="submit"
-        disabled={updating}
+        disabled={props.updating}
         className="w-full rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-zinc-900 transition hover:bg-emerald-400 disabled:opacity-50"
       >
-        {updating ? 'Guardando...' : 'Guardar cambios'}
+        {props.updating ? 'Guardando...' : 'Guardar cambios'}
       </button>
     </form>
   );

@@ -1,25 +1,33 @@
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  CheckIcon,
-} from '@heroicons/react/24/outline';
-
+import type { MacrosPort } from '../../core/application/ports/MacrosPort';
 import type { OnboardingPort } from '../../core/application/ports/OnboardingPort';
+import type { StatsInitPort } from '../../core/application/ports/StatsInitPort';
 import type { OnboardingResponse } from '../../core/domain/models/OnboardingResponse';
 import { useOnboardingWizard } from '../hooks/useOnboardingWizard';
-import StepActivity from './StepActivity';
-import StepBody from './StepBody';
-import StepGoal from './StepGoal';
-import Stepper from './Stepper';
-import StepPersonal from './StepPersonal';
+import { StepActivity } from './StepActivity';
+import { StepBody } from './StepBody';
+import { StepGoal } from './StepGoal';
+import { StepLimitations } from './StepLimitations';
+import { Stepper } from './Stepper';
+import { StepPersonal } from './StepPersonal';
+import { StepTraining } from './StepTraining';
+import { WizardBackground } from './wizard/WizardBackground';
+import { WizardFrame } from './wizard/WizardFrame';
+import { WizardHeader } from './wizard/WizardHeader';
+import { WizardNavigation } from './wizard/WizardNavigation';
+import { WizardSubmitError } from './wizard/WizardSubmitError';
 
 interface OnboardingWizardProps {
+  userId: number;
   token: string;
   onboardingService: OnboardingPort;
+  statsInitService: StatsInitPort;
+  macrosService: MacrosPort;
   onComplete: (userData: OnboardingResponse['user']) => void;
 }
 
-export default function OnboardingWizard(props: OnboardingWizardProps) {
+export const OnboardingWizard = (
+  props: OnboardingWizardProps
+): React.JSX.Element => {
   const {
     currentStep,
     formData,
@@ -43,67 +51,35 @@ export default function OnboardingWizard(props: OnboardingWizardProps) {
         return <StepActivity {...stepProps} />;
       case 4:
         return <StepGoal {...stepProps} />;
+      case 5:
+        return <StepTraining {...stepProps} />;
+      case 6:
+        return <StepLimitations {...stepProps} />;
       default:
         return null;
     }
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
-      <div className="w-full max-w-lg">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold text-emerald-400">GymQuest</h1>
-          <p className="text-zinc-500 text-sm mt-1">
-            Configura tu perfil para personalizar tu experiencia
-          </p>
+    <div className="relative min-h-screen bg-[#0a0a0f] text-[#e4e4e7] overflow-hidden">
+      <WizardBackground />
+      <main className="relative z-10 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-8 min-h-screen">
+        <div className="w-full max-w-xl">
+          <WizardHeader />
+          <WizardFrame>
+            <Stepper currentStep={currentStep} totalSteps={totalSteps} />
+            <div>{renderStep()}</div>
+            <WizardSubmitError error={submitError} />
+            <WizardNavigation
+              currentStep={currentStep}
+              totalSteps={totalSteps}
+              isSubmitting={isSubmitting}
+              onPrev={handlePrev}
+              onNext={handleNext}
+            />
+          </WizardFrame>
         </div>
-
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8">
-          <Stepper currentStep={currentStep} totalSteps={totalSteps} />
-
-          <div className="min-h-[300px]">{renderStep()}</div>
-
-          {submitError && (
-            <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl">
-              <p className="text-red-400 text-sm">{submitError}</p>
-            </div>
-          )}
-
-          <div className="flex gap-3 mt-8">
-            {currentStep > 1 && (
-              <button
-                type="button"
-                onClick={handlePrev}
-                disabled={isSubmitting}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl border border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-zinc-200 transition-colors disabled:opacity-50"
-              >
-                <ArrowLeftIcon className="w-4 h-4" />
-                Anterior
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={handleNext}
-              disabled={isSubmitting}
-              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold transition-all bg-emerald-500 text-zinc-900 hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? (
-                'Guardando...'
-              ) : currentStep === totalSteps ? (
-                <>
-                  Finalizar
-                  <CheckIcon className="w-4 h-4" />
-                </>
-              ) : (
-                <>
-                  Siguiente
-                  <ArrowRightIcon className="w-4 h-4" />
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
   );
-}
+};

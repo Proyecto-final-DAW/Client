@@ -8,10 +8,9 @@ const SIZE_CLASS: Record<NonNullable<PixelCornersProps['size']>, string> = {
   md: 'w-3 h-3',
 };
 
-export const PixelCorners = ({
-  size = 'sm',
-  className = 'border-green-500/40',
-}: PixelCornersProps): React.JSX.Element => {
+export const PixelCorners = (props: PixelCornersProps): React.JSX.Element => {
+  const size = props.size ?? 'sm';
+  const className = props.className ?? 'border-green-500/40';
   const base = `absolute ${SIZE_CLASS[size]} ${className}`;
   return (
     <>
