@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { AuthProvider } from './context/AuthProvider';
+import { Dashboard } from './features/dashboard/ui/DashboardView';
 import { ExercisesView } from './features/exercises/ui/ExercisesView';
 import OnboardingView from './features/onboarding/ui/OnboardingView';
 import { ProfileView } from './features/profile/ui/ProfileView';
@@ -9,7 +10,6 @@ import { Login } from './features/user/ui/components/Login';
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 
-const Dashboard = () => <h1>Dashboard</h1>;
 const Rutinas = () => <h1>Rutinas</h1>;
 const Progreso = () => <h1>Progreso</h1>;
 const Dieta = () => <h1>Dieta</h1>;
@@ -33,7 +33,6 @@ export const App = (): React.JSX.Element => {
               <Route path="/diet" element={<Dieta />} />
               <Route path="/my-profile" element={<Perfil />} />
             </Route>
-            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<ProfileView />} />
           </Route>
         </Routes>
