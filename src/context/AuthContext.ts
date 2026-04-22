@@ -5,9 +5,9 @@ import type { UserInfo } from '../features/user/core/domain/models/UserInfo';
 
 export interface AuthContextType {
   token: string | null;
-  user: User | UserInfo | null;
+  user: UserInfo | null;
   setSession: (token: string, user: User | UserInfo) => void;
-  updateUser: (user: User | UserInfo) => void;
+  updateUser: (user: UserInfo) => void;
   logout: () => void;
 }
 

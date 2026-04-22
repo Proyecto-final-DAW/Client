@@ -3,10 +3,10 @@ import { LoginBackground } from './login-sections/LoginBackground';
 import { LoginEmailField } from './login-sections/LoginEmailField';
 import { LoginErrorAlert } from './login-sections/LoginErrorAlert';
 import { LoginFormCard } from './login-sections/LoginFormCard';
-import { LoginNav } from './login-sections/LoginNav';
 import { LoginPasswordField } from './login-sections/LoginPasswordField';
 import { LoginRegisterLink } from './login-sections/LoginRegisterLink';
 import { LoginTitle } from './login-sections/LoginTitle';
+import { Nav } from './shared/Nav';
 
 export const Login = (): React.JSX.Element => {
   const {
@@ -22,7 +22,7 @@ export const Login = (): React.JSX.Element => {
   return (
     <div className="relative min-h-screen bg-[#0a0a0f] text-[#e4e4e7] overflow-hidden">
       <LoginBackground />
-      <LoginNav backTo="/" />
+      <Nav backTo="/" />
       <main className="relative z-10 flex items-center justify-center px-4 sm:px-6 py-8 min-h-[calc(100vh-6rem)]">
         <div className="w-full max-w-sm">
           <LoginTitle />

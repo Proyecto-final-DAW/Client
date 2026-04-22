@@ -17,22 +17,33 @@ const loadFromStorage = <T,>(key: string): T | null => {
   }
 };
 
+const normalizeAuthUser = (user: User | UserInfo): UserInfo => ({
+  ...user,
+  onboarding_completed:
+    'onboarding_completed' in user ? user.onboarding_completed : false,
+  profileImage: 'profileImage' in user ? user.profileImage : undefined,
+});
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(() =>
     localStorage.getItem(STORAGE_KEY_TOKEN)
   );
-  const [user, setUser] = useState<User | UserInfo | null>(() =>
-    loadFromStorage<User | UserInfo>(STORAGE_KEY_USER)
+  const [user, setUser] = useState<UserInfo | null>(() =>
+    (() => {
+      const stored = loadFromStorage<User | UserInfo>(STORAGE_KEY_USER);
+      return stored ? normalizeAuthUser(stored) : null;
+    })()
   );
 
   const setSession = (newToken: string, newUser: User | UserInfo) => {
+    const normalized = normalizeAuthUser(newUser);
     setToken(newToken);
-    setUser(newUser);
+    setUser(normalized);
     localStorage.setItem(STORAGE_KEY_TOKEN, newToken);
-    localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(newUser));
+    localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(normalized));
   };
 
-  const updateUser = (newUser: User | UserInfo) => {
+  const updateUser = (newUser: UserInfo) => {
     setUser(newUser);
     localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(newUser));
   };
