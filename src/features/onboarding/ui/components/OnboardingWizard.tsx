@@ -16,6 +16,7 @@ import StepPersonal from './StepPersonal';
 import StepTraining from './StepTraining';
 
 interface OnboardingWizardProps {
+  userId: number;
   token: string;
   onboardingService: OnboardingPort;
   onComplete: (userData: OnboardingResponse['user']) => void;

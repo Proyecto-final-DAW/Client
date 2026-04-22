@@ -12,12 +12,14 @@ import { validateStep } from '../../core/domain/validators/OnboardingValidator';
 const TOTAL_STEPS = 6;
 
 interface UseOnboardingWizardProps {
+  userId: number;
   token: string;
   onboardingService: OnboardingPort;
   onComplete: (userData: OnboardingResponse['user']) => void;
 }
 
 export function useOnboardingWizard({
+  userId,
   token,
   onboardingService,
   onComplete,
@@ -69,6 +71,7 @@ export function useOnboardingWizard({
     try {
       const response = await onboardingService.submitOnboarding(
         formData,
+        userId,
         token
       );
       onComplete(response.user);

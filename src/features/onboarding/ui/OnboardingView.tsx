@@ -10,6 +10,7 @@ export default function OnboardingView() {
 
   return (
     <OnboardingWizard
+      userId={user!.id}
       token={token ?? ''}
       onboardingService={onboardingService}
       onComplete={(userData) => {
