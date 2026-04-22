@@ -13,41 +13,31 @@ interface NumericFieldProps {
   onChange: (value: string) => void;
 }
 
-export default function NumericField({
-  id,
-  label,
-  value,
-  placeholder,
-  step = '1',
-  min,
-  max,
-  error,
-  onChange,
-}: NumericFieldProps) {
+export const NumericField = (props: NumericFieldProps): React.JSX.Element => {
   return (
     <div>
       <label
-        htmlFor={id}
+        htmlFor={props.id}
         className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider"
       >
-        {label}
+        {props.label}
       </label>
       <input
-        id={id}
+        id={props.id}
         type="number"
-        step={step}
-        min={min}
-        max={max}
-        placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={`${inputBase} ${error ? 'border-red-500/70 focus:border-red-400' : 'border-[#1e1e2e] focus:border-green-500/70'}`}
+        step={props.step ?? '1'}
+        min={props.min}
+        max={props.max}
+        placeholder={props.placeholder}
+        value={props.value}
+        onChange={(e) => props.onChange(e.target.value)}
+        className={`${inputBase} ${props.error ? 'border-red-500/70 focus:border-red-400' : 'border-[#1e1e2e] focus:border-green-500/70'}`}
       />
-      {error && (
+      {props.error && (
         <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
-          ✕ {error}
+          ✕ {props.error}
         </p>
       )}
     </div>
   );
-}
+};

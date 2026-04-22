@@ -14,25 +14,25 @@ const stepLabels = [
   'LIMITES',
 ];
 
-export default function Stepper({ currentStep, totalSteps }: StepperProps) {
+export const Stepper = (props: StepperProps): React.JSX.Element => {
   return (
     <div className="w-full mb-6">
       <div className="flex justify-between items-center mb-3">
         <span className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] tracking-wider">
-          PASO {currentStep}/{totalSteps}
+          PASO {props.currentStep}/{props.totalSteps}
         </span>
         <span className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-green-400 tracking-wider">
-          {Math.round((currentStep / totalSteps) * 100)}%
+          {Math.round((props.currentStep / props.totalSteps) * 100)}%
         </span>
       </div>
 
       <div className="flex items-start">
-        {Array.from({ length: totalSteps }, (_, i) => {
+        {Array.from({ length: props.totalSteps }, (_, i) => {
           const step = i + 1;
-          const isCompleted = step < currentStep;
-          const isActive = step === currentStep;
-          const prevCompleted = step - 1 < currentStep;
-          const nextCompleted = step < currentStep;
+          const isCompleted = step < props.currentStep;
+          const isActive = step === props.currentStep;
+          const prevCompleted = step - 1 < props.currentStep;
+          const nextCompleted = step < props.currentStep;
 
           return (
             <div
@@ -62,7 +62,7 @@ export default function Stepper({ currentStep, totalSteps }: StepperProps) {
                 </div>
                 <div
                   className={`flex-1 h-0.5 transition-colors ${
-                    i === totalSteps - 1
+                    i === props.totalSteps - 1
                       ? 'bg-transparent'
                       : nextCompleted
                         ? 'bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.6)]'
@@ -87,4 +87,4 @@ export default function Stepper({ currentStep, totalSteps }: StepperProps) {
       </div>
     </div>
   );
-}
+};

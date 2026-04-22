@@ -12,31 +12,25 @@ interface ChoiceGroupProps {
   onChange: (field: keyof OnboardingFormData, value: string) => void;
 }
 
-export default function ChoiceGroup({
-  label,
-  field,
-  value,
-  choices,
-  error,
-  cols = 3,
-  onChange,
-}: ChoiceGroupProps) {
+export const ChoiceGroup = (props: ChoiceGroupProps): React.JSX.Element => {
   return (
     <div className="mb-4 last:mb-0">
       <label className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider">
-        {label}
+        {props.label}
       </label>
       <div
         className="grid gap-2"
-        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0,1fr))` }}
+        style={{
+          gridTemplateColumns: `repeat(${props.cols ?? 3}, minmax(0,1fr))`,
+        }}
       >
-        {choices.map((c) => {
-          const selected = value === c.value;
+        {props.choices.map((c) => {
+          const selected = props.value === c.value;
           return (
             <button
               key={c.value}
               type="button"
-              onClick={() => onChange(field, c.value)}
+              onClick={() => props.onChange(props.field, c.value)}
               className={`px-2 py-3 border-2 text-center transition-all duration-150 ${
                 selected
                   ? 'bg-green-500/10 border-green-500/70 shadow-[0_0_12px_rgba(34,197,94,0.25)]'
@@ -57,11 +51,11 @@ export default function ChoiceGroup({
           );
         })}
       </div>
-      {error && (
+      {props.error && (
         <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
-          ✕ {error}
+          ✕ {props.error}
         </p>
       )}
     </div>
   );
-}
+};

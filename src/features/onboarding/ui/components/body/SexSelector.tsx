@@ -13,11 +13,7 @@ interface SexSelectorProps {
   onChange: (value: Sex) => void;
 }
 
-export default function SexSelector({
-  value,
-  error,
-  onChange,
-}: SexSelectorProps) {
+export const SexSelector = (props: SexSelectorProps): React.JSX.Element => {
   return (
     <div>
       <label className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider">
@@ -28,12 +24,12 @@ export default function SexSelector({
       </p>
       <div className="grid grid-cols-2 gap-3">
         {sexOptions.map((option) => {
-          const isSelected = value === option.value;
+          const isSelected = props.value === option.value;
           return (
             <button
               key={option.value}
               type="button"
-              onClick={() => onChange(option.value)}
+              onClick={() => props.onChange(option.value)}
               className={`relative py-5 border-2 text-center font-['Press_Start_2P'] text-[10px] transition-all duration-150 ${
                 isSelected
                   ? 'bg-green-500/10 border-green-500/70 text-green-400 shadow-[0_0_16px_rgba(34,197,94,0.3)]'
@@ -49,11 +45,11 @@ export default function SexSelector({
           );
         })}
       </div>
-      {error && (
+      {props.error && (
         <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
-          ✕ {error}
+          ✕ {props.error}
         </p>
       )}
     </div>
   );
-}
+};

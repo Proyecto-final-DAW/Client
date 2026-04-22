@@ -2,7 +2,7 @@ import type {
   OnboardingFormData,
   FormErrors,
 } from '../../core/domain/models/OnboardingFormData';
-import ChoiceGroup, { type Choice } from './training/ChoiceGroup';
+import { ChoiceGroup, type Choice } from './training/ChoiceGroup';
 
 interface StepTrainingProps {
   data: OnboardingFormData;
@@ -28,11 +28,7 @@ const daysChoices: Choice[] = [
   { value: '6+', label: '6+' },
 ];
 
-export default function StepTraining({
-  data,
-  errors,
-  onChange,
-}: StepTrainingProps) {
+export const StepTraining = (props: StepTrainingProps): React.JSX.Element => {
   return (
     <div>
       <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
@@ -45,30 +41,30 @@ export default function StepTraining({
       <ChoiceGroup
         label="EXPERIENCIA"
         field="experienceLevel"
-        value={data.experienceLevel}
+        value={props.data.experienceLevel}
         choices={experienceChoices}
-        error={errors.experienceLevel}
+        error={props.errors.experienceLevel}
         cols={3}
-        onChange={onChange}
+        onChange={props.onChange}
       />
       <ChoiceGroup
         label="EQUIPAMIENTO"
         field="equipment"
-        value={data.equipment}
+        value={props.data.equipment}
         choices={equipmentChoices}
-        error={errors.equipment}
+        error={props.errors.equipment}
         cols={3}
-        onChange={onChange}
+        onChange={props.onChange}
       />
       <ChoiceGroup
         label="DIAS POR SEMANA"
         field="daysPerWeek"
-        value={data.daysPerWeek}
+        value={props.data.daysPerWeek}
         choices={daysChoices}
-        error={errors.daysPerWeek}
+        error={props.errors.daysPerWeek}
         cols={3}
-        onChange={onChange}
+        onChange={props.onChange}
       />
     </div>
   );
-}
+};

@@ -29,21 +29,26 @@ function formatDate(dateStr: string): string {
   });
 }
 
-export const AccountSummary = ({
-  createdAt,
-  totalSessions,
-  bestStreak,
-  streak,
-}: AccountSummaryProps) => {
+export const AccountSummary = (
+  props: AccountSummaryProps
+): React.JSX.Element => {
   const items: SummaryItem[] = [
     {
       label: 'Fecha de registro',
       icon: CalendarDaysIcon,
-      value: formatDate(createdAt),
+      value: formatDate(props.createdAt),
     },
-    { label: 'Sesiones totales', icon: StarIcon, value: String(totalSessions) },
-    { label: 'Racha actual', icon: FireIcon, value: `${streak} dias` },
-    { label: 'Racha maxima', icon: TrophyIcon, value: `${bestStreak} dias` },
+    {
+      label: 'Sesiones totales',
+      icon: StarIcon,
+      value: String(props.totalSessions),
+    },
+    { label: 'Racha actual', icon: FireIcon, value: `${props.streak} dias` },
+    {
+      label: 'Racha maxima',
+      icon: TrophyIcon,
+      value: `${props.bestStreak} dias`,
+    },
   ];
 
   return (

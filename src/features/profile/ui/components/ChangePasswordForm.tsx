@@ -11,12 +11,9 @@ interface ChangePasswordFormProps {
   success: boolean;
 }
 
-export const ChangePasswordForm = ({
-  onSubmit,
-  loading,
-  error,
-  success,
-}: ChangePasswordFormProps) => {
+export const ChangePasswordForm = (
+  props: ChangePasswordFormProps
+): React.JSX.Element => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -36,7 +33,7 @@ export const ChangePasswordForm = ({
       return;
     }
 
-    await onSubmit({ currentPassword, newPassword });
+    await props.onSubmit({ currentPassword, newPassword });
   };
 
   return (
@@ -72,18 +69,20 @@ export const ChangePasswordForm = ({
       />
 
       <FormFeedback
-        error={localError || error}
+        error={localError || props.error}
         success={
-          success ? 'Contrasena actualizada. Redirigiendo al login...' : null
+          props.success
+            ? 'Contrasena actualizada. Redirigiendo al login...'
+            : null
         }
       />
 
       <button
         type="submit"
-        disabled={loading}
+        disabled={props.loading}
         className="w-full rounded-xl border border-red-500/30 bg-red-500/10 px-6 py-3 text-sm font-semibold text-red-400 transition hover:bg-red-500/20 disabled:opacity-50"
       >
-        {loading ? 'Cambiando...' : 'Cambiar contrasena'}
+        {props.loading ? 'Cambiando...' : 'Cambiar contrasena'}
       </button>
     </form>
   );

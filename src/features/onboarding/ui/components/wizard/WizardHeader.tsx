@@ -1,4 +1,4 @@
-export default function WizardHeader() {
+export const WizardHeader = (): React.JSX.Element => {
   return (
     <div className="text-center mb-4 sm:mb-5">
       <h1 className="font-['Press_Start_2P'] text-base sm:text-xl md:text-2xl text-white leading-relaxed [text-shadow:3px_3px_0_#000,-1px_-1px_0_#000,1px_-1px_0_#000,-1px_1px_0_#000,0_0_22px_rgba(0,0,0,1)]">
@@ -9,4 +9,4 @@ export default function WizardHeader() {
       </h1>
     </div>
   );
-}
+};

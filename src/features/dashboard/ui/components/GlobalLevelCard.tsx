@@ -4,7 +4,7 @@ type Props = {
   globalLevel: number;
 };
 
-export const GlobalLevelCard = ({ globalLevel }: Props): React.JSX.Element => {
+export const GlobalLevelCard = (props: Props): React.JSX.Element => {
   return (
     <article className="mr-2 ml-2 rounded-2xl border border-emerald-500 bg-zinc-900 p-6 shadow-sm">
       <div>
@@ -15,7 +15,7 @@ export const GlobalLevelCard = ({ globalLevel }: Props): React.JSX.Element => {
 
           <div>
             <p className="text-xl font-bold text-zinc-100">
-              {globalLevel.toFixed(1)}
+              {props.globalLevel.toFixed(1)}
             </p>
             <p className="text-sm text-zinc-100">Media de tus stats</p>
           </div>

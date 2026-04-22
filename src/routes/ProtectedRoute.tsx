@@ -2,7 +2,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../context/hooks/useAuth';
 
-export const ProtectedRoute = () => {
+export const ProtectedRoute = (): React.JSX.Element => {
   const { token, user } = useAuth();
   const location = useLocation();
 
