@@ -2,7 +2,7 @@ import type { UserInfoRepository } from '../../../application/ports/UserInfoRepo
 import type { LoginResponse } from '../../../domain/models/UserInfo';
 
 export class MockUserInfoRepository implements UserInfoRepository {
-  async login(email: string, password: string): Promise<LoginResponse> {
+  async login(email: string, _password: string): Promise<LoginResponse> {
     await new Promise((resolve) => setTimeout(resolve, 100));
     return {
       message: 'Mock login successful',
@@ -11,7 +11,6 @@ export class MockUserInfoRepository implements UserInfoRepository {
         id: 1,
         name: 'Mock User',
         email,
-        password,
         onboarding_completed: false,
       },
     };

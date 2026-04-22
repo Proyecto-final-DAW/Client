@@ -9,6 +9,9 @@ interface StepPersonalProps {
   onChange: (field: keyof OnboardingFormData, value: string) => void;
 }
 
+const inputBase =
+  'w-full bg-[#12121a] border-2 px-3 py-2.5 font-["Press_Start_2P"] text-[9px] sm:text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] focus:outline-none transition-colors [color-scheme:dark]';
+
 export default function StepPersonal({
   data,
   errors,
@@ -16,19 +19,19 @@ export default function StepPersonal({
 }: StepPersonalProps) {
   return (
     <div>
-      <h2 className="text-2xl font-bold text-zinc-100 mb-2">
-        ¿Cómo te llamas?
+      <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
+        ¿COMO TE <span className="text-green-400">LLAMAS?</span>
       </h2>
-      <p className="text-zinc-400 text-sm mb-8">
-        Empecemos por conocerte un poco.
+      <p className="text-center font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
+        Empecemos por conocerte.
       </p>
 
       <div className="mb-6">
         <label
           htmlFor="name"
-          className="block text-sm font-medium text-zinc-300 mb-2"
+          className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider"
         >
-          Nombre
+          NOMBRE
         </label>
         <input
           id="name"
@@ -36,29 +39,33 @@ export default function StepPersonal({
           placeholder="Tu nombre"
           value={data.name}
           onChange={(e) => onChange('name', e.target.value)}
-          className={`w-full px-4 py-3 rounded-xl bg-zinc-800 border text-zinc-100 placeholder-zinc-500 outline-none transition-colors ${errors.name ? 'border-red-500 focus:border-red-400' : 'border-zinc-700 focus:border-emerald-500'}`}
+          className={`${inputBase} ${errors.name ? 'border-red-500/70 focus:border-red-400' : 'border-[#1e1e2e] focus:border-green-500/70'}`}
         />
         {errors.name && (
-          <p className="text-red-400 text-sm mt-1.5">{errors.name}</p>
+          <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
+            ✕ {errors.name}
+          </p>
         )}
       </div>
 
-      <div className="mb-6">
+      <div className="mb-2">
         <label
           htmlFor="birthDate"
-          className="block text-sm font-medium text-zinc-300 mb-2"
+          className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider"
         >
-          Fecha de nacimiento
+          FECHA DE NACIMIENTO
         </label>
         <input
           id="birthDate"
           type="date"
           value={data.birthDate}
           onChange={(e) => onChange('birthDate', e.target.value)}
-          className={`w-full px-4 py-3 rounded-xl bg-zinc-800 border text-zinc-100 outline-none transition-colors [color-scheme:dark] ${errors.birthDate ? 'border-red-500 focus:border-red-400' : 'border-zinc-700 focus:border-emerald-500'}`}
+          className={`${inputBase} ${errors.birthDate ? 'border-red-500/70 focus:border-red-400' : 'border-[#1e1e2e] focus:border-green-500/70'}`}
         />
         {errors.birthDate && (
-          <p className="text-red-400 text-sm mt-1.5">{errors.birthDate}</p>
+          <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
+            ✕ {errors.birthDate}
+          </p>
         )}
       </div>
     </div>

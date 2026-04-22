@@ -4,6 +4,7 @@ import type { OnboardingResponse } from '../../domain/models/OnboardingResponse'
 export interface OnboardingPort {
   submitOnboarding(
     data: OnboardingFormData,
+    userId: number,
     token: string
   ): Promise<OnboardingResponse>;
 }
