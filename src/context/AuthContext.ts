@@ -1,11 +1,12 @@
 import { createContext } from 'react';
 
+import type { User } from '../features/user/core/domain/models/User';
 import type { UserInfo } from '../features/user/core/domain/models/UserInfo';
 
 export interface AuthContextType {
   token: string | null;
   user: UserInfo | null;
-  setSession: (token: string, user: UserInfo) => void;
+  setSession: (token: string, user: User | UserInfo) => void;
   updateUser: (user: UserInfo) => void;
   logout: () => void;
 }

@@ -23,7 +23,7 @@ export const CtaSection = (): React.JSX.Element => {
             Únete gratis y empieza a entrenar hoy.
           </p>
           <Link
-            to="/login?mode=register"
+            to="/register"
             className="inline-block font-['Press_Start_2P'] text-[10px] sm:text-xs bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-8 sm:px-10 py-3.5 sm:py-4 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_16px_rgba(34,197,94,0.35)]"
           >
             ▶ EMPEZAR AVENTURA
