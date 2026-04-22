@@ -10,7 +10,7 @@ export const LoginNav = (props: LoginNavProps): React.JSX.Element => {
       <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14 h-24 flex items-center justify-between">
         <Link to="/">
           <img
-            src="/images/Logo.png"
+            src="/images/Logo.webp"
             alt="GymQuest"
             className="h-28 w-auto -my-6 drop-shadow-lg object-contain"
           />
