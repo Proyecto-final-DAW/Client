@@ -3,18 +3,18 @@ import type { OnboardingPort } from '../../core/application/ports/OnboardingPort
 import type { StatsInitPort } from '../../core/application/ports/StatsInitPort';
 import type { OnboardingResponse } from '../../core/domain/models/OnboardingResponse';
 import { useOnboardingWizard } from '../hooks/useOnboardingWizard';
-import StepActivity from './StepActivity';
-import StepBody from './StepBody';
-import StepGoal from './StepGoal';
-import StepLimitations from './StepLimitations';
-import Stepper from './Stepper';
-import StepPersonal from './StepPersonal';
-import StepTraining from './StepTraining';
-import WizardBackground from './wizard/WizardBackground';
-import WizardFrame from './wizard/WizardFrame';
-import WizardHeader from './wizard/WizardHeader';
-import WizardNavigation from './wizard/WizardNavigation';
-import WizardSubmitError from './wizard/WizardSubmitError';
+import { StepActivity } from './StepActivity';
+import { StepBody } from './StepBody';
+import { StepGoal } from './StepGoal';
+import { StepLimitations } from './StepLimitations';
+import { Stepper } from './Stepper';
+import { StepPersonal } from './StepPersonal';
+import { StepTraining } from './StepTraining';
+import { WizardBackground } from './wizard/WizardBackground';
+import { WizardFrame } from './wizard/WizardFrame';
+import { WizardHeader } from './wizard/WizardHeader';
+import { WizardNavigation } from './wizard/WizardNavigation';
+import { WizardSubmitError } from './wizard/WizardSubmitError';
 
 interface OnboardingWizardProps {
   userId: number;
@@ -25,7 +25,9 @@ interface OnboardingWizardProps {
   onComplete: (userData: OnboardingResponse['user']) => void;
 }
 
-export default function OnboardingWizard(props: OnboardingWizardProps) {
+export const OnboardingWizard = (
+  props: OnboardingWizardProps
+): React.JSX.Element => {
   const {
     currentStep,
     formData,
@@ -80,4 +82,4 @@ export default function OnboardingWizard(props: OnboardingWizardProps) {
       </main>
     </div>
   );
-}
+};

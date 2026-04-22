@@ -1,4 +1,4 @@
-export default function WizardBackground() {
+export const WizardBackground = (): React.JSX.Element => {
   return (
     <>
       <div
@@ -20,4 +20,4 @@ export default function WizardBackground() {
       />
     </>
   );
-}
+};

@@ -1,7 +1,7 @@
 import { StatsPanel } from './components/StatsPanel';
 import { useStats } from './hooks/useStats';
 
-export const StatsPreview = () => {
+export const StatsPreview = (): React.JSX.Element => {
   const { stats, loading, error } = useStats();
 
   return (

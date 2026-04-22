@@ -12,11 +12,7 @@ interface StepPersonalProps {
 const inputBase =
   'w-full bg-[#12121a] border-2 px-3 py-2.5 font-["Press_Start_2P"] text-[9px] sm:text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] focus:outline-none transition-colors [color-scheme:dark]';
 
-export default function StepPersonal({
-  data,
-  errors,
-  onChange,
-}: StepPersonalProps) {
+export const StepPersonal = (props: StepPersonalProps): React.JSX.Element => {
   return (
     <div>
       <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
@@ -37,13 +33,13 @@ export default function StepPersonal({
           id="name"
           type="text"
           placeholder="Tu nombre"
-          value={data.name}
-          onChange={(e) => onChange('name', e.target.value)}
-          className={`${inputBase} ${errors.name ? 'border-red-500/70 focus:border-red-400' : 'border-[#1e1e2e] focus:border-green-500/70'}`}
+          value={props.data.name}
+          onChange={(e) => props.onChange('name', e.target.value)}
+          className={`${inputBase} ${props.errors.name ? 'border-red-500/70 focus:border-red-400' : 'border-[#1e1e2e] focus:border-green-500/70'}`}
         />
-        {errors.name && (
+        {props.errors.name && (
           <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
-            ✕ {errors.name}
+            ✕ {props.errors.name}
           </p>
         )}
       </div>
@@ -58,16 +54,16 @@ export default function StepPersonal({
         <input
           id="birthDate"
           type="date"
-          value={data.birthDate}
-          onChange={(e) => onChange('birthDate', e.target.value)}
-          className={`${inputBase} ${errors.birthDate ? 'border-red-500/70 focus:border-red-400' : 'border-[#1e1e2e] focus:border-green-500/70'}`}
+          value={props.data.birthDate}
+          onChange={(e) => props.onChange('birthDate', e.target.value)}
+          className={`${inputBase} ${props.errors.birthDate ? 'border-red-500/70 focus:border-red-400' : 'border-[#1e1e2e] focus:border-green-500/70'}`}
         />
-        {errors.birthDate && (
+        {props.errors.birthDate && (
           <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
-            ✕ {errors.birthDate}
+            ✕ {props.errors.birthDate}
           </p>
         )}
       </div>
     </div>
   );
-}
+};

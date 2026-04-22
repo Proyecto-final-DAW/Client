@@ -3,16 +3,16 @@ interface FormFeedbackProps {
   success?: string | null;
 }
 
-export const FormFeedback = ({ error, success }: FormFeedbackProps) => (
+export const FormFeedback = (props: FormFeedbackProps): React.JSX.Element => (
   <>
-    {error && (
+    {props.error && (
       <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 p-3">
-        <p className="text-sm text-red-400">{error}</p>
+        <p className="text-sm text-red-400">{props.error}</p>
       </div>
     )}
-    {success && (
+    {props.success && (
       <div className="mb-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3">
-        <p className="text-sm text-emerald-400">{success}</p>
+        <p className="text-sm text-emerald-400">{props.success}</p>
       </div>
     )}
   </>

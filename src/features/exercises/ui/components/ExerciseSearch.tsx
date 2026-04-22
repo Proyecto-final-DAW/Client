@@ -1,7 +1,7 @@
 import { MUSCLE_OPTIONS, useExerciseSearch } from '../hooks/useExerciseSearch';
 import { ExerciseCard } from './ExerciseCard';
 
-export const ExerciseSearch = () => {
+export const ExerciseSearch = (): React.JSX.Element => {
   const {
     search,
     setSearch,

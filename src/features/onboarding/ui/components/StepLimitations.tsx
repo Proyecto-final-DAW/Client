@@ -3,7 +3,7 @@ import type {
   FormErrors,
   Injury,
 } from '../../core/domain/models/OnboardingFormData';
-import InjuryCard, { type InjuryOption } from './limitations/InjuryCard';
+import { InjuryCard, type InjuryOption } from './limitations/InjuryCard';
 
 interface StepLimitationsProps {
   data: OnboardingFormData;
@@ -44,12 +44,10 @@ const injuryOptions: InjuryOption[] = [
   },
 ];
 
-export default function StepLimitations({
-  data,
-  errors,
-  onChange,
-}: StepLimitationsProps) {
-  const selected = data.injuries ?? [];
+export const StepLimitations = (
+  props: StepLimitationsProps
+): React.JSX.Element => {
+  const selected = props.data.injuries ?? [];
 
   const toggle = (value: Injury) => {
     let next: Injury[];
@@ -60,7 +58,7 @@ export default function StepLimitations({
     } else {
       next = [...selected.filter((v) => v !== 'NONE'), value];
     }
-    onChange('injuries', next);
+    props.onChange('injuries', next);
   };
 
   return (
@@ -82,11 +80,11 @@ export default function StepLimitations({
           />
         ))}
       </div>
-      {errors.injuries && (
+      {props.errors.injuries && (
         <p className="font-['VT323'] text-base text-red-400 mt-3 tracking-wide leading-none">
-          ✕ {errors.injuries}
+          ✕ {props.errors.injuries}
         </p>
       )}
     </div>
   );
-}
+};

@@ -2,9 +2,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../../context/hooks/useAuth';
 import { macrosService, onboardingService, statsInitService } from './adapter';
-import OnboardingWizard from './components/OnboardingWizard';
+import { OnboardingWizard } from './components/OnboardingWizard';
 
-export default function OnboardingView() {
+export const OnboardingView = (): React.JSX.Element => {
   const { token, user, updateUser } = useAuth();
   const navigate = useNavigate();
 
@@ -21,4 +21,4 @@ export default function OnboardingView() {
       }}
     />
   );
-}
+};

@@ -345,47 +345,47 @@ const STAR = [
   '................',
 ];
 
-export const SwordIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(SWORD, color, accent ?? '#8b5a2b', p);
+export const SwordIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(SWORD, props.color, props.accent ?? '#8b5a2b', props);
 
-export const ShieldIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(SHIELD, color, accent, p);
+export const ShieldIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(SHIELD, props.color, props.accent, props);
 
-export const PixelHeartIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(HEART, color, accent ?? '#ffffff', p);
+export const PixelHeartIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(HEART, props.color, props.accent ?? '#ffffff', props);
 
-export const PixelBoltIcon = ({ color, ...p }: PixelIconProps) =>
-  renderGrid(BOLT, color, undefined, p);
+export const PixelBoltIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(BOLT, props.color, undefined, props);
 
-export const PixelFlameIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(FLAME, color, accent ?? '#fde68a', p);
+export const PixelFlameIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(FLAME, props.color, props.accent ?? '#fde68a', props);
 
-export const PixelStarIcon = ({ color, ...p }: PixelIconProps) =>
-  renderGrid(STAR, color, undefined, p);
+export const PixelStarIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(STAR, props.color, undefined, props);
 
-export const ScrollIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(SCROLL, color, accent, p);
+export const ScrollIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(SCROLL, props.color, props.accent, props);
 
-export const ChartUpIcon = ({ color, ...p }: PixelIconProps) =>
-  renderGrid(CHART_UP, color, undefined, p);
+export const ChartUpIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(CHART_UP, props.color, undefined, props);
 
-export const TimerIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(TIMER, color, accent, p);
+export const TimerIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(TIMER, props.color, props.accent, props);
 
-export const AppleIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(APPLE, color, accent, p);
+export const AppleIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(APPLE, props.color, props.accent, props);
 
-export const GemIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(GEM, color, accent, p);
+export const GemIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(GEM, props.color, props.accent, props);
 
-export const BookIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(BOOK, color, accent, p);
+export const BookIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(BOOK, props.color, props.accent, props);
 
-export const UserPlusIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(USER_PLUS, color, accent ?? color, p);
+export const UserPlusIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(USER_PLUS, props.color, props.accent ?? props.color, props);
 
-export const PlayIcon = ({ color, ...p }: PixelIconProps) =>
-  renderGrid(PLAY, color, undefined, p);
+export const PlayIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(PLAY, props.color, undefined, props);
 
 const MAP = [
   '................',
@@ -501,20 +501,20 @@ const HELMET = [
   '................',
 ];
 
-export const MapIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(MAP, color, accent ?? '#7c2d12', p);
+export const MapIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(MAP, props.color, props.accent ?? '#7c2d12', props);
 
-export const HourglassIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(HOURGLASS, color, accent, p);
+export const HourglassIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(HOURGLASS, props.color, props.accent, props);
 
-export const TrophyIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(TROPHY, color, accent, p);
+export const TrophyIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(TROPHY, props.color, props.accent, props);
 
-export const PotionIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(POTION, color, accent ?? '#ef4444', p);
+export const PotionIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(POTION, props.color, props.accent ?? '#ef4444', props);
 
-export const ChestIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(CHEST, color, accent ?? '#fde68a', p);
+export const ChestIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(CHEST, props.color, props.accent ?? '#fde68a', props);
 
-export const HelmetIcon = ({ color, accent, ...p }: PixelIconProps) =>
-  renderGrid(HELMET, color, accent, p);
+export const HelmetIcon = (props: PixelIconProps): React.JSX.Element =>
+  renderGrid(HELMET, props.color, props.accent, props);

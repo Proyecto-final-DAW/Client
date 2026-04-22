@@ -8,22 +8,20 @@ interface StatsPanelProps {
   error?: string | null;
 }
 
-export const StatsPanel = ({
-  stats,
-  loading = false,
-  error = null,
-}: StatsPanelProps) => {
-  if (loading) return <StatsPanelSkeleton />;
+export const StatsPanel = (
+  props: StatsPanelProps
+): React.JSX.Element | null => {
+  if (props.loading) return <StatsPanelSkeleton />;
 
-  if (error) {
+  if (props.error) {
     return (
       <div className="rounded-xl border border-destructive/50 bg-card p-5">
-        <p className="text-sm text-destructive-foreground">{error}</p>
+        <p className="text-sm text-destructive-foreground">{props.error}</p>
       </div>
     );
   }
 
-  if (!stats || stats.length === 0) return null;
+  if (!props.stats || props.stats.length === 0) return null;
 
   return (
     <div className="rounded-xl border border-border bg-card p-5">
@@ -31,7 +29,7 @@ export const StatsPanel = ({
         Stats del Personaje
       </h3>
       <div className="flex flex-col gap-4">
-        {stats.map((pilar) => (
+        {props.stats.map((pilar) => (
           <StatBar key={pilar.name} pilar={pilar} />
         ))}
       </div>

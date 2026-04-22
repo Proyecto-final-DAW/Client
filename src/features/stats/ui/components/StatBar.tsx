@@ -4,10 +4,10 @@ interface StatBarProps {
   pilar: StatPilar;
 }
 
-export const StatBar = ({ pilar }: StatBarProps) => {
-  const percentage = (pilar.value / pilar.max) * 100;
-  const color = `var(${pilar.colorVar})`;
-  const Icon = pilar.icon;
+export const StatBar = (props: StatBarProps): React.JSX.Element => {
+  const percentage = (props.pilar.value / props.pilar.max) * 100;
+  const color = `var(${props.pilar.colorVar})`;
+  const Icon = props.pilar.icon;
 
   return (
     <div className="flex items-center gap-3">
@@ -23,12 +23,12 @@ export const StatBar = ({ pilar }: StatBarProps) => {
       <div className="min-w-0 flex-1">
         <div className="mb-1.5 flex items-baseline justify-between">
           <span className="text-sm font-bold text-foreground">
-            {pilar.name}
+            {props.pilar.name}
           </span>
           <span className="font-mono text-sm font-bold" style={{ color }}>
-            {pilar.value}
+            {props.pilar.value}
             <span className="font-normal text-muted-foreground">
-              /{pilar.max}
+              /{props.pilar.max}
             </span>
           </span>
         </div>

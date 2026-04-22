@@ -1,5 +1,5 @@
 import type { SelectableOption } from '../../core/domain/models/SelectableOption';
-import SelectableCard from './selectable/SelectableCard';
+import { SelectableCard } from './selectable/SelectableCard';
 
 interface SelectableCardGroupProps {
   options: SelectableOption[];
@@ -8,29 +8,26 @@ interface SelectableCardGroupProps {
   error?: string;
 }
 
-export default function SelectableCardGroup({
-  options,
-  selected,
-  onSelect,
-  error,
-}: SelectableCardGroupProps) {
+export const SelectableCardGroup = (
+  props: SelectableCardGroupProps
+): React.JSX.Element => {
   return (
     <div>
       <div className="flex flex-col gap-3">
-        {options.map((option) => (
+        {props.options.map((option) => (
           <SelectableCard
             key={option.value}
             option={option}
-            isSelected={selected === option.value}
-            onSelect={onSelect}
+            isSelected={props.selected === option.value}
+            onSelect={props.onSelect}
           />
         ))}
       </div>
-      {error && (
+      {props.error && (
         <p className="font-['VT323'] text-base text-red-400 mt-3 tracking-wide leading-none">
-          ✕ {error}
+          ✕ {props.error}
         </p>
       )}
     </div>
   );
-}
+};
