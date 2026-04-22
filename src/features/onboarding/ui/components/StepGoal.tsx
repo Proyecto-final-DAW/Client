@@ -44,14 +44,14 @@ const goalOptions: GoalOption[] = [
   },
 ];
 
-export default function StepGoal({ data, errors, onChange }: StepGoalProps) {
-  const selected = data.goals ?? [];
+export const StepGoal = (props: StepGoalProps): React.JSX.Element => {
+  const selected = props.data.goals ?? [];
 
   const toggle = (value: Goal) => {
     const next = selected.includes(value)
       ? selected.filter((g) => g !== value)
       : [...selected, value];
-    onChange('goals', next);
+    props.onChange('goals', next);
   };
 
   return (
@@ -102,11 +102,11 @@ export default function StepGoal({ data, errors, onChange }: StepGoalProps) {
           );
         })}
       </div>
-      {errors.goals && (
+      {props.errors.goals && (
         <p className="font-['VT323'] text-base text-red-400 mt-3 tracking-wide leading-none">
-          ✕ {errors.goals}
+          ✕ {props.errors.goals}
         </p>
       )}
     </div>
   );
-}
+};

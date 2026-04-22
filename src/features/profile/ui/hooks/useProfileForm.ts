@@ -73,9 +73,9 @@ interface UseProfileFormParams {
   onSubmit: (data: ProfileUpdateData) => Promise<void>;
 }
 
-export const useProfileForm = ({ profile, onSubmit }: UseProfileFormParams) => {
+export const useProfileForm = (props: UseProfileFormParams) => {
   const [form, setForm] = useState<ProfileFormState>(() =>
-    toFormState(profile)
+    toFormState(props.profile)
   );
 
   const handleChange = (field: keyof ProfileFormState, value: string) => {
@@ -84,9 +84,9 @@ export const useProfileForm = ({ profile, onSubmit }: UseProfileFormParams) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data = buildUpdatePayload(form, profile);
+    const data = buildUpdatePayload(form, props.profile);
     if (Object.keys(data).length > 0) {
-      await onSubmit(data);
+      await props.onSubmit(data);
     }
   };
 

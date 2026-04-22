@@ -5,19 +5,15 @@ import { StreakCard } from './StreakCard';
 
 type Props = Cards;
 
-export const DashboardCards = ({
-  streak,
-  lastWorkoutDaysAgo,
-  stats,
-}: Props): React.JSX.Element => {
+export const DashboardCards = (props: Props): React.JSX.Element => {
   const globalLevel =
-    Object.values(stats).reduce((acc, val) => acc + val, 0) /
-    Object.values(stats).length;
+    Object.values(props.stats).reduce((acc, val) => acc + val, 0) /
+    Object.values(props.stats).length;
 
   return (
     <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-      <StreakCard streak={streak} />
-      <LastWorkoutCard lastWorkoutDaysAgo={lastWorkoutDaysAgo} />
+      <StreakCard streak={props.streak} />
+      <LastWorkoutCard lastWorkoutDaysAgo={props.lastWorkoutDaysAgo} />
       <GlobalLevelCard globalLevel={globalLevel} />
     </section>
   );

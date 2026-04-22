@@ -3,7 +3,7 @@ import type {
   FormErrors,
 } from '../../core/domain/models/OnboardingFormData';
 import type { SelectableOption } from '../../core/domain/models/SelectableOption';
-import SelectableCardGroup from './SelectableCardGroup';
+import { SelectableCardGroup } from './SelectableCardGroup';
 
 interface StepActivityProps {
   data: OnboardingFormData;
@@ -38,11 +38,7 @@ const activityOptions: SelectableOption[] = [
   },
 ];
 
-export default function StepActivity({
-  data,
-  errors,
-  onChange,
-}: StepActivityProps) {
+export const StepActivity = (props: StepActivityProps): React.JSX.Element => {
   return (
     <div>
       <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
@@ -54,10 +50,10 @@ export default function StepActivity({
 
       <SelectableCardGroup
         options={activityOptions}
-        selected={data.activityLevel ?? null}
-        onSelect={(value) => onChange('activityLevel', value)}
-        error={errors.activityLevel}
+        selected={props.data.activityLevel ?? null}
+        onSelect={(value) => props.onChange('activityLevel', value)}
+        error={props.errors.activityLevel}
       />
     </div>
   );
-}
+};

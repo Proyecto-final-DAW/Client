@@ -16,7 +16,9 @@ const loadFromStorage = <T,>(key: string): T | null => {
   }
 };
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = (props: {
+  children: ReactNode;
+}): React.JSX.Element => {
   const [token, setToken] = useState<string | null>(() =>
     localStorage.getItem(STORAGE_KEY_TOKEN)
   );
@@ -47,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{ token, user, setSession, updateUser, logout }}
     >
-      {children}
+      {props.children}
     </AuthContext.Provider>
   );
 };
