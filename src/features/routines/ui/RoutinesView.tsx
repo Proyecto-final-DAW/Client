@@ -7,7 +7,7 @@ import { RoutinesHeader } from './components/RoutinesHeader';
 import { useRoutineExercises } from './hooks/useRoutineExercises';
 import { useRoutines } from './hooks/useRoutines';
 
-export const RoutinesView = (): React.JSX.Element | null => {
+export const RoutinesView = (): React.JSX.Element => {
   const {
     routines,
     selectedRoutine,
@@ -51,7 +51,6 @@ export const RoutinesView = (): React.JSX.Element | null => {
 
           <RoutineDetail
             routine={selectedRoutine}
-            selectedRoutineId={selectedRoutineId}
             onAddExercise={addExercise}
             onRemoveExercise={removeExercise}
           />

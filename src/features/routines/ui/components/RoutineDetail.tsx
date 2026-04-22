@@ -4,17 +4,16 @@ import { ExerciseRow } from './ExerciseRow';
 
 type RoutineDetailProps = {
   routine: Routine | null;
-  selectedRoutineId: string;
   onAddExercise: (exerciseId: string) => void | Promise<void>;
   onRemoveExercise: (exerciseId: string) => void | Promise<void>;
 };
 
 export const RoutineDetail = ({
   routine,
-  selectedRoutineId,
   onAddExercise,
   onRemoveExercise,
 }: RoutineDetailProps) => {
+  const routineId = routine?.id;
   return (
     <main className="space-y-6">
       <section className="rounded-2xl border border-gray-800 bg-gray-900/80 p-5 shadow-sm">
@@ -52,7 +51,7 @@ export const RoutineDetail = ({
         <div className="mb-5 flex items-center gap-3 rounded-2xl border border-gray-700 bg-gray-950 px-4 py-3">
           <ExerciseSearch
             onSelectExercise={(exercise) => {
-              if (!selectedRoutineId) return;
+              if (!routineId) return;
               void onAddExercise(exercise.id);
             }}
           />

@@ -27,8 +27,10 @@ export const ExerciseCard = ({ exercise, onSelect }: ExerciseCardProps) => {
 
   return (
     <div
-      onClick={() => onSelect?.(exercise)}
-      className="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden flex flex-col hover:border-blue-500 transition-colors duration-200"
+      onClick={onSelect ? () => onSelect(exercise) : undefined}
+      className={`bg-gray-800 border border-gray-700 rounded-xl overflow-hidden flex flex-col transition-colors duration-200 ${
+        onSelect ? 'hover:border-blue-500 cursor-pointer' : ''
+      }`}
     >
       <img
         src={imgSrc}

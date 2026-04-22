@@ -9,17 +9,15 @@ import { RoutinesFromDTO } from './mappers/RoutinesFromDTO';
 
 const ROUTINES_URL = `${API_BASE_URL}/routines`;
 
-const authHeaders = (token?: string) => ({
-  headers: token ? { Authorization: `Bearer ${token}` } : {},
-});
+const authHeaders = (token?: string) =>
+  token ? { Authorization: `Bearer ${token}` } : {};
 
 export class APIRoutineRepository implements RoutineRepository {
   async getRoutines(token?: string): Promise<Routine[]> {
     try {
-      const response = await axios.get<GetRoutineDTO[]>(
-        ROUTINES_URL,
-        authHeaders(token)
-      );
+      const response = await axios.get<GetRoutineDTO[]>(ROUTINES_URL, {
+        headers: authHeaders(token),
+      });
 
       return RoutinesFromDTO.fromDTOList(response.data);
     } catch (error) {
@@ -32,7 +30,7 @@ export class APIRoutineRepository implements RoutineRepository {
       const response = await axios.post<GetRoutineDTO>(
         ROUTINES_URL,
         { name },
-        authHeaders(token)
+        { headers: authHeaders(token) }
       );
 
       return RoutinesFromDTO.fromDTO(response.data);
@@ -43,7 +41,9 @@ export class APIRoutineRepository implements RoutineRepository {
 
   async deleteRoutine(routineId: string, token?: string): Promise<void> {
     try {
-      await axios.delete(`${ROUTINES_URL}/${routineId}`, authHeaders(token));
+      await axios.delete(`${ROUTINES_URL}/${routineId}`, {
+        headers: authHeaders(token),
+      });
     } catch (error) {
       throw this.handleError(error, 'Error al eliminar la rutina');
     }
@@ -58,7 +58,7 @@ export class APIRoutineRepository implements RoutineRepository {
       const response = await axios.post<GetRoutineDTO>(
         `${ROUTINES_URL}/${routineId}/exercises`,
         { exerciseId },
-        authHeaders(token)
+        { headers: authHeaders(token) }
       );
 
       return RoutinesFromDTO.fromDTO(response.data);
@@ -75,7 +75,7 @@ export class APIRoutineRepository implements RoutineRepository {
     try {
       const response = await axios.delete<GetRoutineDTO>(
         `${ROUTINES_URL}/${routineId}/exercises/${exerciseId}`,
-        authHeaders(token)
+        { headers: authHeaders(token) }
       );
 
       return RoutinesFromDTO.fromDTO(response.data);
@@ -93,7 +93,7 @@ export class APIRoutineRepository implements RoutineRepository {
       const response = await axios.patch<GetRoutineDTO>(
         `${ROUTINES_URL}/${routineId}/exercises/reorder`,
         { order },
-        authHeaders(token)
+        { headers: authHeaders(token) }
       );
 
       return RoutinesFromDTO.fromDTO(response.data);
