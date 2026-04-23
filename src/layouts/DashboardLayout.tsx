@@ -5,9 +5,11 @@ import {
   HomeIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../context/hooks/useAuth';
+import { DashboardBackground } from '../shared/components/DashboardBackground';
+import { PixelCorners } from '../shared/components/PixelCorners';
 
 type MenuItem = {
   to: string;
@@ -31,50 +33,61 @@ export const DashboardLayout = (): React.JSX.Element => {
   };
 
   const menuItems: MenuItem[] = [
-    { to: '/dashboard', label: 'Inicio', icon: HomeIcon },
-    { to: '/rutinas', label: 'Rutinas', icon: ClipboardDocumentListIcon },
-    { to: '/progreso', label: 'Progreso', icon: ChartBarIcon },
-    { to: '/dieta', label: 'Dieta', icon: HeartIcon },
-    { to: '/perfil', label: 'Perfil', icon: UserCircleIcon },
+    { to: '/dashboard', label: 'INICIO', icon: HomeIcon },
+    { to: '/routines', label: 'RUTINAS', icon: ClipboardDocumentListIcon },
+    { to: '/progress', label: 'PROGRESO', icon: ChartBarIcon },
+    { to: '/diet', label: 'DIETA', icon: HeartIcon },
+    { to: '/profile', label: 'PERFIL', icon: UserCircleIcon },
   ];
 
   const userName = user?.name ?? 'Usuario';
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="w-full h-16 bg-zinc-950 shadow-sm flex items-center px-6">
-        <h1 className="text-lg font-semibold text-zinc-100">Gimnasio</h1>
+    <div className="relative min-h-screen flex flex-col text-[#e4e4e7]">
+      <DashboardBackground />
+      <header className="relative z-20 border-b-2 border-[#1e1e2e] bg-[#0a0a0f] h-32 flex items-center justify-between px-8 sm:px-14">
+        <Link to="/dashboard" className="flex items-center gap-3">
+          <img
+            src="/images/Logo.webp"
+            alt="GymQuest"
+            className="h-32 w-auto drop-shadow-lg object-contain"
+          />
+        </Link>
         <button
           onClick={clickAuth}
-          className="ml-auto rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-emerald-400 transition"
+          className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 sm:px-6 py-2.5 sm:py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)]"
         >
-          {isLoggedIn ? 'Logout' : 'Login'}
+          {isLoggedIn ? '▶ LOGOUT' : '▶ LOGIN'}
         </button>
       </header>
 
-      <div className="flex flex-1">
-        <aside className="w-64 bg-zinc-950 text-zinc-100 p-4 flex flex-col">
+      <div className="relative z-10 flex flex-1">
+        <aside className="w-64 shrink-0 border-r-2 border-[#1e1e2e] bg-[#0a0a0f] p-4 flex flex-col gap-4">
           {isLoggedIn && (
-            <div className="mb-6 flex items-center gap-3 rounded-xl bg-zinc-900 p-3">
+            <div className="relative border-2 border-green-500/50 bg-[#0d0d14] p-3 flex items-center gap-3">
+              <PixelCorners size="sm" className="border-green-500/50" />
               {user?.profileImage ? (
                 <img
                   src={user.profileImage}
-                  className="h-12 w-12 rounded-full object-cover"
+                  className="h-12 w-12 rounded-sm border-2 border-[#1e1e2e] object-cover"
                 />
               ) : (
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-900">
-                  <UserCircleIcon className="h-8 w-8 text-zinc-400" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-sm border-2 border-[#1e1e2e] bg-green-500/10">
+                  <UserCircleIcon className="h-7 w-7 text-green-400" />
                 </div>
               )}
 
               <div className="min-w-0">
-                <p className="text-xs text-zinc-100">Bienvenido</p>
-                <p className="truncate text-sm font-semibold text-zinc-100">
-                  {userName}
+                <p className="font-['Press_Start_2P'] text-[8px] text-[#a1a1aa] tracking-widest mb-1">
+                  HEROE
+                </p>
+                <p className="font-['Press_Start_2P'] text-[10px] text-green-400 truncate [text-shadow:0_0_12px_rgba(34,197,94,0.6)]">
+                  {userName.toUpperCase()}
                 </p>
               </div>
             </div>
           )}
+
           <nav className="flex flex-col gap-2">
             {menuItems.map((item) => {
               const Icon = item.icon;
@@ -82,12 +95,12 @@ export const DashboardLayout = (): React.JSX.Element => {
                 <NavLink
                   key={item.to}
                   to={item.to}
-                  end={item.to == '/'}
+                  end={item.to === '/'}
                   className={({ isActive }) =>
-                    ` flex items-center gap-3 rounded-lg px-4 py-3 transition ${
+                    `flex items-center gap-3 border-2 px-3 py-5 font-['Press_Start_2P'] text-[10px] tracking-widest transition-colors ${
                       isActive
-                        ? 'bg-emerald-500 text-zinc-950'
-                        : 'text-zinc-100 hover:bg-zinc-800'
+                        ? 'border-green-500 bg-green-500/10 text-green-400 shadow-[0_0_14px_rgba(34,197,94,0.3)]'
+                        : 'border-[#1e1e2e] text-[#a1a1aa] hover:border-green-500/50 hover:text-green-400'
                     }`
                   }
                 >
@@ -98,7 +111,8 @@ export const DashboardLayout = (): React.JSX.Element => {
             })}
           </nav>
         </aside>
-        <main className="flex-1 p-6 bg-[#0a0a0f]">
+
+        <main className="relative flex-1 p-6 sm:p-8">
           <Outlet />
         </main>
       </div>

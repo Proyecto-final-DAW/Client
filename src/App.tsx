@@ -14,7 +14,6 @@ import { ProtectedRoute } from './routes/ProtectedRoute';
 const Rutinas = () => <h1>Rutinas</h1>;
 const Progreso = () => <h1>Progreso</h1>;
 const Dieta = () => <h1>Dieta</h1>;
-const Perfil = () => <h1>Perfil</h1>;
 
 export const App = (): React.JSX.Element => {
   return (
@@ -32,9 +31,8 @@ export const App = (): React.JSX.Element => {
               <Route path="/routines" element={<Rutinas />} />
               <Route path="/progress" element={<Progreso />} />
               <Route path="/diet" element={<Dieta />} />
-              <Route path="/my-profile" element={<Perfil />} />
+              <Route path="/profile" element={<ProfileView />} />
             </Route>
-            <Route path="/profile" element={<ProfileView />} />
           </Route>
         </Routes>
       </BrowserRouter>

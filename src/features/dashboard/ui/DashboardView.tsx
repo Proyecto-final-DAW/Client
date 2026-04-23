@@ -1,4 +1,5 @@
 import { useAuth } from '../../../context/hooks/useAuth';
+import { LoadingPixel } from '../../../shared/components/LoadingPixel';
 import { DashboardCards } from './components/DashboardCards';
 import { DashboardHeader } from './components/DashboardHeader';
 import { useCards } from './hooks/useCards';
@@ -8,21 +9,19 @@ export const Dashboard = (): React.JSX.Element | null => {
   const { cards, loading, error } = useCards();
 
   if (loading) {
-    return (
-      <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500 animate-pulse">
-        ─ CARGANDO... ─
-      </p>
-    );
+    return <LoadingPixel />;
   }
 
   if (error) {
     return (
-      <p
-        role="alert"
-        className="font-['VT323'] text-lg text-red-400 border-2 border-red-500/40 bg-red-500/10 px-3 py-2"
-      >
-        ✕ {error}
-      </p>
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <p
+          role="alert"
+          className="font-['VT323'] text-xl text-red-400 border-2 border-red-500/40 bg-red-500/10 px-4 py-3"
+        >
+          ✕ {error}
+        </p>
+      </div>
     );
   }
 

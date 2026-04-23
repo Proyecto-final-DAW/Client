@@ -17,11 +17,11 @@ export const GlobalLevelCard = (props: Props): React.JSX.Element => {
         visible: { opacity: 1, y: 0 },
       }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      className="relative border-2 border-green-500/60 bg-[#0d0d14] p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_40px_rgba(34,197,94,0.28),0_16px_40px_rgba(0,0,0,0.7)]"
+      className="relative border-2 border-green-500/60 bg-[#0d0d14] p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(34,197,94,0.35),0_20px_50px_rgba(0,0,0,0.8)]"
     >
       <PixelCorners size="md" className="border-green-500/60" />
 
-      <div className="mb-4 font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+      <div className="mb-4 text-center font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
         ─ NIVEL GLOBAL ─
       </div>
 

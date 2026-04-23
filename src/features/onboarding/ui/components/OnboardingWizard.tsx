@@ -71,7 +71,7 @@ export const OnboardingWizard = (
           <WizardFrame>
             <Stepper currentStep={currentStep} totalSteps={totalSteps} />
             <div className="relative overflow-hidden">
-              <AnimatePresence mode="wait" initial={false}>
+              <AnimatePresence mode="popLayout" initial={false}>
                 <motion.div
                   key={currentStep}
                   initial={{ opacity: 0, x: 40 }}
