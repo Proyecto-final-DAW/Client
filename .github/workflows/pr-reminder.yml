@@ -22,6 +22,7 @@ jobs:
             let reviewers = [];
             const baseRef = context.payload.pull_request.base.ref;
             const headRef = context.payload.pull_request.head.ref;
+            const author = context.payload.pull_request.user.login;
 
             const readReviewers = async (ref) => {
               const { data } = await github.rest.repos.getContent({
@@ -49,14 +50,17 @@ jobs:
               }
             }
 
-            if (reviewers.length > 0) {
+            const filteredReviewers = reviewers.filter(r => r !== author);
+            console.log(`PR author: ${author} — excluded from reviewers`);
+
+            if (filteredReviewers.length > 0) {
               await github.rest.pulls.requestReviewers({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 pull_number: context.issue.number,
-                reviewers,
+                reviewers: filteredReviewers,
               });
-              console.log(`Requested reviewers: ${reviewers.join(', ')}`);
+              console.log(`Requested reviewers: ${filteredReviewers.join(', ')}`);
             }
 
       - name: Comment merge policy

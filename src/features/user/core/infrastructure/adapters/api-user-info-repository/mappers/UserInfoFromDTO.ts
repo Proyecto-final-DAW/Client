@@ -7,7 +7,7 @@ export class UserInfoFromDTO {
       id: dto.id,
       name: dto.name,
       email: dto.email,
-      password: dto.password,
+      onboarding_completed: dto.onboarding_completed,
     };
   }
 }

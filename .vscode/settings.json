@@ -10,5 +10,8 @@
     "source.fixAll.format": "explicit"
   },
   // Unix line endings
-  "files.eol": "\n"
+  "files.eol": "\n",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

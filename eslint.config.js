@@ -44,7 +44,10 @@ export default [
       "prettier/prettier": ["error", prettierConfig],
       "@typescript-eslint/no-unused-vars": [
         "error",
-        { varsIgnorePattern: "^_" },
+        {
+          varsIgnorePattern: "^_",
+          argsIgnorePattern: "^_",
+        },
       ],
       "no-unused-vars": "off",
       "perfectionist/sort-imports": [
