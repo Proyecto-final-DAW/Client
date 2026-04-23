@@ -5,7 +5,7 @@ import { APIUserRepository } from '../core/infrastructure/adapters/api-user-repo
 import { MockUserInfoRepository } from '../core/infrastructure/adapters/mock-user-info-repository/MockUserInfoRepository';
 import { MockUserRepository } from '../core/infrastructure/adapters/mock-user-repository/MockUserRepository';
 
-export const ACTIVE_ADAPTER: 'api' | 'mock' = 'mock';
+export const ACTIVE_ADAPTER: 'api' | 'mock' = 'api';
 
 export const REPOSITORIES = {
   api: {
