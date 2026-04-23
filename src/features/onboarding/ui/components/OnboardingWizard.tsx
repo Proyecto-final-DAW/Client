@@ -1,3 +1,5 @@
+import { AnimatePresence, motion } from 'framer-motion';
+
 import type { MacrosPort } from '../../core/application/ports/MacrosPort';
 import type { OnboardingPort } from '../../core/application/ports/OnboardingPort';
 import type { StatsInitPort } from '../../core/application/ports/StatsInitPort';
@@ -68,7 +70,19 @@ export const OnboardingWizard = (
           <WizardHeader />
           <WizardFrame>
             <Stepper currentStep={currentStep} totalSteps={totalSteps} />
-            <div>{renderStep()}</div>
+            <div className="relative overflow-hidden">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={currentStep}
+                  initial={{ opacity: 0, x: 40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -40 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {renderStep()}
+                </motion.div>
+              </AnimatePresence>
+            </div>
             <WizardSubmitError error={submitError} />
             <WizardNavigation
               currentStep={currentStep}

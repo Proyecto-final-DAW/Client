@@ -98,7 +98,7 @@ export const DashboardLayout = (): React.JSX.Element => {
             })}
           </nav>
         </aside>
-        <main className="flex-1 p-6 bg-zinc-800">
+        <main className="flex-1 p-6 bg-[#0a0a0f]">
           <Outlet />
         </main>
       </div>

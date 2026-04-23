@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 import type { Cards } from '../../core/domain/models/Cards';
 import { GlobalLevelCard } from './GlobalLevelCard';
 import { LastWorkoutCard } from './LastWorkoutCard';
@@ -11,10 +13,18 @@ export const DashboardCards = (props: Props): React.JSX.Element => {
     Object.values(props.stats).length;
 
   return (
-    <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <motion.section
+      variants={{
+        hidden: {},
+        visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
+      }}
+      initial="hidden"
+      animate="visible"
+      className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3"
+    >
       <StreakCard streak={props.streak} />
       <LastWorkoutCard lastWorkoutDaysAgo={props.lastWorkoutDaysAgo} />
       <GlobalLevelCard globalLevel={globalLevel} />
-    </section>
+    </motion.section>
   );
 };

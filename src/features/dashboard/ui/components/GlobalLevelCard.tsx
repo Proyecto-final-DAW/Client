@@ -1,26 +1,53 @@
-import { ChartBarIcon } from '@heroicons/react/24/outline';
+import { ChartBarIcon } from '@heroicons/react/24/solid';
+import { motion } from 'framer-motion';
+
+import { PixelCorners } from '../../../../shared/components/PixelCorners';
 
 type Props = {
   globalLevel: number;
 };
 
 export const GlobalLevelCard = (props: Props): React.JSX.Element => {
+  const percentage = Math.min(100, Math.max(0, props.globalLevel));
+
   return (
-    <article className="mr-2 ml-2 rounded-2xl border border-emerald-500 bg-zinc-900 p-6 shadow-sm">
-      <div>
-        <p className="text-sm font-medium text-zinc-100">Nivel global</p>
+    <motion.article
+      variants={{
+        hidden: { opacity: 0, y: 24 },
+        visible: { opacity: 1, y: 0 },
+      }}
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      className="relative border-2 border-green-500/60 bg-[#0d0d14] p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_40px_rgba(34,197,94,0.28),0_16px_40px_rgba(0,0,0,0.7)]"
+    >
+      <PixelCorners size="md" className="border-green-500/60" />
 
-        <div className="mt-3 flex items-center gap-3">
-          <ChartBarIcon className="h-8 w-8 text-emerald-500" />
+      <div className="mb-4 font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+        ─ NIVEL GLOBAL ─
+      </div>
 
-          <div>
-            <p className="text-xl font-bold text-zinc-100">
-              {props.globalLevel.toFixed(1)}
-            </p>
-            <p className="text-sm text-zinc-100">Media de tus stats</p>
-          </div>
+      <div className="flex items-center gap-4">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-sm border-2 border-green-500/40 bg-green-500/10">
+          <ChartBarIcon className="h-8 w-8 text-green-400" />
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <p className="font-['Press_Start_2P'] text-3xl leading-none text-[#e4e4e7] [text-shadow:2px_2px_0_#000,0_0_14px_rgba(34,197,94,0.5)]">
+            {props.globalLevel.toFixed(1)}
+          </p>
+          <p className="mt-2 font-['VT323'] text-base tracking-wide text-[#a1a1aa]">
+            Media de tus stats
+          </p>
         </div>
       </div>
-    </article>
+
+      <div className="mt-4 h-2 w-full overflow-hidden rounded-sm bg-[#1e1e2e]">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${percentage}%` }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+          className="h-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"
+        />
+      </div>
+    </motion.article>
   );
 };
