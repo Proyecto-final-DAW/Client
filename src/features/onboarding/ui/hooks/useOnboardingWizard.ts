@@ -19,7 +19,7 @@ interface UseOnboardingWizardProps {
   onboardingService: OnboardingPort;
   statsInitService: StatsInitPort;
   macrosService: MacrosPort;
-  onComplete: (userData: OnboardingResponse['user']) => void;
+  onComplete: (response: OnboardingResponse) => void;
 }
 
 export function useOnboardingWizard({
@@ -81,11 +81,14 @@ export function useOnboardingWizard({
         token
       );
       // Post-onboarding side effects: non-fatal, do not block navigation.
-      await Promise.allSettled([
-        statsInitService.initStats(token),
-        macrosService.calculateMacros(formData, userId, token),
-      ]);
-      onComplete(response.user);
+      const nextToken = response.token ?? token;
+      if (nextToken) {
+        await Promise.allSettled([
+          statsInitService.initStats(nextToken),
+          macrosService.calculateMacros(formData, userId, nextToken),
+        ]);
+      }
+      onComplete(response);
     } catch (error) {
       setSubmitError(
         error instanceof Error

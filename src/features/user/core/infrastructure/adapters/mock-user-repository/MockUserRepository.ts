@@ -5,7 +5,7 @@ export class MockUserRepository implements UserRepository {
   async register(
     name: string,
     email: string,
-    password: string
+    _password: string
   ): Promise<RegisterResponse> {
     await new Promise((resolve) => setTimeout(resolve, 100));
     return {
@@ -15,7 +15,9 @@ export class MockUserRepository implements UserRepository {
         id: 1,
         name,
         email,
-        password,
+        onboarding_completed: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       },
     };
   }
