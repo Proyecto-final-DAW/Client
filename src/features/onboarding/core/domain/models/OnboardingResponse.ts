@@ -3,6 +3,7 @@ export interface OnboardingResponseUser {
   email: string;
   name: string;
   birth_date: string;
+  profileImage?: string | null;
   sex?: string;
   weight?: number;
   height?: number;
@@ -24,5 +25,6 @@ export interface OnboardingResponseUser {
 }
 
 export interface OnboardingResponse {
+  token?: string;
   user: OnboardingResponseUser;
 }

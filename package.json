@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "cross-env VITE_USE_LOCAL_API=true vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css}\"",
@@ -26,6 +26,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react-swc": "^4.2.2",
     "autoprefixer": "^10.4.24",
+    "cross-env": "^10.1.0",
     "eslint": "^9.39.1",
     "eslint-plugin-perfectionist": "^5.5.0",
     "eslint-plugin-prettier": "^5.5.5",
