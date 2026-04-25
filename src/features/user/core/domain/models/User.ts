@@ -1,3 +1,5 @@
+import type { UserInfo } from '../../../../../shared/core/domain/models/UserInfo';
+
 export interface User {
   id: number;
   name: string;
@@ -6,7 +8,7 @@ export interface User {
 }
 
 export type RegisterResponse = {
-  message: string;
+  message?: string;
   token: string;
-  user: User;
+  user: UserInfo;
 };
