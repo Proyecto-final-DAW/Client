@@ -3,4 +3,5 @@ export interface GetUserInfoDTO {
   name: string;
   email: string;
   onboarding_completed: boolean;
+  profileImage?: string | null;
 }

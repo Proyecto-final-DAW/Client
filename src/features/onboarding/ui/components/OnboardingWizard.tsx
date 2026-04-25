@@ -22,7 +22,7 @@ interface OnboardingWizardProps {
   onboardingService: OnboardingPort;
   statsInitService: StatsInitPort;
   macrosService: MacrosPort;
-  onComplete: (userData: OnboardingResponse['user']) => void;
+  onComplete: (response: OnboardingResponse) => void;
 }
 
 export const OnboardingWizard = (

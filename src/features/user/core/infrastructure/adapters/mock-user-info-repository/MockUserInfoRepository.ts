@@ -1,5 +1,5 @@
+import type { LoginResponse } from '../../../../../../shared/core/domain/models/UserInfo';
 import type { UserInfoRepository } from '../../../application/ports/UserInfoRepository';
-import type { LoginResponse } from '../../../domain/models/UserInfo';
 
 export class MockUserInfoRepository implements UserInfoRepository {
   async login(email: string, _password: string): Promise<LoginResponse> {

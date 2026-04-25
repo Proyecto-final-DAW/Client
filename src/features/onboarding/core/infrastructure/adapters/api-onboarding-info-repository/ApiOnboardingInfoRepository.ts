@@ -33,17 +33,15 @@ export class ApiOnboardingInfoRepository implements OnboardingPort {
     token: string
   ): Promise<OnboardingResponse> {
     try {
-      const response = await axios.put<OnboardingResponseUser>(
-        API_ENDPOINTS.onboarding(userId),
-        toOnboardingPayload(data),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-        }
-      );
-      return { user: response.data };
+      const response = await axios.put<
+        OnboardingResponseUser | OnboardingResponse
+      >(API_ENDPOINTS.onboarding(userId), toOnboardingPayload(data), {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      return { user: response.data as OnboardingResponseUser };
     } catch (error) {
       const err = error as AxiosError<APIErrorResponse>;
       throw new Error(

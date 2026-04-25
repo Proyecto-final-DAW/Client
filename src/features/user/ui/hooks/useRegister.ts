@@ -24,7 +24,9 @@ export const useRegister = () => {
         password
       );
       setSession(token, user);
-      navigate('/onboarding', { replace: true });
+      navigate(user.onboarding_completed ? '/dashboard' : '/onboarding', {
+        replace: true,
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
