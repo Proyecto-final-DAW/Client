@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../../../context/hooks/useAuth';
 import { userInfoRepository } from '../adapter';
 
 export const useLogin = () => {
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -13,6 +14,11 @@ export const useLogin = () => {
 
   const { setSession } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const prefillEmail = (location.state as { email?: string } | null)?.email;
+    if (prefillEmail) setEmail(prefillEmail);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
