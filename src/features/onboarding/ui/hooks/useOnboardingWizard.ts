@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
+import type { MacrosPort } from '../../core/application/ports/MacrosPort';
 import type { OnboardingPort } from '../../core/application/ports/OnboardingPort';
+import type { StatsInitPort } from '../../core/application/ports/StatsInitPort';
 import type {
   OnboardingFormData,
   FormErrors,
@@ -9,17 +11,23 @@ import { INITIAL_FORM_DATA } from '../../core/domain/models/OnboardingFormData';
 import type { OnboardingResponse } from '../../core/domain/models/OnboardingResponse';
 import { validateStep } from '../../core/domain/validators/OnboardingValidator';
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 6;
 
 interface UseOnboardingWizardProps {
+  userId: number;
   token: string;
   onboardingService: OnboardingPort;
-  onComplete: (userData: OnboardingResponse['user']) => void;
+  statsInitService: StatsInitPort;
+  macrosService: MacrosPort;
+  onComplete: (response: OnboardingResponse) => void;
 }
 
 export function useOnboardingWizard({
+  userId,
   token,
   onboardingService,
+  statsInitService,
+  macrosService,
   onComplete,
 }: UseOnboardingWizardProps) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -29,7 +37,10 @@ export function useOnboardingWizard({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  function handleChange(field: keyof OnboardingFormData, value: string) {
+  function handleChange(
+    field: keyof OnboardingFormData,
+    value: string | string[]
+  ) {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors((prev) => {
@@ -66,9 +77,18 @@ export function useOnboardingWizard({
     try {
       const response = await onboardingService.submitOnboarding(
         formData,
+        userId,
         token
       );
-      onComplete(response.user);
+      // Post-onboarding side effects: non-fatal, do not block navigation.
+      const nextToken = response.token ?? token;
+      if (nextToken) {
+        await Promise.allSettled([
+          statsInitService.initStats(nextToken),
+          macrosService.calculateMacros(formData, userId, nextToken),
+        ]);
+      }
+      onComplete(response);
     } catch (error) {
       setSubmitError(
         error instanceof Error

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { ReactNode } from 'react';
 
-import type { UserInfo } from '../features/user/core/domain/models/UserInfo';
+import type { UserInfo } from '../shared/core/domain/models/UserInfo';
 import { AuthContext } from './AuthContext';
+import type { AuthUser } from './AuthContext';
 
 const STORAGE_KEY_TOKEN = 'auth_token';
 const STORAGE_KEY_USER = 'auth_user';
@@ -16,19 +16,50 @@ const loadFromStorage = <T,>(key: string): T | null => {
   }
 };
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+const normalizeAuthUser = (user: AuthUser | null | undefined): UserInfo => {
+  const safeUser = (user ?? {}) as Partial<UserInfo>;
+  return {
+    ...(safeUser as UserInfo),
+    onboarding_completed:
+      typeof user === 'object' &&
+      user !== null &&
+      'onboarding_completed' in user
+        ? (user as UserInfo).onboarding_completed
+        : false,
+    profileImage:
+      typeof user === 'object' && user !== null && 'profileImage' in user
+        ? (user as UserInfo).profileImage
+        : undefined,
+  };
+};
+
+export const AuthProvider = (props: {
+  children: React.ReactNode;
+}): React.JSX.Element => {
   const [token, setToken] = useState<string | null>(() =>
     localStorage.getItem(STORAGE_KEY_TOKEN)
   );
   const [user, setUser] = useState<UserInfo | null>(() =>
-    loadFromStorage<UserInfo>(STORAGE_KEY_USER)
+    (() => {
+      const stored = loadFromStorage<AuthUser>(STORAGE_KEY_USER);
+      return stored ? normalizeAuthUser(stored) : null;
+    })()
   );
 
-  const setSession = (newToken: string, newUser: UserInfo) => {
+  const setSession = (newToken: string, newUser: AuthUser) => {
+    const normalized = normalizeAuthUser(newUser);
     setToken(newToken);
-    setUser(newUser);
+    setUser(normalized);
     localStorage.setItem(STORAGE_KEY_TOKEN, newToken);
-    localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(newUser));
+    localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(normalized));
+  };
+
+  const setUserOnly = (newUser: AuthUser) => {
+    const normalized = normalizeAuthUser(newUser);
+    setToken(null);
+    setUser(normalized);
+    localStorage.removeItem(STORAGE_KEY_TOKEN);
+    localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(normalized));
   };
 
   const updateUser = (newUser: UserInfo) => {
@@ -45,9 +76,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ token, user, setSession, updateUser, logout }}
+      value={{
+        token,
+        user,
+        setSession,
+        setUser: setUserOnly,
+        updateUser,
+        logout,
+      }}
     >
-      {children}
+      {props.children}
     </AuthContext.Provider>
   );
 };

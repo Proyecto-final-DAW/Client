@@ -5,41 +5,48 @@ import { API_ENDPOINTS } from '../../../../../../config/api';
 import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
 import type { OnboardingPort } from '../../../application/ports/OnboardingPort';
 import type { OnboardingFormData } from '../../../domain/models/OnboardingFormData';
-import type { OnboardingResponse } from '../../../domain/models/OnboardingResponse';
+import type {
+  OnboardingResponse,
+  OnboardingResponseUser,
+} from '../../../domain/models/OnboardingResponse';
 
-function toPayload(data: OnboardingFormData) {
+function toOnboardingPayload(data: OnboardingFormData) {
   return {
     name: data.name.trim(),
-    birth_date: data.birthDate,
-    sex: data.sex!,
-    weight: parseFloat(data.weight),
-    height: parseFloat(data.height),
-    activity_level: data.activityLevel!,
-    goal: data.goal!,
+    birthDate: data.birthDate,
+    weight: data.weight,
+    height: data.height,
+    sex: data.sex,
+    activityLevel: data.activityLevel,
+    goals: data.goals,
+    experienceLevel: data.experienceLevel,
+    equipment: data.equipment,
+    daysPerWeek: data.daysPerWeek,
+    injuries: data.injuries,
   };
 }
 
-export class OnboardingApiAdapter implements OnboardingPort {
+export class ApiOnboardingInfoRepository implements OnboardingPort {
   async submitOnboarding(
     data: OnboardingFormData,
+    userId: number,
     token: string
   ): Promise<OnboardingResponse> {
-    const payload = toPayload(data);
-
     try {
-      const response = await axios.put(API_ENDPOINTS.onboarding, payload, {
+      const response = await axios.put<
+        OnboardingResponseUser | OnboardingResponse
+      >(API_ENDPOINTS.onboarding(userId), toOnboardingPayload(data), {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
       });
-
-      return response.data;
+      return { user: response.data as OnboardingResponseUser };
     } catch (error) {
       const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al completar el onboarding';
-      throw new Error(serverMessage);
+      throw new Error(
+        err.response?.data?.message || 'Error al completar el onboarding'
+      );
     }
   }
 }

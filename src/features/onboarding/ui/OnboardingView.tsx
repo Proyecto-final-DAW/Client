@@ -1,21 +1,36 @@
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../../context/hooks/useAuth';
-import { onboardingService } from './adapter';
-import OnboardingWizard from './components/OnboardingWizard';
+import { macrosService, onboardingService, statsInitService } from './adapter';
+import { OnboardingWizard } from './components/OnboardingWizard';
 
-export default function OnboardingView() {
-  const { token, user, updateUser } = useAuth();
+export const OnboardingView = (): React.JSX.Element => {
+  const { token, user, updateUser, setSession } = useAuth();
   const navigate = useNavigate();
+
+  // If the user is not authenticated, the onboarding flow can't proceed.
+  if (!user || !token) {
+    navigate('/login', { replace: true });
+    return <></>;
+  }
 
   return (
     <OnboardingWizard
-      token={token ?? ''}
+      userId={user.id}
+      token={token}
       onboardingService={onboardingService}
-      onComplete={(userData) => {
-        updateUser({ ...user!, ...userData, onboarding_completed: true });
+      statsInitService={statsInitService}
+      macrosService={macrosService}
+      onComplete={(response) => {
+        const nextUser = response.user;
+
+        if (response.token) {
+          setSession(response.token, nextUser);
+        } else {
+          updateUser(nextUser);
+        }
         navigate('/dashboard', { replace: true });
       }}
     />
   );
-}
+};

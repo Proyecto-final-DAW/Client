@@ -6,7 +6,7 @@ export const LandingNav = (): React.JSX.Element => {
       <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14 h-24 flex items-center justify-between">
         <Link to="/">
           <img
-            src="/images/Logo.png"
+            src="/images/Logo.webp"
             alt="GymQuest"
             className="h-28 w-auto -my-6 drop-shadow-lg object-contain"
           />
@@ -20,7 +20,7 @@ export const LandingNav = (): React.JSX.Element => {
             CONTINUAR
           </Link>
           <Link
-            to="/login?mode=register"
+            to="/register"
             className="font-['Press_Start_2P'] text-[8px] sm:text-[10px] bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-3 sm:px-5 py-2 sm:py-2.5 border-b-[3px] border-green-700 hover:border-green-600 active:border-b-0 active:mt-[3px] transition-all duration-150 shadow-[0_0_12px_rgba(34,197,94,0.3)]"
           >
             ▶ INICIAR

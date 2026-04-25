@@ -1,14 +1,7 @@
-import type { Exercise } from '../../core/domain/models/Exercise';
 import { MUSCLE_OPTIONS, useExerciseSearch } from '../hooks/useExerciseSearch';
 import { ExerciseCard } from './ExerciseCard';
 
-type ExerciseSearchProps = {
-  onSelectExercise?: (exercise: Exercise) => void;
-};
-
-export const ExerciseSearch = ({
-  onSelectExercise,
-}: ExerciseSearchProps): React.JSX.Element => {
+export const ExerciseSearch = (): React.JSX.Element => {
   const {
     search,
     setSearch,
@@ -24,19 +17,18 @@ export const ExerciseSearch = ({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="flex flex-col sm:flex-row gap-3">
         <input
           type="text"
           placeholder="Buscar ejercicio..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 rounded-lg bg-gray-800 px-4 py-2 text-white outline-none placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+          className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
         />
-
         <select
           value={muscle}
           onChange={(e) => setMuscle(e.target.value)}
-          className="rounded-lg bg-gray-800 px-4 py-2 text-white outline-none focus:ring-2 focus:ring-blue-500"
+          className="bg-gray-800 text-white rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500"
         >
           {MUSCLE_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -48,44 +40,40 @@ export const ExerciseSearch = ({
 
       {loading && (
         <div className="flex justify-center py-12">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
         </div>
       )}
 
       {error && !loading && (
-        <div className="py-8 text-center text-red-400">{error}</div>
+        <div className="text-red-400 text-center py-8">{error}</div>
       )}
 
       {!loading && !error && exercises.length === 0 && (search || muscle) && (
-        <div className="py-8 text-center text-gray-400">
+        <div className="text-gray-400 text-center py-8">
           No se encontraron ejercicios
         </div>
       )}
 
       {!loading && !error && !search && !muscle && (
-        <div className="py-8 text-center text-gray-400">
+        <div className="text-gray-400 text-center py-8">
           Busca un ejercicio o selecciona un grupo muscular
         </div>
       )}
 
       {!loading && !error && exercises.length > 0 && (
         <>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {exercises.map((exercise) => (
-              <ExerciseCard
-                key={exercise.id}
-                exercise={exercise}
-                onSelect={onSelectExercise}
-              />
+              <ExerciseCard key={exercise.id} exercise={exercise} />
             ))}
           </div>
 
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex justify-center items-center gap-2">
               <button
                 onClick={() => goToPage(page - 1)}
                 disabled={page === 1}
-                className="rounded-lg bg-gray-700 px-3 py-1.5 text-sm text-white transition-colors hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-30"
+                className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed text-white rounded-lg transition-colors text-sm"
               >
                 Anterior
               </button>
@@ -94,7 +82,7 @@ export const ExerciseSearch = ({
                 <button
                   key={p}
                   onClick={() => goToPage(p)}
-                  className={`h-8 w-8 rounded-lg text-sm transition-colors ${
+                  className={`w-8 h-8 rounded-lg text-sm transition-colors ${
                     p === page
                       ? 'bg-blue-600 text-white'
                       : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
@@ -107,7 +95,7 @@ export const ExerciseSearch = ({
               <button
                 onClick={() => goToPage(page + 1)}
                 disabled={page === totalPages}
-                className="rounded-lg bg-gray-700 px-3 py-1.5 text-sm text-white transition-colors hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-30"
+                className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed text-white rounded-lg transition-colors text-sm"
               >
                 Siguiente
               </button>

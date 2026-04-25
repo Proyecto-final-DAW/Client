@@ -58,7 +58,7 @@ export const DashboardLayout = (): React.JSX.Element => {
             <div className="mb-6 flex items-center gap-3 rounded-xl bg-zinc-900 p-3">
               {user?.profileImage ? (
                 <img
-                  src="{user.profileImage}"
+                  src={user.profileImage}
                   className="h-12 w-12 rounded-full object-cover"
                 />
               ) : (

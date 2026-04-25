@@ -3,7 +3,7 @@ import type {
   FormErrors,
 } from '../../core/domain/models/OnboardingFormData';
 import type { SelectableOption } from '../../core/domain/models/SelectableOption';
-import SelectableCardGroup from './SelectableCardGroup';
+import { SelectableCardGroup } from './SelectableCardGroup';
 
 interface StepActivityProps {
   data: OnboardingFormData;
@@ -13,58 +13,47 @@ interface StepActivityProps {
 
 const activityOptions: SelectableOption[] = [
   {
-    value: 'sedentary',
-    title: 'Sedentario',
-    description: 'Trabajo de oficina o estudio, sin ejercicio regular',
+    value: 'SEDENTARY',
+    title: 'SEDENTARIO',
+    description: 'Sin ejercicio regular.',
     icon: '🪑',
   },
   {
-    value: 'light',
-    title: 'Ligeramente activo',
-    description: 'Ejercicio ligero 1-3 días por semana (caminar, yoga)',
+    value: 'LIGHT',
+    title: 'LIGERAMENTE ACTIVO',
+    description: 'Ejercicio 1-3 días por semana.',
     icon: '🚶',
   },
   {
-    value: 'moderate',
-    title: 'Moderadamente activo',
-    description: 'Ejercicio moderado 3-5 días por semana (gimnasio, deporte)',
-    icon: '🏃',
-  },
-  {
-    value: 'active',
-    title: 'Activo',
-    description: 'Ejercicio intenso 6-7 días por semana',
+    value: 'ACTIVE',
+    title: 'ACTIVO',
+    description: 'Ejercicio 3-5 días por semana.',
     icon: '💪',
   },
   {
-    value: 'very_active',
-    title: 'Muy activo',
-    description: 'Trabajo físico diario + ejercicio intenso',
+    value: 'VERY_ACTIVE',
+    title: 'MUY ACTIVO',
+    description: 'Ejercicio 6-7 días por semana y trabajo físico diario.',
     icon: '🔥',
   },
 ];
 
-export default function StepActivity({
-  data,
-  errors,
-  onChange,
-}: StepActivityProps) {
+export const StepActivity = (props: StepActivityProps): React.JSX.Element => {
   return (
     <div>
-      <h2 className="text-2xl font-bold text-zinc-100 mb-2">
-        Tu nivel de actividad
+      <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
+        TU NIVEL DE <span className="text-green-400">ACTIVIDAD</span>
       </h2>
-      <p className="text-zinc-400 text-sm mb-8">
-        ¿Cómo es tu día a día? Esto nos ayuda a calcular cuántas calorías
-        gastas.
+      <p className="text-center font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
+        ¿Cómo es tu día a día?
       </p>
 
       <SelectableCardGroup
         options={activityOptions}
-        selected={data.activityLevel ?? null}
-        onSelect={(value) => onChange('activityLevel', value)}
-        error={errors.activityLevel}
+        selected={props.data.activityLevel ?? null}
+        onSelect={(value) => props.onChange('activityLevel', value)}
+        error={props.errors.activityLevel}
       />
     </div>
   );
-}
+};
