@@ -1,7 +1,14 @@
+import type { Exercise } from '../../core/domain/models/Exercise';
 import { MUSCLE_OPTIONS, useExerciseSearch } from '../hooks/useExerciseSearch';
 import { ExerciseCard } from './ExerciseCard';
 
-export const ExerciseSearch = (): React.JSX.Element => {
+type ExerciseSearchProps = {
+  onSelectExercise?: (exercise: Exercise) => void;
+};
+
+export const ExerciseSearch = ({
+  onSelectExercise,
+}: ExerciseSearchProps): React.JSX.Element => {
   const {
     search,
     setSearch,
@@ -62,9 +69,13 @@ export const ExerciseSearch = (): React.JSX.Element => {
 
       {!loading && !error && exercises.length > 0 && (
         <>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {exercises.map((exercise) => (
-              <ExerciseCard key={exercise.id} exercise={exercise} />
+              <ExerciseCard
+                key={exercise.id}
+                exercise={exercise}
+                onSelect={onSelectExercise}
+              />
             ))}
           </div>
 
