@@ -1,4 +1,9 @@
-export type Progress = {
+export interface Progress {
   date: Date;
-  weight: string;
-};
+  weight: number;
+}
+
+export interface RegisterWeightInput {
+  weight: number;
+  date: Date;
+}

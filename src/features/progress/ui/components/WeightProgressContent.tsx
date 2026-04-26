@@ -1,24 +1,31 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import type { Progress } from '../../core/domain/models/Progress';
 import { useProgress } from '../hooks/useProgress';
-import { ProgressForm } from './ProgressForm';
+import { RegisterWeightForm } from './RegisterWeightForm';
+import { WeightHistoryTable } from './WeightHistoryTable';
 import { WeightProgressChart } from './WeightProgressChart';
 
 export const WeightProgressContent = (): React.JSX.Element => {
-  const { weightHistory, loading, error, refetch } = useProgress();
+  const {
+    weightHistory,
+    loading,
+    error,
+    submitting,
+    submitError,
+    refetch,
+    addEntry,
+  } = useProgress();
 
   const [showForm, setShowForm] = useState(false);
-  const [localEntries, setLocalEntries] = useState<Progress[]>([]);
 
-  const entries = [...(weightHistory ?? []), ...localEntries].sort(
-    (a, b) => a.date.getTime() - b.date.getTime()
+  const entries = useMemo(
+    () =>
+      [...(weightHistory ?? [])].sort(
+        (a, b) => a.date.getTime() - b.date.getTime()
+      ),
+    [weightHistory]
   );
-
-  const handleAddEntry = (entry: Progress) => {
-    setLocalEntries((current) => [...current, entry]);
-  };
 
   if (loading) {
     return (
@@ -45,12 +52,7 @@ export const WeightProgressContent = (): React.JSX.Element => {
 
   return (
     <section className="rounded-2xl border border-gray-800 bg-gray-900/80 p-5">
-      <div className="mb-5 flex items-center justify-between gap-4">
-        <div>
-          <p className="text-sm text-blue-400">Progreso</p>
-          <h2 className="text-xl font-bold text-white">Evolución de peso</h2>
-        </div>
-
+      <div className="mb-5 flex items-center justify-end">
         <button
           type="button"
           onClick={() => setShowForm((value) => !value)}
@@ -61,9 +63,11 @@ export const WeightProgressContent = (): React.JSX.Element => {
       </div>
 
       {showForm && (
-        <ProgressForm
-          onAddEntry={handleAddEntry}
-          onCancel={() => setShowForm(false)}
+        <RegisterWeightForm
+          submitting={submitting}
+          submitError={submitError}
+          onSubmit={addEntry}
+          onSuccess={() => setShowForm(false)}
         />
       )}
 
@@ -72,33 +76,10 @@ export const WeightProgressContent = (): React.JSX.Element => {
           Todavía no tienes registros de peso.
         </p>
       ) : (
-        <>
+        <div className="space-y-6">
           <WeightProgressChart entries={entries} />
-
-          <div className="mt-6 overflow-hidden rounded-2xl border border-gray-800">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-gray-950 text-gray-400">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Fecha</th>
-                  <th className="px-4 py-3 font-medium">Peso</th>
-                </tr>
-              </thead>
-
-              <tbody className="divide-y divide-gray-800">
-                {entries.map((entry) => (
-                  <tr key={`${entry.date.toISOString()}-${entry.weight}`}>
-                    <td className="px-4 py-3 text-gray-300">
-                      {entry.date.toLocaleDateString('es-ES')}
-                    </td>
-                    <td className="px-4 py-3 text-gray-100">
-                      {entry.weight} kg
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
+          <WeightHistoryTable entries={entries} />
+        </div>
       )}
     </section>
   );

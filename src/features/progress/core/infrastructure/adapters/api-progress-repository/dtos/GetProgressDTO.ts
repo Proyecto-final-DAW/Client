@@ -1,6 +1,9 @@
 export interface GetProgressDTO {
   date: string;
-  weight: string;
+  weight: number;
 }
 
-export type GetProgressResponseDTO = GetProgressDTO[];
+export interface RegisterWeightRequestDTO {
+  weight: number;
+  date: string;
+}

@@ -22,7 +22,7 @@ export const WeightProgressChart = ({
       day: '2-digit',
       month: '2-digit',
     }),
-    weight: Number(entry.weight),
+    weight: entry.weight,
   }));
 
   return (
