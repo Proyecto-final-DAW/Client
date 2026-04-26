@@ -1,3 +1,6 @@
+import { BoltIcon } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
+
 export const RoutinesHeader = () => {
   return (
     <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -10,6 +13,14 @@ export const RoutinesHeader = () => {
           Crea, organiza y reutiliza tus rutinas semanales.
         </p>
       </div>
+
+      <Link
+        to="/sessions/new"
+        className="inline-flex items-center gap-2 self-start rounded-xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-gray-950 transition hover:bg-emerald-400"
+      >
+        <BoltIcon className="h-4 w-4" />
+        Sesión libre
+      </Link>
     </div>
   );
 };
