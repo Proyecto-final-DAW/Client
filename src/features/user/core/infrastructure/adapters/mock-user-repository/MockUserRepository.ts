@@ -10,7 +10,6 @@ export class MockUserRepository implements UserRepository {
     await new Promise((resolve) => setTimeout(resolve, 100));
     return {
       message: 'Mock register successful',
-      token: 'mock-jwt-token',
       user: {
         id: 1,
         name,

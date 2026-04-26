@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../../../context/hooks/useAuth';
-import { userRepository } from '../adapter';
+import { userInfoRepository, userRepository } from '../adapter';
 
 export const useRegister = () => {
   const [name, setName] = useState('');
@@ -18,11 +18,15 @@ export const useRegister = () => {
     setLoading(true);
 
     try {
-      const { token, user } = await userRepository.register(
-        name.trim(),
-        email,
+      const normalizedName = name.trim();
+      const normalizedEmail = email.trim();
+
+      await userRepository.register(normalizedName, normalizedEmail, password);
+      const { token, user } = await userInfoRepository.login(
+        normalizedEmail,
         password
       );
+
       setSession(token, user);
       navigate(user.onboarding_completed ? '/dashboard' : '/onboarding', {
         replace: true,

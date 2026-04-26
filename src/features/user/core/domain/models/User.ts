@@ -9,6 +9,5 @@ export interface User {
 
 export type RegisterResponse = {
   message?: string;
-  token: string;
-  user: UserInfo;
+  user?: UserInfo;
 };
