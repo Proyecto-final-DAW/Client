@@ -12,7 +12,7 @@ export const DashboardCards = (props: Props): React.JSX.Element => {
 
   return (
     <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-      <StreakCard streak={props.streak} />
+      <StreakCard streak={props.streak} trainingDays={props.trainingDays} />
       <LastWorkoutCard lastWorkoutDaysAgo={props.lastWorkoutDaysAgo} />
       <GlobalLevelCard globalLevel={globalLevel} />
     </section>

@@ -1,10 +1,13 @@
 import { FireIcon } from '@heroicons/react/24/outline';
 
-type Props = {
+import { TrainingCalendar } from './TrainingCalendar';
+
+type StreakCardProps = {
   streak: number;
+  trainingDays: string[];
 };
 
-export const StreakCard = (props: Props): React.JSX.Element => {
+export const StreakCard = (props: StreakCardProps): React.JSX.Element => {
   return (
     <article className="mr-2 ml-2 rounded-2xl border border-emerald-500 bg-zinc-900 p-6 shadow-sm">
       <div className="flex items-start justify-between">
@@ -23,6 +26,8 @@ export const StreakCard = (props: Props): React.JSX.Element => {
           </div>
         </div>
       </div>
+
+      <TrainingCalendar trainingDays={props.trainingDays} />
     </article>
   );
 };
