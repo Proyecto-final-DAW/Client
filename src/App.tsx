@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider';
 import { AchievementsView } from './features/achievements/ui/AchievementsView';
 import { Dashboard } from './features/dashboard/ui/DashboardView';
+import { DietView } from './features/diet/ui/DietView';
 import { ExercisesView } from './features/exercises/ui/ExercisesView';
 import { OnboardingView } from './features/onboarding/ui/OnboardingView';
 import { ProfileView } from './features/profile/ui/ProfileView';
@@ -16,7 +17,6 @@ import { Register } from './features/user/ui/components/Register';
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 
-const Dieta = () => <h1>Dieta</h1>;
 const Perfil = () => <h1>Perfil</h1>;
 
 export const App = (): React.JSX.Element => {
@@ -34,8 +34,8 @@ export const App = (): React.JSX.Element => {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/progress" element={<ProgressView />} />
               <Route path="/routines" element={<RoutinesView />} />
+              <Route path="/diet" element={<DietView />} />
               <Route path="/sessions/new" element={<NewSessionView />} />
-              <Route path="/diet" element={<Dieta />} />
               <Route path="/achievements" element={<AchievementsView />} />
               <Route path="/my-profile" element={<Perfil />} />
               <Route path="/session-history" element={<SessionHistoryView />} />
