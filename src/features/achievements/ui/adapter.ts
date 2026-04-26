@@ -2,7 +2,7 @@ import type { MilestonesRepository } from '../core/application/ports/MilestonesR
 import { APIMilestonesRepository } from '../core/infrastructure/adapters/api-milestones-repository/APIMilestonesRepository';
 import { MockMilestonesRepository } from '../core/infrastructure/adapters/mock-milestones-repository/MockMilestonesRepository';
 
-export const ACTIVE_ADAPTER: 'api' | 'mock' = 'mock';
+export const ACTIVE_ADAPTER: 'api' | 'mock' = 'api';
 
 export const REPOSITORIES = {
   api: new APIMilestonesRepository(),
