@@ -1,16 +1,22 @@
 import axios, { AxiosError } from 'axios';
 
-import { API_BASE_URL } from '../../../../../../config/api';
+import { API_BASE_URL, API_ENDPOINTS } from '../../../../../../config/api';
 import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
 import type { ProgressRepository } from '../../../application/ports/ProgressRepository';
+import type { ExerciseProgressPoint } from '../../../domain/models/ExerciseProgressPoint';
+import type { PerformedExercise } from '../../../domain/models/PerformedExercise';
 import type {
   Progress,
   RegisterWeightInput,
 } from '../../../domain/models/Progress';
+import type { GetExerciseProgressDTO } from './dtos/GetExerciseProgressDTO';
+import type { GetPerformedExercisesDTO } from './dtos/GetPerformedExercisesDTO';
 import type {
   GetProgressDTO,
   RegisterWeightRequestDTO,
 } from './dtos/GetProgressDTO';
+import { ExerciseProgressFromDTO } from './mappers/ExerciseProgressFromDTO';
+import { PerformedExercisesFromDTO } from './mappers/PerformedExercisesFromDTO';
 import { WeightHistoryFromDTO } from './mappers/WeightHistoryFromDTO';
 
 const PROGRESS_URL = `${API_BASE_URL}/progress`;
@@ -21,6 +27,37 @@ const authHeaders = (token?: string) =>
 const toIsoDate = (date: Date): string => date.toISOString().split('T')[0];
 
 export class APIProgressRepository implements ProgressRepository {
+  async getPerformedExercises(
+    userId: number,
+    token: string
+  ): Promise<PerformedExercise[]> {
+    try {
+      const response = await axios.get<GetPerformedExercisesDTO>(
+        API_ENDPOINTS.performedExercises(userId),
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return PerformedExercisesFromDTO.fromDTO(response.data);
+    } catch (error) {
+      throw this.handleError(error, 'Error al cargar los ejercicios');
+    }
+  }
+
+  async getExerciseProgress(
+    userId: number,
+    exerciseId: string,
+    token: string
+  ): Promise<ExerciseProgressPoint[]> {
+    try {
+      const response = await axios.get<GetExerciseProgressDTO>(
+        API_ENDPOINTS.exerciseProgress(userId, exerciseId),
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return ExerciseProgressFromDTO.fromDTO(response.data);
+    } catch (error) {
+      throw this.handleError(error, 'Error al cargar la progresión');
+    }
+  }
+
   async getWeightHistory(userId: number, token?: string): Promise<Progress[]> {
     try {
       const response = await axios.get<GetProgressDTO[]>(
