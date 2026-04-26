@@ -4,10 +4,9 @@ import { MockSessionRepository } from '../core/infrastructure/adapters/mock-sess
 
 export const ACTIVE_ADAPTER: 'api' | 'mock' = 'mock';
 
-export const REPOSITORIES = {
+export const ADAPTERS = {
   api: new APISessionRepository(),
   mock: new MockSessionRepository(),
 };
 
-export const sessionRepository: SessionRepository =
-  REPOSITORIES[ACTIVE_ADAPTER];
+export const sessionRepository: SessionRepository = ADAPTERS[ACTIVE_ADAPTER];

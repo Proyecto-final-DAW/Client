@@ -1,10 +1,10 @@
 import type React from 'react';
 
-import { useSessions } from '../hooks/useHistorySessions';
+import { useSessionHistory } from '../hooks/useSessionHistory';
 import { SessionHistoryCard } from './SessionHistoryCard';
 
 export const SessionHistoryContent = (): React.JSX.Element => {
-  const { sessions, loading, error, refetch } = useSessions();
+  const { sessions, loading, error, refetch } = useSessionHistory();
 
   if (loading) {
     return (

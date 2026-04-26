@@ -4,7 +4,7 @@ import { useAuth } from '../../../../context/hooks/useAuth';
 import type { Session } from '../../core/domain/models/Session';
 import { sessionRepository } from '../adapter';
 
-export const useSessions = () => {
+export const useSessionHistory = () => {
   const { token } = useAuth();
 
   const [sessions, setSessions] = useState<Session[] | null>(null);
@@ -32,6 +32,12 @@ export const useSessions = () => {
   };
 
   useEffect(() => {
+    if (!token) {
+      setSessions(null);
+      setLoading(false);
+      return;
+    }
+
     fetchSessions();
   }, [token]);
 

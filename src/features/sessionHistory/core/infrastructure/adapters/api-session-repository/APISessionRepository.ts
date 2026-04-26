@@ -5,20 +5,22 @@ import type { APIErrorResponse } from '../../../../../../shared/api/error-respon
 import type { SessionRepository } from '../../../application/ports/SessionRepository';
 import type { Session } from '../../../domain/models/Session';
 import type { GetSessionDTO } from './dtos/GetSessionDTO';
-import { SessionFromDTO } from './mappers/SessionsFromDTO';
+import { SessionsFromDTO } from './mappers/SessionsFromDTO';
 
 const SESSIONS_URL = `${API_BASE_URL}/sessions/history`;
 
+const authHeaders = (token?: string) => ({
+  Authorization: token ? `Bearer ${token}` : '',
+});
+
 export class APISessionRepository implements SessionRepository {
-  async getUserSessions(token: string): Promise<Session[]> {
+  async getUserSessions(token?: string): Promise<Session[]> {
     try {
       const response = await axios.get<GetSessionDTO[]>(SESSIONS_URL, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: authHeaders(token),
       });
 
-      return SessionFromDTO.fromDTOList(response.data);
+      return SessionsFromDTO.fromDTOList(response.data);
     } catch (error) {
       const err = error as AxiosError<APIErrorResponse>;
       const serverMessage =

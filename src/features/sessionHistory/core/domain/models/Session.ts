@@ -1,7 +1,7 @@
 export interface Session {
-  id: number;
-  userId: number;
-  routineId?: number | null;
+  id: string;
+  userId: string;
+  routineId?: string | null;
   date: Date;
   notes?: string | null;
   createdAt: Date;

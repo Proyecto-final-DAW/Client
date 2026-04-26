@@ -1,7 +1,7 @@
 import type { Session } from '../../../../domain/models/Session';
 import type { GetSessionDTO } from '../dtos/GetSessionDTO';
 
-export class SessionFromDTO {
+export class SessionsFromDTO {
   static fromDTO(dto: GetSessionDTO): Session {
     return {
       id: dto.id,
@@ -14,6 +14,6 @@ export class SessionFromDTO {
   }
 
   static fromDTOList(dtos: GetSessionDTO[]): Session[] {
-    return dtos.map(SessionFromDTO.fromDTO);
+    return dtos.map(SessionsFromDTO.fromDTO);
   }
 }
