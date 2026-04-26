@@ -1,14 +1,8 @@
+import { toISODate } from '../../../../../../shared/utils/date';
 import type { CardsRepository } from '../../../application/ports/CardsRepository';
 import type { Cards } from '../../../domain/models/Cards';
 
 const STREAK = 7;
-
-const toISODate = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
 
 const buildMockTrainingDays = (): string[] => {
   const today = new Date();
@@ -28,10 +22,13 @@ const buildMockTrainingDays = (): string[] => {
     }
   }
 
+  // When the streak crosses month boundaries, streakStart can be < 1.
+  // In that case any scattered day in this month is "outside the streak window".
   const streakStart = today.getDate() - STREAK + 1;
   const scattered = [2, 4, 7, 9, 12, 15];
   scattered.forEach((day) => {
-    if (day >= 1 && day < streakStart && day <= daysInMonth) {
+    const beforeStreak = streakStart < 1 || day < streakStart;
+    if (day >= 1 && day <= daysInMonth && beforeStreak) {
       const date = new Date(today.getFullYear(), today.getMonth(), day);
       trained.add(toISODate(date));
     }
@@ -41,9 +38,7 @@ const buildMockTrainingDays = (): string[] => {
 };
 
 export class MockCardsRepository implements CardsRepository {
-  async getCards(token: string): Promise<Cards> {
-    void token;
-
+  async getCards(_token: string): Promise<Cards> {
     await new Promise((resolve) => setTimeout(resolve, 400));
 
     return {
