@@ -22,7 +22,7 @@ export const SessionHistoryCard = ({
         </div>
 
         <div className="rounded-xl bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-400">
-          {session.routineId ? `Rutina #${session.routineId}` : 'Sin rutina'}
+          {session.routineId ? 'Rutina' : 'Sin rutina'}
         </div>
       </div>
 
