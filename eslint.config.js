@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import perfectionist from "eslint-plugin-perfectionist";
 import prettier from "eslint-plugin-prettier";
+import reactHooks from "eslint-plugin-react-hooks";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 
@@ -39,9 +40,12 @@ export default [
       "@typescript-eslint": typescriptEslint,
       prettier: prettier,
       perfectionist: perfectionist,
+      "react-hooks": reactHooks,
     },
     rules: {
       "prettier/prettier": ["error", prettierConfig],
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
