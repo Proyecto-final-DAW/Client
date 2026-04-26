@@ -1,7 +1,7 @@
-type PixelCornersProps = {
+interface PixelCornersProps {
   size?: 'sm' | 'md';
   className?: string;
-};
+}
 
 const SIZE_CLASS: Record<NonNullable<PixelCornersProps['size']>, string> = {
   sm: 'w-2 h-2',

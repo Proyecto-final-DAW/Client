@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 import type { StatPilar } from '../../core/domain/models/StatPilar';
 
 interface StatBarProps {
@@ -39,12 +41,12 @@ export const StatBar = (props: StatBarProps): React.JSX.Element => {
             backgroundColor: `color-mix(in srgb, ${color} 12%, var(--muted))`,
           }}
         >
-          <div
-            className="h-full rounded-full transition-[width] duration-700 ease-out"
-            style={{
-              width: `${percentage}%`,
-              backgroundColor: color,
-            }}
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${percentage}%` }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="h-full rounded-full"
+            style={{ backgroundColor: color }}
           />
         </div>
       </div>
