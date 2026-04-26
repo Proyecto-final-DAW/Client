@@ -9,9 +9,8 @@ import { SessionsFromDTO } from './mappers/SessionsFromDTO';
 
 const SESSIONS_URL = `${API_BASE_URL}/sessions/history`;
 
-const authHeaders = (token?: string) => ({
-  Authorization: token ? `Bearer ${token}` : '',
-});
+const authHeaders = (token?: string) =>
+  token ? { Authorization: `Bearer ${token}` } : {};
 
 export class APISessionRepository implements SessionRepository {
   async getUserSessions(token?: string): Promise<Session[]> {

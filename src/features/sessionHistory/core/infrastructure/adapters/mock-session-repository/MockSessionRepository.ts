@@ -2,7 +2,7 @@ import type { SessionRepository } from '../../../application/ports/SessionReposi
 import type { Session } from '../../../domain/models/Session';
 
 export class MockSessionRepository implements SessionRepository {
-  async getUserSessions(_token: string): Promise<Session[]> {
+  async getUserSessions(_token?: string): Promise<Session[]> {
     return [
       {
         id: '1',
