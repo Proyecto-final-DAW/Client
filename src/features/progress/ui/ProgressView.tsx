@@ -1,6 +1,9 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
 
+import { AsyncState } from '../../../shared/components/AsyncState';
+import { ErrorState } from '../../../shared/components/ErrorState';
+import { LoadingPixel } from '../../../shared/components/LoadingPixel';
 import { ExerciseProgressChart } from './components/ExerciseProgressChart';
 import { ExerciseSelector } from './components/ExerciseSelector';
 import { WeightProgressContent } from './components/WeightProgressContent';
@@ -44,40 +47,35 @@ export const ProgressView = (): React.JSX.Element => {
             Progresión por ejercicio
           </h2>
 
-          {loadingExercises ? (
-            <p className="text-gray-400">Cargando ejercicios...</p>
-          ) : exercisesError ? (
-            <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-400">
-              {exercisesError}
-            </p>
-          ) : exercises.length === 0 ? (
-            <div className="rounded-xl border border-gray-800 bg-gray-900 p-6">
-              <p className="text-gray-400">
-                Aún no has registrado sesiones. Cuando entrenes podrás ver tu
-                progresión aquí.
-              </p>
-            </div>
-          ) : (
-            <>
-              <div className="mb-6">
-                <ExerciseSelector
-                  exercises={exercises}
-                  selectedId={selectedId}
-                  onChange={setSelectedId}
-                />
-              </div>
+          <AsyncState
+            loading={loadingExercises}
+            error={exercisesError}
+            data={exercises}
+            empty={(e) => e.length === 0}
+            loadingLabel="CARGANDO EJERCICIOS"
+            emptyTitle="Sin sesiones"
+            emptyDescription="Aún no has registrado sesiones. Cuando entrenes podrás ver tu progresión aquí."
+          >
+            {(exercises) => (
+              <>
+                <div className="mb-6">
+                  <ExerciseSelector
+                    exercises={exercises}
+                    selectedId={selectedId}
+                    onChange={setSelectedId}
+                  />
+                </div>
 
-              {progressError ? (
-                <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-400">
-                  {progressError}
-                </p>
-              ) : loadingProgress ? (
-                <p className="text-gray-400">Cargando progresión...</p>
-              ) : (
-                <ExerciseProgressChart points={points} />
-              )}
-            </>
-          )}
+                {loadingProgress ? (
+                  <LoadingPixel label="CARGANDO PROGRESIÓN" />
+                ) : progressError ? (
+                  <ErrorState message={progressError} />
+                ) : (
+                  <ExerciseProgressChart points={points} />
+                )}
+              </>
+            )}
+          </AsyncState>
         </section>
       </section>
     </main>
