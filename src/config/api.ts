@@ -20,7 +20,10 @@ export const API_ENDPOINTS = {
   changePassword: `${API_BASE_URL}/profile/me/password`,
   statsInit: `${API_BASE_URL}/stats/init`,
   dashboardCards: `${API_BASE_URL}/users/cards`,
+  weeklySummary: `${API_BASE_URL}/sessions/weekly-summary`,
   onboarding: (userId: number) => `${API_BASE_URL}/onboarding/${userId}/submit`,
   macrosCalculate: (userId: number) =>
     `${API_BASE_URL}/users/${userId}/macros/calculate`,
+  milestones: `${API_BASE_URL}/milestones`,
+  milestonesUnlocked: `${API_BASE_URL}/milestones/me`,
 };

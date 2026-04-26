@@ -2,12 +2,14 @@ import { FireIcon } from '@heroicons/react/24/solid';
 import { motion } from 'framer-motion';
 
 import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { TrainingCalendar } from './TrainingCalendar';
 
-type Props = {
+type StreakCardProps = {
   streak: number;
+  trainingDays: string[];
 };
 
-export const StreakCard = (props: Props): React.JSX.Element => {
+export const StreakCard = (props: StreakCardProps): React.JSX.Element => {
   const hasStreak = props.streak > 0;
 
   return (
@@ -41,6 +43,8 @@ export const StreakCard = (props: Props): React.JSX.Element => {
           </p>
         </div>
       </div>
+
+      <TrainingCalendar trainingDays={props.trainingDays} />
     </motion.article>
   );
 };

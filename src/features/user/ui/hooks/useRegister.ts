@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../../../context/hooks/useAuth';
-import { userRepository } from '../adapter';
+import { userInfoRepository, userRepository } from '../adapter';
 
 export const useRegister = () => {
   const [name, setName] = useState('');
@@ -14,15 +14,23 @@ export const useRegister = () => {
   const { setSession } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (
+    normalizedName: string,
+    normalizedEmail: string
+  ) => {
     setLoading(true);
 
     try {
-      const { token, user } = await userRepository.register(
-        name.trim(),
-        email,
+      await userRepository.register({
+        name: normalizedName,
+        email: normalizedEmail,
+        password,
+      });
+      const { token, user } = await userInfoRepository.login(
+        normalizedEmail,
         password
       );
+
       setSession(token, user);
       navigate(user.onboarding_completed ? '/dashboard' : '/onboarding', {
         replace: true,
@@ -39,15 +47,18 @@ export const useRegister = () => {
     setError(null);
     setClientError(null);
 
-    if (!name.trim()) {
+    const normalizedName = name.trim();
+    const normalizedEmail = email.trim();
+
+    if (!normalizedName) {
       setClientError('INGRESA TU NOMBRE');
       return;
     }
-    if (!email.trim()) {
+    if (!normalizedEmail) {
       setClientError('INGRESA TU EMAIL');
       return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
       setClientError('EMAIL INVALIDO');
       return;
     }
@@ -60,7 +71,7 @@ export const useRegister = () => {
       return;
     }
 
-    void handleSubmit();
+    void handleSubmit(normalizedName, normalizedEmail);
   };
 
   const displayError = clientError ?? error;

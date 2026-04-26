@@ -3,6 +3,7 @@ import {
   ClipboardDocumentListIcon,
   HeartIcon,
   HomeIcon,
+  TrophyIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
@@ -37,6 +38,7 @@ export const DashboardLayout = (): React.JSX.Element => {
     { to: '/routines', label: 'RUTINAS', icon: ClipboardDocumentListIcon },
     { to: '/progress', label: 'PROGRESO', icon: ChartBarIcon },
     { to: '/diet', label: 'DIETA', icon: HeartIcon },
+    { to: '/achievements', label: 'LOGROS', icon: TrophyIcon },
     { to: '/profile', label: 'PERFIL', icon: UserCircleIcon },
   ];
 
