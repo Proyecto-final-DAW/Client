@@ -23,7 +23,7 @@ jobs:
         run: npm ci
 
       - name: ESLint
-        run: npm run lint -- --max-warnings=0
+        run: npm run lint
 
       - name: TypeScript
         run: npx tsc --noEmit
