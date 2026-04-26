@@ -9,6 +9,7 @@ import { ProfileView } from './features/profile/ui/ProfileView';
 import { ProgressView } from './features/progress/ui/ProgressView';
 import { RoutinesView } from './features/routines/ui/RoutinesView';
 import { SessionHistoryView } from './features/sessionHistory/ui/SessionHistoryView';
+import { NewSessionView } from './features/sessions/ui/NewSessionView';
 import { Landing } from './features/user/ui/components/landing/Landing';
 import { Login } from './features/user/ui/components/Login';
 import { Register } from './features/user/ui/components/Register';
@@ -33,6 +34,7 @@ export const App = (): React.JSX.Element => {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/progress" element={<ProgressView />} />
               <Route path="/routines" element={<RoutinesView />} />
+              <Route path="/sessions/new" element={<NewSessionView />} />
               <Route path="/diet" element={<Dieta />} />
               <Route path="/achievements" element={<AchievementsView />} />
               <Route path="/my-profile" element={<Perfil />} />

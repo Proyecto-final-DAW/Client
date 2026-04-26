@@ -1,4 +1,5 @@
-import { PlayIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { BoltIcon, PlayIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
 
 import type { Routine } from '../../core/domain/models/Routine';
 
@@ -56,6 +57,14 @@ export const RoutineCard = ({
           <PlayIcon className="h-4 w-4" />
           Usar
         </button>
+
+        <Link
+          to={`/sessions/new?routineId=${routine.id}`}
+          className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-3 py-2 text-sm font-medium text-gray-950 transition hover:bg-emerald-400"
+        >
+          <BoltIcon className="h-4 w-4" />
+          Iniciar sesión
+        </Link>
       </div>
     </article>
   );
