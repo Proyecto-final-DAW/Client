@@ -18,6 +18,7 @@ export class CardsFromDTO {
     return {
       streak: dto.streak,
       lastWorkoutDaysAgo,
+      trainingDays: dto.training_days_this_month ?? [],
       stats: dto.stats,
     };
   }
