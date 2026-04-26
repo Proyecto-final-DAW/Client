@@ -6,44 +6,49 @@ import { dietRepository } from '../adapter';
 
 export const useDiet = () => {
   const { token, user } = useAuth();
+  const authToken = token ?? undefined;
 
   const [diet, setDiet] = useState<Diet | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchDiet = async () => {
-    if (!token || !user?.id) return;
+    if (!user?.id) {
+      setDiet(null);
+      setLoading(false);
+      return;
+    }
 
-    setLoading(true);
     setError(null);
 
     try {
-      const result = await dietRepository.getDiet(String(user.id), token);
+      const result = await dietRepository.getDiet(user.id, authToken);
       setDiet(result);
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Error al cargar la dieta';
 
       setError(message);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (!token || !user?.id) {
-      setDiet(null);
-      setLoading(false);
-      return;
-    }
+    setLoading(true);
+    void fetchDiet().finally(() => setLoading(false));
+  }, [user?.id, token]);
 
-    fetchDiet();
-  }, [token, user?.id]);
+  const refetch = async () => {
+    setRefreshing(true);
+    await fetchDiet();
+    setRefreshing(false);
+  };
 
   return {
     diet,
     loading,
+    refreshing,
     error,
-    refetch: fetchDiet,
+    refetch,
   };
 };

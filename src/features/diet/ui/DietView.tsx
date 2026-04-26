@@ -1,8 +1,11 @@
 import type React from 'react';
 
 import { DietSummaryCard } from './components/DietSummaryCard';
+import { useDiet } from './hooks/useDiet';
 
 export const DietView = (): React.JSX.Element => {
+  const { diet, loading, refreshing, error, refetch } = useDiet();
+
   return (
     <main className="min-h-screen bg-gray-950 px-4 py-8 text-white sm:px-6 lg:px-8">
       <section className="mx-auto flex max-w-5xl flex-col gap-6">
@@ -17,7 +20,13 @@ export const DietView = (): React.JSX.Element => {
           </p>
         </header>
 
-        <DietSummaryCard />
+        <DietSummaryCard
+          diet={diet}
+          loading={loading}
+          refreshing={refreshing}
+          error={error}
+          onRefresh={refetch}
+        />
       </section>
     </main>
   );

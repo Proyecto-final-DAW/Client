@@ -1,6 +1,6 @@
 export type Diet = {
-  dailyCalories: string;
-  proteinGrams: string;
-  fatGrams: string;
-  carbGrams: string;
+  dailyCalories: number;
+  proteinGrams: number;
+  fatGrams: number;
+  carbGrams: number;
 };
