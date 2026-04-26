@@ -27,13 +27,13 @@ export const App = (): React.JSX.Element => {
           <Route path="/" element={<Landing />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/exercises" element={<ExercisesView />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/onboarding" element={<OnboardingView />} />
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/progress" element={<ProgressView />} />
               <Route path="/routines" element={<RoutinesView />} />
+              <Route path="/exercises" element={<ExercisesView />} />
               <Route path="/diet" element={<DietView />} />
               <Route path="/sessions/new" element={<NewSessionView />} />
               <Route path="/achievements" element={<AchievementsView />} />
