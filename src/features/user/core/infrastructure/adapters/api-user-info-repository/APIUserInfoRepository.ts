@@ -2,8 +2,8 @@ import axios, { AxiosError } from 'axios';
 
 import { API_ENDPOINTS } from '../../../../../../config/api';
 import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
+import type { LoginResponse } from '../../../../../../shared/core/domain/models/UserInfo';
 import type { UserInfoRepository } from '../../../application/ports/UserInfoRepository';
-import type { LoginResponse } from '../../../domain/models/UserInfo';
 
 export class APIUserInfoRepository implements UserInfoRepository {
   async login(email: string, password: string): Promise<LoginResponse> {
@@ -12,12 +12,38 @@ export class APIUserInfoRepository implements UserInfoRepository {
         email,
         password,
       });
-      return response.data as LoginResponse;
+      const data = response.data as unknown as Record<string, unknown>;
+
+      const token = data.token as string | undefined;
+      const user =
+        (data.user as LoginResponse['user'] | undefined) ??
+        ({
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          onboarding_completed: data.onboarding_completed ?? false,
+          profileImage: data.profileImage,
+          created_at: data.created_at,
+          updated_at: data.updated_at,
+        } as LoginResponse['user']);
+
+      if (!token) {
+        throw new Error(
+          'No pudimos iniciar sesión. Verifica tus datos e intenta nuevamente.'
+        );
+      }
+
+      return {
+        message: (data.message as string) ?? 'OK',
+        token,
+        user,
+      };
     } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
       const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al iniciar sesión';
-      throw new Error(serverMessage);
+      throw new Error(err.response?.data?.message || 'Error al iniciar sesión');
     }
   }
 }
