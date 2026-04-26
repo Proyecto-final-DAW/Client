@@ -14,14 +14,18 @@ export const useRegister = () => {
   const { setSession } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (
+    normalizedName: string,
+    normalizedEmail: string
+  ) => {
     setLoading(true);
 
     try {
-      const normalizedName = name.trim();
-      const normalizedEmail = email.trim();
-
-      await userRepository.register(normalizedName, normalizedEmail, password);
+      await userRepository.register({
+        name: normalizedName,
+        email: normalizedEmail,
+        password,
+      });
       const { token, user } = await userInfoRepository.login(
         normalizedEmail,
         password
@@ -43,15 +47,18 @@ export const useRegister = () => {
     setError(null);
     setClientError(null);
 
-    if (!name.trim()) {
+    const normalizedName = name.trim();
+    const normalizedEmail = email.trim();
+
+    if (!normalizedName) {
       setClientError('INGRESA TU NOMBRE');
       return;
     }
-    if (!email.trim()) {
+    if (!normalizedEmail) {
       setClientError('INGRESA TU EMAIL');
       return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
       setClientError('EMAIL INVALIDO');
       return;
     }
@@ -64,7 +71,7 @@ export const useRegister = () => {
       return;
     }
 
-    void handleSubmit();
+    void handleSubmit(normalizedName, normalizedEmail);
   };
 
   const displayError = clientError ?? error;

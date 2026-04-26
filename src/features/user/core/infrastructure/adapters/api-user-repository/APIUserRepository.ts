@@ -3,49 +3,22 @@ import axios, { AxiosError } from 'axios';
 import { API_ENDPOINTS } from '../../../../../../config/api';
 import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
 import type { UserRepository } from '../../../application/ports/UserRepository';
-import type { RegisterResponse } from '../../../domain/models/User';
+import type { User, RegisterResponse } from '../../../domain/models/User';
 
 export class APIUserRepository implements UserRepository {
-  async register(
-    name: string,
-    email: string,
-    password: string
-  ): Promise<RegisterResponse> {
+  async register(payload: User): Promise<RegisterResponse> {
     try {
-      const response = await axios.post(API_ENDPOINTS.register, {
-        name,
-        email,
-        password,
-      });
+      const response = await axios.post(API_ENDPOINTS.register, payload);
       const data =
         (response.data as unknown as Record<string, unknown> | undefined) ?? {};
 
-      // Register can return 202 with no token/user (anti-enumeration / no autologin).
-      // Treat it as success; login happens explicitly right after.
-      const userCandidate =
-        (data.user as RegisterResponse['user'] | undefined) ??
-        (data.id != null || data.email != null
-          ? ({
-              id: data.id,
-              name: data.name,
-              email: data.email,
-              onboarding_completed: data.onboarding_completed ?? false,
-              created_at: data.created_at,
-              updated_at: data.updated_at,
-            } as RegisterResponse['user'])
-          : undefined);
-
       return {
         message: data.message as string | undefined,
-        user: userCandidate,
       };
     } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
       const err = error as AxiosError<APIErrorResponse>;
       throw new Error(
-        err.response?.data?.message || 'Error al registrar usuario'
+        err.response?.data?.message ?? 'Error al registrar usuario'
       );
     }
   }

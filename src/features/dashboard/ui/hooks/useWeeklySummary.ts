@@ -33,7 +33,7 @@ export const useWeeklySummary = () => {
 
   useEffect(() => {
     fetchSummary();
-  }, []);
+  }, [token]);
 
   return { summary, loading, error, refetch: fetchSummary };
 };
