@@ -1,9 +1,5 @@
-import type { RegisterResponse } from '../../domain/models/User';
+import type { User, RegisterResponse } from '../../domain/models/User';
 
 export interface UserRepository {
-  register(
-    name: string,
-    email: string,
-    password: string
-  ): Promise<RegisterResponse>;
+  register(payload: User): Promise<RegisterResponse>;
 }
