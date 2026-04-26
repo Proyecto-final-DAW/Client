@@ -9,7 +9,7 @@ export class MockSessionRepository implements SessionRepository {
 
   async createSession(
     input: CreateSessionInput,
-    _token?: string
+    _token: string
   ): Promise<Session> {
     await this.delay();
 

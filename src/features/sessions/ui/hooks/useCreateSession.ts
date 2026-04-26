@@ -6,18 +6,22 @@ import { sessionRepository } from '../adapter';
 
 export const useCreateSession = () => {
   const { token } = useAuth();
-  const authToken = token ?? undefined;
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savedAt, setSavedAt] = useState<number | null>(null);
 
   const submit = async (input: CreateSessionInput): Promise<boolean> => {
+    if (!token) {
+      setError('Tu sesión ha caducado. Vuelve a iniciar sesión.');
+      return false;
+    }
+
     setSaving(true);
     setError(null);
 
     try {
-      await sessionRepository.createSession(input, authToken);
+      await sessionRepository.createSession(input, token);
       setSavedAt(Date.now());
       return true;
     } catch (err) {

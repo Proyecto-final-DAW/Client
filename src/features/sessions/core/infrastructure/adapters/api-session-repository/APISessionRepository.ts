@@ -15,13 +15,10 @@ import { SessionFromDTO } from './mappers/SessionFromDTO';
 
 const SESSIONS_URL = `${API_BASE_URL}/sessions`;
 
-const authHeaders = (token?: string) =>
-  token ? { Authorization: `Bearer ${token}` } : {};
-
 export class APISessionRepository implements SessionRepository {
   async createSession(
     input: CreateSessionInput,
-    token?: string
+    token: string
   ): Promise<Session> {
     try {
       const body: CreateSessionRequestDTO = {
@@ -32,7 +29,7 @@ export class APISessionRepository implements SessionRepository {
       const response = await axios.post<CreateSessionResponseDTO>(
         SESSIONS_URL,
         body,
-        { headers: authHeaders(token) }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       return SessionFromDTO.fromDTO(response.data);
