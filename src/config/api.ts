@@ -24,4 +24,6 @@ export const API_ENDPOINTS = {
   onboarding: (userId: number) => `${API_BASE_URL}/onboarding/${userId}/submit`,
   macrosCalculate: (userId: number) =>
     `${API_BASE_URL}/users/${userId}/macros/calculate`,
+  milestones: `${API_BASE_URL}/milestones`,
+  milestonesUnlocked: `${API_BASE_URL}/milestones/me`,
 };
