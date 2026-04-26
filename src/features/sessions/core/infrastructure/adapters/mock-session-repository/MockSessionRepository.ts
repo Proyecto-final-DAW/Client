@@ -28,8 +28,4 @@ export class MockSessionRepository implements SessionRepository {
       createdAt,
     };
   }
-
-  private async delay(): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, 400));
-  }
 }
