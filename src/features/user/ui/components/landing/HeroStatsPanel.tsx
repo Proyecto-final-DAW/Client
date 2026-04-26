@@ -5,9 +5,10 @@ import {
   SparklesIcon,
   StarIcon,
 } from '@heroicons/react/24/solid';
+import { motion } from 'framer-motion';
 import type { ComponentType, SVGProps } from 'react';
 
-import { PixelCorners } from './PixelCorners';
+import { PixelCorners } from '../../../../../shared/components/PixelCorners';
 
 type HeroIconCmp = ComponentType<SVGProps<SVGSVGElement>>;
 
@@ -63,10 +64,12 @@ const StatRow = ({ stat }: { stat: Stat }) => {
         </div>
 
         <div className="h-2 w-full overflow-hidden rounded-sm bg-[#1e1e2e]">
-          <div
-            className="h-full transition-[width] duration-700 ease-out"
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${stat.value}%` }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="h-full"
             style={{
-              width: `${stat.value}%`,
               backgroundColor: stat.color,
               boxShadow: `0 0 8px ${stat.color}66`,
             }}
