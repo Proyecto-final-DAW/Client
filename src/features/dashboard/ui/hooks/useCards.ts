@@ -31,7 +31,7 @@ export const useCards = () => {
 
   useEffect(() => {
     fetchCards();
-  }, [token]);
+  }, []);
 
   return { cards, loading, error, refetch: fetchCards };
 };
