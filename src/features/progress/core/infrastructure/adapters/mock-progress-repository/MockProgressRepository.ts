@@ -1,6 +1,10 @@
 import type { ProgressRepository } from '../../../application/ports/ProgressRepository';
 import type { ExerciseProgressPoint } from '../../../domain/models/ExerciseProgressPoint';
 import type { PerformedExercise } from '../../../domain/models/PerformedExercise';
+import type {
+  Progress,
+  RegisterWeightInput,
+} from '../../../domain/models/Progress';
 
 type MockExercise = {
   id: string;
@@ -19,6 +23,14 @@ const EXERCISES: MockExercise[] = [
 
 const SESSIONS = 10;
 const DAYS_BACK = 90;
+
+const SEED_HISTORY: Progress[] = [
+  { date: new Date('2026-04-01'), weight: 72 },
+  { date: new Date('2026-04-05'), weight: 71.5 },
+  { date: new Date('2026-04-10'), weight: 71 },
+  { date: new Date('2026-04-15'), weight: 70.8 },
+  { date: new Date('2026-04-20'), weight: 70.5 },
+];
 
 const toISODate = (date: Date): string => {
   const year = date.getFullYear();
@@ -52,13 +64,15 @@ const buildProgression = (exercise: MockExercise): ExerciseProgressPoint[] => {
 };
 
 export class MockProgressRepository implements ProgressRepository {
+  private history: Progress[] = structuredClone(SEED_HISTORY);
+
   async getPerformedExercises(
     userId: number,
     token: string
   ): Promise<PerformedExercise[]> {
     void userId;
     void token;
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await this.delay(200);
     return EXERCISES.map(({ id, name }) => ({ id, name }));
   }
 
@@ -69,9 +83,39 @@ export class MockProgressRepository implements ProgressRepository {
   ): Promise<ExerciseProgressPoint[]> {
     void userId;
     void token;
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    await this.delay(300);
     const exercise = EXERCISES.find((e) => e.id === exerciseId);
     if (!exercise) return [];
     return buildProgression(exercise);
+  }
+
+  async getWeightHistory(
+    _userId: number,
+    _token?: string
+  ): Promise<Progress[]> {
+    await this.delay(300);
+
+    return structuredClone(this.history);
+  }
+
+  async registerWeight(
+    _userId: number,
+    input: RegisterWeightInput,
+    _token?: string
+  ): Promise<Progress> {
+    await this.delay(300);
+
+    const entry: Progress = {
+      date: new Date(input.date),
+      weight: input.weight,
+    };
+
+    this.history = [...this.history, entry];
+
+    return structuredClone(entry);
+  }
+
+  private async delay(ms: number): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

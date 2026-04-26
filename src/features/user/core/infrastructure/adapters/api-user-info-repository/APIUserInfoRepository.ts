@@ -39,11 +39,8 @@ export class APIUserInfoRepository implements UserInfoRepository {
         user,
       };
     } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
       const err = error as AxiosError<APIErrorResponse>;
-      throw new Error(err.response?.data?.message || 'Error al iniciar sesión');
+      throw new Error(err.response?.data?.message ?? 'Error al iniciar sesión');
     }
   }
 }
