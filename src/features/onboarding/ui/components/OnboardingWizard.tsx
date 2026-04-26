@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
 
-import type { MacrosPort } from '../../core/application/ports/MacrosPort';
-import type { OnboardingPort } from '../../core/application/ports/OnboardingPort';
-import type { StatsInitPort } from '../../core/application/ports/StatsInitPort';
+import type { MacrosPort } from '../../core/application/ports/MacrosRepository';
+import type { OnboardingPort } from '../../core/application/ports/OnboardingRepository';
+import type { StatsInitPort } from '../../core/application/ports/StatsInitRepository';
 import type { OnboardingResponse } from '../../core/domain/models/OnboardingResponse';
 import { useOnboardingWizard } from '../hooks/useOnboardingWizard';
 import { StepActivity } from './StepActivity';

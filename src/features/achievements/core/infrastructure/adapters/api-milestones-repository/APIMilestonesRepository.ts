@@ -11,15 +11,13 @@ import type {
 import { MilestonesFromDTO } from './mappers/MilestonesFromDTO';
 
 export class APIMilestonesRepository implements MilestonesRepository {
-  async getAllWithStatus(token: string): Promise<Milestone[]> {
+  async getAllWithStatus(): Promise<Milestone[]> {
     try {
-      const headers = { Authorization: `Bearer ${token}` };
-
       const [allResponse, unlockedResponse] = await Promise.all([
-        axios.get<GetAllMilestonesDTO>(API_ENDPOINTS.milestones, { headers }),
-        axios.get<GetUnlockedMilestonesDTO>(API_ENDPOINTS.milestonesUnlocked, {
-          headers,
-        }),
+        axios.get<GetAllMilestonesDTO>(API_ENDPOINTS.getMilestones),
+        axios.get<GetUnlockedMilestonesDTO>(
+          API_ENDPOINTS.getMilestonesUnlocked
+        ),
       ]);
 
       return MilestonesFromDTO.fromDTO({

@@ -111,8 +111,7 @@ const MOCK_MILESTONES: Milestone[] = [
 ];
 
 export class MockMilestonesRepository implements MilestonesRepository {
-  async getAllWithStatus(token: string): Promise<Milestone[]> {
-    void token;
+  async getAllWithStatus(): Promise<Milestone[]> {
     await new Promise((resolve) => setTimeout(resolve, 300));
     return MOCK_MILESTONES;
   }

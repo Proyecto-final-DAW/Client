@@ -1,12 +1,12 @@
-import type { MacrosPort } from '../../../application/ports/MacrosPort';
+import type { MacrosRepository } from '../../../application/ports/MacrosRepository';
 import type { OnboardingFormData } from '../../../domain/models/OnboardingFormData';
 
-export class MockMacrosRepository implements MacrosPort {
+export class MockMacrosRepository implements MacrosRepository {
   async calculateMacros(
     _data: OnboardingFormData,
-    _userId: number,
-    _token: string
+    _userId: number
   ): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, 400));
     return;
   }
 }

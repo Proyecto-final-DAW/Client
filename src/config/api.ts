@@ -15,19 +15,71 @@ axios.defaults.baseURL = API_BASE_URL;
 export const API_ENDPOINTS = {
   register: `${API_BASE_URL}/users/auth/register`,
   login: `${API_BASE_URL}/users/auth/login`,
+  logout: `${API_BASE_URL}/users/auth/logout`,
   getExercises: `${API_BASE_URL}/exercises`,
   profile: `${API_BASE_URL}/profile/me`,
   changePassword: `${API_BASE_URL}/profile/me/password`,
-  statsInit: `${API_BASE_URL}/stats/init`,
-  dashboardCards: `${API_BASE_URL}/users/cards`,
-  weeklySummary: `${API_BASE_URL}/sessions/weekly-summary`,
+  initStats: `${API_BASE_URL}/stats/init`,
+  getStats: `${API_BASE_URL}/users/stats`,
+  getDashboardCards: `${API_BASE_URL}/users/cards`,
+  getWeeklySummary: `${API_BASE_URL}/sessions/weekly-summary`,
+  createSession: `${API_BASE_URL}/sessions`,
+  getSessionHistory: `${API_BASE_URL}/sessions/history`,
+  routines: `${API_BASE_URL}/routines`,
+  deleteRoutine: (routineId: string) => `${API_BASE_URL}/routines/${routineId}`,
+  addExerciseToRoutine: (routineId: string) =>
+    `${API_BASE_URL}/routines/${routineId}/exercises`,
+  removeExerciseFromRoutine: (routineId: string, exerciseId: string) =>
+    `${API_BASE_URL}/routines/${routineId}/exercises/${exerciseId}`,
+  reorderExercises: (routineId: string) =>
+    `${API_BASE_URL}/routines/${routineId}/exercises/reorder`,
+  getDiet: (userId: number) => `${API_BASE_URL}/diet/${userId}`,
   onboarding: (userId: number) => `${API_BASE_URL}/onboarding/${userId}/submit`,
-  macrosCalculate: (userId: number) =>
+  calculateMacros: (userId: number) =>
     `${API_BASE_URL}/users/${userId}/macros/calculate`,
-  performedExercises: (userId: number) =>
+  getPerformedExercises: (userId: number) =>
     `${API_BASE_URL}/progress/${userId}/exercises-performed`,
-  exerciseProgress: (userId: number, exerciseId: string) =>
+  getExerciseProgress: (userId: number, exerciseId: string) =>
     `${API_BASE_URL}/progress/${userId}/exercise/${exerciseId}`,
-  milestones: `${API_BASE_URL}/milestones`,
-  milestonesUnlocked: `${API_BASE_URL}/milestones/me`,
+  getWeightHistory: (userId: number) =>
+    `${API_BASE_URL}/progress/${userId}/weight`,
+  getMilestones: `${API_BASE_URL}/milestones`,
+  getMilestonesUnlocked: `${API_BASE_URL}/milestones/me`,
 };
+
+axios.interceptors.request.use((config) => {
+  if (typeof window === 'undefined') return config;
+
+  const token = localStorage.getItem('auth_token');
+  if (!token) return config;
+
+  const headers = (config.headers ?? {}) as Record<string, unknown>;
+  const hasAuthHeader = typeof headers.Authorization === 'string';
+
+  if (!hasAuthHeader) {
+    config.headers = {
+      ...(headers as Record<string, string>),
+      Authorization: `Bearer ${token}`,
+    } as never;
+  }
+
+  return config;
+});
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error?.response?.status;
+
+    if (status === 401 && typeof window !== 'undefined') {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('auth_user');
+
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
