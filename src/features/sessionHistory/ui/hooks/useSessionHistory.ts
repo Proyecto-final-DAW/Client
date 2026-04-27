@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useAuth } from '../../../../context/hooks/useAuth';
 import type { Session } from '../../core/domain/models/Session';
@@ -11,7 +11,7 @@ export const useSessionHistory = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchSessions = async () => {
+  const fetchSessions = useCallback(async () => {
     if (!token) return;
 
     setLoading(true);
@@ -29,7 +29,7 @@ export const useSessionHistory = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     if (!token) {
@@ -39,7 +39,7 @@ export const useSessionHistory = () => {
     }
 
     fetchSessions();
-  }, [token]);
+  }, [token, fetchSessions]);
 
   return { sessions, loading, error, refetch: fetchSessions };
 };

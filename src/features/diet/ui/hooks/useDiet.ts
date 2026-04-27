@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useAuth } from '../../../../context/hooks/useAuth';
 import type { Diet } from '../../core/domain/models/Diet';
@@ -13,7 +13,7 @@ export const useDiet = () => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchDiet = async () => {
+  const fetchDiet = useCallback(async () => {
     if (!user?.id) {
       setDiet(null);
       setLoading(false);
@@ -31,12 +31,12 @@ export const useDiet = () => {
 
       setError(message);
     }
-  };
+  }, [user?.id, authToken]);
 
   useEffect(() => {
     setLoading(true);
     void fetchDiet().finally(() => setLoading(false));
-  }, [user?.id, token]);
+  }, [fetchDiet]);
 
   const refetch = async () => {
     setRefreshing(true);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useAuth } from '../../../../context/hooks/useAuth';
 import type { Milestone } from '../../core/domain/models/Milestone';
@@ -11,7 +11,7 @@ export const useMilestones = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchMilestones = async () => {
+  const fetchMilestones = useCallback(async () => {
     if (!token) return;
 
     setLoading(true);
@@ -27,11 +27,11 @@ export const useMilestones = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchMilestones();
-  }, [token]);
+  }, [fetchMilestones]);
 
   return { milestones, loading, error, refetch: fetchMilestones };
 };

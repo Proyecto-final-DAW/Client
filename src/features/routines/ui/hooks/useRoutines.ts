@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useAuth } from '../../../../context/hooks/useAuth';
 import type { Routine } from '../../core/domain/models/Routine';
@@ -13,7 +13,7 @@ export const useRoutines = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedRoutineId, setSelectedRoutineId] = useState<string>('');
 
-  const fetchRoutines = async () => {
+  const fetchRoutines = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -27,11 +27,11 @@ export const useRoutines = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [authToken]);
 
   useEffect(() => {
     void fetchRoutines();
-  }, [authToken]);
+  }, [fetchRoutines]);
 
   useEffect(() => {
     setSelectedRoutineId((currentSelectedId) => {

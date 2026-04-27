@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useAuth } from '../../../../context/hooks/useAuth';
 import type { WeeklySummary } from '../../core/domain/models/WeeklySummary';
@@ -11,7 +11,7 @@ export const useWeeklySummary = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchSummary = async () => {
+  const fetchSummary = useCallback(async () => {
     if (!token) return;
 
     setLoading(true);
@@ -29,11 +29,11 @@ export const useWeeklySummary = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchSummary();
-  }, [token]);
+  }, [fetchSummary]);
 
   return { summary, loading, error, refetch: fetchSummary };
 };

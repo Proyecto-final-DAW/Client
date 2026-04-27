@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useAuth } from '../../../../context/hooks/useAuth';
 import type {
@@ -16,7 +16,7 @@ export const useProgress = () => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const fetchProgress = async () => {
+  const fetchProgress = useCallback(async () => {
     if (!token || !user?.id) return;
 
     setLoading(true);
@@ -35,7 +35,7 @@ export const useProgress = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, user?.id]);
 
   const addEntry = async (input: RegisterWeightInput): Promise<boolean> => {
     if (!token || !user?.id) return false;
@@ -71,7 +71,7 @@ export const useProgress = () => {
     }
 
     fetchProgress();
-  }, [token, user?.id]);
+  }, [token, user?.id, fetchProgress]);
 
   return {
     weightHistory,

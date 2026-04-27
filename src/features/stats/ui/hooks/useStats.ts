@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useAuth } from '../../../../context/hooks/useAuth';
 import type { UserStats } from '../../core/domain/models/UserStats';
@@ -11,7 +11,7 @@ export const useStats = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     if (!token) return;
 
     setLoading(true);
@@ -27,11 +27,11 @@ export const useStats = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchStats();
-  }, [token]);
+  }, [fetchStats]);
 
   return { stats, loading, error, refetch: fetchStats };
 };

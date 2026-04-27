@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useAuth } from '../../../../context/hooks/useAuth';
 import type { Cards } from '../../core/domain/models/Cards';
@@ -11,7 +11,7 @@ export const useCards = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchCards = async () => {
+  const fetchCards = useCallback(async () => {
     if (!token) return;
 
     setLoading(true);
@@ -27,11 +27,11 @@ export const useCards = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchCards();
-  }, [token]);
+  }, [fetchCards]);
 
   return { cards, loading, error, refetch: fetchCards };
 };
