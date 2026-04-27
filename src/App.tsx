@@ -11,6 +11,8 @@ import { ProgressView } from './features/progress/ui/ProgressView';
 import { RoutinesView } from './features/routines/ui/RoutinesView';
 import { SessionHistoryView } from './features/sessionHistory/ui/SessionHistoryView';
 import { NewSessionView } from './features/sessions/ui/NewSessionView';
+import { TemplateDetailView } from './features/templates/ui/TemplateDetailView';
+import { TemplatesView } from './features/templates/ui/TemplatesView';
 import { Landing } from './features/user/ui/components/landing/Landing';
 import { Login } from './features/user/ui/components/Login';
 import { Register } from './features/user/ui/components/Register';
@@ -37,6 +39,8 @@ export const App = (): React.JSX.Element => {
               <Route path="/diet" element={<DietView />} />
               <Route path="/sessions/new" element={<NewSessionView />} />
               <Route path="/achievements" element={<AchievementsView />} />
+              <Route path="/templates" element={<TemplatesView />} />
+              <Route path="/templates/:id" element={<TemplateDetailView />} />
               <Route path="/my-profile" element={<Perfil />} />
               <Route path="/session-history" element={<SessionHistoryView />} />
             </Route>
