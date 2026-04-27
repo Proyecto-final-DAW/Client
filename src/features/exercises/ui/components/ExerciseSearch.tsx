@@ -25,14 +25,22 @@ export const ExerciseSearch = ({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row gap-3">
+        <label htmlFor="exercise-search" className="sr-only">
+          Buscar ejercicio
+        </label>
         <input
+          id="exercise-search"
           type="text"
           placeholder="Buscar ejercicio..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
         />
+        <label htmlFor="exercise-muscle" className="sr-only">
+          Filtrar por grupo muscular
+        </label>
         <select
+          id="exercise-muscle"
           value={muscle}
           onChange={(e) => setMuscle(e.target.value)}
           className="bg-gray-800 text-white rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500"
@@ -80,7 +88,10 @@ export const ExerciseSearch = ({
           </div>
 
           {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-2">
+            <nav
+              aria-label="Paginación de ejercicios"
+              className="flex justify-center items-center gap-2"
+            >
               <button
                 onClick={() => goToPage(page - 1)}
                 disabled={page === 1}
@@ -93,6 +104,8 @@ export const ExerciseSearch = ({
                 <button
                   key={p}
                   onClick={() => goToPage(p)}
+                  aria-label={`Página ${p}`}
+                  aria-current={p === page ? 'page' : undefined}
                   className={`w-8 h-8 rounded-lg text-sm transition-colors ${
                     p === page
                       ? 'bg-blue-600 text-white'
@@ -110,7 +123,7 @@ export const ExerciseSearch = ({
               >
                 Siguiente
               </button>
-            </div>
+            </nav>
           )}
         </>
       )}

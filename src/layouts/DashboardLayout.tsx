@@ -71,6 +71,7 @@ export const DashboardLayout = (): React.JSX.Element => {
               {user?.profileImage ? (
                 <img
                   src={user.profileImage}
+                  alt={`Foto de perfil de ${userName}`}
                   className="h-12 w-12 rounded-sm border-2 border-[#1e1e2e] object-cover"
                 />
               ) : (
