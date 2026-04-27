@@ -8,7 +8,7 @@ import { MockMacrosRepository } from '../core/infrastructure/adapters/mock-macro
 import { MockOnboardingAdapter } from '../core/infrastructure/adapters/mock-onboarding-info-repository/MockOnboardingInfoRepository';
 import { MockStatsInitRepository } from '../core/infrastructure/adapters/mock-stats-init-repository/MockStatsInitRepository';
 
-export const ACTIVE_ADAPTER: 'api' | 'mock' = 'mock';
+export const ACTIVE_ADAPTER: 'api' | 'mock' = 'api';
 
 const ONBOARDING_ADAPTERS = {
   api: new ApiOnboardingInfoRepository(),

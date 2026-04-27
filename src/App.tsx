@@ -17,8 +17,6 @@ import { Register } from './features/user/ui/components/Register';
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 
-const Perfil = () => <h1>Perfil</h1>;
-
 export const App = (): React.JSX.Element => {
   return (
     <AuthProvider>
@@ -37,11 +35,9 @@ export const App = (): React.JSX.Element => {
               <Route path="/diet" element={<DietView />} />
               <Route path="/sessions/new" element={<NewSessionView />} />
               <Route path="/achievements" element={<AchievementsView />} />
-              <Route path="/my-profile" element={<Perfil />} />
               <Route path="/session-history" element={<SessionHistoryView />} />
+              <Route path="/profile" element={<ProfileView />} />
             </Route>
-
-            <Route path="/profile" element={<ProfileView />} />
           </Route>
         </Routes>
       </BrowserRouter>
