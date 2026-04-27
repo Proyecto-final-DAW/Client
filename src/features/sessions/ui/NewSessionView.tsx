@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
+import { ErrorState } from '../../../shared/components/ErrorState';
+import { LoadingPixel } from '../../../shared/components/LoadingPixel';
 import { AddExercisePanel } from './components/AddExercisePanel';
 import { SessionDatePicker } from './components/SessionDatePicker';
 import { SessionExerciseCard } from './components/SessionExerciseCard';
@@ -55,11 +57,11 @@ export const NewSessionView = (): React.JSX.Element => {
   };
 
   if (loadingRoutine) {
-    return <p className="p-6 text-gray-100">Cargando rutina...</p>;
+    return <LoadingPixel label="CARGANDO RUTINA" />;
   }
 
   if (routineError) {
-    return <p className="p-6 text-red-400">{routineError}</p>;
+    return <ErrorState message={routineError} />;
   }
 
   return (
