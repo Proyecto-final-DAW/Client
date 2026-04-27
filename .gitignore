@@ -24,3 +24,5 @@ dist-ssr
 .cursor
 
 .env
+.env.*
+!.env.example
