@@ -117,16 +117,19 @@ const MOCK_ROUTINES: Routine[] = [
 ];
 
 export class MockRoutineRepository implements RoutineRepository {
-  private routines: Routine[] = structuredClone(MOCK_ROUTINES);
+  private routines: Routine[] = [...MOCK_ROUTINES];
 
-  async getRoutines(_token?: string): Promise<Routine[]> {
-    await this.delay();
+  async getRoutines(): Promise<Routine[]> {
+    await new Promise((resolve) => setTimeout(resolve, 400));
 
-    return structuredClone(this.routines);
+    return this.routines.map((routine) => ({
+      ...routine,
+      exercises: routine.exercises.map((exercise) => ({ ...exercise })),
+    }));
   }
 
-  async createRoutine(name: string, _token?: string): Promise<Routine> {
-    await this.delay();
+  async createRoutine(name: string): Promise<Routine> {
+    await new Promise((resolve) => setTimeout(resolve, 400));
 
     const newRoutine: Routine = {
       id: crypto.randomUUID(),
@@ -136,21 +139,17 @@ export class MockRoutineRepository implements RoutineRepository {
 
     this.routines = [...this.routines, newRoutine];
 
-    return structuredClone(newRoutine);
+    return { ...newRoutine, exercises: [] };
   }
 
-  async deleteRoutine(routineId: string, _token?: string): Promise<void> {
-    await this.delay();
+  async deleteRoutine(routineId: string): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, 400));
 
     this.routines = this.routines.filter((routine) => routine.id !== routineId);
   }
 
-  async addExercise(
-    routineId: string,
-    exerciseId: string,
-    _token?: string
-  ): Promise<Routine> {
-    await this.delay();
+  async addExercise(routineId: string, exerciseId: string): Promise<Routine> {
+    await new Promise((resolve) => setTimeout(resolve, 400));
 
     const exercise = MOCK_EXERCISE_CATALOG.find(
       (item) => item.id === exerciseId
@@ -183,15 +182,17 @@ export class MockRoutineRepository implements RoutineRepository {
       throw new Error('Rutina no encontrada');
     }
 
-    return structuredClone(updatedRoutine);
+    return {
+      ...updatedRoutine,
+      exercises: updatedRoutine.exercises.map((item) => ({ ...item })),
+    };
   }
 
   async removeExercise(
     routineId: string,
-    exerciseId: string,
-    _token?: string
+    exerciseId: string
   ): Promise<Routine> {
-    await this.delay();
+    await new Promise((resolve) => setTimeout(resolve, 400));
 
     let updatedRoutine: Routine | undefined;
 
@@ -212,15 +213,14 @@ export class MockRoutineRepository implements RoutineRepository {
       throw new Error('Rutina no encontrada');
     }
 
-    return structuredClone(updatedRoutine);
+    return {
+      ...updatedRoutine,
+      exercises: updatedRoutine.exercises.map((item) => ({ ...item })),
+    };
   }
 
-  async reorderExercises(
-    routineId: string,
-    order: string[],
-    _token?: string
-  ): Promise<Routine> {
-    await this.delay();
+  async reorderExercises(routineId: string, order: string[]): Promise<Routine> {
+    await new Promise((resolve) => setTimeout(resolve, 400));
 
     let updatedRoutine: Routine | undefined;
 
@@ -247,10 +247,9 @@ export class MockRoutineRepository implements RoutineRepository {
       throw new Error('Rutina no encontrada');
     }
 
-    return structuredClone(updatedRoutine);
-  }
-
-  private async delay(): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, 400));
+    return {
+      ...updatedRoutine,
+      exercises: updatedRoutine.exercises.map((item) => ({ ...item })),
+    };
   }
 }

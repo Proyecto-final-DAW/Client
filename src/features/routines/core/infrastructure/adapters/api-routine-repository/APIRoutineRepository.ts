@@ -1,111 +1,90 @@
 import axios, { AxiosError } from 'axios';
 
-import { API_BASE_URL } from '../../../../../../config/api';
+import { API_ENDPOINTS } from '../../../../../../config/api';
 import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
 import type { RoutineRepository } from '../../../application/ports/RoutineRepository';
 import type { Routine } from '../../../domain/models/Routine';
 import type { GetRoutineDTO } from './dtos/GetRoutineDTO';
 import { RoutinesFromDTO } from './mappers/RoutinesFromDTO';
 
-const ROUTINES_URL = `${API_BASE_URL}/routines`;
-
-const authHeaders = (token?: string) =>
-  token ? { Authorization: `Bearer ${token}` } : {};
-
 export class APIRoutineRepository implements RoutineRepository {
-  async getRoutines(token?: string): Promise<Routine[]> {
+  async getRoutines(): Promise<Routine[]> {
     try {
-      const response = await axios.get<GetRoutineDTO[]>(ROUTINES_URL, {
-        headers: authHeaders(token),
-      });
-
+      const response = await axios.get<GetRoutineDTO[]>(API_ENDPOINTS.routines);
       return RoutinesFromDTO.fromDTOList(response.data);
     } catch (error) {
-      throw this.handleError(error, 'Error al cargar las rutinas');
+      const err = error as AxiosError<APIErrorResponse>;
+      const serverMessage =
+        err.response?.data?.message || 'Error al cargar las rutinas';
+      throw new Error(serverMessage);
     }
   }
-
-  async createRoutine(name: string, token?: string): Promise<Routine> {
+  async createRoutine(name: string): Promise<Routine> {
     try {
-      const response = await axios.post<GetRoutineDTO>(
-        ROUTINES_URL,
-        { name },
-        { headers: authHeaders(token) }
-      );
-
-      return RoutinesFromDTO.fromDTO(response.data);
-    } catch (error) {
-      throw this.handleError(error, 'Error al crear la rutina');
-    }
-  }
-
-  async deleteRoutine(routineId: string, token?: string): Promise<void> {
-    try {
-      await axios.delete(`${ROUTINES_URL}/${routineId}`, {
-        headers: authHeaders(token),
+      const response = await axios.post<GetRoutineDTO>(API_ENDPOINTS.routines, {
+        name: name.trim(),
       });
-    } catch (error) {
-      throw this.handleError(error, 'Error al eliminar la rutina');
-    }
-  }
-
-  async addExercise(
-    routineId: string,
-    exerciseId: string,
-    token?: string
-  ): Promise<Routine> {
-    try {
-      const response = await axios.post<GetRoutineDTO>(
-        `${ROUTINES_URL}/${routineId}/exercises`,
-        { exerciseId },
-        { headers: authHeaders(token) }
-      );
-
       return RoutinesFromDTO.fromDTO(response.data);
     } catch (error) {
-      throw this.handleError(error, 'Error al añadir el ejercicio');
+      const err = error as AxiosError<APIErrorResponse>;
+      const serverMessage =
+        err.response?.data?.message || 'Error al crear la rutina';
+      throw new Error(serverMessage);
     }
   }
-
+  async deleteRoutine(routineId: string): Promise<void> {
+    try {
+      await axios.delete(API_ENDPOINTS.deleteRoutine(routineId));
+    } catch (error) {
+      const err = error as AxiosError<APIErrorResponse>;
+      const serverMessage =
+        err.response?.data?.message || 'Error al eliminar la rutina';
+      throw new Error(serverMessage);
+    }
+  }
+  async addExercise(routineId: string, exerciseId: string): Promise<Routine> {
+    try {
+      const response = await axios.post<GetRoutineDTO>(
+        API_ENDPOINTS.addExerciseToRoutine(routineId),
+        { exerciseId }
+      );
+      return RoutinesFromDTO.fromDTO(response.data);
+    } catch (error) {
+      const err = error as AxiosError<APIErrorResponse>;
+      const serverMessage =
+        err.response?.data?.message || 'Error al añadir el ejercicio';
+      throw new Error(serverMessage);
+    }
+  }
   async removeExercise(
     routineId: string,
-    exerciseId: string,
-    token?: string
+    exerciseId: string
   ): Promise<Routine> {
     try {
       const response = await axios.delete<GetRoutineDTO>(
-        `${ROUTINES_URL}/${routineId}/exercises/${exerciseId}`,
-        { headers: authHeaders(token) }
+        API_ENDPOINTS.removeExerciseFromRoutine(routineId, exerciseId),
+        {}
       );
-
       return RoutinesFromDTO.fromDTO(response.data);
     } catch (error) {
-      throw this.handleError(error, 'Error al eliminar el ejercicio');
+      const err = error as AxiosError<APIErrorResponse>;
+      const serverMessage =
+        err.response?.data?.message || 'Error al eliminar el ejercicio';
+      throw new Error(serverMessage);
     }
   }
-
-  async reorderExercises(
-    routineId: string,
-    order: string[],
-    token?: string
-  ): Promise<Routine> {
+  async reorderExercises(routineId: string, order: string[]): Promise<Routine> {
     try {
       const response = await axios.patch<GetRoutineDTO>(
-        `${ROUTINES_URL}/${routineId}/exercises/reorder`,
-        { order },
-        { headers: authHeaders(token) }
+        API_ENDPOINTS.reorderExercises(routineId),
+        { order }
       );
-
       return RoutinesFromDTO.fromDTO(response.data);
     } catch (error) {
-      throw this.handleError(error, 'Error al reordenar los ejercicios');
+      const err = error as AxiosError<APIErrorResponse>;
+      const serverMessage =
+        err.response?.data?.message || 'Error al reordenar los ejercicios';
+      throw new Error(serverMessage);
     }
-  }
-
-  private handleError(error: unknown, fallbackMessage: string): Error {
-    const err = error as AxiosError<APIErrorResponse>;
-    const serverMessage = err.response?.data?.message || fallbackMessage;
-
-    return new Error(serverMessage);
   }
 }

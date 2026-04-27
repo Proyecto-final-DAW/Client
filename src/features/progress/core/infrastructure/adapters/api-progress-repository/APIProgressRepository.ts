@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 
-import { API_BASE_URL, API_ENDPOINTS } from '../../../../../../config/api';
+import { API_ENDPOINTS } from '../../../../../../config/api';
 import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
 import type { ProgressRepository } from '../../../application/ports/ProgressRepository';
 import type { ExerciseProgressPoint } from '../../../domain/models/ExerciseProgressPoint';
@@ -11,93 +11,75 @@ import type {
 } from '../../../domain/models/Progress';
 import type { GetExerciseProgressDTO } from './dtos/GetExerciseProgressDTO';
 import type { GetPerformedExercisesDTO } from './dtos/GetPerformedExercisesDTO';
-import type {
-  GetProgressDTO,
-  RegisterWeightRequestDTO,
-} from './dtos/GetProgressDTO';
+import type { GetProgressDTO, RegisterWeightDTO } from './dtos/GetProgressDTO';
 import { ExerciseProgressFromDTO } from './mappers/ExerciseProgressFromDTO';
 import { PerformedExercisesFromDTO } from './mappers/PerformedExercisesFromDTO';
 import { WeightHistoryFromDTO } from './mappers/WeightHistoryFromDTO';
 
-const PROGRESS_URL = `${API_BASE_URL}/progress`;
-
-const authHeaders = (token?: string) =>
-  token ? { Authorization: `Bearer ${token}` } : {};
-
 const toIsoDate = (date: Date): string => date.toISOString().split('T')[0];
 
 export class APIProgressRepository implements ProgressRepository {
-  async getPerformedExercises(
-    userId: number,
-    token: string
-  ): Promise<PerformedExercise[]> {
+  async getPerformedExercises(userId: number): Promise<PerformedExercise[]> {
     try {
       const response = await axios.get<GetPerformedExercisesDTO>(
-        API_ENDPOINTS.performedExercises(userId),
-        { headers: { Authorization: `Bearer ${token}` } }
+        API_ENDPOINTS.getPerformedExercises(userId)
       );
       return PerformedExercisesFromDTO.fromDTO(response.data);
     } catch (error) {
-      throw this.handleError(error, 'Error al cargar los ejercicios');
+      const err = error as AxiosError<APIErrorResponse>;
+      const serverMessage =
+        err.response?.data?.message || 'Error al cargar los ejercicios';
+      throw new Error(serverMessage);
     }
   }
-
   async getExerciseProgress(
     userId: number,
-    exerciseId: string,
-    token: string
+    exerciseId: string
   ): Promise<ExerciseProgressPoint[]> {
     try {
       const response = await axios.get<GetExerciseProgressDTO>(
-        API_ENDPOINTS.exerciseProgress(userId, exerciseId),
-        { headers: { Authorization: `Bearer ${token}` } }
+        API_ENDPOINTS.getExerciseProgress(userId, exerciseId)
       );
       return ExerciseProgressFromDTO.fromDTO(response.data);
     } catch (error) {
-      throw this.handleError(error, 'Error al cargar la progresión');
+      const err = error as AxiosError<APIErrorResponse>;
+      const serverMessage =
+        err.response?.data?.message || 'Error al cargar la progresión';
+      throw new Error(serverMessage);
     }
   }
-
-  async getWeightHistory(userId: number, token?: string): Promise<Progress[]> {
+  async getWeightHistory(userId: number): Promise<Progress[]> {
     try {
       const response = await axios.get<GetProgressDTO[]>(
-        `${PROGRESS_URL}/${userId}/weight`,
-        { headers: authHeaders(token) }
+        API_ENDPOINTS.getWeightHistory(userId)
       );
-
       return WeightHistoryFromDTO.fromDTOList(response.data);
     } catch (error) {
-      throw this.handleError(error, 'Error al cargar el historial de peso');
+      const err = error as AxiosError<APIErrorResponse>;
+      const serverMessage =
+        err.response?.data?.message || 'Error al cargar el historial de peso';
+      throw new Error(serverMessage);
     }
   }
-
   async registerWeight(
     userId: number,
-    input: RegisterWeightInput,
-    token?: string
+    input: RegisterWeightInput
   ): Promise<Progress> {
     try {
-      const body: RegisterWeightRequestDTO = {
+      const body: RegisterWeightDTO = {
         weight: input.weight,
         date: toIsoDate(input.date),
       };
-
       const response = await axios.post<GetProgressDTO>(
-        `${PROGRESS_URL}/${userId}/weight`,
-        body,
-        { headers: authHeaders(token) }
+        API_ENDPOINTS.getWeightHistory(userId),
+        body
       );
-
       return WeightHistoryFromDTO.fromDTO(response.data);
     } catch (error) {
-      throw this.handleError(error, 'Error al registrar el peso');
+      const err = error as AxiosError<APIErrorResponse>;
+      const serverMessage =
+        err.response?.data?.message || 'Error al registrar el peso';
+      throw new Error(serverMessage);
     }
-  }
-
-  private handleError(error: unknown, fallbackMessage: string): Error {
-    const err = error as AxiosError<APIErrorResponse>;
-    const serverMessage = err.response?.data?.message || fallbackMessage;
-
-    return new Error(serverMessage);
   }
 }

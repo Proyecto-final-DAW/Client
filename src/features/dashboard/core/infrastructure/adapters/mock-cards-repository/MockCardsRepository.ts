@@ -38,7 +38,7 @@ const buildMockTrainingDays = (): string[] => {
 };
 
 export class MockCardsRepository implements CardsRepository {
-  async getCards(_token: string): Promise<Cards> {
+  async getCards(): Promise<Cards> {
     await new Promise((resolve) => setTimeout(resolve, 400));
 
     return {
