@@ -1,6 +1,7 @@
 import type React from 'react';
 import { useMemo, useState } from 'react';
 
+import { EmptyState } from '../../../../shared/components/EmptyState';
 import { useProgress } from '../hooks/useProgress';
 import { RegisterWeightForm } from './RegisterWeightForm';
 import { WeightHistoryTable } from './WeightHistoryTable';
@@ -72,9 +73,14 @@ export const WeightProgressContent = (): React.JSX.Element => {
       )}
 
       {entries.length === 0 ? (
-        <p className="text-sm text-gray-400">
-          Todavía no tienes registros de peso.
-        </p>
+        <EmptyState
+          title="Sin registros de peso"
+          description="Todavía no tienes registros de peso."
+          cta={{
+            label: 'Registra tu peso',
+            onClick: () => setShowForm(true),
+          }}
+        />
       ) : (
         <div className="space-y-6">
           <WeightProgressChart entries={entries} />

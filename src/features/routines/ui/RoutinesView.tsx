@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { AsyncState } from '../../../shared/components/AsyncState';
+import { EmptyState } from '../../../shared/components/EmptyState';
 import { ConfirmDialog } from './components/ConfirmDialog';
 import { RoutineDetail } from './components/RoutineDetail';
 import { RoutineList } from './components/RoutineList';
@@ -41,21 +42,32 @@ export const RoutinesView = (): React.JSX.Element => {
           <div className="mx-auto max-w-7xl p-6">
             <RoutinesHeader />
 
-            <div className="grid gap-6 xl:grid-cols-[380px_minmax(0,1fr)]">
-              <RoutineList
-                routines={routines}
-                selectedRoutineId={selectedRoutineId}
-                onCreateRoutine={createRoutine}
-                onSelectRoutine={selectRoutine}
-                onDeleteRoutine={setRoutineToDelete}
+            {routines.length === 0 ? (
+              <EmptyState
+                title="Sin rutinas"
+                description="Todavía no has creado ninguna rutina."
+                cta={{
+                  label: 'Crea tu primera rutina',
+                  to: '/routines',
+                }}
               />
+            ) : (
+              <div className="grid gap-6 xl:grid-cols-[380px_minmax(0,1fr)]">
+                <RoutineList
+                  routines={routines}
+                  selectedRoutineId={selectedRoutineId}
+                  onCreateRoutine={createRoutine}
+                  onSelectRoutine={selectRoutine}
+                  onDeleteRoutine={setRoutineToDelete}
+                />
 
-              <RoutineDetail
-                routine={selectedRoutine}
-                onAddExercise={addExercise}
-                onRemoveExercise={removeExercise}
-              />
-            </div>
+                <RoutineDetail
+                  routine={selectedRoutine}
+                  onAddExercise={addExercise}
+                  onRemoveExercise={removeExercise}
+                />
+              </div>
+            )}
 
             <ConfirmDialog
               open={routineToDelete !== null}

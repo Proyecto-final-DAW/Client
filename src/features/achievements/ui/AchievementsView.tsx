@@ -1,4 +1,5 @@
 import { AsyncState } from '../../../shared/components/AsyncState';
+import { EmptyState } from '../../../shared/components/EmptyState';
 import { MilestoneCard } from './components/MilestoneCard';
 import { useMilestones } from './hooks/useMilestones';
 
@@ -13,8 +14,16 @@ export const AchievementsView = (): React.JSX.Element => {
       onRetry={refetch}
       empty={(m) => m.length === 0}
       loadingLabel="CARGANDO LOGROS"
-      emptyTitle="Sin logros"
-      emptyDescription="Aún no hay logros disponibles. Vuelve más tarde."
+      emptyRender={() => (
+        <EmptyState
+          title="Sin logros"
+          description="Completa tu primer entreno para desbloquear logros."
+          cta={{
+            label: 'Ir a entrenar',
+            to: '/sessions/new',
+          }}
+        />
+      )}
     >
       {(milestones) => {
         const unlockedCount = milestones.filter((m) => m.unlocked).length;
