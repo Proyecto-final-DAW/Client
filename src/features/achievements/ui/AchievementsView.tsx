@@ -11,10 +11,12 @@ export const AchievementsView = (): React.JSX.Element => {
       error={error}
       data={milestones}
       onRetry={refetch}
-      empty={(m) => m.length === 0}
+      empty={(m) => m.every((milestone) => !milestone.unlocked)}
       loadingLabel="CARGANDO LOGROS"
+      emptyIcon="🏆"
       emptyTitle="Sin logros"
-      emptyDescription="Aún no hay logros disponibles. Vuelve más tarde."
+      emptyDescription="Completa tu primer entreno para desbloquear logros."
+      emptyCta={{ label: 'Ir a entrenar', to: '/sessions/new' }}
     >
       {(milestones) => {
         const unlockedCount = milestones.filter((m) => m.unlocked).length;
