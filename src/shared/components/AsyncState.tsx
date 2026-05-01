@@ -1,6 +1,12 @@
+import type { ReactNode } from 'react';
+
 import { EmptyState } from './EmptyState';
 import { ErrorState } from './ErrorState';
 import { LoadingPixel } from './LoadingPixel';
+
+type EmptyCta =
+  | { label: string; to: string }
+  | { label: string; onClick: () => void };
 
 type Props<T> = {
   loading: boolean;
@@ -9,10 +15,11 @@ type Props<T> = {
   empty?: (data: T) => boolean;
   onRetry?: () => void;
   loadingLabel?: string;
+  emptyIcon?: ReactNode;
   emptyTitle?: string;
   emptyDescription?: string;
-  emptyCta?: { label: string; to: string };
-  children: (data: T) => React.ReactNode;
+  emptyCta?: EmptyCta;
+  children: (data: T) => ReactNode;
 };
 
 export const AsyncState = <T,>(props: Props<T>): React.JSX.Element => {
@@ -22,18 +29,15 @@ export const AsyncState = <T,>(props: Props<T>): React.JSX.Element => {
   if (props.error) {
     return <ErrorState message={props.error} onRetry={props.onRetry} />;
   }
-  const isEmpty =
-    props.data === null ||
-    props.data === undefined ||
-    (props.empty !== undefined && props.empty(props.data));
-  if (isEmpty) {
+  if (props.data == null || props.empty?.(props.data) === true) {
     return (
       <EmptyState
+        icon={props.emptyIcon}
         title={props.emptyTitle ?? 'Nada por aquí'}
         description={props.emptyDescription}
         cta={props.emptyCta}
       />
     );
   }
-  return <>{props.children(props.data as T)}</>;
+  return <>{props.children(props.data)}</>;
 };
