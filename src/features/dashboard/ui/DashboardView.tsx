@@ -4,6 +4,7 @@ import { DietSummaryCard } from '../../diet/ui/components/DietSummaryCard';
 import { useDiet } from '../../diet/ui/hooks/useDiet';
 import { DashboardCards } from './components/DashboardCards';
 import { DashboardHeader } from './components/DashboardHeader';
+import { StartWorkoutButton } from './components/StartWorkoutButton';
 import { WeeklySummaryCard } from './components/weekly-summary/WeeklySummaryCard';
 import { useCards } from './hooks/useCards';
 import { useWeeklySummary } from './hooks/useWeeklySummary';
@@ -42,6 +43,9 @@ export const Dashboard = (): React.JSX.Element => {
       {({ cards, summary }) => (
         <div>
           <DashboardHeader userName={user?.name} />
+          <div className="my-4">
+            <StartWorkoutButton />
+          </div>
           <DashboardCards {...cards} />
           <section className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             <WeeklySummaryCard summary={summary} />
