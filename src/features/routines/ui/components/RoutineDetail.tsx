@@ -1,12 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 
+import type { Exercise } from '../../../exercises/core/domain/models/Exercise';
 import { ExerciseSearch } from '../../../exercises/ui/components/ExerciseSearch';
 import type { Routine } from '../../core/domain/models/Routine';
 import { ExerciseRow } from './ExerciseRow';
 
 type RoutineDetailProps = {
   routine: Routine | null;
-  onAddExercise: (exerciseId: string) => void | Promise<void>;
+  onAddExercise: (exercise: Exercise) => void | Promise<void>;
   onRemoveExercise: (exerciseId: string) => void | Promise<void>;
 };
 
@@ -68,7 +69,7 @@ export const RoutineDetail = ({
           <ExerciseSearch
             onSelectExercise={(exercise) => {
               if (!routineId) return;
-              void onAddExercise(exercise.id);
+              void onAddExercise(exercise);
             }}
           />
         </div>

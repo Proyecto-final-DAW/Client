@@ -23,7 +23,7 @@ export const RoutinesView = (): React.JSX.Element => {
   } = useRoutines();
 
   const { addExercise, removeExercise } = useRoutineExercises({
-    routineId: selectedRoutineId,
+    routine: selectedRoutine,
     refetchRoutines: refetch,
   });
 
