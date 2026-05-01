@@ -1,4 +1,6 @@
 import { AsyncState } from '../../../shared/components/AsyncState';
+import { CharacterBadge } from '../../character/ui/components/CharacterBadge';
+import { useCharacterState } from '../../character/ui/hooks/useCharacterState';
 import { AccountSummary } from './components/AccountSummary';
 import { ChangePasswordForm } from './components/ChangePasswordForm';
 import { ProfileForm } from './components/ProfileForm';
@@ -18,6 +20,7 @@ export const ProfileView = (): React.JSX.Element => {
     passwordError,
     passwordSuccess,
   } = useProfile();
+  const { state: characterState } = useCharacterState();
 
   return (
     <AsyncState
@@ -31,6 +34,8 @@ export const ProfileView = (): React.JSX.Element => {
           <h2 className="mb-6 text-2xl font-bold text-zinc-100">Mi perfil</h2>
 
           <div className="flex flex-col gap-6">
+            {characterState && <CharacterBadge state={characterState} />}
+
             <AccountSummary
               createdAt={profile.created_at}
               totalSessions={profile.total_sessions}

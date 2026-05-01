@@ -1,5 +1,10 @@
+import { useState } from 'react';
+
 import { useAuth } from '../../../context/hooks/useAuth';
 import { AsyncState } from '../../../shared/components/AsyncState';
+import { CharacterBadge } from '../../character/ui/components/CharacterBadge';
+import { TierUpModal } from '../../character/ui/components/TierUpModal';
+import { useCharacterState } from '../../character/ui/hooks/useCharacterState';
 import { DietSummaryCard } from '../../diet/ui/components/DietSummaryCard';
 import { useDiet } from '../../diet/ui/hooks/useDiet';
 import { useStreakStatus } from '../../streak/ui/hooks/useStreakStatus';
@@ -28,11 +33,31 @@ export const Dashboard = (): React.JSX.Element => {
     refetch: dietRefetch,
   } = useDiet();
   const { status: streakStatus } = useStreakStatus();
+  const {
+    state: characterState,
+    choosing: characterChoosing,
+    chooseClass,
+  } = useCharacterState();
+
+  const [tierUpDismissed, setTierUpDismissed] = useState<boolean>(false);
 
   const combinedData = cards && summary ? { cards, summary } : null;
   const handleRetry = (): void => {
     void refetchCards();
     void refetchSummary();
+  };
+
+  const showTierUpModal = Boolean(
+    characterState?.pendingChoice && !tierUpDismissed
+  );
+
+  const handleConfirmChoice = async (classId: string): Promise<void> => {
+    if (!characterState?.pendingChoice) return;
+    const success = await chooseClass(
+      characterState.pendingChoice.tier,
+      classId
+    );
+    if (success) setTierUpDismissed(false);
   };
 
   return (
@@ -54,6 +79,11 @@ export const Dashboard = (): React.JSX.Element => {
           <div className="my-4">
             <StartWorkoutButton />
           </div>
+          {characterState && (
+            <div className="mt-4">
+              <CharacterBadge state={characterState} />
+            </div>
+          )}
           <DashboardCards {...cards} />
           <section className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             <WeeklySummaryCard summary={summary} />
@@ -65,6 +95,16 @@ export const Dashboard = (): React.JSX.Element => {
               onRefresh={dietRefetch}
             />
           </section>
+
+          {characterState?.pendingChoice && (
+            <TierUpModal
+              open={showTierUpModal}
+              pendingChoice={characterState.pendingChoice}
+              choosing={characterChoosing}
+              onConfirm={handleConfirmChoice}
+              onClose={() => setTierUpDismissed(true)}
+            />
+          )}
         </div>
       )}
     </AsyncState>
