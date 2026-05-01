@@ -1,6 +1,6 @@
 import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type { RoutineTemplate } from '../../core/domain/models/RoutineTemplate';
-import { countExercises } from '../../data/templateMetrics';
+import { countExercises } from '../../core/domain/services/templateMetrics';
 import {
   EQUIPMENT_LABELS,
   GOAL_LABELS,

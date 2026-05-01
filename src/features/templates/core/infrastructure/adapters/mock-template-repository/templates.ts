@@ -1,4 +1,4 @@
-import type { RoutineTemplate } from '../core/domain/models/RoutineTemplate';
+import type { RoutineTemplate } from '../../../domain/models/RoutineTemplate';
 
 export const TEMPLATES: RoutineTemplate[] = [
   {

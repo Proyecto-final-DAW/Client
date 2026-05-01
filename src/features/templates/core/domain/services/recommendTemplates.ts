@@ -1,5 +1,5 @@
-import type { UserInfo } from '../../../shared/core/domain/models/UserInfo';
-import type { RoutineTemplate } from '../core/domain/models/RoutineTemplate';
+import type { UserInfo } from '../../../../../shared/core/domain/models/UserInfo';
+import type { RoutineTemplate } from '../models/RoutineTemplate';
 
 const DAYS_RANGE_MIDPOINT: Record<string, number> = {
   '2-3': 2.5,

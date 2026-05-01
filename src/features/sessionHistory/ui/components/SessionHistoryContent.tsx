@@ -1,5 +1,6 @@
 import type React from 'react';
 
+import { EmptyState } from '../../../../shared/components/EmptyState';
 import { useSessionHistory } from '../hooks/useSessionHistory';
 import { SessionHistoryCard } from './SessionHistoryCard';
 
@@ -34,14 +35,15 @@ export const SessionHistoryContent = (): React.JSX.Element => {
 
   if (!sessions || sessions.length === 0) {
     return (
-      <div className="mt-6 rounded-2xl border border-dashed border-gray-700 bg-gray-950/40 p-4">
-        <p className="text-sm font-medium text-gray-300">
-          Historial de sesiones
-        </p>
-        <p className="mt-2 text-sm text-gray-400">
-          Aún no tienes sesiones registradas.
-        </p>
-      </div>
+      <EmptyState
+        icon="📜"
+        title="Sin sesiones"
+        description="Aún no tienes entrenamientos registrados."
+        cta={{
+          label: 'Registra tu primer entreno',
+          to: '/sessions/new',
+        }}
+      />
     );
   }
 

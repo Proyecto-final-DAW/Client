@@ -1,4 +1,4 @@
-import type { RoutineTemplate } from '../core/domain/models/RoutineTemplate';
+import type { RoutineTemplate } from '../models/RoutineTemplate';
 
 export const countExercises = (template: RoutineTemplate): number =>
   template.routines.reduce(
