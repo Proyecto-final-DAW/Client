@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { AsyncState } from '../../../shared/components/AsyncState';
+import { EmptyState } from '../../../shared/components/EmptyState';
 import { ConfirmDialog } from './components/ConfirmDialog';
 import { RoutineDetail } from './components/RoutineDetail';
 import { RoutineList } from './components/RoutineList';
@@ -50,11 +51,19 @@ export const RoutinesView = (): React.JSX.Element => {
                 onDeleteRoutine={setRoutineToDelete}
               />
 
-              <RoutineDetail
-                routine={selectedRoutine}
-                onAddExercise={addExercise}
-                onRemoveExercise={removeExercise}
-              />
+              {routines.length === 0 ? (
+                <EmptyState
+                  icon="⚔"
+                  title="Sin rutinas"
+                  description="Crea tu primera rutina con el formulario de la izquierda."
+                />
+              ) : (
+                <RoutineDetail
+                  routine={selectedRoutine}
+                  onAddExercise={addExercise}
+                  onRemoveExercise={removeExercise}
+                />
+              )}
             </div>
 
             <ConfirmDialog
