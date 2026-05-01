@@ -29,7 +29,7 @@ export const OnboardingView = (): React.JSX.Element => {
         } else {
           updateUser(nextUser);
         }
-        navigate('/dashboard', { replace: true });
+        navigate('/templates', { replace: true });
       }}
     />
   );

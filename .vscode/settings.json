@@ -13,5 +13,11 @@
   "files.eol": "\n",
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Force TypeScript association inside templates/ folder
+  // (some Django extensions hijack files inside any "templates/" folder)
+  "files.associations": {
+    "**/templates/**/*.ts": "typescript",
+    "**/templates/**/*.tsx": "typescriptreact"
   }
 }
