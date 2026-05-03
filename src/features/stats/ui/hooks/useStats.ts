@@ -18,7 +18,7 @@ export const useStats = () => {
     setError(null);
 
     try {
-      const result = await statsRepository.getStats(token);
+      const result = await statsRepository.getStats();
       setStats(result);
     } catch (err) {
       const message =

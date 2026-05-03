@@ -6,19 +6,11 @@ import type {
 } from '../../domain/models/Progress';
 
 export interface ProgressRepository {
-  getPerformedExercises(
-    userId: number,
-    token: string
-  ): Promise<PerformedExercise[]>;
+  getPerformedExercises(userId: number): Promise<PerformedExercise[]>;
   getExerciseProgress(
     userId: number,
-    exerciseId: string,
-    token: string
+    exerciseId: string
   ): Promise<ExerciseProgressPoint[]>;
-  getWeightHistory(userId: number, token?: string): Promise<Progress[]>;
-  registerWeight(
-    userId: number,
-    input: RegisterWeightInput,
-    token?: string
-  ): Promise<Progress>;
+  getWeightHistory(userId: number): Promise<Progress[]>;
+  registerWeight(userId: number, input: RegisterWeightInput): Promise<Progress>;
 }

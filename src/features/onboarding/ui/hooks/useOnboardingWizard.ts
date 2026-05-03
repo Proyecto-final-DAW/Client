@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-import type { MacrosPort } from '../../core/application/ports/MacrosPort';
-import type { OnboardingPort } from '../../core/application/ports/OnboardingPort';
-import type { StatsInitPort } from '../../core/application/ports/StatsInitPort';
+import type { MacrosRepository } from '../../core/application/ports/MacrosRepository';
+import type { OnboardingRepository } from '../../core/application/ports/OnboardingRepository';
+import type { StatsInitRepository } from '../../core/application/ports/StatsInitRepository';
 import type {
   OnboardingFormData,
   FormErrors,
@@ -16,9 +16,9 @@ const TOTAL_STEPS = 6;
 interface UseOnboardingWizardProps {
   userId: number;
   token: string;
-  onboardingService: OnboardingPort;
-  statsInitService: StatsInitPort;
-  macrosService: MacrosPort;
+  onboardingService: OnboardingRepository;
+  statsInitService: StatsInitRepository;
+  macrosService: MacrosRepository;
   onComplete: (response: OnboardingResponse) => void;
 }
 
@@ -77,15 +77,14 @@ export function useOnboardingWizard({
     try {
       const response = await onboardingService.submitOnboarding(
         formData,
-        userId,
-        token
+        userId
       );
       // Post-onboarding side effects: non-fatal, do not block navigation.
       const nextToken = response.token ?? token;
       if (nextToken) {
         await Promise.allSettled([
-          statsInitService.initStats(nextToken),
-          macrosService.calculateMacros(formData, userId, nextToken),
+          statsInitService.initStats(),
+          macrosService.calculateMacros(formData, userId),
         ]);
       }
       onComplete(response);
