@@ -1,22 +1,18 @@
+import type { Exercise } from '../../../../exercises/core/domain/models/Exercise';
 import type { Routine } from '../../domain/models/Routine';
 
 export interface RoutineRepository {
   getRoutines(token?: string): Promise<Routine[]>;
   createRoutine(name: string, token?: string): Promise<Routine>;
-  deleteRoutine(routineId: string, token?: string): Promise<void>;
   addExercise(
-    routineId: string,
-    exerciseId: string,
+    routine: Routine,
+    exercise: Exercise,
     token?: string
   ): Promise<Routine>;
   removeExercise(
-    routineId: string,
+    routine: Routine,
     exerciseId: string,
     token?: string
   ): Promise<Routine>;
-  reorderExercises(
-    routineId: string,
-    order: string[],
-    token?: string
-  ): Promise<Routine>;
+  deleteRoutine(routineId: string, token?: string): Promise<void>;
 }

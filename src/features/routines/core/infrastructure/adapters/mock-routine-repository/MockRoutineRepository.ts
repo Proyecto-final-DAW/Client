@@ -139,107 +139,50 @@ export class MockRoutineRepository implements RoutineRepository {
     return structuredClone(newRoutine);
   }
 
+  async addExercise(
+    routine: Routine,
+    exercise: Exercise,
+    _token?: string
+  ): Promise<Routine> {
+    await this.delay();
+
+    const alreadyExists = routine.exercises.some(
+      (current) => current.id === exercise.id
+    );
+    const nextExercises = alreadyExists
+      ? routine.exercises
+      : [...routine.exercises, exercise];
+
+    return this.replaceExercises(routine.id, nextExercises);
+  }
+
+  async removeExercise(
+    routine: Routine,
+    exerciseId: string,
+    _token?: string
+  ): Promise<Routine> {
+    await this.delay();
+
+    const nextExercises = routine.exercises.filter(
+      (exercise) => exercise.id !== exerciseId
+    );
+
+    return this.replaceExercises(routine.id, nextExercises);
+  }
+
   async deleteRoutine(routineId: string, _token?: string): Promise<void> {
     await this.delay();
 
     this.routines = this.routines.filter((routine) => routine.id !== routineId);
   }
 
-  async addExercise(
-    routineId: string,
-    exerciseId: string,
-    _token?: string
-  ): Promise<Routine> {
-    await this.delay();
-
-    const exercise = MOCK_EXERCISE_CATALOG.find(
-      (item) => item.id === exerciseId
-    );
-
-    if (!exercise) {
-      throw new Error('Ejercicio no encontrado');
-    }
-
+  private replaceExercises(routineId: string, exercises: Exercise[]): Routine {
     let updatedRoutine: Routine | undefined;
 
     this.routines = this.routines.map((routine) => {
       if (routine.id !== routineId) return routine;
 
-      const alreadyExists = routine.exercises.some(
-        (currentExercise) => currentExercise.id === exerciseId
-      );
-
-      updatedRoutine = alreadyExists
-        ? routine
-        : {
-            ...routine,
-            exercises: [...routine.exercises, exercise],
-          };
-
-      return updatedRoutine;
-    });
-
-    if (!updatedRoutine) {
-      throw new Error('Rutina no encontrada');
-    }
-
-    return structuredClone(updatedRoutine);
-  }
-
-  async removeExercise(
-    routineId: string,
-    exerciseId: string,
-    _token?: string
-  ): Promise<Routine> {
-    await this.delay();
-
-    let updatedRoutine: Routine | undefined;
-
-    this.routines = this.routines.map((routine) => {
-      if (routine.id !== routineId) return routine;
-
-      updatedRoutine = {
-        ...routine,
-        exercises: routine.exercises.filter(
-          (exercise) => exercise.id !== exerciseId
-        ),
-      };
-
-      return updatedRoutine;
-    });
-
-    if (!updatedRoutine) {
-      throw new Error('Rutina no encontrada');
-    }
-
-    return structuredClone(updatedRoutine);
-  }
-
-  async reorderExercises(
-    routineId: string,
-    order: string[],
-    _token?: string
-  ): Promise<Routine> {
-    await this.delay();
-
-    let updatedRoutine: Routine | undefined;
-
-    this.routines = this.routines.map((routine) => {
-      if (routine.id !== routineId) return routine;
-
-      const exercisesById = new Map(
-        routine.exercises.map((exercise) => [exercise.id, exercise])
-      );
-
-      const reorderedExercises = order
-        .map((exerciseId) => exercisesById.get(exerciseId))
-        .filter((exercise): exercise is Exercise => Boolean(exercise));
-
-      updatedRoutine = {
-        ...routine,
-        exercises: reorderedExercises,
-      };
-
+      updatedRoutine = { ...routine, exercises };
       return updatedRoutine;
     });
 

@@ -1,15 +1,17 @@
 import { useState } from 'react';
 
 import { useAuth } from '../../../../context/hooks/useAuth';
+import type { Exercise } from '../../../exercises/core/domain/models/Exercise';
+import type { Routine } from '../../core/domain/models/Routine';
 import { routineRepository } from '../adapter';
 
 type UseRoutineExercisesParams = {
-  routineId: string;
+  routine: Routine | null;
   refetchRoutines: () => Promise<void>;
 };
 
 export const useRoutineExercises = ({
-  routineId,
+  routine,
   refetchRoutines,
 }: UseRoutineExercisesParams) => {
   const { token } = useAuth();
@@ -17,10 +19,12 @@ export const useRoutineExercises = ({
 
   const [error, setError] = useState<string | null>(null);
 
-  const addExercise = async (exerciseId: string) => {
+  const addExercise = async (exercise: Exercise) => {
+    if (!routine) return;
+
     setError(null);
     try {
-      await routineRepository.addExercise(routineId, exerciseId, authToken);
+      await routineRepository.addExercise(routine, exercise, authToken);
       await refetchRoutines();
     } catch (err) {
       setError(
@@ -30,9 +34,11 @@ export const useRoutineExercises = ({
   };
 
   const removeExercise = async (exerciseId: string) => {
+    if (!routine) return;
+
     setError(null);
     try {
-      await routineRepository.removeExercise(routineId, exerciseId, authToken);
+      await routineRepository.removeExercise(routine, exerciseId, authToken);
       await refetchRoutines();
     } catch (err) {
       setError(

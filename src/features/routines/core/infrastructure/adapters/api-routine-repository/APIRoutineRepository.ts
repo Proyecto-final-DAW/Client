@@ -2,15 +2,29 @@ import axios, { AxiosError } from 'axios';
 
 import { API_BASE_URL } from '../../../../../../config/api';
 import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
+import type { Exercise } from '../../../../../exercises/core/domain/models/Exercise';
 import type { RoutineRepository } from '../../../application/ports/RoutineRepository';
 import type { Routine } from '../../../domain/models/Routine';
 import type { GetRoutineDTO } from './dtos/GetRoutineDTO';
+import type {
+  UpdateRoutineExerciseRequestDTO,
+  UpdateRoutineRequestDTO,
+} from './dtos/UpdateRoutineRequestDTO';
 import { RoutinesFromDTO } from './mappers/RoutinesFromDTO';
 
 const ROUTINES_URL = `${API_BASE_URL}/routines`;
 
 const authHeaders = (token?: string) =>
   token ? { Authorization: `Bearer ${token}` } : {};
+
+const toExercisesRequestDTO = (
+  exercises: Exercise[]
+): UpdateRoutineExerciseRequestDTO[] =>
+  exercises.map((exercise, index) => ({
+    exercise_api_id: exercise.id,
+    exercise_name: exercise.name || null,
+    order_index: index,
+  }));
 
 export class APIRoutineRepository implements RoutineRepository {
   async getRoutines(token?: string): Promise<Routine[]> {
@@ -29,7 +43,7 @@ export class APIRoutineRepository implements RoutineRepository {
     try {
       const response = await axios.post<GetRoutineDTO>(
         ROUTINES_URL,
-        { name },
+        { name, exercises: [] },
         { headers: authHeaders(token) }
       );
 
@@ -37,6 +51,37 @@ export class APIRoutineRepository implements RoutineRepository {
     } catch (error) {
       throw this.handleError(error, 'Error al crear la rutina');
     }
+  }
+
+  async addExercise(
+    routine: Routine,
+    exercise: Exercise,
+    token?: string
+  ): Promise<Routine> {
+    const alreadyExists = routine.exercises.some(
+      (current) => current.id === exercise.id
+    );
+    if (alreadyExists) return routine;
+
+    return this.replaceExercises(
+      routine.id,
+      [...routine.exercises, exercise],
+      'Error al añadir el ejercicio',
+      token
+    );
+  }
+
+  async removeExercise(
+    routine: Routine,
+    exerciseId: string,
+    token?: string
+  ): Promise<Routine> {
+    return this.replaceExercises(
+      routine.id,
+      routine.exercises.filter((exercise) => exercise.id !== exerciseId),
+      'Error al eliminar el ejercicio',
+      token
+    );
   }
 
   async deleteRoutine(routineId: string, token?: string): Promise<void> {
@@ -49,56 +94,26 @@ export class APIRoutineRepository implements RoutineRepository {
     }
   }
 
-  async addExercise(
+  private async replaceExercises(
     routineId: string,
-    exerciseId: string,
+    exercises: Exercise[],
+    fallbackMessage: string,
     token?: string
   ): Promise<Routine> {
     try {
-      const response = await axios.post<GetRoutineDTO>(
-        `${ROUTINES_URL}/${routineId}/exercises`,
-        { exerciseId },
+      const body: UpdateRoutineRequestDTO = {
+        exercises: toExercisesRequestDTO(exercises),
+      };
+
+      const response = await axios.put<GetRoutineDTO>(
+        `${ROUTINES_URL}/${routineId}`,
+        body,
         { headers: authHeaders(token) }
       );
 
       return RoutinesFromDTO.fromDTO(response.data);
     } catch (error) {
-      throw this.handleError(error, 'Error al añadir el ejercicio');
-    }
-  }
-
-  async removeExercise(
-    routineId: string,
-    exerciseId: string,
-    token?: string
-  ): Promise<Routine> {
-    try {
-      const response = await axios.delete<GetRoutineDTO>(
-        `${ROUTINES_URL}/${routineId}/exercises/${exerciseId}`,
-        { headers: authHeaders(token) }
-      );
-
-      return RoutinesFromDTO.fromDTO(response.data);
-    } catch (error) {
-      throw this.handleError(error, 'Error al eliminar el ejercicio');
-    }
-  }
-
-  async reorderExercises(
-    routineId: string,
-    order: string[],
-    token?: string
-  ): Promise<Routine> {
-    try {
-      const response = await axios.patch<GetRoutineDTO>(
-        `${ROUTINES_URL}/${routineId}/exercises/reorder`,
-        { order },
-        { headers: authHeaders(token) }
-      );
-
-      return RoutinesFromDTO.fromDTO(response.data);
-    } catch (error) {
-      throw this.handleError(error, 'Error al reordenar los ejercicios');
+      throw this.handleError(error, fallbackMessage);
     }
   }
 

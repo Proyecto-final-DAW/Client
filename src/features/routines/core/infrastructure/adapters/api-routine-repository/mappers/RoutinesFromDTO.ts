@@ -1,13 +1,25 @@
-import { ExercisesFromDTO } from '../../../../../../exercises/core/infrastructure/adapters/api-exercise-repository/mappers/ExercisesFromDTO';
+import type { Exercise } from '../../../../../../exercises/core/domain/models/Exercise';
 import type { Routine } from '../../../../domain/models/Routine';
-import type { GetRoutineDTO } from '../dtos/GetRoutineDTO';
+import type {
+  GetRoutineDTO,
+  GetRoutineExerciseDTO,
+} from '../dtos/GetRoutineDTO';
+
+const toExercise = (dto: GetRoutineExerciseDTO): Exercise => ({
+  id: dto.exercise_api_id,
+  name: dto.exercise_name ?? '',
+  target: '',
+  equipment: '',
+  difficulty: '',
+  imageUrl: '',
+});
 
 export class RoutinesFromDTO {
   static fromDTO(dto: GetRoutineDTO): Routine {
     return {
-      id: dto.id,
+      id: String(dto.id),
       name: dto.name,
-      exercises: ExercisesFromDTO.fromDTOList(dto.exercises),
+      exercises: dto.exercises.map(toExercise),
     };
   }
 
