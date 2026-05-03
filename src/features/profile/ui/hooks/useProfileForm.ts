@@ -15,13 +15,16 @@ type ProfileFormState = {
   sleep_hours: string;
 };
 
+// The form keeps a single `goal` for UX (single-select dropdown), but the
+// server contract is plural `goals: string[]`. Mapping happens here and in
+// `buildUpdatePayload` so the rest of the UI can stay simple.
 const toFormState = (profile: ProfileData): ProfileFormState => ({
   name: profile.name,
   weight: profile.weight != null ? String(profile.weight) : '',
   height: profile.height != null ? String(profile.height) : '',
   age: profile.age != null ? String(profile.age) : '',
   activity_level: profile.activity_level ?? '',
-  goal: profile.goal ?? '',
+  goal: profile.goals?.[0] ?? '',
   sleep_hours: profile.sleep_hours != null ? String(profile.sleep_hours) : '',
 });
 
@@ -54,8 +57,8 @@ const buildUpdatePayload = (
   if (form.activity_level && form.activity_level !== profile.activity_level) {
     data.activity_level = form.activity_level;
   }
-  if (form.goal && form.goal !== profile.goal) {
-    data.goal = form.goal;
+  if (form.goal && form.goal !== (profile.goals?.[0] ?? '')) {
+    data.goals = [form.goal];
   }
   if (
     form.sleep_hours &&

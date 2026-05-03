@@ -25,9 +25,15 @@ const activityOptions: SelectableOption[] = [
     icon: '🚶',
   },
   {
-    value: 'ACTIVE',
-    title: 'ACTIVO',
+    value: 'MODERATE',
+    title: 'MODERADAMENTE ACTIVO',
     description: 'Ejercicio 3-5 días por semana.',
+    icon: '🏃',
+  },
+  {
+    value: 'ACTIVE',
+    title: 'MUY ACTIVO',
+    description: 'Ejercicio intenso 5-6 días por semana.',
     icon: '💪',
   },
   {
