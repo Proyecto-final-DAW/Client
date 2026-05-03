@@ -12,7 +12,6 @@ type ProfileFormState = {
   age: string;
   activity_level: string;
   goal: string;
-  sleep_hours: string;
 };
 
 // The form keeps a single `goal` for UX (single-select dropdown), but the
@@ -25,7 +24,6 @@ const toFormState = (profile: ProfileData): ProfileFormState => ({
   age: profile.age != null ? String(profile.age) : '',
   activity_level: profile.activity_level ?? '',
   goal: profile.goals?.[0] ?? '',
-  sleep_hours: profile.sleep_hours != null ? String(profile.sleep_hours) : '',
 });
 
 const buildUpdatePayload = (
@@ -59,13 +57,6 @@ const buildUpdatePayload = (
   }
   if (form.goal && form.goal !== (profile.goals?.[0] ?? '')) {
     data.goals = [form.goal];
-  }
-  if (
-    form.sleep_hours &&
-    Number(form.sleep_hours) > 0 &&
-    Number(form.sleep_hours) !== profile.sleep_hours
-  ) {
-    data.sleep_hours = Number(form.sleep_hours);
   }
 
   return data;

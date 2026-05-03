@@ -7,6 +7,12 @@ import { RegisterWeightForm } from './RegisterWeightForm';
 import { WeightHistoryTable } from './WeightHistoryTable';
 import { WeightProgressChart } from './WeightProgressChart';
 
+const DATE_FORMAT = new Intl.DateTimeFormat('es-ES', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+
 export const WeightProgressContent = (): React.JSX.Element => {
   const {
     weightHistory,
@@ -27,6 +33,11 @@ export const WeightProgressContent = (): React.JSX.Element => {
       ),
     [weightHistory]
   );
+
+  // The current weight is the most recent entry. Surfacing it next to the
+  // "Registrar peso" button lets the user decide whether they need to add
+  // a new measurement at all.
+  const latest = entries.length > 0 ? entries[entries.length - 1] : null;
 
   if (loading) {
     return (
@@ -53,7 +64,22 @@ export const WeightProgressContent = (): React.JSX.Element => {
 
   return (
     <section className="rounded-2xl border border-gray-800 bg-gray-900/80 p-5">
-      <div className="mb-5 flex items-center justify-end">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-xs uppercase tracking-wider text-gray-500">
+            Peso actual
+          </p>
+          {latest ? (
+            <p className="mt-1 text-2xl font-bold text-white">
+              {latest.weight.toFixed(1)}{' '}
+              <span className="text-base font-normal text-gray-400">
+                kg · {DATE_FORMAT.format(latest.date)}
+              </span>
+            </p>
+          ) : (
+            <p className="mt-1 text-base text-gray-400">Sin registros aún</p>
+          )}
+        </div>
         <button
           type="button"
           onClick={() => setShowForm((value) => !value)}

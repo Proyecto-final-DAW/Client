@@ -20,16 +20,9 @@ function isValidDate(dateStr: string): boolean {
 }
 
 export function validateStep1(data: OnboardingFormData): FormErrors {
+  // Name comes from registration and is pre-filled into the form by
+  // OnboardingView; this step only collects the birth date.
   const errors: FormErrors = {};
-  const trimmedName = data.name.trim();
-
-  if (!trimmedName) {
-    errors.name = 'El nombre es obligatorio';
-  } else if (trimmedName.length < 2) {
-    errors.name = 'El nombre debe tener al menos 2 caracteres';
-  } else if (trimmedName.length > 100) {
-    errors.name = 'El nombre no puede superar los 100 caracteres';
-  }
 
   if (!data.birthDate) {
     errors.birthDate = 'La fecha de nacimiento es obligatoria';

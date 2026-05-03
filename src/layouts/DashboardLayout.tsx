@@ -18,6 +18,12 @@ type MenuItem = {
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 };
 
+// Header height — kept in one place because the sidebar `top` and the
+// `h-[calc(100vh-…)]` of the scroll containers all depend on it.
+const HEADER_H = 'h-16';
+const HEADER_OFFSET = 'top-16';
+const HEADER_HEIGHT_PX = 'h-[calc(100vh-4rem)]';
+
 export const DashboardLayout = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -47,24 +53,28 @@ export const DashboardLayout = (): React.JSX.Element => {
   return (
     <div className="relative min-h-screen flex flex-col text-[#e4e4e7]">
       <DashboardBackground />
-      <header className="relative z-20 border-b-2 border-[#1e1e2e] bg-[#0a0a0f] h-32 flex items-center justify-between px-8 sm:px-14">
+      <header
+        className={`sticky top-0 z-30 ${HEADER_H} flex items-center justify-between border-b-2 border-[#1e1e2e] bg-[#0a0a0f] px-4 sm:px-6`}
+      >
         <Link to="/dashboard" className="flex items-center gap-3">
           <img
             src="/images/Logo.webp"
             alt="GymQuest"
-            className="h-32 w-auto drop-shadow-lg object-contain"
+            className="h-12 w-auto drop-shadow-lg object-contain"
           />
         </Link>
         <button
           onClick={clickAuth}
-          className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 sm:px-6 py-2.5 sm:py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)]"
+          className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-3 sm:px-4 py-2 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)]"
         >
           {isLoggedIn ? '▶ LOGOUT' : '▶ LOGIN'}
         </button>
       </header>
 
       <div className="relative z-10 flex flex-1">
-        <aside className="w-64 shrink-0 border-r-2 border-[#1e1e2e] bg-[#0a0a0f] p-4 flex flex-col gap-4">
+        <aside
+          className={`sticky ${HEADER_OFFSET} ${HEADER_HEIGHT_PX} w-64 shrink-0 self-start overflow-y-auto border-r-2 border-[#1e1e2e] bg-[#0a0a0f] p-4 flex flex-col gap-4`}
+        >
           {isLoggedIn && (
             <div className="relative border-2 border-green-500/50 bg-[#0d0d14] p-3 flex items-center gap-3">
               <PixelCorners size="sm" className="border-green-500/50" />
@@ -100,7 +110,7 @@ export const DashboardLayout = (): React.JSX.Element => {
                   to={item.to}
                   end={item.to === '/'}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 border-2 px-3 py-5 font-['Press_Start_2P'] text-[10px] tracking-widest transition-colors ${
+                    `flex items-center gap-3 border-2 px-3 py-3 font-['Press_Start_2P'] text-[10px] tracking-widest transition-colors ${
                       isActive
                         ? 'border-green-500 bg-green-500/10 text-green-400 shadow-[0_0_14px_rgba(34,197,94,0.3)]'
                         : 'border-[#1e1e2e] text-[#a1a1aa] hover:border-green-500/50 hover:text-green-400'

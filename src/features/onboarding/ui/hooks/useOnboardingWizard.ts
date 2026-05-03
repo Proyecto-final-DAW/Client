@@ -16,6 +16,7 @@ const TOTAL_STEPS = 6;
 interface UseOnboardingWizardProps {
   userId: number;
   token: string;
+  initialName: string;
   onboardingService: OnboardingRepository;
   statsInitService: StatsInitRepository;
   macrosService: MacrosRepository;
@@ -25,14 +26,19 @@ interface UseOnboardingWizardProps {
 export function useOnboardingWizard({
   userId,
   token,
+  initialName,
   onboardingService,
   statsInitService,
   macrosService,
   onComplete,
 }: UseOnboardingWizardProps) {
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] =
-    useState<OnboardingFormData>(INITIAL_FORM_DATA);
+  // Seed `name` from the auth user — the wizard no longer asks for it but
+  // the server validator still requires it in the submit payload.
+  const [formData, setFormData] = useState<OnboardingFormData>(() => ({
+    ...INITIAL_FORM_DATA,
+    name: initialName,
+  }));
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
