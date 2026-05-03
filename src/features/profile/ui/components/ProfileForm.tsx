@@ -141,21 +141,6 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
         </div>
       </div>
 
-      <div className="mb-6">
-        <label htmlFor="profile-sleep" className={labelClass}>
-          Horas de sueno
-        </label>
-        <input
-          id="profile-sleep"
-          type="number"
-          min="4"
-          max="12"
-          value={form.sleep_hours}
-          onChange={(e) => handleChange('sleep_hours', e.target.value)}
-          className={inputClass}
-        />
-      </div>
-
       <FormFeedback
         error={props.error}
         success={

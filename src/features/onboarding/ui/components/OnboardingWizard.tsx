@@ -21,6 +21,7 @@ import { WizardSubmitError } from './wizard/WizardSubmitError';
 interface OnboardingWizardProps {
   userId: number;
   token: string;
+  initialName: string;
   onboardingService: OnboardingRepository;
   statsInitService: StatsInitRepository;
   macrosService: MacrosRepository;

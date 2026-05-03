@@ -1,4 +1,5 @@
 import type React from 'react';
+import { Link } from 'react-router-dom';
 
 import type { Diet } from '../../core/domain/models/Diet';
 
@@ -32,16 +33,31 @@ export const DietSummaryCard = ({
   }
 
   if (error) {
+    // The server returns "Diet not available. Complete onboarding first."
+    // when any macro input (weight/height/birth_date/sex/activity_level/goals)
+    // is missing — even after onboarding flagged the user as completed. Send
+    // them to /profile, where they can fill the missing field directly.
+    const looksLikeOnboardingError = /onboarding/i.test(error);
     return (
       <section className="rounded-2xl border border-red-500/40 bg-red-500/10 p-6">
         <p className="text-sm text-red-400">{error}</p>
-        <button
-          type="button"
-          onClick={() => void onRefresh()}
-          className="mt-4 rounded-xl bg-red-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600"
-        >
-          Reintentar
-        </button>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={() => void onRefresh()}
+            className="rounded-xl bg-red-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600"
+          >
+            Reintentar
+          </button>
+          {looksLikeOnboardingError && (
+            <Link
+              to="/profile"
+              className="rounded-xl border border-red-500/60 px-4 py-2 text-sm font-medium text-red-200 transition-colors hover:bg-red-500/20"
+            >
+              Ir al perfil
+            </Link>
+          )}
+        </div>
       </section>
     );
   }

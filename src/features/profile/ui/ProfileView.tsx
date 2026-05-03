@@ -1,6 +1,8 @@
 import { useCharacterState } from '../../../context/hooks/useCharacterState';
 import { AsyncState } from '../../../shared/components/AsyncState';
 import { CharacterBadge } from '../../character/ui/components/CharacterBadge';
+import { StatsPanel } from '../../stats/ui/components/StatsPanel';
+import { useStats } from '../../stats/ui/hooks/useStats';
 import { AccountSummary } from './components/AccountSummary';
 import { ChangePasswordForm } from './components/ChangePasswordForm';
 import { ProfileForm } from './components/ProfileForm';
@@ -25,6 +27,7 @@ export const ProfileView = (): React.JSX.Element => {
     loading: characterLoading,
     error: characterError,
   } = useCharacterState();
+  const { stats, loading: statsLoading, error: statsError } = useStats();
 
   return (
     <AsyncState
@@ -49,6 +52,12 @@ export const ProfileView = (): React.JSX.Element => {
                 {characterError}
               </div>
             )}
+
+            <StatsPanel
+              stats={stats?.pilpilar ?? null}
+              loading={statsLoading}
+              error={statsError}
+            />
 
             <AccountSummary
               createdAt={profile.created_at}
