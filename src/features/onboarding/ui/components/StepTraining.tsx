@@ -17,7 +17,7 @@ const experienceChoices: Choice[] = [
 ];
 
 const equipmentChoices: Choice[] = [
-  { value: 'FULL_GYM', label: 'GIMNASIO', sub: 'Máquinas y pesas' },
+  { value: 'FULL_GYM', label: 'GIMNASIO', sub: 'Maquinas y pesas' },
   { value: 'HOME_WEIGHTS', label: 'CASA + PESAS', sub: 'Mancuernas / barras' },
   { value: 'BODYWEIGHT', label: 'PESO CORPORAL', sub: 'Sin material' },
 ];
@@ -34,8 +34,8 @@ export const StepTraining = (props: StepTrainingProps): React.JSX.Element => {
       <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
         TU <span className="text-green-400">ENTRENAMIENTO</span>
       </h2>
-      <p className="text-center font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
-        Cómo, cuándo y con qué entrenas.
+      <p className="text-center font-['Press_Start_2P'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
+        Como, cuando y con que entrenas.
       </p>
 
       <ChoiceGroup

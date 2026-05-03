@@ -13,7 +13,7 @@ const subtitleFor = (state: CharacterState): string => {
   if (state.legendaryStage === 'TRANSCENDENT') return '✦ TRASCENDENTE';
   if (state.legendary) return '🜂 LEGENDARIO';
   if (state.specialization) return '◆ ESPECIALISTA';
-  if (state.vocation) return '◆ VOCACIÓN';
+  if (state.vocation) return '◆ VOCACION';
   return '◆ INICIADO';
 };
 
@@ -78,13 +78,13 @@ export const CharacterBadge = (props: Props): React.JSX.Element => {
       </p>
 
       {frase && (
-        <p className="mt-3 text-center font-['VT323'] text-base italic leading-tight text-[#a1a1aa]">
+        <p className="mt-3 text-center font-['Press_Start_2P'] text-base italic leading-tight text-[#a1a1aa]">
           “{frase}”
         </p>
       )}
 
       <p className="mt-4 text-center font-['Press_Start_2P'] text-[8px] tracking-widest text-green-400">
-        ─ HÉROE LVL {props.state.heroLevel} ─
+        HEROE LVL {props.state.heroLevel}
       </p>
     </motion.article>
   );

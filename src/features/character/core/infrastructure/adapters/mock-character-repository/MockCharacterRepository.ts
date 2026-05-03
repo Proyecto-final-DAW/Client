@@ -25,14 +25,14 @@ const NOVICE: NoviceClass = {
   id: 'ESCUDERO',
   tier: 0,
   name: 'Escudero',
-  frase: 'Todo héroe empezó siendo nadie.',
+  frase: 'Todo heroe empezo siendo nadie.',
 };
 
 const VOCATION_GUERRERO: VocationClass = {
   id: 'GUERRERO',
   tier: 1,
   name: 'Guerrero',
-  frase: 'Cada cicatriz es una victoria que sobrevivió.',
+  frase: 'Cada cicatriz es una victoria que sobrevivio.',
   dominantStat: 'strength',
 };
 
@@ -49,12 +49,12 @@ const SPEC_BERSERKER: SpecializationClass = {
 const LEG_TITAN: LegendaryClass = {
   id: 'TITAN',
   tier: 3,
-  name: 'Titán',
-  frase: 'Los dioses lo enterraron. La tierra lo devolvió.',
+  name: 'Titan',
+  frase: 'Los dioses lo enterraron. La tierra lo devolvio.',
   iconHint: '⚔',
   requiredStats: ['strength'],
   transcendentName: 'Primordial',
-  transcendentFrase: 'Antes del verbo, ya tenía nombre.',
+  transcendentFrase: 'Antes del verbo, ya tenia nombre.',
 };
 
 const initialState = (): CharacterState => ({

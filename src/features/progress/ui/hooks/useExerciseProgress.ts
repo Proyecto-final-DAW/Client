@@ -30,7 +30,7 @@ export const useExerciseProgress = (exerciseId: string | null) => {
       .catch((err: unknown) => {
         if (cancelled) return;
         const message =
-          err instanceof Error ? err.message : 'Error al cargar la progresión';
+          err instanceof Error ? err.message : 'Error al cargar la progresion';
         setError(message);
       })
       .finally(() => {

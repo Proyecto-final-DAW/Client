@@ -44,7 +44,7 @@ export class ErrorBoundary extends Component<Props, State> {
         <ErrorState
           message={
             this.state.error?.message ??
-            'Algo ha fallado. Recarga la aplicación.'
+            'Algo ha fallado. Recarga la aplicacion.'
           }
           onRetry={this.handleReload}
         />

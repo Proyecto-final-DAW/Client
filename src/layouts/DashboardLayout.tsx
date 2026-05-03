@@ -1,4 +1,5 @@
 import {
+  BookOpenIcon,
   ChartBarIcon,
   ClipboardDocumentListIcon,
   HeartIcon,
@@ -11,6 +12,7 @@ import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/hooks/useAuth';
 import { DashboardBackground } from '../shared/components/DashboardBackground';
 import { PixelCorners } from '../shared/components/PixelCorners';
+import { SidebarTodayPanel } from './components/SidebarTodayPanel';
 
 type MenuItem = {
   to: string;
@@ -19,10 +21,12 @@ type MenuItem = {
 };
 
 // Header height — kept in one place because the sidebar `top` and the
-// `h-[calc(100vh-…)]` of the scroll containers all depend on it.
-const HEADER_H = 'h-16';
-const HEADER_OFFSET = 'top-16';
-const HEADER_HEIGHT_PX = 'h-[calc(100vh-4rem)]';
+// `h-[calc(100vh-…)]` of the scroll containers all depend on it. Matches
+// the public Nav (login / landing) so the header is visually consistent
+// across the app.
+const HEADER_H = 'h-24';
+const HEADER_OFFSET = 'top-24';
+const HEADER_HEIGHT_PX = 'h-[calc(100vh-6rem)]';
 
 export const DashboardLayout = (): React.JSX.Element => {
   const navigate = useNavigate();
@@ -41,7 +45,8 @@ export const DashboardLayout = (): React.JSX.Element => {
 
   const menuItems: MenuItem[] = [
     { to: '/dashboard', label: 'INICIO', icon: HomeIcon },
-    { to: '/routines', label: 'RUTINAS', icon: ClipboardDocumentListIcon },
+    { to: '/templates', label: 'RUTINAS', icon: BookOpenIcon },
+    { to: '/routines', label: 'SESIONES', icon: ClipboardDocumentListIcon },
     { to: '/progress', label: 'PROGRESO', icon: ChartBarIcon },
     { to: '/diet', label: 'DIETA', icon: HeartIcon },
     { to: '/achievements', label: 'LOGROS', icon: TrophyIcon },
@@ -54,18 +59,18 @@ export const DashboardLayout = (): React.JSX.Element => {
     <div className="relative min-h-screen flex flex-col text-[#e4e4e7]">
       <DashboardBackground />
       <header
-        className={`sticky top-0 z-30 ${HEADER_H} flex items-center justify-between border-b-2 border-[#1e1e2e] bg-[#0a0a0f] px-4 sm:px-6`}
+        className={`sticky top-0 z-30 ${HEADER_H} flex items-center justify-between border-b-2 border-[#1e1e2e] bg-[#0a0a0f]/95 backdrop-blur-md px-6 sm:px-10 lg:px-14`}
       >
         <Link to="/dashboard" className="flex items-center gap-3">
           <img
             src="/images/Logo.webp"
             alt="GymQuest"
-            className="h-12 w-auto drop-shadow-lg object-contain"
+            className="h-28 w-auto -my-6 drop-shadow-lg object-contain"
           />
         </Link>
         <button
           onClick={clickAuth}
-          className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-3 sm:px-4 py-2 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)]"
+          className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 sm:px-5 py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)]"
         >
           {isLoggedIn ? '▶ LOGOUT' : '▶ LOGIN'}
         </button>
@@ -123,6 +128,8 @@ export const DashboardLayout = (): React.JSX.Element => {
               );
             })}
           </nav>
+
+          {isLoggedIn && <SidebarTodayPanel />}
         </aside>
 
         <main className="relative flex-1 p-6 sm:p-8">

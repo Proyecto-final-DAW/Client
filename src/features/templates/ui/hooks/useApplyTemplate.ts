@@ -34,6 +34,40 @@ const toRoutineExercisePayload = (
   order_index: index,
 });
 
+// Templates encode day labels inconsistently — some as "Dia A — Empuje",
+// others as "Tren superior — Fuerza", others as bare "Push" or "Circuito A
+// — Tren completo". We normalize all of them into a short, scannable form:
+// "Dia N · <body part>" where N is the routine's 1-based position in the
+// template and the body part is the meaningful descriptor with intro
+// prefixes ("Dia A —", "Circuito A —") and methodology suffixes
+// (" — Fuerza", " — Hipertrofia") stripped. The full template name lives in
+// `description`, so the per-day label stays scannable.
+const stripIntroPrefix = (name: string): string =>
+  name
+    .replace(/^(?:Dia|Circuito)\s+[A-Za-z0-9]+(?:\s*[—\-·:]\s*)?/i, '')
+    .trim();
+
+// Drop the methodology / variant suffix after the first " — ". Keeps "Tren
+// inferior" out of "Tren inferior — Hipertrofia". Single-word names ("Push",
+// "Empuje") are unaffected.
+const stripMethodologySuffix = (name: string): string => {
+  const idx = name.indexOf(' — ');
+  return idx === -1 ? name : name.slice(0, idx).trim();
+};
+
+// "Tren superior A" → "Tren superior". Single trailing capital letter is
+// almost always the variant marker the templates already used.
+const stripVariantSuffix = (name: string): string =>
+  name.replace(/\s+[A-Z]$/, '').trim();
+
+const buildRoutineName = (routineName: string, index: number): string => {
+  const cleaned = stripVariantSuffix(
+    stripMethodologySuffix(stripIntroPrefix(routineName))
+  );
+  const dayNumber = index + 1;
+  return cleaned ? `Dia ${dayNumber} · ${cleaned}` : `Dia ${dayNumber}`;
+};
+
 export const useApplyTemplate = () => {
   const { token } = useAuth();
   const [applying, setApplying] = useState(false);
@@ -41,7 +75,7 @@ export const useApplyTemplate = () => {
 
   const apply = async (template: RoutineTemplate): Promise<boolean> => {
     if (!token) {
-      setError('Sesión no válida.');
+      setError('Sesion no valida.');
       return false;
     }
 
@@ -49,12 +83,13 @@ export const useApplyTemplate = () => {
     setError(null);
 
     try {
-      for (const routine of template.routines) {
+      for (let i = 0; i < template.routines.length; i++) {
+        const routine = template.routines[i];
         await axios.post(
           ROUTINES_URL,
           {
-            name: `${template.name} — ${routine.name}`,
-            description: template.description,
+            name: buildRoutineName(routine.name, i),
+            description: template.name,
             exercises: routine.exercises.map(toRoutineExercisePayload),
           },
           { headers: { Authorization: `Bearer ${token}` } }

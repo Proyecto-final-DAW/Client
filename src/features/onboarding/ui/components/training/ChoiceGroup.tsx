@@ -43,7 +43,7 @@ export const ChoiceGroup = (props: ChoiceGroupProps): React.JSX.Element => {
                 {c.label}
               </div>
               {c.sub && (
-                <div className="font-['VT323'] text-xs sm:text-sm text-[#71717a] mt-1 leading-none">
+                <div className="font-['Press_Start_2P'] text-xs sm:text-sm text-[#71717a] mt-1 leading-none">
                   {c.sub}
                 </div>
               )}
@@ -52,7 +52,7 @@ export const ChoiceGroup = (props: ChoiceGroupProps): React.JSX.Element => {
         })}
       </div>
       {props.error && (
-        <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
+        <p className="font-['Press_Start_2P'] text-base text-red-400 mt-2 tracking-wide leading-none">
           ✕ {props.error}
         </p>
       )}

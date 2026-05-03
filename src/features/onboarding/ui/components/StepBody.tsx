@@ -18,7 +18,7 @@ export const StepBody = (props: StepBodyProps): React.JSX.Element => {
       <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
         TU <span className="text-green-400">CUERPO</span>
       </h2>
-      <p className="text-center font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
+      <p className="text-center font-['Press_Start_2P'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
         Para calcular tu metabolismo basal.
       </p>
 

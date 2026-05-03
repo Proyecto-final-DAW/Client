@@ -30,22 +30,26 @@ export const ProgressView = (): React.JSX.Element => {
   }, [exercises, selectedId]);
 
   return (
-    <main className="min-h-screen bg-gray-950 px-4 py-8 text-white sm:px-6 lg:px-8">
-      <section className="mx-auto flex max-w-5xl flex-col gap-8">
-        <header>
-          <p className="text-sm text-blue-400">Progreso</p>
-          <h1 className="text-3xl font-bold text-white">Seguimiento de peso</h1>
-          <p className="text-sm text-gray-400">
-            Visualiza cómo evoluciona tu peso a lo largo del tiempo.
-          </p>
-        </header>
+    <section className="mx-auto max-w-5xl text-[#e4e4e7]">
+      <header className="mb-6">
+        <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+          ▶ PROGRESO
+        </p>
+        <h1 className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
+          SEGUIMIENTO
+        </h1>
+        <p className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg text-[#a1a1aa]">
+          Visualiza como evolucionan tu peso y tus maximos por ejercicio.
+        </p>
+      </header>
 
+      <div className="flex flex-col gap-6">
         <WeightProgressContent />
 
-        <section>
-          <h2 className="mb-6 text-2xl font-bold text-white">
-            Progresión por ejercicio
-          </h2>
+        <section className="relative border-2 border-green-500/40 bg-[#0d0d14] p-5">
+          <p className="mb-4 font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+            ◆ PROGRESION POR EJERCICIO
+          </p>
 
           <AsyncState
             loading={loadingExercises}
@@ -54,11 +58,11 @@ export const ProgressView = (): React.JSX.Element => {
             empty={(e) => e.length === 0}
             loadingLabel="CARGANDO EJERCICIOS"
             emptyTitle="Sin sesiones"
-            emptyDescription="Aún no has registrado sesiones. Cuando entrenes podrás ver tu progresión aquí."
+            emptyDescription="Aun no has registrado sesiones. Cuando entrenes podras ver tu progresion aqui."
           >
             {(exercises) => (
               <>
-                <div className="mb-6">
+                <div className="mb-5">
                   <ExerciseSelector
                     exercises={exercises}
                     selectedId={selectedId}
@@ -67,7 +71,7 @@ export const ProgressView = (): React.JSX.Element => {
                 </div>
 
                 {loadingProgress ? (
-                  <LoadingPixel label="CARGANDO PROGRESIÓN" />
+                  <LoadingPixel label="CARGANDO PROGRESION" />
                 ) : progressError ? (
                   <ErrorState message={progressError} />
                 ) : (
@@ -77,7 +81,7 @@ export const ProgressView = (): React.JSX.Element => {
             )}
           </AsyncState>
         </section>
-      </section>
-    </main>
+      </div>
+    </section>
   );
 };

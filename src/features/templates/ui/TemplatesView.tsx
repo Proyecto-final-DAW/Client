@@ -23,26 +23,29 @@ export const TemplatesView = (): React.JSX.Element => {
       loading={loading}
       error={error}
       data={filteredTemplates}
-      loadingLabel="CARGANDO PLANTILLAS"
+      loadingLabel="CARGANDO RUTINAS"
     >
       {() => (
         <section className="text-[#e4e4e7]">
-          <div className="mx-auto max-w-7xl">
-            <header className="flex flex-col gap-2 mb-6">
-              <h1 className="font-['Press_Start_2P'] text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
-                ▶ ELIGE TU PLAN
+          <div className="mx-auto max-w-6xl">
+            <header className="mb-8">
+              <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+                ▶ RUTINAS
+              </p>
+              <h1 className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
+                ELIGE TU PLAN
               </h1>
-              <p className="font-['VT323'] text-lg text-[#a1a1aa]">
-                Plantillas listas para empezar. Filtra por objetivo,
-                equipamiento o nivel.
+              <p className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg text-[#a1a1aa]">
+                Rutinas semanales listas. Aplicalas y tendras las sesiones de
+                cada dia creadas automaticamente.
               </p>
             </header>
 
             <RecommendedTemplatesSection templates={recommendedTemplates} />
 
-            <div className="flex items-baseline gap-3 mb-3">
+            <div className="mb-4 flex items-baseline gap-3">
               <h2 className="font-['Press_Start_2P'] text-[11px] tracking-widest text-[#a1a1aa]">
-                ▸ TODAS LAS PLANTILLAS
+                ▸ TODAS LAS RUTINAS
               </h2>
             </div>
 
@@ -54,7 +57,7 @@ export const TemplatesView = (): React.JSX.Element => {
               templates={filteredTemplates}
               recommendedTemplateIds={recommendedTemplateIds}
               emptyTitle="Sin resultados"
-              emptyDescription="Prueba a quitar algún filtro."
+              emptyDescription="Prueba a quitar algun filtro."
             />
 
             <div className="mt-8 flex justify-center">
@@ -63,7 +66,7 @@ export const TemplatesView = (): React.JSX.Element => {
                 onClick={() => navigate('/dashboard')}
                 className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#1e1e2e] bg-[#0d0d14] text-[#a1a1aa] px-5 py-3 hover:border-green-500/40 hover:text-green-400 transition-colors"
               >
-                OMITIR Y CREAR DESPUÉS
+                ◀ VOLVER AL INICIO
               </button>
             </div>
           </div>

@@ -43,12 +43,12 @@ export const useFinishWorkout = () => {
     exercises: WorkoutPayloadExercise[]
   ): Promise<boolean> => {
     if (!token) {
-      setError('Sesión no válida.');
+      setError('Sesion no valida.');
       return false;
     }
 
     if (exercises.length === 0) {
-      setError('Registra al menos un set para guardar la sesión.');
+      setError('Registra al menos un set para guardar la sesion.');
       return false;
     }
 
@@ -78,7 +78,7 @@ export const useFinishWorkout = () => {
       return true;
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : 'Error al guardar la sesión.';
+        err instanceof Error ? err.message : 'Error al guardar la sesion.';
       setError(message);
       return false;
     } finally {

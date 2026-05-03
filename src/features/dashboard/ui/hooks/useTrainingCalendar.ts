@@ -44,6 +44,21 @@ const buildMonthGrid = (
   return grid;
 };
 
+const MONTH_NAMES_ES = [
+  'Enero',
+  'Febrero',
+  'Marzo',
+  'Abril',
+  'Mayo',
+  'Junio',
+  'Julio',
+  'Agosto',
+  'Septiembre',
+  'Octubre',
+  'Noviembre',
+  'Diciembre',
+] as const;
+
 export const useTrainingCalendar = (trainingDays: string[]) => {
   return useMemo(() => {
     const today = new Date();
@@ -56,6 +71,11 @@ export const useTrainingCalendar = (trainingDays: string[]) => {
       trainingSet
     );
 
-    return { grid, weekdayLabels: WEEKDAY_LABELS };
+    return {
+      grid,
+      weekdayLabels: WEEKDAY_LABELS,
+      monthName: MONTH_NAMES_ES[today.getMonth()],
+      year: today.getFullYear(),
+    };
   }, [trainingDays]);
 };

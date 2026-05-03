@@ -4,7 +4,7 @@ export const DashboardBackground = (): React.JSX.Element => {
       <div
         className="fixed inset-0 pointer-events-none z-0"
         style={{
-          backgroundImage: "url('/images/4.png')",
+          backgroundImage: "url('/images/4.webp')",
           backgroundSize: 'cover',
           backgroundPosition: 'center 65%',
           backgroundRepeat: 'no-repeat',

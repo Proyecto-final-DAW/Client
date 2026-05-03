@@ -15,7 +15,7 @@ export const Hero = (): React.JSX.Element => {
         </h1>
 
         <p className="relative mt-6 sm:mt-8 text-[9px] sm:text-[11px] text-[#e4e4e7] max-w-xl mx-auto leading-loose font-['Press_Start_2P'] tracking-wide [text-shadow:0_0_4px_#000,2px_2px_0_rgba(0,0,0,1),0_0_20px_rgba(0,0,0,0.9)]">
-          Rutinas a tu medida, progreso real y hábitos que te llevan al
+          Rutinas a tu medida, progreso real y habitos que te llevan al
           siguiente LVL cada semana.
         </p>
 

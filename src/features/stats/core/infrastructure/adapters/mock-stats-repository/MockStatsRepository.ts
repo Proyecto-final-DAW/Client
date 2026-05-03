@@ -6,26 +6,34 @@ export class MockStatsRepository implements StatsRepository {
   async getStats(): Promise<UserStats> {
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    // Keys must match STAT_ORDER (English), not Spanish, otherwise the
-    // lookup returns undefined and the bars render at 0.
-    const mockValues: Record<(typeof STAT_ORDER)[number], number> = {
-      strength: 24,
-      resistance: 18,
-      stamina: 22,
-      agility: 14,
-      tenacity: 12,
-      vigor: 16,
+    const mockData: Record<
+      (typeof STAT_ORDER)[number],
+      { xp: number; level: number }
+    > = {
+      strength: { xp: 64, level: 18 },
+      resistance: { xp: 22, level: 14 },
+      stamina: { xp: 48, level: 16 },
+      agility: { xp: 12, level: 10 },
+      tenacity: { xp: 30, level: 8 },
+      vigor: { xp: 70, level: 12 },
     };
 
+    const pilpilar = STAT_ORDER.map((key) => ({
+      name: STAT_CONFIG[key].name,
+      value: mockData[key].xp,
+      max: 100,
+      level: mockData[key].level,
+      icon: STAT_CONFIG[key].icon,
+      colorVar: STAT_CONFIG[key].colorVar,
+    }));
+
+    const heroLevel = Math.round(
+      pilpilar.reduce((sum, p) => sum + p.level, 0) / STAT_ORDER.length
+    );
+
     return {
-      pilpilar: STAT_ORDER.map((key) => ({
-        name: STAT_CONFIG[key].name,
-        value: mockValues[key],
-        max: 99,
-        icon: STAT_CONFIG[key].icon,
-        colorVar: STAT_CONFIG[key].colorVar,
-      })),
-      level: 18,
+      pilpilar,
+      level: heroLevel,
       title: 'Especialista',
     };
   }

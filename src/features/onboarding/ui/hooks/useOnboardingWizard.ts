@@ -98,7 +98,7 @@ export function useOnboardingWizard({
       setSubmitError(
         error instanceof Error
           ? error.message
-          : 'Ha ocurrido un error. Inténtalo de nuevo.'
+          : 'Ha ocurrido un error. Intentalo de nuevo.'
       );
     } finally {
       setIsSubmitting(false);

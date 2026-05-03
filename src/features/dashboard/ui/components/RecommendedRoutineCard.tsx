@@ -1,10 +1,11 @@
 import type React from 'react';
 import { Link } from 'react-router-dom';
 
+import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import { useTemplateCatalog } from '../../../templates/ui/hooks/useTemplateCatalog';
 
 const GOAL_LABEL: Record<string, string> = {
-  GAIN_MUSCLE: 'Ganar músculo',
+  GAIN_MUSCLE: 'Ganar musculo',
   LOSE_FAT: 'Perder grasa',
   MAINTAIN: 'Mantenerse',
   HEALTH: 'Salud',
@@ -28,74 +29,85 @@ export const RecommendedRoutineCard = (): React.JSX.Element | null => {
   const top = recommendedTemplates[0];
   if (!top) {
     return (
-      <article className="border-2 border-[#1e1e2e] bg-[#0d0d14] p-4">
-        <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-[#a1a1aa]">
+      <article className="relative border-2 border-[#1e1e2e] bg-[#0d0d14] p-6 text-center">
+        <PixelCorners size="md" className="border-[#27272a]" />
+        <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-[#a1a1aa]">
           ▸ RUTINA RECOMENDADA
         </p>
-        <p className="mt-3 font-['VT323'] text-base text-[#a1a1aa]">
+        <p className="mx-auto mt-4 max-w-md font-['VT323'] text-base leading-tight text-[#a1a1aa]">
           Completa tu perfil (equipamiento y experiencia) para que te
           recomendemos un plan.
         </p>
-        <Link
-          to="/templates"
-          className="mt-4 inline-block font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#1e1e2e] px-3 py-2 text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400 transition-colors"
-        >
-          VER PLANTILLAS
-        </Link>
+        <div className="mt-5">
+          <Link
+            to="/templates"
+            className="inline-block font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#1e1e2e] px-4 py-3 text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400 transition-colors"
+          >
+            VER PLANTILLAS
+          </Link>
+        </div>
       </article>
     );
   }
 
   return (
-    <article className="border-2 border-green-500/50 bg-[#0d0d14] p-4 shadow-[0_0_18px_rgba(34,197,94,0.18)]">
-      <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
-        ★ RECOMENDADA PARA TI
-      </p>
-      <h3 className="mt-3 font-['Press_Start_2P'] text-[11px] leading-relaxed text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)]">
-        {top.name.toUpperCase()}
-      </h3>
-      <p className="mt-2 font-['VT323'] text-base leading-tight text-[#d4d4d8]">
-        {top.description}
-      </p>
-      <dl className="mt-3 grid grid-cols-3 gap-2 text-center">
-        <div>
-          <dt className="font-['Press_Start_2P'] text-[7px] tracking-widest text-[#71717a]">
-            OBJETIVO
-          </dt>
-          <dd className="mt-1 font-['VT323'] text-base text-[#e4e4e7]">
-            {GOAL_LABEL[top.goal] ?? top.goal}
-          </dd>
+    <article className="relative border-2 border-green-500/60 bg-[#0d0d14] p-6 sm:p-8 shadow-[0_0_0_4px_rgba(10,10,15,0.6),0_0_60px_rgba(34,197,94,0.18)]">
+      <PixelCorners size="md" className="border-green-500/60" />
+
+      <header className="border-b-2 border-[#1e1e2e] pb-5">
+        <p className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] tracking-widest text-green-500">
+          ★ RECOMENDADA PARA TI
+        </p>
+        <h3 className="mt-3 font-['Press_Start_2P'] text-[11px] sm:text-xs leading-relaxed text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)] break-words">
+          {top.name.toUpperCase()}
+        </h3>
+        <p className="mt-3 font-['VT323'] text-base leading-snug text-[#d4d4d8]">
+          {top.description}
+        </p>
+      </header>
+
+      <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <dl className="grid grid-cols-3 gap-x-8 gap-y-1">
+          <div>
+            <dt className="font-['Press_Start_2P'] text-[7px] tracking-widest text-[#71717a]">
+              OBJETIVO
+            </dt>
+            <dd className="mt-2 font-['VT323'] text-base text-green-400">
+              {GOAL_LABEL[top.goal] ?? top.goal}
+            </dd>
+          </div>
+          <div>
+            <dt className="font-['Press_Start_2P'] text-[7px] tracking-widest text-[#71717a]">
+              NIVEL
+            </dt>
+            <dd className="mt-2 font-['VT323'] text-base text-green-400">
+              {LEVEL_LABEL[top.level] ?? top.level}
+            </dd>
+          </div>
+          <div>
+            <dt className="font-['Press_Start_2P'] text-[7px] tracking-widest text-[#71717a]">
+              DIAS
+            </dt>
+            <dd className="mt-2 font-['VT323'] text-base text-green-400">
+              {top.daysPerWeek}/sem
+            </dd>
+          </div>
+        </dl>
+
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <Link
+            to="/templates"
+            className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] px-4 py-3 text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400 transition-colors text-center"
+          >
+            VER MAS
+          </Link>
+          <Link
+            to={`/templates/${top.id}`}
+            className="font-['Press_Start_2P'] text-[10px] tracking-widest bg-green-500 text-[#0a0a0f] px-5 py-3 border-b-4 border-green-700 hover:bg-green-400 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] text-center"
+          >
+            ▶ ABRIR
+          </Link>
         </div>
-        <div>
-          <dt className="font-['Press_Start_2P'] text-[7px] tracking-widest text-[#71717a]">
-            NIVEL
-          </dt>
-          <dd className="mt-1 font-['VT323'] text-base text-[#e4e4e7]">
-            {LEVEL_LABEL[top.level] ?? top.level}
-          </dd>
-        </div>
-        <div>
-          <dt className="font-['Press_Start_2P'] text-[7px] tracking-widest text-[#71717a]">
-            DÍAS
-          </dt>
-          <dd className="mt-1 font-['VT323'] text-base text-[#e4e4e7]">
-            {top.daysPerWeek}/sem
-          </dd>
-        </div>
-      </dl>
-      <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
-        <Link
-          to="/templates"
-          className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#1e1e2e] px-3 py-2 text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400 transition-colors"
-        >
-          VER MÁS
-        </Link>
-        <Link
-          to={`/templates/${top.id}`}
-          className="font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 text-[#0a0a0f] px-3 py-2 border-b-4 border-green-700 hover:bg-green-400 hover:border-green-600 active:border-b-0 active:mt-1 transition-all"
-        >
-          ▶ ABRIR
-        </Link>
       </div>
     </article>
   );

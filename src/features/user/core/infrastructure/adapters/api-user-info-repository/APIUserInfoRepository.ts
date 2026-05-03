@@ -29,7 +29,7 @@ export class APIUserInfoRepository implements UserInfoRepository {
 
       if (!token) {
         throw new Error(
-          'No pudimos iniciar sesión. Verifica tus datos e intenta nuevamente.'
+          'No pudimos iniciar sesion. Verifica tus datos e intenta nuevamente.'
         );
       }
 
@@ -40,7 +40,7 @@ export class APIUserInfoRepository implements UserInfoRepository {
       };
     } catch (error) {
       const err = error as AxiosError<APIErrorResponse>;
-      throw new Error(err.response?.data?.message ?? 'Error al iniciar sesión');
+      throw new Error(err.response?.data?.message ?? 'Error al iniciar sesion');
     }
   }
 }

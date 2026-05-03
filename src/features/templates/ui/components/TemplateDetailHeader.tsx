@@ -24,7 +24,7 @@ export const TemplateDetailHeader = (props: Props): React.JSX.Element => {
         {template.name}
       </h1>
 
-      <p className="font-['VT323'] text-lg text-[#a1a1aa] mt-3">
+      <p className="font-['Press_Start_2P'] text-lg text-[#a1a1aa] mt-3">
         {template.description}
       </p>
 
@@ -40,9 +40,9 @@ export const TemplateDetailHeader = (props: Props): React.JSX.Element => {
         </span>
       </div>
 
-      <p className="font-['VT323'] text-sm text-[#71717a] mt-3">
+      <p className="font-['Press_Start_2P'] text-sm text-[#71717a] mt-3">
         {totalExercises(exerciseCount, template.daysPerWeek)} ·{' '}
-        {template.estimatedDurationMin} min/sesión
+        {template.estimatedDurationMin} min/sesion
       </p>
     </header>
   );
