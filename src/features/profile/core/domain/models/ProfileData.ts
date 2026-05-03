@@ -8,7 +8,7 @@ export interface ProfileData {
   weight: number | null;
   height: number | null;
   activity_level: string | null;
-  goal: string | null;
+  goals: string[];
   sleep_hours: number | null;
   daily_calories: number | null;
   protein_grams: number | null;
@@ -28,7 +28,7 @@ export interface ProfileUpdateData {
   height?: number;
   age?: number;
   activity_level?: string;
-  goal?: string;
+  goals?: string[];
   sleep_hours?: number;
 }
 

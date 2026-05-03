@@ -14,7 +14,7 @@ const MOCK_PROFILE: ProfileData = {
   weight: 78,
   height: 178,
   activity_level: 'ACTIVE',
-  goal: 'GAIN_MUSCLE',
+  goals: ['GAIN_MUSCLE'],
   sleep_hours: 8,
   daily_calories: 2800,
   protein_grams: 156,

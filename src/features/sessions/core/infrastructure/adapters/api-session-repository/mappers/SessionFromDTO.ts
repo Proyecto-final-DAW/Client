@@ -6,7 +6,7 @@ export class SessionFromDTO {
     return {
       id: dto.session.id,
       exercises: dto.session.exercises.map((exercise) => ({
-        exerciseId: exercise.exerciseId,
+        exerciseId: exercise.exercise_api_id,
         name: exercise.name,
         type: exercise.type,
         sets: exercise.sets.map((set) => ({

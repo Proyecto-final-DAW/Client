@@ -1,5 +1,10 @@
 export type Sex = 'MALE' | 'FEMALE';
-export type ActivityLevel = 'SEDENTARY' | 'LIGHT' | 'ACTIVE' | 'VERY_ACTIVE';
+export type ActivityLevel =
+  | 'SEDENTARY'
+  | 'LIGHT'
+  | 'MODERATE'
+  | 'ACTIVE'
+  | 'VERY_ACTIVE';
 export type Goal = 'LOSE_FAT' | 'GAIN_MUSCLE' | 'MAINTAIN' | 'HEALTH';
 export type ExperienceLevel = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
 export type Equipment = 'FULL_GYM' | 'HOME_WEIGHTS' | 'BODYWEIGHT';

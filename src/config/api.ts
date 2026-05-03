@@ -41,6 +41,9 @@ export const API_ENDPOINTS = {
   getMilestones: `${API_BASE_URL}/milestones`,
   getMilestonesUnlocked: `${API_BASE_URL}/milestones/me`,
   getStreakStatus: `${API_BASE_URL}/streak/status`,
+  getCharacterState: `${API_BASE_URL}/character/state`,
+  chooseCharacterClass: `${API_BASE_URL}/character/choose`,
+  getCharacterCatalog: `${API_BASE_URL}/character/catalog`,
 };
 
 axios.interceptors.request.use((config) => {

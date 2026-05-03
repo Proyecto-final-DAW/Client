@@ -16,8 +16,14 @@ import { SessionFromDTO } from './mappers/SessionFromDTO';
 export class APISessionRepository implements SessionRepository {
   async createSession(input: CreateSessionInput): Promise<Session> {
     try {
+      // Translate camelCase domain → snake_case wire contract.
       const body: CreateSessionRequestDTO = {
-        exercises: input.exercises,
+        exercises: input.exercises.map((exercise) => ({
+          exercise_api_id: exercise.exerciseId,
+          name: exercise.name,
+          type: exercise.type,
+          sets: exercise.sets,
+        })),
         ...(input.date ? { date: input.date } : {}),
       };
       const response = await axios.post<CreateSessionResponseDTO>(
