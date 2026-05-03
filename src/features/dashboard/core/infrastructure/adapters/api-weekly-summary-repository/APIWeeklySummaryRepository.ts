@@ -8,15 +8,10 @@ import type { GetWeeklySummaryDTO } from './dtos/GetWeeklySummaryDTO';
 import { WeeklySummaryFromDTO } from './mappers/WeeklySummaryFromDTO';
 
 export class APIWeeklySummaryRepository implements WeeklySummaryRepository {
-  async getWeeklySummary(token: string): Promise<WeeklySummary> {
+  async getWeeklySummary(): Promise<WeeklySummary> {
     try {
       const response = await axios.get<GetWeeklySummaryDTO>(
-        API_ENDPOINTS.weeklySummary,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        API_ENDPOINTS.getWeeklySummary
       );
 
       return WeeklySummaryFromDTO.fromDTO(response.data);

@@ -3,7 +3,7 @@ export interface GetProgressDTO {
   weight: number;
 }
 
-export interface RegisterWeightRequestDTO {
+export interface RegisterWeightDTO {
   weight: number;
   date: string;
 }

@@ -2,9 +2,7 @@ import type { WeeklySummaryRepository } from '../../../application/ports/WeeklyS
 import type { WeeklySummary } from '../../../domain/models/WeeklySummary';
 
 export class MockWeeklySummaryRepository implements WeeklySummaryRepository {
-  async getWeeklySummary(token: string): Promise<WeeklySummary> {
-    void token;
-
+  async getWeeklySummary(): Promise<WeeklySummary> {
     await new Promise((resolve) => setTimeout(resolve, 400));
 
     return {

@@ -14,7 +14,7 @@ export class APIStreakRepository implements StreakRepository {
   async getStatus(token?: string): Promise<StreakStatus> {
     try {
       const response = await axios.get<GetStreakStatusDTO>(
-        API_ENDPOINTS.streakStatus,
+        API_ENDPOINTS.getStreakStatus,
         { headers: authHeaders(token) }
       );
 

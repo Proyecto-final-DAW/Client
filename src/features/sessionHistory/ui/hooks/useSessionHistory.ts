@@ -18,7 +18,7 @@ export const useSessionHistory = () => {
     setError(null);
 
     try {
-      const result = await sessionRepository.getUserSessions(token);
+      const result = await sessionRepository.getUserSessions();
       setSessions(result);
     } catch (err) {
       const message =
