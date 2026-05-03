@@ -5,7 +5,7 @@ import type {
 } from '../core/domain/models/RoutineTemplate';
 
 export const GOAL_LABELS: Record<TemplateGoal, string> = {
-  GAIN_MUSCLE: 'Ganar músculo',
+  GAIN_MUSCLE: 'Ganar musculo',
   LOSE_FAT: 'Perder grasa',
   MAINTAIN: 'Mantenimiento',
   HEALTH: 'Salud',
@@ -50,6 +50,6 @@ export const LEVEL_OPTIONS: { value: TemplateLevel | ''; label: string }[] = [
 
 export const totalExercises = (count: number, days: number): string => {
   const exerciseLabel = count === 1 ? 'ejercicio' : 'ejercicios';
-  const dayLabel = days === 1 ? 'día' : 'días';
+  const dayLabel = days === 1 ? 'dia' : 'dias';
   return `${count} ${exerciseLabel} · ${days} ${dayLabel}/semana`;
 };

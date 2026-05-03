@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../../context/hooks/useAuth';
 import { useCharacterState } from '../../../context/hooks/useCharacterState';
 import { AsyncState } from '../../../shared/components/AsyncState';
-import { CharacterBadge } from '../../character/ui/components/CharacterBadge';
 import { TierUpModal } from '../../character/ui/components/TierUpModal';
 import { DietSummaryCard } from '../../diet/ui/components/DietSummaryCard';
 import { useDiet } from '../../diet/ui/hooks/useDiet';
@@ -41,7 +40,7 @@ export const Dashboard = (): React.JSX.Element => {
     chooseClass,
   } = useCharacterState();
 
-  // Per-tier dismissal: clicking "MÁS TARDE" hides the modal for the current
+  // Per-tier dismissal: clicking "MAS TARDE" hides the modal for the current
   // tier only. When a new pending choice arrives (e.g. T2 after T1), the
   // modal opens again automatically.
   const [dismissedTier, setDismissedTier] = useState<number | null>(null);
@@ -99,11 +98,8 @@ export const Dashboard = (): React.JSX.Element => {
           <div className="my-4">
             <StartWorkoutButton />
           </div>
-          {characterState && (
-            <div className="mt-4">
-              <CharacterBadge state={characterState} />
-            </div>
-          )}
+          {/* Character badge lives in /perfil (its home). The compact level
+              + streak summary is always available in the sidebar HOY panel. */}
           {characterError && !characterState && (
             <div className="mt-4 border-2 border-red-500/40 bg-[#0d0d14] p-3 text-center font-['VT323'] text-base text-red-300">
               {characterError}

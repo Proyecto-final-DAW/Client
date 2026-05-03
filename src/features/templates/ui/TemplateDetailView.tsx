@@ -28,7 +28,7 @@ export const TemplateDetailView = (): React.JSX.Element => {
       loadingLabel="CARGANDO PLANTILLA"
       emptyTitle="Plantilla no encontrada"
       emptyDescription="Es posible que el enlace haya cambiado o que la plantilla ya no exista."
-      emptyCta={{ label: 'Volver al catálogo', to: '/templates' }}
+      emptyCta={{ label: 'Volver al catalogo', to: '/templates' }}
     >
       {(template) => (
         <section className="text-[#e4e4e7]">
@@ -48,7 +48,7 @@ export const TemplateDetailView = (): React.JSX.Element => {
             {applyError && (
               <p
                 role="alert"
-                className="mt-6 font-['VT323'] text-base text-red-400 border-2 border-red-500/40 bg-red-500/10 px-4 py-3"
+                className="mt-6 font-['Press_Start_2P'] text-base text-red-400 border-2 border-red-500/40 bg-red-500/10 px-4 py-3"
               >
                 ✕ {applyError}
               </p>

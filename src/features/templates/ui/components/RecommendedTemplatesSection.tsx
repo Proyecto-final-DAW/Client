@@ -16,8 +16,8 @@ export const RecommendedTemplatesSection = (
         <h2 className="font-['Press_Start_2P'] text-[11px] tracking-widest text-green-400">
           ★ RECOMENDADAS PARA TI
         </h2>
-        <p className="font-['VT323'] text-base text-[#71717a]">
-          Según tu perfil de onboarding
+        <p className="font-['Press_Start_2P'] text-base text-[#71717a]">
+          Segun tu perfil de onboarding
         </p>
       </div>
       <TemplateGrid

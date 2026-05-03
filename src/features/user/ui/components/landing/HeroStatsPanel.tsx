@@ -86,7 +86,7 @@ export const HeroStatsPanel = (): React.JSX.Element => {
       <PixelCorners size="md" className="border-green-500/60" />
 
       <div className="text-[9px] sm:text-[10px] font-['Press_Start_2P'] text-green-500 mb-4 text-left tracking-wider">
-        ─ STATS ─
+        STATS
       </div>
       <div className="space-y-3">
         {STATS.map((stat) => (

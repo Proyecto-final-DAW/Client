@@ -20,7 +20,7 @@ export const CompletedSetsList = (props: Props): React.JSX.Element | null => {
             onClick={props.onUndoLast}
             className="font-['Press_Start_2P'] text-[8px] tracking-widest text-[#71717a] hover:text-red-400 transition-colors"
           >
-            ↶ DESHACER ÚLTIMO
+            ↶ DESHACER ULTIMO
           </button>
         )}
       </div>
@@ -31,7 +31,7 @@ export const CompletedSetsList = (props: Props): React.JSX.Element | null => {
             key={index}
             className="flex justify-between items-center border-2 border-[#1e1e2e] bg-[#0d0d14] px-3 py-2"
           >
-            <span className="font-['VT323'] text-base text-[#71717a]">
+            <span className="font-['Press_Start_2P'] text-base text-[#71717a]">
               Set {index + 1}
             </span>
             <span className="font-['Press_Start_2P'] text-[10px] text-green-400">

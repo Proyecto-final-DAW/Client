@@ -54,7 +54,7 @@ export const useProgressForm = ({
 
     const selectedDate = new Date(date);
     if (Number.isNaN(selectedDate.getTime())) {
-      setError('Introduce una fecha válida');
+      setError('Introduce una fecha valida');
       return null;
     }
 

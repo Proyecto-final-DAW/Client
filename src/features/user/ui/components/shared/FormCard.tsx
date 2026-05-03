@@ -15,7 +15,7 @@ export const FormCard = (props: FormCardProps): React.JSX.Element => {
     >
       <PixelCorners size="md" className="border-green-500/60" />
       <div className="text-center text-sm sm:text-base font-['Press_Start_2P'] text-green-500 mb-12 tracking-widest">
-        ─ {props.title} ─
+        {props.title}
       </div>
       {props.children}
     </form>

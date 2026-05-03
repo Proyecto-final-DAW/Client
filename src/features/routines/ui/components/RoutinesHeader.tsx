@@ -1,26 +1,16 @@
-import { BoltIcon } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
-
 export const RoutinesHeader = () => {
   return (
-    <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-      <div>
-        <p className="mb-2 text-sm font-medium text-blue-400">Rutinas</p>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Tus entrenamientos
-        </h1>
-        <p className="mt-2 text-sm text-gray-400">
-          Crea, organiza y reutiliza tus rutinas semanales.
-        </p>
-      </div>
-
-      <Link
-        to="/sessions/new"
-        className="inline-flex items-center gap-2 self-start rounded-xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-gray-950 transition hover:bg-emerald-400"
-      >
-        <BoltIcon className="h-4 w-4" />
-        Sesión libre
-      </Link>
-    </div>
+    <header className="mb-6">
+      <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+        ▶ SESIONES
+      </p>
+      <h1 className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
+        TUS SESIONES
+      </h1>
+      <p className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg text-[#a1a1aa]">
+        Cada sesion es un dia de entrenamiento. Crea las tuyas o aplica una
+        rutina entera desde plantillas.
+      </p>
+    </header>
   );
 };

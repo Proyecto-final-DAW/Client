@@ -17,36 +17,38 @@ const cellBackground = (trained: boolean, future: boolean): string => {
 export const TrainingCalendar = (
   props: TrainingCalendarProps
 ): React.JSX.Element => {
-  const { grid, weekdayLabels } = useTrainingCalendar(props.trainingDays);
+  const { grid, weekdayLabels, monthName } = useTrainingCalendar(
+    props.trainingDays
+  );
 
   return (
-    <div className="mt-4">
-      <p className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400">
-        Este mes
+    <div className="mt-5 flex flex-col items-center">
+      <p className="mb-3 font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500 uppercase">
+        {monthName}
       </p>
-      <div className="inline-flex flex-col gap-1">
-        <div className="flex gap-1">
+      <div className="flex flex-col gap-1.5">
+        <div className="flex gap-1.5">
           {weekdayLabels.map((label) => (
             <span
               key={label}
-              className="flex h-3 w-3 items-center justify-center text-[9px] leading-none text-zinc-500"
+              className="flex h-5 w-5 items-center justify-center font-['Press_Start_2P'] text-[8px] leading-none text-zinc-500"
             >
               {label}
             </span>
           ))}
         </div>
         {grid.map((week, wi) => (
-          <div key={wi} className="flex gap-1">
+          <div key={wi} className="flex gap-1.5">
             {week.map((cell, di) => {
               if (cell.day === null) {
-                return <div key={di} className="h-3 w-3" />;
+                return <div key={di} className="h-5 w-5" />;
               }
-              const title = `Día ${cell.day}${cell.trained ? ' — Entrenado' : ''}`;
+              const title = `Dia ${cell.day}${cell.trained ? ' — Entrenado' : ''}`;
               return (
                 <div
                   key={di}
                   title={title}
-                  className={`h-3 w-3 rounded-sm ${cellBackground(cell.trained, cell.future)}`}
+                  className={`h-5 w-5 rounded-sm ${cellBackground(cell.trained, cell.future)}`}
                 />
               );
             })}

@@ -8,6 +8,7 @@ import {
   TrophyIcon,
 } from '@heroicons/react/24/outline';
 
+import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type { Milestone } from '../../core/domain/models/Milestone';
 
 type Props = {
@@ -39,22 +40,27 @@ export const MilestoneCard = (props: Props): React.JSX.Element => {
 
   return (
     <article
-      className={`relative rounded-2xl border p-5 shadow-sm transition-colors ${
+      className={`relative border-2 p-4 transition-colors ${
         isUnlocked
-          ? 'border-emerald-500 bg-zinc-900'
-          : 'border-zinc-700 bg-zinc-900/50'
+          ? 'border-green-500/60 bg-[#0d0d14] shadow-[0_0_14px_rgba(34,197,94,0.18)]'
+          : 'border-[#1e1e2e] bg-[#0a0a0f]/80'
       }`}
     >
+      <PixelCorners
+        size="sm"
+        className={isUnlocked ? 'border-green-500/60' : 'border-[#3f3f46]'}
+      />
+
       {!isUnlocked && (
-        <LockClosedIcon className="absolute right-3 top-3 h-4 w-4 text-zinc-600" />
+        <LockClosedIcon className="absolute right-2 top-2 h-3.5 w-3.5 text-[#52525b]" />
       )}
 
-      <div className="flex items-start gap-4">
+      <div className="flex items-start gap-3">
         <div
-          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg ${
+          className={`flex h-12 w-12 shrink-0 items-center justify-center border-2 ${
             isUnlocked
-              ? 'bg-emerald-500/10 text-emerald-400'
-              : 'bg-zinc-800 text-zinc-600'
+              ? 'border-green-500/40 bg-green-500/10 text-green-400'
+              : 'border-[#27272a] bg-[#0a0a0f] text-[#52525b]'
           }`}
         >
           <Icon className="h-6 w-6" />
@@ -62,22 +68,24 @@ export const MilestoneCard = (props: Props): React.JSX.Element => {
 
         <div className="min-w-0 flex-1">
           <h3
-            className={`text-sm font-bold ${
-              isUnlocked ? 'text-zinc-100' : 'text-zinc-500'
+            className={`font-['Press_Start_2P'] text-[10px] tracking-widest leading-tight ${
+              isUnlocked
+                ? 'text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.5)]'
+                : 'text-[#71717a]'
             }`}
           >
-            {props.milestone.name}
+            {props.milestone.name.toUpperCase()}
           </h3>
           <p
-            className={`mt-1 text-xs leading-relaxed ${
-              isUnlocked ? 'text-zinc-300' : 'text-zinc-600'
+            className={`mt-2 font-['Press_Start_2P'] text-base leading-tight ${
+              isUnlocked ? 'text-[#d4d4d8]' : 'text-[#52525b]'
             }`}
           >
             {props.milestone.description}
           </p>
           {isUnlocked && props.milestone.unlockedAt && (
-            <p className="mt-2 text-[11px] font-medium text-emerald-400">
-              Desbloqueado el {formatDate(props.milestone.unlockedAt)}
+            <p className="mt-2 font-['Press_Start_2P'] text-[8px] tracking-widest text-green-500">
+              ✦ {formatDate(props.milestone.unlockedAt)}
             </p>
           )}
         </div>

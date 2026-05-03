@@ -2,6 +2,7 @@ import type React from 'react';
 import { useMemo, useState } from 'react';
 
 import { EmptyState } from '../../../../shared/components/EmptyState';
+import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import { useProgress } from '../hooks/useProgress';
 import { RegisterWeightForm } from './RegisterWeightForm';
 import { WeightHistoryTable } from './WeightHistoryTable';
@@ -41,61 +42,73 @@ export const WeightProgressContent = (): React.JSX.Element => {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-gray-800 bg-gray-900/80 p-6">
-        <p className="text-sm text-gray-400">Cargando progreso de peso...</p>
-      </div>
+      <section className="relative border-2 border-[#1e1e2e] bg-[#0d0d14] p-5">
+        <PixelCorners size="sm" className="border-green-500/30" />
+        <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-[#a1a1aa]">
+          CARGANDO PROGRESO…
+        </p>
+      </section>
     );
   }
 
   if (error) {
     return (
-      <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-6">
-        <p className="text-sm text-red-400">{error}</p>
+      <section className="relative border-2 border-red-500/40 bg-[#0d0d14] p-5">
+        <PixelCorners size="sm" className="border-red-500/40" />
+        <p className="font-['Press_Start_2P'] text-base text-red-300">
+          {error}
+        </p>
         <button
           type="button"
           onClick={refetch}
-          className="mt-4 rounded-xl bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
+          className="mt-4 font-['Press_Start_2P'] text-[9px] tracking-widest bg-red-500 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-red-700 hover:bg-red-400 active:border-b-0 active:mt-[1.0625rem] transition-all"
         >
-          Reintentar
+          ▶ REINTENTAR
         </button>
-      </div>
+      </section>
     );
   }
 
   return (
-    <section className="rounded-2xl border border-gray-800 bg-gray-900/80 p-5">
+    <section className="relative border-2 border-green-500/40 bg-[#0d0d14] p-5">
+      <PixelCorners size="md" className="border-green-500/40" />
+
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-wider text-gray-500">
-            Peso actual
+          <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+            ◆ PESO ACTUAL
           </p>
           {latest ? (
-            <p className="mt-1 text-2xl font-bold text-white">
-              {latest.weight.toFixed(1)}{' '}
-              <span className="text-base font-normal text-gray-400">
+            <p className="mt-2 font-['Press_Start_2P'] text-lg text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)]">
+              {latest.weight.toFixed(1)}
+              <span className="ml-2 font-['Press_Start_2P'] text-base text-[#a1a1aa]">
                 kg · {DATE_FORMAT.format(latest.date)}
               </span>
             </p>
           ) : (
-            <p className="mt-1 text-base text-gray-400">Sin registros aún</p>
+            <p className="mt-2 font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+              Sin registros aun
+            </p>
           )}
         </div>
         <button
           type="button"
           onClick={() => setShowForm((value) => !value)}
-          className="rounded-xl bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+          className="font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] self-start"
         >
-          Registrar peso
+          {showForm ? '✕ CANCELAR' : '▶ REGISTRAR PESO'}
         </button>
       </div>
 
       {showForm && (
-        <RegisterWeightForm
-          submitting={submitting}
-          submitError={submitError}
-          onSubmit={addEntry}
-          onSuccess={() => setShowForm(false)}
-        />
+        <div className="mb-5">
+          <RegisterWeightForm
+            submitting={submitting}
+            submitError={submitError}
+            onSubmit={addEntry}
+            onSuccess={() => setShowForm(false)}
+          />
+        </div>
       )}
 
       {entries.length === 0 ? (
@@ -109,7 +122,7 @@ export const WeightProgressContent = (): React.JSX.Element => {
           }}
         />
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-5">
           <WeightProgressChart entries={entries} />
           <WeightHistoryTable entries={entries} />
         </div>

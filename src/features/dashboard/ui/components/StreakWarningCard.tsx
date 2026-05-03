@@ -34,16 +34,16 @@ export const StreakWarningCard = (props: Props): React.JSX.Element | null => {
           <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-red-400">
             ⚠ RACHA EN PELIGRO
           </p>
-          <p className="mt-2 font-['VT323'] text-lg leading-tight text-[#e4e4e7]">
-            Entrena en las próximas {hoursRemaining}h o pierdes tu racha de{' '}
-            {currentStreak} días.
+          <p className="mt-2 font-['Press_Start_2P'] text-lg leading-tight text-[#e4e4e7]">
+            Entrena en las proximas {hoursRemaining}h o pierdes tu racha de{' '}
+            {currentStreak} dias.
           </p>
         </div>
       </div>
 
       <button
         type="button"
-        onClick={() => navigate('/sessions/new')}
+        onClick={() => navigate('/routines')}
         className="mt-4 w-full font-['Press_Start_2P'] text-xs tracking-widest bg-red-500 hover:bg-red-400 text-[#0a0a0f] px-6 py-4 border-b-4 border-red-700 hover:border-red-600 active:border-b-0 active:mt-[1.0625rem] transition-all duration-150 shadow-[0_0_18px_rgba(239,68,68,0.45)]"
       >
         ▶ ENTRENAR AHORA

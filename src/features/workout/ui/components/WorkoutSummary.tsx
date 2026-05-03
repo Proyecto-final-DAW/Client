@@ -73,7 +73,7 @@ export const WorkoutSummary = (props: Props): React.JSX.Element => {
                   <p className="font-['Press_Start_2P'] text-[10px] text-green-400">
                     {milestone.name}
                   </p>
-                  <p className="font-['VT323'] text-base text-[#a1a1aa] mt-1">
+                  <p className="font-['Press_Start_2P'] text-base text-[#a1a1aa] mt-1">
                     {milestone.description}
                   </p>
                 </li>
@@ -85,7 +85,7 @@ export const WorkoutSummary = (props: Props): React.JSX.Element => {
         {error && (
           <p
             role="alert"
-            className="font-['VT323'] text-base text-red-400 border-2 border-red-500/40 bg-red-500/10 px-4 py-3"
+            className="font-['Press_Start_2P'] text-base text-red-400 border-2 border-red-500/40 bg-red-500/10 px-4 py-3"
           >
             ✕ {error}
           </p>
@@ -107,7 +107,7 @@ export const WorkoutSummary = (props: Props): React.JSX.Element => {
               disabled={saving}
               className="font-['Press_Start_2P'] text-[10px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-6 py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
             >
-              {saving ? 'GUARDANDO...' : '▶ GUARDAR SESIÓN'}
+              {saving ? 'GUARDANDO...' : '▶ GUARDAR SESION'}
             </button>
           )}
         </div>

@@ -10,7 +10,7 @@ export const Landing = (): React.JSX.Element => {
       <div
         className="absolute inset-0 pointer-events-none z-0"
         style={{
-          backgroundImage: "url('/images/1.png')",
+          backgroundImage: "url('/images/1.webp')",
           backgroundSize: '100% auto',
           backgroundPosition: 'top center',
           backgroundRepeat: 'repeat-y',

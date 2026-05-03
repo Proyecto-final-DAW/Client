@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { useCharacterState } from '../../../context/hooks/useCharacterState';
 import { AsyncState } from '../../../shared/components/AsyncState';
 import { CharacterBadge } from '../../character/ui/components/CharacterBadge';
@@ -5,6 +7,7 @@ import { StatsPanel } from '../../stats/ui/components/StatsPanel';
 import { useStats } from '../../stats/ui/hooks/useStats';
 import { AccountSummary } from './components/AccountSummary';
 import { ChangePasswordForm } from './components/ChangePasswordForm';
+import { ProfileDataView } from './components/ProfileDataView';
 import { ProfileForm } from './components/ProfileForm';
 import { useProfile } from './hooks/useProfile';
 
@@ -29,6 +32,8 @@ export const ProfileView = (): React.JSX.Element => {
   } = useCharacterState();
   const { stats, loading: statsLoading, error: statsError } = useStats();
 
+  const [editing, setEditing] = useState(false);
+
   return (
     <AsyncState
       loading={loading}
@@ -38,7 +43,14 @@ export const ProfileView = (): React.JSX.Element => {
     >
       {(profile) => (
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-6 text-2xl font-bold text-zinc-100">Mi perfil</h2>
+          <header className="mb-6">
+            <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+              ▶ PERFIL
+            </p>
+            <h1 className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
+              MI PERSONAJE
+            </h1>
+          </header>
 
           <div className="flex flex-col gap-6">
             {characterState && <CharacterBadge state={characterState} />}
@@ -48,7 +60,7 @@ export const ProfileView = (): React.JSX.Element => {
               </div>
             )}
             {!characterState && !characterLoading && characterError && (
-              <div className="border-2 border-red-500/40 bg-[#0d0d14] p-3 text-center font-['VT323'] text-base text-red-300">
+              <div className="border-2 border-red-500/40 bg-[#0d0d14] p-3 text-center font-['Press_Start_2P'] text-base text-red-300">
                 {characterError}
               </div>
             )}
@@ -66,20 +78,31 @@ export const ProfileView = (): React.JSX.Element => {
               streak={profile.streak}
             />
 
-            <ProfileForm
-              profile={profile}
-              onSubmit={updateProfile}
-              updating={updating}
-              error={updateError}
-              success={updateSuccess}
-            />
-
-            <ChangePasswordForm
-              onSubmit={changePassword}
-              loading={changingPassword}
-              error={passwordError}
-              success={passwordSuccess}
-            />
+            {editing ? (
+              <>
+                <ProfileForm
+                  profile={profile}
+                  onSubmit={async (data) => {
+                    await updateProfile(data);
+                  }}
+                  onCancel={() => setEditing(false)}
+                  updating={updating}
+                  error={updateError}
+                  success={updateSuccess}
+                />
+                <ChangePasswordForm
+                  onSubmit={changePassword}
+                  loading={changingPassword}
+                  error={passwordError}
+                  success={passwordSuccess}
+                />
+              </>
+            ) : (
+              <ProfileDataView
+                profile={profile}
+                onEdit={() => setEditing(true)}
+              />
+            )}
           </div>
         </div>
       )}

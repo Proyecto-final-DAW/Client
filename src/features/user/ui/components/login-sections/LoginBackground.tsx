@@ -4,7 +4,7 @@ export const LoginBackground = (): React.JSX.Element => {
       <div
         className="fixed inset-0 pointer-events-none z-0"
         style={{
-          backgroundImage: "url('/images/2.png')",
+          backgroundImage: "url('/images/2.webp')",
           backgroundSize: 'cover',
           backgroundPosition: 'center center',
           backgroundRepeat: 'no-repeat',

@@ -7,6 +7,24 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* Stat color palette consumed by StatBar via `var(--stat-…)`. Without these
+   vars the bars renders transparent because `color-mix` falls back to nothing. */
+:root {
+  --stat-strength: #ef4444;
+  --stat-resistance: #3b82f6;
+  --stat-stamina: #f97316;
+  --stat-agility: #22c55e;
+  --stat-tenacity: #eab308;
+  --stat-vigor: #a855f7;
+  --muted: #1e1e2e;
+  --foreground: #e4e4e7;
+  --muted-foreground: #71717a;
+  --border: #1e1e2e;
+  --card: #0d0d14;
+  --destructive: #ef4444;
+  --destructive-foreground: #fee2e2;
+}
+
 @keyframes slideInLeft {
   from {
     opacity: 0;

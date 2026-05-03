@@ -47,7 +47,7 @@ export const Register = (): React.JSX.Element => {
           </FormCard>
           <AuthSwitchLink
             question="¿YA TIENES CUENTA?"
-            cta="INICIA SESIÓN"
+            cta="INICIA SESION"
             to="/login"
           />
         </div>

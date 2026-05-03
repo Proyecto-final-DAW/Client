@@ -14,7 +14,7 @@ export const SessionHistoryCard = ({
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm font-semibold text-gray-100">
-            Sesión {session.id}
+            Sesion {session.id}
           </p>
           <p className="mt-1 text-sm text-gray-400">
             {session.date.toLocaleDateString('es-ES')}
