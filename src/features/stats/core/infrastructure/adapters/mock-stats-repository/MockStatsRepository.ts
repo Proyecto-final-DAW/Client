@@ -3,9 +3,7 @@ import { STAT_CONFIG, STAT_ORDER } from '../../../domain/models/StatConfig';
 import type { UserStats } from '../../../domain/models/UserStats';
 
 export class MockStatsRepository implements StatsRepository {
-  async getStats(token: string): Promise<UserStats> {
-    void token;
-
+  async getStats(): Promise<UserStats> {
     await new Promise((resolve) => setTimeout(resolve, 400));
 
     const mockValues: Record<string, number> = {

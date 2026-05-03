@@ -33,7 +33,7 @@ export const useProfile = () => {
     setError(null);
 
     try {
-      const data = await profileRepository.getProfile(token);
+      const data = await profileRepository.getProfile();
       setProfile(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar perfil');
@@ -59,7 +59,7 @@ export const useProfile = () => {
     setUpdateSuccess(false);
 
     try {
-      const updated = await profileRepository.updateProfile(token, data);
+      const updated = await profileRepository.updateProfile(data);
       setProfile((prev) => (prev ? { ...prev, ...updated } : null));
       setUpdateSuccess(true);
       successTimerRef.current = setTimeout(() => setUpdateSuccess(false), 3000);
@@ -79,7 +79,7 @@ export const useProfile = () => {
     setPasswordSuccess(false);
 
     try {
-      await profileRepository.changePassword(token, data);
+      await profileRepository.changePassword(data);
       setPasswordSuccess(true);
       setTimeout(() => {
         logout();

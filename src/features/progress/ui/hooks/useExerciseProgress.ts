@@ -22,7 +22,7 @@ export const useExerciseProgress = (exerciseId: string | null) => {
     setError(null);
 
     progressRepository
-      .getExerciseProgress(user.id, exerciseId, token)
+      .getExerciseProgress(user.id, exerciseId)
       .then((result) => {
         if (cancelled) return;
         setPoints(result);

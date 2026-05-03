@@ -1,7 +1,8 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { MacrosPort } from '../../../application/ports/MacrosPort';
+import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
+import type { MacrosRepository } from '../../../application/ports/MacrosRepository';
 import type {
   ActivityLevel,
   OnboardingFormData,
@@ -25,15 +26,13 @@ function computeAge(birthDateStr: string): number {
   return age;
 }
 
-export class ApiMacrosRepository implements MacrosPort {
+export class ApiMacrosRepository implements MacrosRepository {
   async calculateMacros(
     data: OnboardingFormData,
-    userId: number,
-    token: string
+    userId: number
   ): Promise<void> {
-    await axios.post(
-      API_ENDPOINTS.macrosCalculate(userId),
-      {
+    try {
+      const response = await axios.post(API_ENDPOINTS.calculateMacros(userId), {
         weightKg: parseFloat(data.weight),
         heightCm: parseFloat(data.height),
         age: computeAge(data.birthDate),
@@ -41,13 +40,13 @@ export class ApiMacrosRepository implements MacrosPort {
         activityFactor: ACTIVITY_FACTOR_MAP[data.activityLevel!],
         goal: data.goals[0],
         save: true,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      }
-    );
+      });
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError<APIErrorResponse>;
+      const serverMessage =
+        err.response?.data?.message || 'Error al calcular los macros';
+      throw new Error(serverMessage);
+    }
   }
 }

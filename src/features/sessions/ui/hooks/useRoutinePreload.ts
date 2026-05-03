@@ -16,7 +16,6 @@ export const useRoutinePreload = (
   routineId: string | null
 ): RoutinePreloadResult => {
   const { token } = useAuth();
-  const authToken = token ?? undefined;
 
   const [routine, setRoutine] = useState<Routine | null>(null);
   const [loading, setLoading] = useState<boolean>(routineId !== null);
@@ -35,7 +34,7 @@ export const useRoutinePreload = (
     setError(null);
 
     routineRepository
-      .getRoutines(authToken)
+      .getRoutines()
       .then((routines) => {
         if (cancelled) return;
 
@@ -60,7 +59,7 @@ export const useRoutinePreload = (
     return () => {
       cancelled = true;
     };
-  }, [routineId, authToken]);
+  }, [routineId, token]);
 
   return {
     loading,

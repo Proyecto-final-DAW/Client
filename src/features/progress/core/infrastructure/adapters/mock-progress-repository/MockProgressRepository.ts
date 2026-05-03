@@ -64,47 +64,33 @@ const buildProgression = (exercise: MockExercise): ExerciseProgressPoint[] => {
 };
 
 export class MockProgressRepository implements ProgressRepository {
-  private history: Progress[] = structuredClone(SEED_HISTORY);
+  private history: Progress[] = [...SEED_HISTORY];
 
-  async getPerformedExercises(
-    userId: number,
-    token: string
-  ): Promise<PerformedExercise[]> {
-    void userId;
-    void token;
-    await this.delay(200);
+  async getPerformedExercises(_userId: number): Promise<PerformedExercise[]> {
+    await new Promise((resolve) => setTimeout(resolve, 200));
     return EXERCISES.map(({ id, name }) => ({ id, name }));
   }
 
   async getExerciseProgress(
-    userId: number,
-    exerciseId: string,
-    token: string
+    _userId: number,
+    exerciseId: string
   ): Promise<ExerciseProgressPoint[]> {
-    void userId;
-    void token;
-    await this.delay(300);
+    await new Promise((resolve) => setTimeout(resolve, 300));
     const exercise = EXERCISES.find((e) => e.id === exerciseId);
     if (!exercise) return [];
     return buildProgression(exercise);
   }
 
-  async getWeightHistory(
-    _userId: number,
-    _token?: string
-  ): Promise<Progress[]> {
-    await this.delay(300);
-
-    return structuredClone(this.history);
+  async getWeightHistory(_userId: number): Promise<Progress[]> {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    return [...this.history];
   }
 
   async registerWeight(
     _userId: number,
-    input: RegisterWeightInput,
-    _token?: string
+    input: RegisterWeightInput
   ): Promise<Progress> {
-    await this.delay(300);
-
+    await new Promise((resolve) => setTimeout(resolve, 300));
     const entry: Progress = {
       date: new Date(input.date),
       weight: input.weight,
@@ -112,10 +98,6 @@ export class MockProgressRepository implements ProgressRepository {
 
     this.history = [...this.history, entry];
 
-    return structuredClone(entry);
-  }
-
-  private async delay(ms: number): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, ms));
+    return entry;
   }
 }

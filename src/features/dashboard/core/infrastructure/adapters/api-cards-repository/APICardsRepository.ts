@@ -8,15 +8,10 @@ import type { GetCardsDTO } from './dtos/GetCardsDTO';
 import { CardsFromDTO } from './mappers/CardsFromDTO';
 
 export class APICardsRepository implements CardsRepository {
-  async getCards(token: string): Promise<Cards> {
+  async getCards(): Promise<Cards> {
     try {
       const response = await axios.get<GetCardsDTO>(
-        API_ENDPOINTS.dashboardCards,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        API_ENDPOINTS.getDashboardCards
       );
 
       return CardsFromDTO.fromDTO(response.data);

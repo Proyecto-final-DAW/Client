@@ -21,7 +21,7 @@ export const useCreateSession = () => {
     setError(null);
 
     try {
-      await sessionRepository.createSession(input, token);
+      await sessionRepository.createSession(input);
       setSavedAt(Date.now());
       return true;
     } catch (err) {

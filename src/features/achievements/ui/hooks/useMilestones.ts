@@ -18,7 +18,7 @@ export const useMilestones = () => {
     setError(null);
 
     try {
-      const result = await milestonesRepository.getAllWithStatus(token);
+      const result = await milestonesRepository.getAllWithStatus();
       setMilestones(result);
     } catch (err) {
       const message =

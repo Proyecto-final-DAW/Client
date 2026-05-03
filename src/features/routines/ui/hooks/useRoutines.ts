@@ -6,7 +6,6 @@ import { routineRepository } from '../adapter';
 
 export const useRoutines = () => {
   const { token } = useAuth();
-  const authToken = token ?? undefined;
 
   const [fetchedRoutines, setFetchedRoutines] = useState<Routine[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -18,7 +17,7 @@ export const useRoutines = () => {
     setError(null);
 
     try {
-      const result = await routineRepository.getRoutines(authToken);
+      const result = await routineRepository.getRoutines();
       setFetchedRoutines(result);
     } catch (err) {
       const message =
@@ -31,7 +30,7 @@ export const useRoutines = () => {
 
   useEffect(() => {
     void fetchRoutines();
-  }, [authToken]);
+  }, [token]);
 
   useEffect(() => {
     setSelectedRoutineId((currentSelectedId) => {
@@ -64,10 +63,7 @@ export const useRoutines = () => {
     setError(null);
 
     try {
-      const createdRoutine = await routineRepository.createRoutine(
-        trimmedName,
-        authToken
-      );
+      const createdRoutine = await routineRepository.createRoutine(trimmedName);
 
       await fetchRoutines();
       setSelectedRoutineId(createdRoutine.id);
@@ -82,7 +78,7 @@ export const useRoutines = () => {
     setError(null);
 
     try {
-      await routineRepository.deleteRoutine(routineId, authToken);
+      await routineRepository.deleteRoutine(routineId);
       await fetchRoutines();
     } catch (err) {
       const message =

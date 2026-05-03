@@ -7,11 +7,8 @@ import type {
 export class MockSessionRepository implements SessionRepository {
   private nextId = 1;
 
-  async createSession(
-    input: CreateSessionInput,
-    _token: string
-  ): Promise<Session> {
-    await this.delay();
+  async createSession(input: CreateSessionInput): Promise<Session> {
+    await new Promise((resolve) => setTimeout(resolve, 400));
 
     const createdAt = input.date
       ? new Date(input.date).toISOString()
@@ -30,9 +27,5 @@ export class MockSessionRepository implements SessionRepository {
       })),
       createdAt,
     };
-  }
-
-  private async delay(): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, 400));
   }
 }

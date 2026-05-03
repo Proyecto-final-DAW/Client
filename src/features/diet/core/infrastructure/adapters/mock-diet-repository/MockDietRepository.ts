@@ -9,7 +9,8 @@ const MOCK_DIET: Diet = {
 };
 
 export class MockDietRepository implements DietRepository {
-  async getDiet(_userId: number, _token?: string): Promise<Diet> {
-    return { ...MOCK_DIET };
+  async getDiet(): Promise<Diet> {
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    return MOCK_DIET;
   }
 }

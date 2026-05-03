@@ -1,5 +1,7 @@
+import axios from 'axios';
 import { useState } from 'react';
 
+import { API_ENDPOINTS } from '../config/api';
 import type { UserInfo } from '../shared/core/domain/models/UserInfo';
 import { AuthContext } from './AuthContext';
 import type { AuthUser } from './AuthContext';
@@ -68,6 +70,17 @@ export const AuthProvider = (props: {
   };
 
   const logout = () => {
+    const currentToken = localStorage.getItem(STORAGE_KEY_TOKEN);
+    if (currentToken) {
+      axios
+        .post(
+          API_ENDPOINTS.logout,
+          {},
+          { headers: { Authorization: `Bearer ${currentToken}` } }
+        )
+        .catch(() => {});
+    }
+
     setToken(null);
     setUser(null);
     localStorage.removeItem(STORAGE_KEY_TOKEN);

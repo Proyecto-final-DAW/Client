@@ -19,7 +19,7 @@ export const usePerformedExercises = () => {
     setError(null);
 
     progressRepository
-      .getPerformedExercises(user.id, token)
+      .getPerformedExercises(user.id)
       .then((result) => {
         if (cancelled) return;
         setExercises(result);

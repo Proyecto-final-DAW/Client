@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 
-import { API_BASE_URL } from '../../../../../../config/api';
+import { API_ENDPOINTS } from '../../../../../../config/api';
 import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
 import type {
   ExerciseRepository,
@@ -8,8 +8,6 @@ import type {
 } from '../../../application/ports/ExerciseRepository';
 import type { GetExercisesDTO } from './dtos/GetExercisesDTO';
 import { ExercisesFromDTO } from './mappers/ExercisesFromDTO';
-
-const EXERCISES_URL = `${API_BASE_URL}/exercises`;
 
 interface SearchResponse {
   data: GetExercisesDTO[];
@@ -37,11 +35,14 @@ export class APIExerciseRepository implements ExerciseRepository {
         headers.Authorization = `Bearer ${token}`;
       }
 
-      const response = await axios.get<SearchResponse>(EXERCISES_URL, {
-        params,
-        headers,
-        signal,
-      });
+      const response = await axios.get<SearchResponse>(
+        API_ENDPOINTS.getExercises,
+        {
+          params,
+          headers,
+          signal,
+        }
+      );
 
       return {
         data: ExercisesFromDTO.fromDTOList(response.data.data),

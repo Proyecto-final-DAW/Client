@@ -18,7 +18,7 @@ export const useCards = () => {
     setError(null);
 
     try {
-      const result = await cardsRepository.getCards(token);
+      const result = await cardsRepository.getCards();
       setCards(result);
     } catch (err) {
       const message =

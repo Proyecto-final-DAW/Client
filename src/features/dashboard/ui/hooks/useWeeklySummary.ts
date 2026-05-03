@@ -18,7 +18,7 @@ export const useWeeklySummary = () => {
     setError(null);
 
     try {
-      const result = await weeklySummaryRepository.getWeeklySummary(token);
+      const result = await weeklySummaryRepository.getWeeklySummary();
       setSummary(result);
     } catch (err) {
       const message =
