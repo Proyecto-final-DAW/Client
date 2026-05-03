@@ -2,9 +2,11 @@ import { useAuth } from '../../../context/hooks/useAuth';
 import { AsyncState } from '../../../shared/components/AsyncState';
 import { DietSummaryCard } from '../../diet/ui/components/DietSummaryCard';
 import { useDiet } from '../../diet/ui/hooks/useDiet';
+import { useStreakStatus } from '../../streak/ui/hooks/useStreakStatus';
 import { DashboardCards } from './components/DashboardCards';
 import { DashboardHeader } from './components/DashboardHeader';
 import { StartWorkoutButton } from './components/StartWorkoutButton';
+import { StreakWarningCard } from './components/StreakWarningCard';
 import { WeeklySummaryCard } from './components/weekly-summary/WeeklySummaryCard';
 import { useCards } from './hooks/useCards';
 import { useWeeklySummary } from './hooks/useWeeklySummary';
@@ -25,6 +27,7 @@ export const Dashboard = (): React.JSX.Element => {
     error: dietError,
     refetch: dietRefetch,
   } = useDiet();
+  const { status: streakStatus } = useStreakStatus();
 
   const combinedData = cards && summary ? { cards, summary } : null;
   const handleRetry = (): void => {
@@ -43,6 +46,11 @@ export const Dashboard = (): React.JSX.Element => {
       {({ cards, summary }) => (
         <div>
           <DashboardHeader userName={user?.name} />
+          {streakStatus?.isAtRisk && (
+            <div className="my-4">
+              <StreakWarningCard status={streakStatus} />
+            </div>
+          )}
           <div className="my-4">
             <StartWorkoutButton />
           </div>
