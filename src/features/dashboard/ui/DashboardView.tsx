@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useAuth } from '../../../context/hooks/useAuth';
+import { useCharacterState } from '../../../context/hooks/useCharacterState';
 import { AsyncState } from '../../../shared/components/AsyncState';
 import { CharacterBadge } from '../../character/ui/components/CharacterBadge';
 import { TierUpModal } from '../../character/ui/components/TierUpModal';
-import { useCharacterState } from '../../character/ui/hooks/useCharacterState';
 import { DietSummaryCard } from '../../diet/ui/components/DietSummaryCard';
 import { useDiet } from '../../diet/ui/hooks/useDiet';
 import { useStreakStatus } from '../../streak/ui/hooks/useStreakStatus';
@@ -35,11 +35,22 @@ export const Dashboard = (): React.JSX.Element => {
   const { status: streakStatus } = useStreakStatus();
   const {
     state: characterState,
+    error: characterError,
     choosing: characterChoosing,
     chooseClass,
   } = useCharacterState();
 
-  const [tierUpDismissed, setTierUpDismissed] = useState<boolean>(false);
+  // Per-tier dismissal: clicking "MÁS TARDE" hides the modal for the current
+  // tier only. When a new pending choice arrives (e.g. T2 after T1), the
+  // modal opens again automatically.
+  const [dismissedTier, setDismissedTier] = useState<number | null>(null);
+  const pendingTier = characterState?.pendingChoice?.tier ?? null;
+
+  useEffect(() => {
+    if (pendingTier === null) {
+      setDismissedTier(null);
+    }
+  }, [pendingTier]);
 
   const combinedData = cards && summary ? { cards, summary } : null;
   const handleRetry = (): void => {
@@ -47,17 +58,25 @@ export const Dashboard = (): React.JSX.Element => {
     void refetchSummary();
   };
 
-  const showTierUpModal = Boolean(
-    characterState?.pendingChoice && !tierUpDismissed
-  );
+  const showTierUpModal =
+    characterState?.pendingChoice !== null &&
+    characterState?.pendingChoice !== undefined &&
+    dismissedTier !== characterState.pendingChoice.tier;
 
   const handleConfirmChoice = async (classId: string): Promise<void> => {
     if (!characterState?.pendingChoice) return;
-    const success = await chooseClass(
-      characterState.pendingChoice.tier,
-      classId
-    );
-    if (success) setTierUpDismissed(false);
+    try {
+      await chooseClass(characterState.pendingChoice.tier, classId);
+      // Success: state updates automatically via context. If the next tier
+      // also has a pending choice, the modal will re-open with it.
+    } catch {
+      // Error message is already in characterError; the modal stays open so
+      // the user can retry or dismiss.
+    }
+  };
+
+  const handleDismiss = (): void => {
+    if (pendingTier !== null) setDismissedTier(pendingTier);
   };
 
   return (
@@ -84,6 +103,11 @@ export const Dashboard = (): React.JSX.Element => {
               <CharacterBadge state={characterState} />
             </div>
           )}
+          {characterError && !characterState && (
+            <div className="mt-4 border-2 border-red-500/40 bg-[#0d0d14] p-3 text-center font-['VT323'] text-base text-red-300">
+              {characterError}
+            </div>
+          )}
           <DashboardCards {...cards} />
           <section className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             <WeeklySummaryCard summary={summary} />
@@ -102,7 +126,7 @@ export const Dashboard = (): React.JSX.Element => {
               pendingChoice={characterState.pendingChoice}
               choosing={characterChoosing}
               onConfirm={handleConfirmChoice}
-              onClose={() => setTierUpDismissed(true)}
+              onClose={handleDismiss}
             />
           )}
         </div>

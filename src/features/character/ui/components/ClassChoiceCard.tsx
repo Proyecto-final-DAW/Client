@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 import { PixelCorners } from '../../../../shared/components/PixelCorners';
 
@@ -11,19 +11,25 @@ type Props = {
 };
 
 export const ClassChoiceCard = (props: Props): React.JSX.Element => {
+  const prefersReducedMotion = useReducedMotion();
+
   const borderClass = props.selected
     ? 'border-green-400 shadow-[0_0_24px_rgba(34,197,94,0.45)]'
     : props.recommended
       ? 'border-green-500/60 hover:border-green-400'
       : 'border-[#27272a] hover:border-green-500/40';
 
+  const hoverProps = prefersReducedMotion
+    ? {}
+    : { whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 } };
+
   return (
     <motion.button
       type="button"
       onClick={props.onSelect}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      className={`relative w-full border-2 ${borderClass} bg-[#0d0d14] p-4 text-left transition-colors`}
+      aria-pressed={props.selected}
+      {...hoverProps}
+      className={`relative w-full border-2 ${borderClass} bg-[#0d0d14] p-4 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400`}
     >
       <PixelCorners
         size="sm"

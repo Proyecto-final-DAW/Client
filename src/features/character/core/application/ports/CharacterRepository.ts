@@ -3,11 +3,14 @@ import type {
   PendingChoiceTier,
 } from '../../domain/models/CharacterState';
 
+export type CharacterStateOrOnboarding =
+  | { kind: 'state'; state: CharacterState }
+  | { kind: 'requiresOnboarding' };
+
 export interface CharacterRepository {
-  getState(token?: string): Promise<CharacterState>;
+  getState(): Promise<CharacterStateOrOnboarding>;
   chooseClass(
     tier: PendingChoiceTier,
-    classId: string,
-    token?: string
-  ): Promise<CharacterState>;
+    classId: string
+  ): Promise<CharacterStateOrOnboarding>;
 }

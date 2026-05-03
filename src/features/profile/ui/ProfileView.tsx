@@ -1,6 +1,6 @@
+import { useCharacterState } from '../../../context/hooks/useCharacterState';
 import { AsyncState } from '../../../shared/components/AsyncState';
 import { CharacterBadge } from '../../character/ui/components/CharacterBadge';
-import { useCharacterState } from '../../character/ui/hooks/useCharacterState';
 import { AccountSummary } from './components/AccountSummary';
 import { ChangePasswordForm } from './components/ChangePasswordForm';
 import { ProfileForm } from './components/ProfileForm';
@@ -20,7 +20,11 @@ export const ProfileView = (): React.JSX.Element => {
     passwordError,
     passwordSuccess,
   } = useProfile();
-  const { state: characterState } = useCharacterState();
+  const {
+    state: characterState,
+    loading: characterLoading,
+    error: characterError,
+  } = useCharacterState();
 
   return (
     <AsyncState
@@ -35,6 +39,16 @@ export const ProfileView = (): React.JSX.Element => {
 
           <div className="flex flex-col gap-6">
             {characterState && <CharacterBadge state={characterState} />}
+            {!characterState && characterLoading && (
+              <div className="border-2 border-green-500/30 bg-[#0d0d14] p-3 text-center font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500/60">
+                CARGANDO PERSONAJE…
+              </div>
+            )}
+            {!characterState && !characterLoading && characterError && (
+              <div className="border-2 border-red-500/40 bg-[#0d0d14] p-3 text-center font-['VT323'] text-base text-red-300">
+                {characterError}
+              </div>
+            )}
 
             <AccountSummary
               createdAt={profile.created_at}

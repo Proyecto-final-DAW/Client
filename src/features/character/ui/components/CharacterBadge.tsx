@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type { CharacterState } from '../../core/domain/models/CharacterState';
@@ -10,7 +10,7 @@ type Props = {
 const subtitleFor = (state: CharacterState): string => {
   if (state.isMaestroSupremo && state.isLeyenda) return '☆ LEYENDA';
   if (state.isMaestroSupremo) return '✦ MAESTRO SUPREMO';
-  if (state.legendaryStage === 'TRASCENDENTE') return '✦ TRASCENDENTE';
+  if (state.legendaryStage === 'TRANSCENDENT') return '✦ TRASCENDENTE';
   if (state.legendary) return '🜂 LEGENDARIO';
   if (state.specialization) return '◆ ESPECIALISTA';
   if (state.vocation) return '◆ VOCACIÓN';
@@ -21,10 +21,10 @@ const displayClass = (state: CharacterState) => {
   if (state.isMaestroSupremo) {
     return { name: 'Maestro Supremo', frase: '' };
   }
-  if (state.legendary && state.legendaryStage === 'TRASCENDENTE') {
+  if (state.legendary && state.legendaryStage === 'TRANSCENDENT') {
     return {
-      name: state.legendary.trascendenteName.toUpperCase(),
-      frase: state.legendary.trascendenteFrase,
+      name: state.legendary.transcendentName.toUpperCase(),
+      frase: state.legendary.transcendentFrase,
     };
   }
   if (state.legendary) {
@@ -50,14 +50,21 @@ const displayClass = (state: CharacterState) => {
 
 export const CharacterBadge = (props: Props): React.JSX.Element => {
   const { name, frase } = displayClass(props.state);
+  const prefersReducedMotion = useReducedMotion();
+
+  const motionProps = prefersReducedMotion
+    ? { initial: false }
+    : {
+        variants: {
+          hidden: { opacity: 0, y: 24 },
+          visible: { opacity: 1, y: 0 },
+        },
+        transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const },
+      };
 
   return (
     <motion.article
-      variants={{
-        hidden: { opacity: 0, y: 24 },
-        visible: { opacity: 1, y: 0 },
-      }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      {...motionProps}
       className="relative border-2 border-green-500/60 bg-[#0d0d14] p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(34,197,94,0.35),0_20px_50px_rgba(0,0,0,0.8)]"
     >
       <PixelCorners size="md" className="border-green-500/60" />

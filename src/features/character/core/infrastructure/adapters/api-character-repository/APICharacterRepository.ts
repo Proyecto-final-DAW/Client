@@ -1,53 +1,54 @@
 import axios, { AxiosError } from 'axios';
 
-import { API_BASE_URL } from '../../../../../../config/api';
+import { API_ENDPOINTS } from '../../../../../../config/api';
 import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
-import type { CharacterRepository } from '../../../application/ports/CharacterRepository';
 import type {
-  CharacterState,
-  PendingChoiceTier,
-} from '../../../domain/models/CharacterState';
-import type { GetCharacterStateDTO } from './dtos/GetCharacterStateDTO';
+  CharacterRepository,
+  CharacterStateOrOnboarding,
+} from '../../../application/ports/CharacterRepository';
+import type { PendingChoiceTier } from '../../../domain/models/CharacterState';
+import {
+  isOnboardingRequired,
+  type GetCharacterStateDTO,
+} from './dtos/GetCharacterStateDTO';
 import { CharacterStateFromDTO } from './mappers/CharacterStateFromDTO';
 
-const CHARACTER_URL = `${API_BASE_URL}/character`;
-
-const authHeaders = (token?: string) =>
-  token ? { Authorization: `Bearer ${token}` } : {};
-
-const handle = (error: unknown, fallback: string): Error => {
+const surface = (error: unknown, fallback: string): Error => {
   const err = error as AxiosError<APIErrorResponse>;
   return new Error(err.response?.data?.message || fallback);
 };
 
+const toResult = (dto: GetCharacterStateDTO): CharacterStateOrOnboarding => {
+  if (isOnboardingRequired(dto)) {
+    return { kind: 'requiresOnboarding' };
+  }
+  return { kind: 'state', state: CharacterStateFromDTO.fromDTO(dto) };
+};
+
 export class APICharacterRepository implements CharacterRepository {
-  async getState(token?: string): Promise<CharacterState> {
+  async getState(): Promise<CharacterStateOrOnboarding> {
     try {
       const response = await axios.get<GetCharacterStateDTO>(
-        `${CHARACTER_URL}/state`,
-        { headers: authHeaders(token) }
+        API_ENDPOINTS.getCharacterState
       );
-      return CharacterStateFromDTO.fromDTO(response.data);
+      return toResult(response.data);
     } catch (error) {
-      throw handle(error, 'Error al cargar el estado del personaje');
+      throw surface(error, 'Error al cargar el estado del personaje');
     }
   }
 
   async chooseClass(
     tier: PendingChoiceTier,
-    classId: string,
-    token?: string
-  ): Promise<CharacterState> {
+    classId: string
+  ): Promise<CharacterStateOrOnboarding> {
     try {
-      // The choose endpoint returns the bare DB row; refetch to get full state.
-      await axios.post(
-        `${CHARACTER_URL}/choose`,
-        { tier, classId },
-        { headers: authHeaders(token) }
+      const response = await axios.post<GetCharacterStateDTO>(
+        API_ENDPOINTS.chooseCharacterClass,
+        { tier, classId }
       );
-      return this.getState(token);
+      return toResult(response.data);
     } catch (error) {
-      throw handle(error, 'Error al elegir clase');
+      throw surface(error, 'Error al elegir clase');
     }
   }
 }

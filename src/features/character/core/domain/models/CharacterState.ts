@@ -1,4 +1,5 @@
 import type {
+  ClassTier,
   ClassTierStage,
   LegendaryClass,
   NoviceClass,
@@ -14,23 +15,14 @@ export type PendingChoice =
   | { tier: 3; options: readonly LegendaryClass[]; recommendedId: string };
 
 export interface CharacterState {
-  currentTier: number;
+  currentTier: ClassTier;
   heroLevel: number;
   novice: NoviceClass;
   vocation: VocationClass | null;
   specialization: SpecializationClass | null;
   legendary: LegendaryClass | null;
-  legendaryStage: ClassTierStage;
+  legendaryStage: ClassTierStage | null;
   isMaestroSupremo: boolean;
   isLeyenda: boolean;
   pendingChoice: PendingChoice | null;
-}
-
-export interface Stats {
-  strength: number;
-  endurance: number;
-  stamina: number;
-  agility: number;
-  tenacity: number;
-  vigor: number;
 }
