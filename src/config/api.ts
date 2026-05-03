@@ -30,4 +30,5 @@ export const API_ENDPOINTS = {
     `${API_BASE_URL}/progress/${userId}/exercise/${exerciseId}`,
   milestones: `${API_BASE_URL}/milestones`,
   milestonesUnlocked: `${API_BASE_URL}/milestones/me`,
+  streakStatus: `${API_BASE_URL}/streak/status`,
 };
