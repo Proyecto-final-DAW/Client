@@ -78,7 +78,7 @@ export const CharacterBadge = (props: Props): React.JSX.Element => {
       </p>
 
       {frase && (
-        <p className="mt-3 text-center font-['Press_Start_2P'] text-base italic leading-tight text-[#a1a1aa]">
+        <p className="mt-3 text-center font-['VT323'] text-lg italic leading-snug text-[#a1a1aa]">
           “{frase}”
         </p>
       )}

@@ -63,7 +63,7 @@ export const EmptyState = (props: Props): React.JSX.Element => {
           {props.title.toUpperCase()}
         </p>
         {props.description && (
-          <p className="font-['Press_Start_2P'] text-lg leading-tight text-zinc-300">
+          <p className="font-['VT323'] text-xl leading-snug text-zinc-300">
             {props.description}
           </p>
         )}

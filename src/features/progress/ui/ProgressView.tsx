@@ -38,7 +38,7 @@ export const ProgressView = (): React.JSX.Element => {
         <h1 className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
           SEGUIMIENTO
         </h1>
-        <p className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg text-[#a1a1aa]">
+        <p className="mt-3 font-['VT323'] text-xl leading-snug text-[#a1a1aa]">
           Visualiza como evolucionan tu peso y tus maximos por ejercicio.
         </p>
       </header>

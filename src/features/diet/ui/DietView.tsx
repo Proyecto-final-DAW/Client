@@ -15,7 +15,7 @@ export const DietView = (): React.JSX.Element => {
         <h1 className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
           RESUMEN NUTRICIONAL
         </h1>
-        <p className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg text-[#a1a1aa]">
+        <p className="mt-3 font-['VT323'] text-xl leading-snug text-[#a1a1aa]">
           Calorias diarias y distribucion de macros calculadas desde tu perfil.
         </p>
       </header>

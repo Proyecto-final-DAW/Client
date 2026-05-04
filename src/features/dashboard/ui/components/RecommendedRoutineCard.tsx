@@ -55,10 +55,10 @@ export const RecommendedRoutineCard = (): React.JSX.Element | null => {
       <PixelCorners size="md" className="border-green-500/60" />
 
       <header>
-        <p className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] tracking-widest text-green-500">
+        <span className="inline-flex items-center gap-2 border-2 border-green-500/50 bg-green-500/10 px-3 py-1.5 font-['Press_Start_2P'] text-[9px] sm:text-[10px] tracking-widest text-green-400 [text-shadow:0_0_8px_rgba(34,197,94,0.45)]">
           ★ RECOMENDADA PARA TI
-        </p>
-        <h3 className="mt-3 font-['Press_Start_2P'] text-[11px] sm:text-xs leading-relaxed text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)] break-words">
+        </span>
+        <h3 className="mt-4 font-['Press_Start_2P'] text-sm sm:text-base leading-relaxed text-green-400 [text-shadow:0_0_14px_rgba(34,197,94,0.55)] break-words">
           {top.name.toUpperCase()}
         </h3>
         <p className="mt-3 font-['VT323'] text-base leading-snug text-[#d4d4d8]">
