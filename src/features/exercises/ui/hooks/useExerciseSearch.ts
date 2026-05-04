@@ -4,7 +4,7 @@ import { useAuth } from '../../../../context/hooks/useAuth';
 import type { Exercise } from '../../core/domain/models/Exercise';
 import { exerciseRepository } from '../adapter';
 
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 9;
 
 export const MUSCLE_OPTIONS = [
   { label: 'Todos', value: '' },
