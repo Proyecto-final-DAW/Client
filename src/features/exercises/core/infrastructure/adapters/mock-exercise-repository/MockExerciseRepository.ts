@@ -11,7 +11,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'pectorals',
     equipment: 'barbell',
     difficulty: 'intermediate',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0030',
@@ -19,7 +19,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'pectorals',
     equipment: 'barbell',
     difficulty: 'intermediate',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0035',
@@ -27,7 +27,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'pectorals',
     equipment: 'dumbbell',
     difficulty: 'beginner',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0662',
@@ -35,7 +35,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'pectorals',
     equipment: 'body weight',
     difficulty: 'beginner',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0652',
@@ -43,7 +43,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'lats',
     equipment: 'body weight',
     difficulty: 'intermediate',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0655',
@@ -51,7 +51,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'lats',
     equipment: 'cable',
     difficulty: 'beginner',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0660',
@@ -59,7 +59,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'lats',
     equipment: 'barbell',
     difficulty: 'intermediate',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0100',
@@ -67,7 +67,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'delts',
     equipment: 'barbell',
     difficulty: 'intermediate',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0105',
@@ -75,7 +75,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'delts',
     equipment: 'dumbbell',
     difficulty: 'beginner',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0200',
@@ -83,7 +83,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'biceps',
     equipment: 'barbell',
     difficulty: 'beginner',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0205',
@@ -91,7 +91,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'biceps',
     equipment: 'dumbbell',
     difficulty: 'beginner',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0300',
@@ -99,7 +99,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'triceps',
     equipment: 'cable',
     difficulty: 'beginner',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0305',
@@ -107,7 +107,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'triceps',
     equipment: 'dumbbell',
     difficulty: 'intermediate',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0043',
@@ -115,7 +115,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'quads',
     equipment: 'barbell',
     difficulty: 'intermediate',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0045',
@@ -123,7 +123,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'quads',
     equipment: 'leverage machine',
     difficulty: 'beginner',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0046',
@@ -131,7 +131,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'quads',
     equipment: 'leverage machine',
     difficulty: 'beginner',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0050',
@@ -139,7 +139,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'hamstrings',
     equipment: 'barbell',
     difficulty: 'intermediate',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0055',
@@ -147,7 +147,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'hamstrings',
     equipment: 'leverage machine',
     difficulty: 'beginner',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0032',
@@ -155,7 +155,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'glutes',
     equipment: 'barbell',
     difficulty: 'expert',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0033',
@@ -163,7 +163,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'glutes',
     equipment: 'barbell',
     difficulty: 'intermediate',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0400',
@@ -171,7 +171,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'abs',
     equipment: 'body weight',
     difficulty: 'beginner',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0405',
@@ -179,7 +179,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'abs',
     equipment: 'body weight',
     difficulty: 'intermediate',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0500',
@@ -187,7 +187,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'calves',
     equipment: 'leverage machine',
     difficulty: 'beginner',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
   {
     id: '0600',
@@ -195,7 +195,7 @@ const MOCK_EXERCISES: Exercise[] = [
     target: 'traps',
     equipment: 'barbell',
     difficulty: 'beginner',
-    imageUrl: '/exercises/image/mock',
+    imageUrl: '',
   },
 ];
 

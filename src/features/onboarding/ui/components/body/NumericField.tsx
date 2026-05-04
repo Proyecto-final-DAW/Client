@@ -34,7 +34,7 @@ export const NumericField = (props: NumericFieldProps): React.JSX.Element => {
         className={`${inputBase} ${props.error ? 'border-red-500/70 focus:border-red-400' : 'border-[#1e1e2e] focus:border-green-500/70'}`}
       />
       {props.error && (
-        <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
+        <p className="font-['Press_Start_2P'] text-base text-red-400 mt-2 tracking-wide leading-none">
           ✕ {props.error}
         </p>
       )}

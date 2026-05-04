@@ -13,10 +13,33 @@ type Props = {
   title: string;
   description?: string;
   cta?: Cta;
+  /** Secondary action rendered next to (or below on small screens) the primary CTA. */
+  secondaryCta?: Cta;
 };
 
-const CTA_CLASS =
-  "mt-4 inline-block border-b-4 border-green-700 bg-green-500 px-4 py-2.5 font-['Press_Start_2P'] text-[9px] text-[#0a0a0f] shadow-[0_0_14px_rgba(34,197,94,0.35)] transition-all duration-150 hover:border-green-600 hover:bg-green-400 active:mt-[1.0625rem] active:border-b-0";
+const PRIMARY_CTA =
+  "inline-block border-b-4 border-green-700 bg-green-500 px-4 py-2.5 font-['Press_Start_2P'] text-[9px] text-[#0a0a0f] shadow-[0_0_14px_rgba(34,197,94,0.35)] transition-all duration-150 hover:border-green-600 hover:bg-green-400 active:mt-[1.0625rem] active:border-b-0";
+
+const SECONDARY_CTA =
+  "inline-block border-2 border-[#27272a] bg-[#0d0d14] px-4 py-3 font-['Press_Start_2P'] text-[9px] tracking-widest text-[#a1a1aa] hover:border-green-500/50 hover:text-green-400 transition-colors";
+
+const renderCta = (cta: Cta, className: string) => {
+  const label = (
+    <>
+      <span aria-hidden="true">▶ </span>
+      {cta.label.toUpperCase()}
+    </>
+  );
+  return 'to' in cta ? (
+    <Link to={cta.to} className={className}>
+      {label}
+    </Link>
+  ) : (
+    <button type="button" onClick={cta.onClick} className={className}>
+      {label}
+    </button>
+  );
+};
 
 export const EmptyState = (props: Props): React.JSX.Element => {
   return (
@@ -37,29 +60,19 @@ export const EmptyState = (props: Props): React.JSX.Element => {
           </div>
         )}
         <p className="mb-3 font-['Press_Start_2P'] text-[10px] tracking-widest text-zinc-400 [text-shadow:2px_2px_0_#000]">
-          ─ {props.title.toUpperCase()} ─
+          {props.title.toUpperCase()}
         </p>
         {props.description && (
-          <p className="font-['VT323'] text-lg leading-tight text-zinc-300">
+          <p className="font-['VT323'] text-xl leading-snug text-zinc-300">
             {props.description}
           </p>
         )}
-        {props.cta &&
-          ('to' in props.cta ? (
-            <Link to={props.cta.to} className={CTA_CLASS}>
-              <span aria-hidden="true">▶ </span>
-              {props.cta.label.toUpperCase()}
-            </Link>
-          ) : (
-            <button
-              type="button"
-              onClick={props.cta.onClick}
-              className={CTA_CLASS}
-            >
-              <span aria-hidden="true">▶ </span>
-              {props.cta.label.toUpperCase()}
-            </button>
-          ))}
+        {(props.cta || props.secondaryCta) && (
+          <div className="mt-4 flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
+            {props.cta && renderCta(props.cta, PRIMARY_CTA)}
+            {props.secondaryCta && renderCta(props.secondaryCta, SECONDARY_CTA)}
+          </div>
+        )}
       </motion.div>
     </div>
   );

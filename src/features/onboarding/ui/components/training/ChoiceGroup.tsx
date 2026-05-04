@@ -2,22 +2,58 @@ import type { OnboardingFormData } from '../../../core/domain/models/OnboardingF
 
 export type Choice = { value: string; label: string; sub?: string };
 
-interface ChoiceGroupProps {
-  label: string;
+type SingleProps = {
+  multi?: false;
   field: keyof OnboardingFormData;
   value: string | undefined;
+  onChange: (field: keyof OnboardingFormData, value: string) => void;
+};
+
+type MultiProps = {
+  multi: true;
+  field: keyof OnboardingFormData;
+  value: string[] | undefined;
+  onChange: (field: keyof OnboardingFormData, value: string[]) => void;
+};
+
+type ChoiceGroupProps = (SingleProps | MultiProps) & {
+  label: string;
   choices: Choice[];
   error?: string;
   cols?: number;
-  onChange: (field: keyof OnboardingFormData, value: string) => void;
-}
+  hint?: string;
+};
 
 export const ChoiceGroup = (props: ChoiceGroupProps): React.JSX.Element => {
+  const isSelected = (value: string): boolean =>
+    props.multi
+      ? Array.isArray(props.value) && props.value.includes(value)
+      : props.value === value;
+
+  const handleClick = (value: string): void => {
+    if (props.multi) {
+      const current = props.value ?? [];
+      const next = current.includes(value)
+        ? current.filter((v) => v !== value)
+        : [...current, value];
+      props.onChange(props.field, next);
+    } else {
+      props.onChange(props.field, value);
+    }
+  };
+
   return (
     <div className="mb-4 last:mb-0">
-      <label className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider">
-        {props.label}
-      </label>
+      <div className="mb-2 flex items-baseline justify-between gap-3">
+        <label className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] tracking-wider">
+          {props.label}
+        </label>
+        {props.hint && (
+          <span className="font-['VT323'] text-base text-[#52525b] leading-none">
+            {props.hint}
+          </span>
+        )}
+      </div>
       <div
         className="grid gap-2"
         style={{
@@ -25,12 +61,13 @@ export const ChoiceGroup = (props: ChoiceGroupProps): React.JSX.Element => {
         }}
       >
         {props.choices.map((c) => {
-          const selected = props.value === c.value;
+          const selected = isSelected(c.value);
           return (
             <button
               key={c.value}
               type="button"
-              onClick={() => props.onChange(props.field, c.value)}
+              onClick={() => handleClick(c.value)}
+              aria-pressed={selected}
               className={`px-2 py-3 border-2 text-center transition-all duration-150 ${
                 selected
                   ? 'bg-green-500/10 border-green-500/70 shadow-[0_0_12px_rgba(34,197,94,0.25)]'
@@ -43,7 +80,7 @@ export const ChoiceGroup = (props: ChoiceGroupProps): React.JSX.Element => {
                 {c.label}
               </div>
               {c.sub && (
-                <div className="font-['VT323'] text-xs sm:text-sm text-[#71717a] mt-1 leading-none">
+                <div className="font-['VT323'] text-base text-[#71717a] mt-1 leading-none">
                   {c.sub}
                 </div>
               )}
@@ -52,7 +89,7 @@ export const ChoiceGroup = (props: ChoiceGroupProps): React.JSX.Element => {
         })}
       </div>
       {props.error && (
-        <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
+        <p className="font-['VT323'] text-base text-red-400 mt-2 leading-none">
           ✕ {props.error}
         </p>
       )}

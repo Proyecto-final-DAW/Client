@@ -1,5 +1,6 @@
 import type React from 'react';
 
+import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type { RegisterWeightInput } from '../../core/domain/models/Progress';
 import { useProgressForm } from '../hooks/useProgressForm';
 
@@ -9,6 +10,9 @@ type RegisterWeightFormProps = {
   onSubmit: (input: RegisterWeightInput) => Promise<boolean>;
   onSuccess: () => void;
 };
+
+const inputClass =
+  "w-full bg-[#12121a] border-2 border-[#1e1e2e] px-3 py-2.5 font-['Press_Start_2P'] text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] focus:border-green-500/70 focus:outline-none transition-colors [color-scheme:dark]";
 
 export const RegisterWeightForm = ({
   submitting,
@@ -30,17 +34,19 @@ export const RegisterWeightForm = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-5 grid gap-3 rounded-2xl border border-gray-800 bg-gray-950 p-4 sm:grid-cols-[1fr_1fr_auto]"
+      className="relative grid gap-3 border-2 border-dashed border-green-500/40 bg-[#0a0a0f] p-4 sm:grid-cols-[1fr_1fr_auto]"
     >
+      <PixelCorners size="sm" className="border-green-500/40" />
+
       <input
         type="number"
         step="0.1"
         min="1"
         max="300"
-        placeholder="Peso kg"
+        placeholder="PESO KG"
         value={weight}
         onChange={(event) => setWeight(event.target.value)}
-        className="rounded-lg bg-gray-800 px-4 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-blue-500"
+        className={inputClass}
       />
 
       <input
@@ -49,20 +55,20 @@ export const RegisterWeightForm = ({
         max={maxDate}
         value={date}
         onChange={(event) => setDate(event.target.value)}
-        className="rounded-lg bg-gray-800 px-4 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-blue-500"
+        className={inputClass}
       />
 
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        className="font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
       >
-        {submitting ? 'Guardando...' : 'Guardar'}
+        {submitting ? 'GUARDANDO…' : '▶ GUARDAR'}
       </button>
 
       {(error || submitError) && (
-        <p className="text-sm text-red-400 sm:col-span-3">
-          {error ?? submitError}
+        <p className="font-['Press_Start_2P'] text-base text-red-300 sm:col-span-3">
+          ✕ {error ?? submitError}
         </p>
       )}
     </form>

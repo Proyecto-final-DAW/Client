@@ -39,7 +39,7 @@ const injuryOptions: InjuryOption[] = [
   {
     value: 'OTHER',
     title: 'OTRA',
-    description: 'La indicarás luego.',
+    description: 'La indicaras luego.',
     icon: '⚠️',
   },
 ];
@@ -63,11 +63,11 @@ export const StepLimitations = (
 
   return (
     <div>
-      <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
+      <h2 className="text-center font-['Press_Start_2P'] text-lg sm:text-xl text-[#e4e4e7] mb-3 leading-relaxed tracking-wider [text-shadow:0_0_18px_rgba(34,197,94,0.35)]">
         ¿TIENES <span className="text-green-400">LIMITACIONES?</span>
       </h2>
-      <p className="text-center font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
-        Puedes elegir una o más.
+      <p className="text-center font-['VT323'] text-lg sm:text-xl text-[#a1a1aa] mb-5 leading-tight">
+        Puedes elegir una o mas.
       </p>
 
       <div className="grid grid-cols-2 gap-2">
@@ -81,7 +81,7 @@ export const StepLimitations = (
         ))}
       </div>
       {props.errors.injuries && (
-        <p className="font-['VT323'] text-base text-red-400 mt-3 tracking-wide leading-none">
+        <p className="font-['Press_Start_2P'] text-base text-red-400 mt-3 tracking-wide leading-none">
           ✕ {props.errors.injuries}
         </p>
       )}

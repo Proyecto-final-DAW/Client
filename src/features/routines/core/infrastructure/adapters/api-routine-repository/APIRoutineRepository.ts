@@ -84,6 +84,19 @@ export class APIRoutineRepository implements RoutineRepository {
     );
   }
 
+  async reorderExercises(
+    routine: Routine,
+    exercises: Exercise[],
+    token?: string
+  ): Promise<Routine> {
+    return this.replaceExercises(
+      routine.id,
+      exercises,
+      'Error al reordenar los ejercicios',
+      token
+    );
+  }
+
   async deleteRoutine(routineId: string, token?: string): Promise<void> {
     try {
       await axios.delete(`${ROUTINES_URL}/${routineId}`, {

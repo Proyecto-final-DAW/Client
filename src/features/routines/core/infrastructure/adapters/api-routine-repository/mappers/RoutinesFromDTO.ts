@@ -19,6 +19,7 @@ export class RoutinesFromDTO {
     return {
       id: String(dto.id),
       name: dto.name,
+      description: dto.description,
       exercises: dto.exercises.map(toExercise),
     };
   }

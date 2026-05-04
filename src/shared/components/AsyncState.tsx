@@ -33,7 +33,7 @@ export const AsyncState = <T,>(props: Props<T>): React.JSX.Element => {
     return (
       <EmptyState
         icon={props.emptyIcon}
-        title={props.emptyTitle ?? 'Nada por aquí'}
+        title={props.emptyTitle ?? 'Nada por aqui'}
         description={props.emptyDescription}
         cta={props.emptyCta}
       />

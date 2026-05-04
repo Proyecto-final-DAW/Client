@@ -3,9 +3,9 @@ import type { RoutineTemplate } from '../../../domain/models/RoutineTemplate';
 export const TEMPLATES: RoutineTemplate[] = [
   {
     id: 'fb-gym-3d',
-    name: 'Full Body — Gimnasio 3 días',
+    name: 'Full Body — Gimnasio 3 dias',
     description:
-      'Rutina de cuerpo completo en gimnasio. Tres sesiones por semana centradas en los movimientos básicos.',
+      'Rutina de cuerpo completo en gimnasio. Tres sesiones por semana centradas en los movimientos basicos.',
     goal: 'GAIN_MUSCLE',
     equipment: 'FULL_GYM',
     level: 'BEGINNER',
@@ -13,7 +13,7 @@ export const TEMPLATES: RoutineTemplate[] = [
     estimatedDurationMin: 60,
     routines: [
       {
-        name: 'Día A — Empuje',
+        name: 'Dia A — Empuje',
         exercises: [
           {
             name: 'Barbell back squat',
@@ -53,7 +53,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día B — Tracción',
+        name: 'Dia B — Traccion',
         exercises: [
           {
             name: 'Conventional deadlift',
@@ -78,14 +78,14 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Barbell curl',
-            muscleGroup: 'Bíceps',
+            muscleGroup: 'Biceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
           },
           {
             name: 'Triceps cable pushdown',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
@@ -93,11 +93,11 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día C — Pierna y core',
+        name: 'Dia C — Pierna y core',
         exercises: [
           {
             name: 'Barbell hip thrust',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 4,
             reps: '10-12',
             restSeconds: 90,
@@ -136,7 +136,7 @@ export const TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: 'fb-home-3d',
-    name: 'Full Body — Casa con pesos 3 días',
+    name: 'Full Body — Casa con pesos 3 dias',
     description:
       'Cuerpo completo con mancuernas en casa. Ideal para empezar sin necesidad de gimnasio.',
     goal: 'GAIN_MUSCLE',
@@ -146,7 +146,7 @@ export const TEMPLATES: RoutineTemplate[] = [
     estimatedDurationMin: 50,
     routines: [
       {
-        name: 'Día A',
+        name: 'Dia A',
         exercises: [
           {
             name: 'Goblet squat',
@@ -186,7 +186,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día B',
+        name: 'Dia B',
         exercises: [
           {
             name: 'Dumbbell Romanian deadlift',
@@ -211,14 +211,14 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Dumbbell bicep curl',
-            muscleGroup: 'Bíceps',
+            muscleGroup: 'Biceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
           },
           {
             name: 'Triceps kickback',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
@@ -226,7 +226,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día C',
+        name: 'Dia C',
         exercises: [
           {
             name: 'Bulgarian split squat (dumbbells)',
@@ -237,7 +237,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Dumbbell hip thrust',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 3,
             reps: '12-15',
             restSeconds: 75,
@@ -269,7 +269,7 @@ export const TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: 'fb-bw-3d',
-    name: 'Full Body — Bodyweight 3 días',
+    name: 'Full Body — Bodyweight 3 dias',
     description:
       'Cuerpo completo solo con peso corporal. Sin material, ideal para empezar a moverse.',
     goal: 'HEALTH',
@@ -279,7 +279,7 @@ export const TEMPLATES: RoutineTemplate[] = [
     estimatedDurationMin: 40,
     routines: [
       {
-        name: 'Día A',
+        name: 'Dia A',
         exercises: [
           {
             name: 'Bodyweight squat',
@@ -311,7 +311,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Glute bridge',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 3,
             reps: '15-20',
             restSeconds: 45,
@@ -319,7 +319,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día B',
+        name: 'Dia B',
         exercises: [
           {
             name: 'Alternating lunge',
@@ -359,7 +359,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día C',
+        name: 'Dia C',
         exercises: [
           {
             name: 'Assisted pistol squat',
@@ -370,7 +370,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Bench dip',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 3,
             reps: '8-12',
             restSeconds: 60,
@@ -402,9 +402,9 @@ export const TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: 'ul-gym-4d',
-    name: 'Upper/Lower — Gimnasio 4 días',
+    name: 'Upper/Lower — Gimnasio 4 dias',
     description:
-      'Tren superior y tren inferior alternos. Cuatro sesiones por semana, ideal para ganar músculo con experiencia previa.',
+      'Tren superior y tren inferior alternos. Cuatro sesiones por semana, ideal para ganar musculo con experiencia previa.',
     goal: 'GAIN_MUSCLE',
     equipment: 'FULL_GYM',
     level: 'INTERMEDIATE',
@@ -444,14 +444,14 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Barbell curl',
-            muscleGroup: 'Bíceps',
+            muscleGroup: 'Biceps',
             sets: 3,
             reps: '8-10',
             restSeconds: 75,
           },
           {
             name: 'Skull crusher',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 3,
             reps: '8-10',
             restSeconds: 75,
@@ -538,14 +538,14 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Hammer curl',
-            muscleGroup: 'Bíceps',
+            muscleGroup: 'Biceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
           },
           {
             name: 'Triceps cable pushdown',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
@@ -557,7 +557,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         exercises: [
           {
             name: 'Barbell hip thrust',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 4,
             reps: '10-12',
             restSeconds: 90,
@@ -585,7 +585,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Hip abductor machine',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 3,
             reps: '12-15',
             restSeconds: 60,
@@ -603,7 +603,7 @@ export const TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: 'ul-home-4d',
-    name: 'Upper/Lower — Casa con pesos 4 días',
+    name: 'Upper/Lower — Casa con pesos 4 dias',
     description:
       'Tren superior y tren inferior con mancuernas en casa. Cuatro sesiones para progresar sin gimnasio.',
     goal: 'GAIN_MUSCLE',
@@ -638,14 +638,14 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Alternating dumbbell curl',
-            muscleGroup: 'Bíceps',
+            muscleGroup: 'Biceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
           },
           {
             name: 'Triceps kickback',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
@@ -678,7 +678,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Dumbbell hip thrust',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 3,
             reps: '12-15',
             restSeconds: 75,
@@ -718,14 +718,14 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Hammer curl',
-            muscleGroup: 'Bíceps',
+            muscleGroup: 'Biceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
           },
           {
             name: 'Dumbbell skull crusher',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
@@ -751,7 +751,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Hip thrust',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 3,
             reps: '12-15',
             restSeconds: 75,
@@ -776,7 +776,7 @@ export const TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: 'ul-bw-4d',
-    name: 'Upper/Lower — Bodyweight 4 días',
+    name: 'Upper/Lower — Bodyweight 4 dias',
     description:
       'Tren superior y tren inferior solo con peso corporal. Para mantener nivel sin material.',
     goal: 'MAINTAIN',
@@ -818,7 +818,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Bench dip',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
@@ -844,7 +844,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Single-leg glute bridge',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 3,
             reps: '12/leg',
             restSeconds: 60,
@@ -870,14 +870,14 @@ export const TEMPLATES: RoutineTemplate[] = [
         exercises: [
           {
             name: 'Diamond push-up',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 4,
             reps: '10-12',
             restSeconds: 75,
           },
           {
             name: 'Chin-up',
-            muscleGroup: 'Bíceps',
+            muscleGroup: 'Biceps',
             sets: 4,
             reps: '6-10',
             restSeconds: 90,
@@ -949,9 +949,9 @@ export const TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: 'ppl-gym-6d-adv',
-    name: 'Push/Pull/Legs — Gimnasio 6 días avanzado',
+    name: 'Push/Pull/Legs — Gimnasio 6 dias avanzado',
     description:
-      'Empuje, tracción y pierna repetidos dos veces por semana. Volumen alto para usuarios avanzados.',
+      'Empuje, traccion y pierna repetidos dos veces por semana. Volumen alto para usuarios avanzados.',
     goal: 'GAIN_MUSCLE',
     equipment: 'FULL_GYM',
     level: 'ADVANCED',
@@ -998,7 +998,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Triceps cable pushdown',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 4,
             reps: '10-12',
             restSeconds: 60,
@@ -1045,7 +1045,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'EZ-bar curl',
-            muscleGroup: 'Bíceps',
+            muscleGroup: 'Biceps',
             sets: 4,
             reps: '8-10',
             restSeconds: 60,
@@ -1064,7 +1064,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Barbell hip thrust',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 4,
             reps: '8-10',
             restSeconds: 120,
@@ -1103,7 +1103,7 @@ export const TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: 'ppl-home-6d',
-    name: 'Push/Pull/Legs — Casa con pesos 6 días',
+    name: 'Push/Pull/Legs — Casa con pesos 6 dias',
     description:
       'PPL adaptado a mancuernas en casa. Seis sesiones por semana repitiendo el ciclo de tres.',
     goal: 'GAIN_MUSCLE',
@@ -1145,14 +1145,14 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Triceps kickback',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
           },
           {
             name: 'Dumbbell skull crusher',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
@@ -1192,14 +1192,14 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Alternating dumbbell curl',
-            muscleGroup: 'Bíceps',
+            muscleGroup: 'Biceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
           },
           {
             name: 'Hammer curl',
-            muscleGroup: 'Bíceps',
+            muscleGroup: 'Biceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 60,
@@ -1225,7 +1225,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Dumbbell hip thrust',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 4,
             reps: '12-15',
             restSeconds: 75,
@@ -1257,7 +1257,7 @@ export const TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: 'ppl-bw-6d',
-    name: 'Push/Pull/Legs — Bodyweight avanzado 6 días',
+    name: 'Push/Pull/Legs — Bodyweight avanzado 6 dias',
     description:
       'PPL solo con peso corporal y barra para dominadas. Para usuarios con buen control y nivel.',
     goal: 'GAIN_MUSCLE',
@@ -1285,7 +1285,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Diamond push-up',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 4,
             reps: '10-15',
             restSeconds: 60,
@@ -1299,7 +1299,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Bench dip',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 4,
             reps: '12-15',
             restSeconds: 60,
@@ -1325,7 +1325,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Chin-up',
-            muscleGroup: 'Bíceps',
+            muscleGroup: 'Biceps',
             sets: 4,
             reps: '6-10',
             restSeconds: 90,
@@ -1386,7 +1386,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Single-leg glute bridge',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 3,
             reps: '12-15/leg',
             restSeconds: 60,
@@ -1411,7 +1411,7 @@ export const TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: 'fat-hiit-gym-4d',
-    name: 'Quema grasa HIIT — Gimnasio 4 días',
+    name: 'Quema grasa HIIT — Gimnasio 4 dias',
     description:
       'Mezcla de fuerza y cardio HIIT. Cuatro sesiones intensas para perder grasa manteniendo masa muscular.',
     goal: 'LOSE_FAT',
@@ -1421,7 +1421,7 @@ export const TEMPLATES: RoutineTemplate[] = [
     estimatedDurationMin: 55,
     routines: [
       {
-        name: 'Día A — Fuerza superior + cardio',
+        name: 'Dia A — Fuerza superior + cardio',
         exercises: [
           {
             name: 'Dumbbell bench press',
@@ -1461,7 +1461,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día B — Fuerza inferior + cardio',
+        name: 'Dia B — Fuerza inferior + cardio',
         exercises: [
           {
             name: 'Goblet squat',
@@ -1472,7 +1472,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Dumbbell hip thrust',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 4,
             reps: '15',
             restSeconds: 60,
@@ -1494,7 +1494,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día C — Circuito metabólico',
+        name: 'Dia C — Circuito metabolico',
         exercises: [
           {
             name: 'Kettlebell swing',
@@ -1534,7 +1534,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día D — Cardio largo + core',
+        name: 'Dia D — Cardio largo + core',
         exercises: [
           {
             name: 'Treadmill steady pace',
@@ -1577,7 +1577,7 @@ export const TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: 'fat-home-4d',
-    name: 'Quema grasa funcional — Casa 4 días',
+    name: 'Quema grasa funcional — Casa 4 dias',
     description:
       'Circuitos en casa con mancuernas. Sesiones cortas e intensas para perder grasa empezando.',
     goal: 'LOSE_FAT',
@@ -1631,7 +1631,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Dumbbell hip thrust',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 4,
             reps: '15',
             restSeconds: 30,
@@ -1664,14 +1664,14 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Dumbbell bicep curl',
-            muscleGroup: 'Bíceps',
+            muscleGroup: 'Biceps',
             sets: 3,
             reps: '12',
             restSeconds: 30,
           },
           {
             name: 'Triceps kickback',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 3,
             reps: '12',
             restSeconds: 30,
@@ -1729,9 +1729,9 @@ export const TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: 'fat-bw-5d',
-    name: 'Quema grasa — Bodyweight 5 días',
+    name: 'Quema grasa — Bodyweight 5 dias',
     description:
-      'Circuitos diarios con peso corporal. Cinco sesiones cortas para acelerar la pérdida de grasa.',
+      'Circuitos diarios con peso corporal. Cinco sesiones cortas para acelerar la perdida de grasa.',
     goal: 'LOSE_FAT',
     equipment: 'BODYWEIGHT',
     level: 'INTERMEDIATE',
@@ -1797,7 +1797,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Bench dip',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 3,
             reps: '12',
             restSeconds: 30,
@@ -1928,7 +1928,7 @@ export const TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: 'health-gym-3d',
-    name: 'Salud y movilidad — Gimnasio 3 días',
+    name: 'Salud y movilidad — Gimnasio 3 dias',
     description:
       'Trabajo general en gimnasio enfocado en mantenerse activo, sano y con buena movilidad.',
     goal: 'HEALTH',
@@ -1938,7 +1938,7 @@ export const TEMPLATES: RoutineTemplate[] = [
     estimatedDurationMin: 45,
     routines: [
       {
-        name: 'Día A',
+        name: 'Dia A',
         exercises: [
           {
             name: 'Goblet squat',
@@ -1978,7 +1978,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día B',
+        name: 'Dia B',
         exercises: [
           {
             name: 'Dumbbell Romanian deadlift',
@@ -2018,11 +2018,11 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día C',
+        name: 'Dia C',
         exercises: [
           {
             name: 'Machine hip thrust',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 3,
             reps: '12-15',
             restSeconds: 60,
@@ -2061,9 +2061,9 @@ export const TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: 'maint-home-3d',
-    name: 'Mantenimiento — Casa con pesos 3 días',
+    name: 'Mantenimiento — Casa con pesos 3 dias',
     description:
-      'Tres sesiones cortas en casa para mantener fuerza y forma física sin ir al gimnasio.',
+      'Tres sesiones cortas en casa para mantener fuerza y forma fisica sin ir al gimnasio.',
     goal: 'MAINTAIN',
     equipment: 'HOME_WEIGHTS',
     level: 'BEGINNER',
@@ -2071,7 +2071,7 @@ export const TEMPLATES: RoutineTemplate[] = [
     estimatedDurationMin: 35,
     routines: [
       {
-        name: 'Día A',
+        name: 'Dia A',
         exercises: [
           {
             name: 'Goblet squat',
@@ -2104,7 +2104,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día B',
+        name: 'Dia B',
         exercises: [
           {
             name: 'Dumbbell Romanian deadlift',
@@ -2122,14 +2122,14 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Dumbbell bicep curl',
-            muscleGroup: 'Bíceps',
+            muscleGroup: 'Biceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 45,
           },
           {
             name: 'Triceps kickback',
-            muscleGroup: 'Tríceps',
+            muscleGroup: 'Triceps',
             sets: 3,
             reps: '10-12',
             restSeconds: 45,
@@ -2137,7 +2137,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día C',
+        name: 'Dia C',
         exercises: [
           {
             name: 'Bulgarian split squat (dumbbells)',
@@ -2148,7 +2148,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Dumbbell hip thrust',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 3,
             reps: '12-15',
             restSeconds: 60,
@@ -2180,7 +2180,7 @@ export const TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: 'mob-bw-4d',
-    name: 'Movilidad y core — Bodyweight 4 días',
+    name: 'Movilidad y core — Bodyweight 4 dias',
     description:
       'Sesiones cortas centradas en movilidad, core y trabajo cardiovascular suave. Sin material.',
     goal: 'HEALTH',
@@ -2190,7 +2190,7 @@ export const TEMPLATES: RoutineTemplate[] = [
     estimatedDurationMin: 30,
     routines: [
       {
-        name: 'Día A — Movilidad',
+        name: 'Dia A — Movilidad',
         exercises: [
           {
             name: 'Cat-cow stretch',
@@ -2230,7 +2230,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día B — Core',
+        name: 'Dia B — Core',
         exercises: [
           {
             name: 'Front plank',
@@ -2270,7 +2270,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día C — Cuerpo completo suave',
+        name: 'Dia C — Cuerpo completo suave',
         exercises: [
           {
             name: 'Bodyweight squat',
@@ -2295,7 +2295,7 @@ export const TEMPLATES: RoutineTemplate[] = [
           },
           {
             name: 'Glute bridge',
-            muscleGroup: 'Glúteo',
+            muscleGroup: 'Gluteo',
             sets: 3,
             reps: '15',
             restSeconds: 30,
@@ -2310,7 +2310,7 @@ export const TEMPLATES: RoutineTemplate[] = [
         ],
       },
       {
-        name: 'Día D — Yoga / movilidad',
+        name: 'Dia D — Yoga / movilidad',
         exercises: [
           {
             name: 'Sun salutation',

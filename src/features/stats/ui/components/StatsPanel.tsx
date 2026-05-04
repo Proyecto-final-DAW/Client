@@ -1,3 +1,4 @@
+import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type { StatPilar } from '../../core/domain/models/StatPilar';
 import { StatBar } from './StatBar';
 import { StatsPanelSkeleton } from './StatsPanelSkeleton';
@@ -15,8 +16,11 @@ export const StatsPanel = (
 
   if (props.error) {
     return (
-      <div className="rounded-xl border border-destructive/50 bg-card p-5">
-        <p className="text-sm text-destructive-foreground">{props.error}</p>
+      <div className="relative border-2 border-red-500/40 bg-[#0d0d14] p-4">
+        <PixelCorners size="sm" className="border-red-500/40" />
+        <p className="font-['Press_Start_2P'] text-base text-red-300">
+          {props.error}
+        </p>
       </div>
     );
   }
@@ -24,15 +28,16 @@ export const StatsPanel = (
   if (!props.stats || props.stats.length === 0) return null;
 
   return (
-    <div className="rounded-xl border border-border bg-card p-5">
-      <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-foreground">
-        Stats del Personaje
-      </h3>
+    <section className="relative border-2 border-green-500/50 bg-[#0d0d14] p-5 shadow-[0_0_18px_rgba(34,197,94,0.18)]">
+      <PixelCorners size="md" className="border-green-500/50" />
+      <p className="mb-4 font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+        ◆ STATS DEL PERSONAJE
+      </p>
       <div className="flex flex-col gap-4">
         {props.stats.map((pilar) => (
           <StatBar key={pilar.name} pilar={pilar} />
         ))}
       </div>
-    </div>
+    </section>
   );
 };

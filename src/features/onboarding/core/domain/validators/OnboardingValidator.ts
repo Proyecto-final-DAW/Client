@@ -20,25 +20,18 @@ function isValidDate(dateStr: string): boolean {
 }
 
 export function validateStep1(data: OnboardingFormData): FormErrors {
+  // Name comes from registration and is pre-filled into the form by
+  // OnboardingView; this step only collects the birth date.
   const errors: FormErrors = {};
-  const trimmedName = data.name.trim();
-
-  if (!trimmedName) {
-    errors.name = 'El nombre es obligatorio';
-  } else if (trimmedName.length < 2) {
-    errors.name = 'El nombre debe tener al menos 2 caracteres';
-  } else if (trimmedName.length > 100) {
-    errors.name = 'El nombre no puede superar los 100 caracteres';
-  }
 
   if (!data.birthDate) {
     errors.birthDate = 'La fecha de nacimiento es obligatoria';
   } else if (!isValidDate(data.birthDate)) {
-    errors.birthDate = 'Fecha no válida';
+    errors.birthDate = 'Fecha no valida';
   } else {
     const age = calculateAge(data.birthDate);
     if (age < 14) errors.birthDate = 'Debes tener al menos 14 años';
-    else if (age > 100) errors.birthDate = 'Fecha de nacimiento no válida';
+    else if (age > 100) errors.birthDate = 'Fecha de nacimiento no valida';
   }
 
   return errors;
@@ -49,17 +42,17 @@ export function validateStep2(data: OnboardingFormData): FormErrors {
 
   const weight = parseFloat(data.weight);
   if (!data.weight) errors.weight = 'El peso es obligatorio';
-  else if (isNaN(weight)) errors.weight = 'Introduce un número válido';
+  else if (isNaN(weight)) errors.weight = 'Introduce un numero valido';
   else if (weight < 30 || weight > 250)
     errors.weight = 'El peso debe estar entre 30 y 250 kg';
 
   const height = parseFloat(data.height);
   if (!data.height) errors.height = 'La altura es obligatoria';
-  else if (isNaN(height)) errors.height = 'Introduce un número válido';
+  else if (isNaN(height)) errors.height = 'Introduce un numero valido';
   else if (height < 120 || height > 230)
     errors.height = 'La altura debe estar entre 120 y 230 cm';
 
-  if (!data.sex) errors.sex = 'Selecciona tu sexo biológico';
+  if (!data.sex) errors.sex = 'Selecciona tu sexo biologico';
 
   return errors;
 }
@@ -82,15 +75,16 @@ export function validateStep5(data: OnboardingFormData): FormErrors {
   const errors: FormErrors = {};
   if (!data.experienceLevel)
     errors.experienceLevel = 'Selecciona tu experiencia';
-  if (!data.equipment) errors.equipment = 'Selecciona tu equipamiento';
-  if (!data.daysPerWeek) errors.daysPerWeek = 'Selecciona los días por semana';
+  if (!data.equipment || data.equipment.length === 0)
+    errors.equipment = 'Selecciona al menos un equipamiento';
+  if (!data.daysPerWeek) errors.daysPerWeek = 'Selecciona los dias por semana';
   return errors;
 }
 
 export function validateStep6(data: OnboardingFormData): FormErrors {
   const errors: FormErrors = {};
   if (!data.injuries || data.injuries.length === 0)
-    errors.injuries = 'Selecciona al menos una opción';
+    errors.injuries = 'Selecciona al menos una opcion';
   return errors;
 }
 

@@ -20,7 +20,7 @@ export interface OnboardingFormData {
   activityLevel?: ActivityLevel;
   goals: Goal[];
   experienceLevel?: ExperienceLevel;
-  equipment?: Equipment;
+  equipment: Equipment[];
   daysPerWeek?: DaysPerWeek;
   injuries: Injury[];
 }
@@ -36,7 +36,7 @@ export const INITIAL_FORM_DATA: OnboardingFormData = {
   activityLevel: undefined,
   goals: [],
   experienceLevel: undefined,
-  equipment: undefined,
+  equipment: [],
   daysPerWeek: undefined,
   injuries: [],
 };

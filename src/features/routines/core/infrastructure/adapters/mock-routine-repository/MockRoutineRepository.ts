@@ -77,7 +77,7 @@ const MOCK_EXERCISE_CATALOG: Exercise[] = [
   },
   {
     id: 'biceps-curl',
-    name: 'Curl bíceps',
+    name: 'Curl biceps',
     target: 'biceps',
     equipment: 'dumbbell',
     difficulty: 'beginner',
@@ -89,6 +89,7 @@ const MOCK_ROUTINES: Routine[] = [
   {
     id: '1',
     name: 'Push Day',
+    description: null,
     exercises: [
       MOCK_EXERCISE_CATALOG[0],
       MOCK_EXERCISE_CATALOG[1],
@@ -99,6 +100,7 @@ const MOCK_ROUTINES: Routine[] = [
   {
     id: '2',
     name: 'Pierna',
+    description: null,
     exercises: [
       MOCK_EXERCISE_CATALOG[4],
       MOCK_EXERCISE_CATALOG[5],
@@ -107,7 +109,8 @@ const MOCK_ROUTINES: Routine[] = [
   },
   {
     id: '3',
-    name: 'Espalda y bíceps',
+    name: 'Espalda y biceps',
+    description: null,
     exercises: [
       MOCK_EXERCISE_CATALOG[7],
       MOCK_EXERCISE_CATALOG[8],
@@ -131,6 +134,7 @@ export class MockRoutineRepository implements RoutineRepository {
     const newRoutine: Routine = {
       id: crypto.randomUUID(),
       name,
+      description: null,
       exercises: [],
     };
 
@@ -168,6 +172,15 @@ export class MockRoutineRepository implements RoutineRepository {
     );
 
     return this.replaceExercises(routine.id, nextExercises);
+  }
+
+  async reorderExercises(
+    routine: Routine,
+    exercises: Exercise[],
+    _token?: string
+  ): Promise<Routine> {
+    await this.delay();
+    return this.replaceExercises(routine.id, exercises);
   }
 
   async deleteRoutine(routineId: string, _token?: string): Promise<void> {
