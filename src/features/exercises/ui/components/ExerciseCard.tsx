@@ -1,4 +1,10 @@
 import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import {
+  DIFFICULTY_LABEL,
+  EQUIPMENT_LABEL,
+  TARGET_LABEL,
+  formatLabel,
+} from '../../core/domain/labels';
 import type { Exercise } from '../../core/domain/models/Exercise';
 
 interface ExerciseCardProps {
@@ -6,71 +12,16 @@ interface ExerciseCardProps {
   onSelect?: (exercise: Exercise) => void;
 }
 
-const DIFFICULTY_LABEL: Record<string, string> = {
-  beginner: 'PRINCIPIANTE',
-  intermediate: 'INTERMEDIO',
-  expert: 'AVANZADO',
-};
-
 const DIFFICULTY_COLOR: Record<string, string> = {
   beginner: 'text-green-400 border-green-500/40 bg-green-500/10',
   intermediate: 'text-yellow-400 border-yellow-500/40 bg-yellow-500/10',
   expert: 'text-red-400 border-red-500/40 bg-red-500/10',
 };
 
-// Spanish labels for the muscle and equipment chips. The server returns the
-// raw free-exercise-db vocabulary (English, lowercase), but the rest of the
-// UI is in Spanish — translating at render time keeps the API stable.
-const TARGET_LABEL: Record<string, string> = {
-  chest: 'PECHO',
-  pectorals: 'PECHO',
-  lats: 'ESPALDA',
-  middle_back: 'ESPALDA',
-  lower_back: 'LUMBARES',
-  upper_back: 'ESPALDA ALTA',
-  traps: 'TRAPECIOS',
-  neck: 'CUELLO',
-  shoulders: 'HOMBROS',
-  delts: 'HOMBROS',
-  biceps: 'BICEPS',
-  triceps: 'TRICEPS',
-  forearms: 'ANTEBRAZOS',
-  abdominals: 'ABDOMEN',
-  abs: 'ABDOMEN',
-  obliques: 'OBLICUOS',
-  quadriceps: 'CUADRICEPS',
-  quads: 'CUADRICEPS',
-  hamstrings: 'ISQUIOTIBIALES',
-  glutes: 'GLUTEOS',
-  calves: 'GEMELOS',
-  abductors: 'ABDUCTORES',
-  adductors: 'ADUCTORES',
-};
-
-const EQUIPMENT_LABEL: Record<string, string> = {
-  'body only': 'PESO CORPORAL',
-  'barbell': 'BARRA',
-  'dumbbell': 'MANCUERNA',
-  'cable': 'CABLE',
-  'machine': 'MAQUINA',
-  'kettlebells': 'KETTLEBELL',
-  'bands': 'BANDA',
-  'medicine ball': 'BALON MEDICINAL',
-  'exercise ball': 'PELOTA',
-  'foam roll': 'FOAM ROLLER',
-  'e-z curl bar': 'BARRA EZ',
-  'other': 'OTRO',
-};
-
 const PIXEL_GRID_BG: React.CSSProperties = {
   backgroundImage:
     'linear-gradient(rgba(34,197,94,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(34,197,94,0.06) 1px, transparent 1px)',
   backgroundSize: '8px 8px',
-};
-
-const formatLabel = (raw: string, table: Record<string, string>): string => {
-  const key = raw.toLowerCase().replace(/\s+/g, '_');
-  return table[key] ?? table[raw.toLowerCase()] ?? raw.toUpperCase();
 };
 
 export const ExerciseCard = ({
@@ -112,9 +63,11 @@ export const ExerciseCard = ({
         </h3>
 
         <div className="flex flex-wrap gap-1.5">
-          <span className="font-['Press_Start_2P'] text-[7px] tracking-widest border border-[#3f3f46] bg-[#18181b] text-[#a1a1aa] px-1.5 py-0.5 uppercase">
-            {equipmentLabel}
-          </span>
+          {exercise.equipment && (
+            <span className="font-['Press_Start_2P'] text-[7px] tracking-widest border border-[#3f3f46] bg-[#18181b] text-[#a1a1aa] px-1.5 py-0.5 uppercase">
+              {equipmentLabel}
+            </span>
+          )}
           <span
             className={`font-['Press_Start_2P'] text-[7px] tracking-widest border px-1.5 py-0.5 uppercase ${diffColor}`}
           >
