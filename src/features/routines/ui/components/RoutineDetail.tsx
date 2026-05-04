@@ -29,6 +29,7 @@ export const RoutineDetail = ({
 }: RoutineDetailProps) => {
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(true);
 
   if (!routine) {
     return (
@@ -130,12 +131,22 @@ export const RoutineDetail = ({
 
       {editing && (
         <div className="mt-6 border-t-2 border-[#1e1e2e] pt-5">
-          <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500 mb-3">
-            ▸ AÑADIR EJERCICIO
-          </p>
-          <ExerciseSearch
-            onSelectExercise={(exercise) => void onAddExercise(exercise)}
-          />
+          <button
+            type="button"
+            onClick={() => setSearchOpen((open) => !open)}
+            aria-expanded={searchOpen}
+            className="mb-3 flex w-full items-center justify-between gap-3 font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500 transition-colors hover:text-green-400"
+          >
+            <span>{searchOpen ? '▾' : '▸'} AÑADIR EJERCICIO</span>
+            <span className="font-['Press_Start_2P'] text-[8px] text-[#a1a1aa]">
+              {searchOpen ? 'OCULTAR' : 'MOSTRAR'}
+            </span>
+          </button>
+          {searchOpen && (
+            <ExerciseSearch
+              onSelectExercise={(exercise) => void onAddExercise(exercise)}
+            />
+          )}
         </div>
       )}
     </section>
