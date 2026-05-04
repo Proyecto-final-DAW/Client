@@ -29,6 +29,7 @@ export const RoutinesView = (): React.JSX.Element => {
     loading,
     error,
     refetch,
+    replaceRoutine,
     createRoutine,
     deleteRoutine,
     selectRoutine,
@@ -46,9 +47,9 @@ export const RoutinesView = (): React.JSX.Element => {
     );
   }, [sessions]);
 
-  const { addExercise, removeExercise } = useRoutineExercises({
+  const { addExercise, removeExercise, moveExercise } = useRoutineExercises({
     routine: selectedRoutine,
-    refetchRoutines: refetch,
+    onRoutineUpdated: replaceRoutine,
   });
 
   const [routineToDelete, setRoutineToDelete] = useState<string | null>(null);
@@ -108,6 +109,7 @@ export const RoutinesView = (): React.JSX.Element => {
                   routine={selectedRoutine}
                   onAddExercise={addExercise}
                   onRemoveExercise={removeExercise}
+                  onMoveExercise={moveExercise}
                   onDeleteRoutine={() =>
                     selectedRoutine && setRoutineToDelete(selectedRoutine.id)
                   }

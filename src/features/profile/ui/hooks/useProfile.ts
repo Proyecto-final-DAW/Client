@@ -83,7 +83,7 @@ export const useProfile = () => {
       setPasswordSuccess(true);
       setTimeout(() => {
         logout();
-        navigate('/login', { replace: true });
+        navigate('/', { replace: true });
       }, 1500);
     } catch (err) {
       setPasswordError(

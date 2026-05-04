@@ -8,7 +8,7 @@ interface StatBarProps {
 
 export const StatBar = (props: StatBarProps): React.JSX.Element => {
   const percentage = Math.min(100, (props.pilar.value / props.pilar.max) * 100);
-  const color = `var(${props.pilar.colorVar})`;
+  const accent = props.pilar.accentColor;
   const Icon = props.pilar.icon;
 
   return (
@@ -16,34 +16,30 @@ export const StatBar = (props: StatBarProps): React.JSX.Element => {
       <div
         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border-2"
         style={{
-          borderColor: `color-mix(in srgb, ${color} 60%, transparent)`,
-          backgroundColor: `color-mix(in srgb, ${color} 12%, transparent)`,
+          borderColor: `color-mix(in srgb, ${accent} 60%, transparent)`,
+          backgroundColor: `color-mix(in srgb, ${accent} 12%, transparent)`,
         }}
       >
-        <Icon className="h-5 w-5" style={{ color }} />
+        <Icon className="h-5 w-5" style={{ color: accent }} />
       </div>
 
       <div className="min-w-0 flex-1">
         <div className="mb-1.5 flex items-baseline justify-between gap-2">
-          <span
-            className="font-['Press_Start_2P'] text-[10px] tracking-widest uppercase"
-            style={{ color }}
-          >
+          <span className="font-['Press_Start_2P'] text-[10px] tracking-widest uppercase text-[#e4e4e7]">
             {props.pilar.name}
           </span>
           <span className="font-['Press_Start_2P'] text-[10px] text-[#a1a1aa]">
             LVL{' '}
-            <span style={{ color }} className="font-bold">
+            <span className="font-bold text-green-400">
               {Math.floor(props.pilar.level)}
             </span>
           </span>
         </div>
 
         <div
-          className="h-3 w-full overflow-hidden rounded-sm border"
+          className="h-3 w-full overflow-hidden rounded-sm border bg-[#0a0a0f]"
           style={{
-            borderColor: `color-mix(in srgb, ${color} 35%, transparent)`,
-            backgroundColor: `color-mix(in srgb, ${color} 8%, #0a0a0f)`,
+            borderColor: `color-mix(in srgb, ${accent} 35%, transparent)`,
           }}
         >
           <motion.div
@@ -52,8 +48,8 @@ export const StatBar = (props: StatBarProps): React.JSX.Element => {
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             className="h-full rounded-sm"
             style={{
-              backgroundColor: color,
-              boxShadow: `0 0 10px ${color}`,
+              background: `linear-gradient(90deg, ${accent}, color-mix(in srgb, ${accent} 70%, #22c55e))`,
+              boxShadow: `0 0 8px color-mix(in srgb, ${accent} 65%, transparent)`,
             }}
           />
         </div>

@@ -174,6 +174,15 @@ export class MockRoutineRepository implements RoutineRepository {
     return this.replaceExercises(routine.id, nextExercises);
   }
 
+  async reorderExercises(
+    routine: Routine,
+    exercises: Exercise[],
+    _token?: string
+  ): Promise<Routine> {
+    await this.delay();
+    return this.replaceExercises(routine.id, exercises);
+  }
+
   async deleteRoutine(routineId: string, _token?: string): Promise<void> {
     await this.delay();
 

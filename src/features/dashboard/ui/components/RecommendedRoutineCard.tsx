@@ -29,7 +29,7 @@ export const RecommendedRoutineCard = (): React.JSX.Element | null => {
   const top = recommendedTemplates[0];
   if (!top) {
     return (
-      <article className="relative border-2 border-[#1e1e2e] bg-[#0d0d14] p-6 text-center">
+      <article className="relative flex h-full flex-col items-center justify-center border-2 border-[#1e1e2e] bg-[#0d0d14] p-6 text-center">
         <PixelCorners size="md" className="border-[#27272a]" />
         <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-[#a1a1aa]">
           ▸ RUTINA RECOMENDADA
@@ -51,10 +51,10 @@ export const RecommendedRoutineCard = (): React.JSX.Element | null => {
   }
 
   return (
-    <article className="relative border-2 border-green-500/60 bg-[#0d0d14] p-6 sm:p-8 shadow-[0_0_0_4px_rgba(10,10,15,0.6),0_0_60px_rgba(34,197,94,0.18)]">
+    <article className="relative flex h-full flex-col border-2 border-green-500/60 bg-[#0d0d14] p-6 sm:p-8 shadow-[0_0_0_4px_rgba(10,10,15,0.6),0_0_60px_rgba(34,197,94,0.18)]">
       <PixelCorners size="md" className="border-green-500/60" />
 
-      <header className="border-b-2 border-[#1e1e2e] pb-5">
+      <header>
         <p className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] tracking-widest text-green-500">
           ★ RECOMENDADA PARA TI
         </p>
@@ -66,7 +66,11 @@ export const RecommendedRoutineCard = (): React.JSX.Element | null => {
         </p>
       </header>
 
-      <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+      {/* my-auto centers the footer vertically in the leftover space below
+          the header. Auto margins on top AND bottom split the spare height
+          evenly, so the action block sits in the visual center of the card
+          instead of pinned to either edge. */}
+      <div className="my-auto pt-5 border-t-2 border-[#1e1e2e] flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <dl className="grid grid-cols-3 gap-x-8 gap-y-1">
           <div>
             <dt className="font-['Press_Start_2P'] text-[7px] tracking-widest text-[#71717a]">

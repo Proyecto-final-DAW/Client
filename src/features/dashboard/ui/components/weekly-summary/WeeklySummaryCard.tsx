@@ -12,7 +12,7 @@ export const WeeklySummaryCard = (props: Props): React.JSX.Element => {
   const { current, previous } = props.summary;
 
   return (
-    <article className="relative border-2 border-green-500/60 bg-[#0d0d14] p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.6),0_0_60px_rgba(34,197,94,0.18)] md:col-span-2 xl:col-span-3">
+    <article className="relative border-2 border-green-500/60 bg-[#0d0d14] p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.6),0_0_60px_rgba(34,197,94,0.18)]">
       <PixelCorners size="md" className="border-green-500/60" />
 
       <div className="flex items-center gap-3 border-b-2 border-[#1e1e2e] pb-4">

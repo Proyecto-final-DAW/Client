@@ -1,13 +1,14 @@
-import { useNavigate } from 'react-router-dom';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
 
 import { AsyncState } from '../../../shared/components/AsyncState';
-import { RecommendedTemplatesSection } from './components/RecommendedTemplatesSection';
+import { HeroRoutineCard } from './components/HeroRoutineCard';
+import { TemplateCard } from './components/TemplateCard';
 import { TemplateFilters } from './components/TemplateFilters';
 import { TemplateGrid } from './components/TemplateGrid';
 import { useTemplateCatalog } from './hooks/useTemplateCatalog';
 
 export const TemplatesView = (): React.JSX.Element => {
-  const navigate = useNavigate();
   const {
     loading,
     error,
@@ -18,6 +19,8 @@ export const TemplatesView = (): React.JSX.Element => {
     filteredTemplates,
   } = useTemplateCatalog();
 
+  const [browseOpen, setBrowseOpen] = useState(false);
+
   return (
     <AsyncState
       loading={loading}
@@ -25,53 +28,85 @@ export const TemplatesView = (): React.JSX.Element => {
       data={filteredTemplates}
       loadingLabel="CARGANDO RUTINAS"
     >
-      {() => (
-        <section className="text-[#e4e4e7]">
-          <div className="mx-auto max-w-6xl">
-            <header className="mb-8">
-              <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
-                ▶ RUTINAS
-              </p>
-              <h1 className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
-                ELIGE TU PLAN
-              </h1>
-              <p className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg text-[#a1a1aa]">
-                Rutinas semanales listas. Aplicalas y tendras las sesiones de
-                cada dia creadas automaticamente.
-              </p>
-            </header>
+      {() => {
+        const [topPick, ...alsoForYou] = recommendedTemplates;
 
-            <RecommendedTemplatesSection templates={recommendedTemplates} />
+        return (
+          <section className="text-[#e4e4e7]">
+            <div className="mx-auto max-w-4xl">
+              <header className="mb-6">
+                <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+                  ▶ RUTINAS
+                </p>
+                <h1 className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
+                  TU PLAN
+                </h1>
+                <p className="mt-2 font-['VT323'] text-lg text-[#a1a1aa]">
+                  Aplica un plan y se crearán tus sesiones automaticamente.
+                </p>
+              </header>
 
-            <div className="mb-4 flex items-baseline gap-3">
-              <h2 className="font-['Press_Start_2P'] text-[11px] tracking-widest text-[#a1a1aa]">
-                ▸ TODAS LAS RUTINAS
-              </h2>
-            </div>
+              {topPick && (
+                <div className="mb-8">
+                  <HeroRoutineCard template={topPick} />
+                </div>
+              )}
 
-            <div className="mb-6">
-              <TemplateFilters value={filters} onChange={setFilters} />
-            </div>
+              {alsoForYou.length > 0 && (
+                <section className="mb-10">
+                  <h2 className="mb-3 font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+                    ▸ TAMBIEN PARA TI
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {alsoForYou.map((template) => (
+                      <TemplateCard
+                        key={`rec-${template.id}`}
+                        template={template}
+                        recommended
+                      />
+                    ))}
+                  </div>
+                </section>
+              )}
 
-            <TemplateGrid
-              templates={filteredTemplates}
-              recommendedTemplateIds={recommendedTemplateIds}
-              emptyTitle="Sin resultados"
-              emptyDescription="Prueba a quitar algun filtro."
-            />
-
-            <div className="mt-8 flex justify-center">
-              <button
-                type="button"
-                onClick={() => navigate('/dashboard')}
-                className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#1e1e2e] bg-[#0d0d14] text-[#a1a1aa] px-5 py-3 hover:border-green-500/40 hover:text-green-400 transition-colors"
+              {/* Browse all — collapsed by default to keep the page calm. */}
+              <section
+                className={`relative border-2 transition-colors ${
+                  browseOpen
+                    ? 'border-green-500/30 bg-[#0a0a10]/80'
+                    : 'border-[#1e1e2e] bg-[#0d0d14]/60'
+                }`}
               >
-                ◀ VOLVER AL INICIO
-              </button>
+                <button
+                  type="button"
+                  onClick={() => setBrowseOpen((open) => !open)}
+                  aria-expanded={browseOpen}
+                  className="w-full flex items-center justify-between px-4 py-3 font-['Press_Start_2P'] text-[10px] tracking-widest text-[#a1a1aa] hover:text-green-400 transition-colors"
+                >
+                  <span>BUSCAR MAS RUTINAS</span>
+                  {browseOpen ? (
+                    <ChevronUpIcon className="h-4 w-4" />
+                  ) : (
+                    <ChevronDownIcon className="h-4 w-4" />
+                  )}
+                </button>
+
+                {browseOpen && (
+                  <div className="border-t-2 border-[#1e1e2e]/80 px-4 pb-5 pt-4 flex flex-col gap-5">
+                    <TemplateFilters value={filters} onChange={setFilters} />
+                    <TemplateGrid
+                      templates={filteredTemplates}
+                      recommendedTemplateIds={recommendedTemplateIds}
+                      emptyTitle="Sin resultados"
+                      emptyDescription="Prueba a quitar algun filtro."
+                    />
+                  </div>
+                )}
+              </section>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        );
+      }}
     </AsyncState>
   );
 };

@@ -18,10 +18,10 @@ export const StepPersonal = (props: StepPersonalProps): React.JSX.Element => {
   // from the auth user in OnboardingView) so the submit payload is unchanged.
   return (
     <div>
-      <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
+      <h2 className="text-center font-['Press_Start_2P'] text-lg sm:text-xl text-[#e4e4e7] mb-3 leading-relaxed tracking-wider [text-shadow:0_0_18px_rgba(34,197,94,0.35)]">
         ¿CUANDO <span className="text-green-400">NACISTE?</span>
       </h2>
-      <p className="text-center font-['Press_Start_2P'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
+      <p className="text-center font-['VT323'] text-lg sm:text-xl text-[#a1a1aa] mb-5 leading-tight">
         Calculamos tu edad para personalizar tus macros.
       </p>
 
@@ -35,6 +35,8 @@ export const StepPersonal = (props: StepPersonalProps): React.JSX.Element => {
         <input
           id="birthDate"
           type="date"
+          min="1900-01-01"
+          max={new Date().toISOString().slice(0, 10)}
           value={props.data.birthDate}
           onChange={(e) => props.onChange('birthDate', e.target.value)}
           className={`${inputBase} ${props.errors.birthDate ? 'border-red-500/70 focus:border-red-400' : 'border-[#1e1e2e] focus:border-green-500/70'}`}

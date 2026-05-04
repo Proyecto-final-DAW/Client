@@ -18,7 +18,7 @@ export type SubmitOnboardingDTO = {
   activityLevel: ActivityLevel | undefined;
   goals: Goal[];
   experienceLevel: ExperienceLevel | undefined;
-  equipment: Equipment | undefined;
+  equipment: Equipment[];
   daysPerWeek: DaysPerWeek | undefined;
   injuries: Injury[];
 };

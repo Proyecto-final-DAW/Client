@@ -75,7 +75,8 @@ export function validateStep5(data: OnboardingFormData): FormErrors {
   const errors: FormErrors = {};
   if (!data.experienceLevel)
     errors.experienceLevel = 'Selecciona tu experiencia';
-  if (!data.equipment) errors.equipment = 'Selecciona tu equipamiento';
+  if (!data.equipment || data.equipment.length === 0)
+    errors.equipment = 'Selecciona al menos un equipamiento';
   if (!data.daysPerWeek) errors.daysPerWeek = 'Selecciona los dias por semana';
   return errors;
 }

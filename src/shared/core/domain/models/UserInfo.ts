@@ -10,7 +10,7 @@ export interface UserInfo {
   activity_level?: string;
   goals?: string[];
   experience_level?: string;
-  equipment?: string;
+  equipment?: string[];
   days_per_week?: string;
   injuries?: string[];
   age?: number;

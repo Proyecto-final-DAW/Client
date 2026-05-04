@@ -23,11 +23,14 @@ const formatNumber = (value: number | null | undefined, suffix: string) =>
   value != null && value > 0 ? `${value} ${suffix}` : dash;
 
 const formatList = (
-  values: string[] | null | undefined,
+  values: string[] | string | null | undefined,
   labels: Record<string, string>
 ): string => {
-  if (!values || values.length === 0) return dash;
-  return values.map((v) => labels[v] ?? v).join(', ');
+  if (!values) return dash;
+  // Defensive: tolerate scalar or pg-array-string responses without crashing.
+  const arr = Array.isArray(values) ? values : [values];
+  if (arr.length === 0) return dash;
+  return arr.map((v) => labels[v] ?? v).join(', ');
 };
 
 const formatLabel = (
@@ -92,7 +95,7 @@ export const ProfileDataView = ({
     },
     {
       label: 'EQUIPAMIENTO',
-      value: formatLabel(profile.equipment, EQUIPMENT_LABELS),
+      value: formatList(profile.equipment, EQUIPMENT_LABELS),
     },
     {
       label: 'DIAS POR SEMANA',

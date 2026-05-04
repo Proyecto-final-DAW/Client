@@ -234,17 +234,17 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
             </select>
           </div>
           <div>
-            <label htmlFor="profile-equipment" className={labelClass}>
-              EQUIPAMIENTO
+            <label htmlFor="profile-days" className={labelClass}>
+              DIAS POR SEMANA
             </label>
             <select
-              id="profile-equipment"
-              value={form.equipment}
-              onChange={(e) => handleChange('equipment', e.target.value)}
+              id="profile-days"
+              value={form.days_per_week}
+              onChange={(e) => handleChange('days_per_week', e.target.value)}
               className={inputClass}
             >
               <option value="">— Seleccionar —</option>
-              {EQUIPMENT_OPTIONS.map((opt) => (
+              {DAYS_PER_WEEK_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
                 </option>
@@ -254,22 +254,19 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
         </div>
 
         <div className="mb-5">
-          <label htmlFor="profile-days" className={labelClass}>
-            DIAS POR SEMANA
-          </label>
-          <select
-            id="profile-days"
-            value={form.days_per_week}
-            onChange={(e) => handleChange('days_per_week', e.target.value)}
-            className={inputClass}
-          >
-            <option value="">— Seleccionar —</option>
-            {DAYS_PER_WEEK_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
+          <span className={labelClass}>
+            EQUIPAMIENTO (puedes elegir varios)
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {EQUIPMENT_OPTIONS.map((opt) => (
+              <Chip
+                key={opt.value}
+                label={opt.label}
+                selected={form.equipment.includes(opt.value)}
+                onClick={() => toggleInArray('equipment', opt.value)}
+              />
             ))}
-          </select>
+          </div>
         </div>
 
         <div>

@@ -35,7 +35,7 @@ export const SelectableCard = (
           >
             {props.option.title}
           </div>
-          <div className="font-['Press_Start_2P'] text-sm sm:text-base text-[#a1a1aa] mt-1 tracking-wide leading-tight">
+          <div className="font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mt-1 leading-tight">
             {props.option.description}
           </div>
         </div>
