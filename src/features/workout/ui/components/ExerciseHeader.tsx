@@ -1,5 +1,9 @@
 import { API_BASE_URL } from '../../../../config/api';
 import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import {
+  TARGET_LABEL,
+  formatLabel,
+} from '../../../exercises/core/domain/labels';
 import type { Exercise } from '../../../exercises/core/domain/models/Exercise';
 
 type Props = {
@@ -8,8 +12,13 @@ type Props = {
 };
 
 export const ExerciseHeader = (props: Props): React.JSX.Element => {
+  // Absolute URL → use as-is (free-exercise-db CDN). Relative path → prefix
+  // with the API base, kept for backward compatibility with any pre-migration
+  // saved exercise that still carries a relative URL.
   const imgSrc = props.exercise.imageUrl
-    ? `${API_BASE_URL}${props.exercise.imageUrl}`
+    ? props.exercise.imageUrl.startsWith('http')
+      ? props.exercise.imageUrl
+      : `${API_BASE_URL}${props.exercise.imageUrl}`
     : null;
 
   return (
@@ -39,8 +48,8 @@ export const ExerciseHeader = (props: Props): React.JSX.Element => {
           {props.exercise.name}
         </h1>
         {props.exercise.target && (
-          <p className="font-['Press_Start_2P'] text-lg text-[#a1a1aa] mt-2 capitalize">
-            {props.exercise.target}
+          <p className="font-['Press_Start_2P'] text-lg text-[#a1a1aa] mt-2 uppercase">
+            {formatLabel(props.exercise.target, TARGET_LABEL)}
           </p>
         )}
       </div>

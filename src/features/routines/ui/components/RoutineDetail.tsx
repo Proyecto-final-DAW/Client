@@ -1,5 +1,5 @@
 import { PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { PixelCorners } from '../../../../shared/components/PixelCorners';
@@ -30,6 +30,13 @@ export const RoutineDetail = ({
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
   const [searchOpen, setSearchOpen] = useState(true);
+
+  // Re-open the "AÑADIR EJERCICIO" panel every time the user enters edit
+  // mode. Without this, collapsing it once and exiting edit would leave it
+  // hidden on next entry, with no obvious way to add exercises.
+  useEffect(() => {
+    if (editing) setSearchOpen(true);
+  }, [editing]);
 
   if (!routine) {
     return (
