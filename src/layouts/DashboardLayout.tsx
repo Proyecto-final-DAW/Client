@@ -44,7 +44,7 @@ const HEADER_HEIGHT_PX = 'h-[calc(100vh-4rem)] lg:h-[calc(100vh-6rem)]';
 
 const MENU_GROUPS: MenuGroup[] = [
   {
-    label: 'NAVEGACION',
+    label: 'ENTRENAMIENTO',
     items: [
       { to: '/dashboard', label: 'INICIO', icon: HomeIcon },
       { to: '/templates', label: 'RUTINAS', icon: BookOpenIcon },

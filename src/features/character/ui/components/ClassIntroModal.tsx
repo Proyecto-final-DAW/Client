@@ -152,7 +152,7 @@ export const ClassIntroModal = ({
                         </span>
                       )}
                     </p>
-                    <p className="mt-1.5 font-['Press_Start_2P'] text-base leading-tight text-[#a1a1aa]">
+                    <p className="mt-1.5 font-['VT323'] text-lg leading-snug text-[#a1a1aa]">
                       {step.hint}
                     </p>
                   </div>
@@ -160,7 +160,7 @@ export const ClassIntroModal = ({
               ))}
             </ol>
 
-            <p className="mt-5 text-center font-['Press_Start_2P'] text-base italic leading-tight text-[#71717a]">
+            <p className="mt-5 text-center font-['VT323'] text-lg italic leading-snug text-[#71717a]">
               Cuando alcances el siguiente tier te avisaremos.
             </p>
 

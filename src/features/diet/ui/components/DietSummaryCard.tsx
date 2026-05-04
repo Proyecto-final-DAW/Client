@@ -92,7 +92,7 @@ export const DietSummaryCard = ({
     return (
       <section className="relative border-2 border-[#1e1e2e] bg-[#0d0d14] p-5">
         <PixelCorners size="md" className="border-green-500/30" />
-        <p className="font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+        <p className="font-['VT323'] text-xl leading-snug text-[#a1a1aa]">
           No hay datos de dieta disponibles.
         </p>
       </section>
@@ -138,27 +138,33 @@ export const DietSummaryCard = ({
     <section className="relative border-2 border-green-500/50 bg-[#0d0d14] p-5 shadow-[0_0_18px_rgba(34,197,94,0.15)]">
       <PixelCorners size="md" className="border-green-500/50" />
 
-      <header className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
-            ◆ DIETA
-          </p>
-          <h2 className="mt-2 font-['Press_Start_2P'] text-base text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)]">
-            OBJETIVO DIARIO
-          </h2>
-          <p className="mt-1 font-['Press_Start_2P'] text-base text-[#a1a1aa]">
-            Calculado automaticamente desde tu peso y objetivo.
-          </p>
+      <header className="mb-5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+              ◆ DIETA
+            </p>
+            <h2 className="mt-2 font-['Press_Start_2P'] text-base text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)]">
+              OBJETIVO DIARIO
+            </h2>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => void onRefresh()}
+            disabled={refreshing}
+            className="font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-60 disabled:cursor-not-allowed disabled:active:mt-0 whitespace-nowrap self-start"
+          >
+            {refreshing ? 'RECALCULANDO…' : '↻ RECALCULAR'}
+          </button>
         </div>
 
-        <button
-          type="button"
-          onClick={() => void onRefresh()}
-          disabled={refreshing}
-          className="font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-60 disabled:cursor-not-allowed disabled:active:mt-0 whitespace-nowrap self-start"
-        >
-          {refreshing ? 'RECALCULANDO…' : '↻ RECALCULAR'}
-        </button>
+        {/* description spans the full card width — pinned inside the title
+            column it would compete with the recalcular button and wrap into
+            an awkward 2-line block ("...peso y / objetivo."). */}
+        <p className="mt-3 font-['VT323'] text-xl leading-snug text-[#a1a1aa]">
+          Calculado automaticamente desde tu peso y objetivo.
+        </p>
       </header>
 
       <div className="border-2 border-[#1e1e2e] bg-[#0a0a0f] p-5 text-center">
@@ -177,23 +183,23 @@ export const DietSummaryCard = ({
         {macros.map((macro) => (
           <article
             key={macro.label}
-            className="border-2 border-[#1e1e2e] bg-[#0a0a0f] p-4"
+            className="border-2 border-[#1e1e2e] bg-[#0a0a0f] p-4 text-center"
             style={{ borderTopColor: macro.color, borderTopWidth: '4px' }}
           >
-            <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-[#71717a]">
-              {macro.label}
-            </p>
             <p
-              className="mt-2 font-['Press_Start_2P'] text-lg"
+              className="font-['Press_Start_2P'] text-[10px] tracking-widest"
               style={{ color: macro.color }}
             >
+              {macro.label}
+            </p>
+            <p className="mt-2 font-['Press_Start_2P'] text-base text-[#e4e4e7]">
               {macro.grams}
-              <span className="ml-1 font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+              <span className="ml-1 font-['Press_Start_2P'] text-sm text-[#71717a]">
                 g
               </span>
             </p>
-            <p className="mt-1 font-['Press_Start_2P'] text-sm text-[#a1a1aa]">
-              {macro.percentage}% del total
+            <p className="mt-1 font-['Press_Start_2P'] text-[10px] tracking-widest text-[#71717a]">
+              {macro.percentage}% DEL TOTAL
             </p>
           </article>
         ))}

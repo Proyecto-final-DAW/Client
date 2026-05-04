@@ -20,7 +20,7 @@ export const ErrorState = (props: Props): React.JSX.Element => {
         <p className="mb-3 font-['Press_Start_2P'] text-[10px] tracking-widest text-red-400 [text-shadow:2px_2px_0_#000,0_0_12px_rgba(239,68,68,0.45)]">
           ✕ ERROR
         </p>
-        <p className="font-['Press_Start_2P'] text-lg leading-tight text-zinc-200">
+        <p className="font-['VT323'] text-xl leading-snug text-zinc-200">
           {props.message}
         </p>
         {props.onRetry && (

@@ -64,7 +64,7 @@ export const WeightProgressContent = (): React.JSX.Element => {
     return (
       <section className="relative border-2 border-red-500/40 bg-[#0d0d14] p-5">
         <PixelCorners size="sm" className="border-red-500/40" />
-        <p className="font-['Press_Start_2P'] text-base text-red-300">
+        <p className="font-['VT323'] text-xl leading-snug text-red-300">
           {error}
         </p>
         <button

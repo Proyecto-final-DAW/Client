@@ -96,7 +96,7 @@ export const ConfirmDialog = ({
         </h3>
 
         {description && (
-          <p className="mt-3 font-['Press_Start_2P'] text-base leading-tight text-[#a1a1aa]">
+          <p className="mt-3 font-['VT323'] text-lg leading-snug text-[#a1a1aa]">
             {description}
           </p>
         )}
