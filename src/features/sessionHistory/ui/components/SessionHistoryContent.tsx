@@ -38,10 +38,10 @@ export const SessionHistoryContent = (): React.JSX.Element => {
       <EmptyState
         icon="📜"
         title="Sin sesiones"
-        description="Aún no tienes entrenamientos registrados."
+        description="Aun no tienes entrenamientos registrados."
         cta={{
-          label: 'Registra tu primer entreno',
-          to: '/sessions/new',
+          label: 'Ir a rutinas',
+          to: '/routines',
         }}
       />
     );

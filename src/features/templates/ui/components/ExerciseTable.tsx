@@ -41,19 +41,19 @@ export const ExerciseTable = (props: Props): React.JSX.Element => {
               key={`${exercise.name}-${index}`}
               className="border-b border-[#1e1e2e] last:border-b-0"
             >
-              <td className="font-['VT323'] text-base text-[#71717a] px-3 py-3">
+              <td className="font-['Press_Start_2P'] text-[10px] text-[#71717a] px-3 py-2.5">
                 {index + 1}
               </td>
-              <td className="font-['VT323'] text-lg text-[#e4e4e7] px-3 py-3">
+              <td className="font-['Press_Start_2P'] text-[10px] leading-relaxed text-[#e4e4e7] px-3 py-2.5">
                 {exercise.name}
               </td>
-              <td className="font-['VT323'] text-base text-[#a1a1aa] px-3 py-3 hidden sm:table-cell">
+              <td className="font-['Press_Start_2P'] text-[9px] text-[#a1a1aa] px-3 py-2.5 hidden sm:table-cell">
                 {exercise.muscleGroup}
               </td>
-              <td className="font-['VT323'] text-lg text-green-400 px-3 py-3 text-center whitespace-nowrap">
+              <td className="font-['Press_Start_2P'] text-[10px] text-green-400 px-3 py-2.5 text-center whitespace-nowrap">
                 {exercise.sets} × {exercise.reps}
               </td>
-              <td className="font-['VT323'] text-base text-[#a1a1aa] px-3 py-3 text-center whitespace-nowrap">
+              <td className="font-['Press_Start_2P'] text-[9px] text-[#a1a1aa] px-3 py-2.5 text-center whitespace-nowrap">
                 {formatRest(exercise.restSeconds)}
               </td>
             </tr>

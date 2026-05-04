@@ -44,7 +44,7 @@ export class APIProgressRepository implements ProgressRepository {
     } catch (error) {
       const err = error as AxiosError<APIErrorResponse>;
       const serverMessage =
-        err.response?.data?.message || 'Error al cargar la progresión';
+        err.response?.data?.message || 'Error al cargar la progresion';
       throw new Error(serverMessage);
     }
   }

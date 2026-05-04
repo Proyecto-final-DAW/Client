@@ -20,7 +20,7 @@ export const CtaSection = (): React.JSX.Element => {
             TU QUEST?
           </h2>
           <p className="font-['Press_Start_2P'] text-[9px] sm:text-[11px] text-[#71717a] leading-loose tracking-wide mb-8">
-            Únete gratis y empieza a entrenar hoy.
+            Unete gratis y empieza a entrenar hoy.
           </p>
           <Link
             to="/register"

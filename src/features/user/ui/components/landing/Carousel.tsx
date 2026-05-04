@@ -24,7 +24,7 @@ const FEATURES: Feature[] = [
     Icon: MapIcon,
     title: 'PLAN',
     subtitle: 'Personalizado',
-    description: 'IA genera tu rutina según nivel, objetivos y equipamiento.',
+    description: 'IA genera tu rutina segun nivel, objetivos y equipamiento.',
   },
   {
     Icon: ClockIcon,
@@ -36,13 +36,13 @@ const FEATURES: Feature[] = [
     Icon: ChartBarIcon,
     title: 'STATS',
     subtitle: 'Progreso',
-    description: 'Gráficos de fuerza, peso corporal y volumen semanal.',
+    description: 'Graficos de fuerza, peso corporal y volumen semanal.',
   },
   {
     Icon: BeakerIcon,
     title: 'FOOD',
-    subtitle: 'Nutrición',
-    description: 'Macros calculados según tu objetivo y actividad.',
+    subtitle: 'Nutricion',
+    description: 'Macros calculados segun tu objetivo y actividad.',
   },
   {
     Icon: TrophyIcon,
@@ -53,8 +53,8 @@ const FEATURES: Feature[] = [
   {
     Icon: AcademicCapIcon,
     title: 'FORM',
-    subtitle: 'Técnica',
-    description: 'GIFs y guías paso a paso para cada ejercicio.',
+    subtitle: 'Tecnica',
+    description: 'GIFs y guias paso a paso para cada ejercicio.',
   },
 ];
 

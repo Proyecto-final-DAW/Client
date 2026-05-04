@@ -40,7 +40,7 @@ export const InjuryCard = (props: InjuryCardProps): React.JSX.Element => {
           >
             {props.option.title}
           </div>
-          <div className="font-['VT323'] text-sm text-[#a1a1aa] mt-1 tracking-wide leading-tight">
+          <div className="font-['VT323'] text-base text-[#a1a1aa] mt-1 leading-tight">
             {props.option.description}
           </div>
         </div>

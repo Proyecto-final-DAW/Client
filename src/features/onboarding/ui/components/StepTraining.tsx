@@ -7,7 +7,7 @@ import { ChoiceGroup, type Choice } from './training/ChoiceGroup';
 interface StepTrainingProps {
   data: OnboardingFormData;
   errors: FormErrors;
-  onChange: (field: keyof OnboardingFormData, value: string) => void;
+  onChange: (field: keyof OnboardingFormData, value: string | string[]) => void;
 }
 
 const experienceChoices: Choice[] = [
@@ -17,7 +17,7 @@ const experienceChoices: Choice[] = [
 ];
 
 const equipmentChoices: Choice[] = [
-  { value: 'FULL_GYM', label: 'GIMNASIO', sub: 'Máquinas y pesas' },
+  { value: 'FULL_GYM', label: 'GIMNASIO', sub: 'Maquinas y pesas' },
   { value: 'HOME_WEIGHTS', label: 'CASA + PESAS', sub: 'Mancuernas / barras' },
   { value: 'BODYWEIGHT', label: 'PESO CORPORAL', sub: 'Sin material' },
 ];
@@ -29,13 +29,27 @@ const daysChoices: Choice[] = [
 ];
 
 export const StepTraining = (props: StepTrainingProps): React.JSX.Element => {
+  const handleSingle = (
+    field: keyof OnboardingFormData,
+    value: string
+  ): void => {
+    props.onChange(field, value);
+  };
+
+  const handleMulti = (
+    field: keyof OnboardingFormData,
+    value: string[]
+  ): void => {
+    props.onChange(field, value);
+  };
+
   return (
     <div>
-      <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
+      <h2 className="text-center font-['Press_Start_2P'] text-lg sm:text-xl text-[#e4e4e7] mb-3 leading-relaxed tracking-wider [text-shadow:0_0_18px_rgba(34,197,94,0.35)]">
         TU <span className="text-green-400">ENTRENAMIENTO</span>
       </h2>
-      <p className="text-center font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
-        Cómo, cuándo y con qué entrenas.
+      <p className="text-center font-['VT323'] text-lg sm:text-xl text-[#a1a1aa] mb-5 leading-tight">
+        Como, cuando y con que entrenas.
       </p>
 
       <ChoiceGroup
@@ -45,16 +59,18 @@ export const StepTraining = (props: StepTrainingProps): React.JSX.Element => {
         choices={experienceChoices}
         error={props.errors.experienceLevel}
         cols={3}
-        onChange={props.onChange}
+        onChange={handleSingle}
       />
       <ChoiceGroup
+        multi
         label="EQUIPAMIENTO"
+        hint="Puedes elegir varios"
         field="equipment"
         value={props.data.equipment}
         choices={equipmentChoices}
         error={props.errors.equipment}
         cols={3}
-        onChange={props.onChange}
+        onChange={handleMulti}
       />
       <ChoiceGroup
         label="DIAS POR SEMANA"
@@ -63,7 +79,7 @@ export const StepTraining = (props: StepTrainingProps): React.JSX.Element => {
         choices={daysChoices}
         error={props.errors.daysPerWeek}
         cols={3}
-        onChange={props.onChange}
+        onChange={handleSingle}
       />
     </div>
   );

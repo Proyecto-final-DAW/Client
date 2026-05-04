@@ -15,10 +15,10 @@ interface StepBodyProps {
 export const StepBody = (props: StepBodyProps): React.JSX.Element => {
   return (
     <div>
-      <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
+      <h2 className="text-center font-['Press_Start_2P'] text-lg sm:text-xl text-[#e4e4e7] mb-3 leading-relaxed tracking-wider [text-shadow:0_0_18px_rgba(34,197,94,0.35)]">
         TU <span className="text-green-400">CUERPO</span>
       </h2>
-      <p className="text-center font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
+      <p className="text-center font-['VT323'] text-lg sm:text-xl text-[#a1a1aa] mb-5 leading-tight">
         Para calcular tu metabolismo basal.
       </p>
 

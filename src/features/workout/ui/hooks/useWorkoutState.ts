@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import type { Routine } from '../../../routines/core/domain/models/Routine';
 import type { WorkoutSet } from '../../core/domain/models/WorkoutSet';
@@ -12,6 +12,33 @@ export type WorkoutPayloadExercise = {
   name: string;
   type: 'strength';
   sets: WorkoutSet[];
+};
+
+type PersistedState = {
+  currentExerciseIndex: number;
+  completedSetsByExerciseId: Record<string, WorkoutSet[]>;
+  restDurationSeconds: number;
+};
+
+const STORAGE_PREFIX = 'gymquest:workout:';
+const storageKey = (routineId: string) => `${STORAGE_PREFIX}${routineId}`;
+
+const loadPersisted = (routineId: string): PersistedState | null => {
+  try {
+    const raw = localStorage.getItem(storageKey(routineId));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as PersistedState;
+    if (
+      typeof parsed.currentExerciseIndex !== 'number' ||
+      typeof parsed.restDurationSeconds !== 'number' ||
+      typeof parsed.completedSetsByExerciseId !== 'object'
+    ) {
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
 };
 
 const buildEmptySetsByExercise = (
@@ -32,15 +59,72 @@ export const useWorkoutState = (routine: Routine | null) => {
     useState<number>(DEFAULT_REST_SECONDS);
   const [restRemainingSeconds, setRestRemainingSeconds] = useState<number>(0);
   const [isResting, setIsResting] = useState<boolean>(false);
+  const [resumed, setResumed] = useState<boolean>(false);
 
-  // Inicializar el mapa de sets cuando llega la rutina (post-fetch)
+  // Tracks whether the initial hydration from localStorage has happened for
+  // the current routine. Save effects skip until this is true so they can't
+  // overwrite a real persisted state with the empty default.
+  const hydratedRef = useRef<boolean>(false);
+
+  // Inicializar el mapa de sets cuando llega la rutina (post-fetch).
+  // Si hay un estado persistido para esta rutina, lo restauramos.
   useEffect(() => {
-    if (routine) {
+    hydratedRef.current = false;
+    if (!routine) return;
+
+    const persisted = loadPersisted(routine.id);
+    if (persisted) {
+      const empty = buildEmptySetsByExercise(routine);
+      // Only keep sets for exercises that still exist in the routine — if the
+      // routine was edited mid-workout, stale exercise IDs would be ignored.
+      const merged: Record<string, WorkoutSet[]> = { ...empty };
+      for (const id of Object.keys(persisted.completedSetsByExerciseId)) {
+        if (id in merged) {
+          merged[id] = persisted.completedSetsByExerciseId[id] ?? [];
+        }
+      }
+      setCompletedSetsByExerciseId(merged);
+      setCurrentExerciseIndex(
+        Math.min(persisted.currentExerciseIndex, routine.exercises.length - 1)
+      );
+      setRestDurationSeconds(persisted.restDurationSeconds);
+      setStatus('active');
+      setResumed(true);
+    } else {
       setCompletedSetsByExerciseId(buildEmptySetsByExercise(routine));
       setCurrentExerciseIndex(0);
+      setRestDurationSeconds(DEFAULT_REST_SECONDS);
       setStatus('active');
+      setResumed(false);
     }
+
+    hydratedRef.current = true;
   }, [routine]);
+
+  // Persist on every relevant state change once hydrated. The rest timer
+  // (isResting / restRemainingSeconds) is intentionally NOT persisted — when
+  // the user resumes, they shouldn't land mid-countdown of a stale rest.
+  useEffect(() => {
+    if (!routine || !hydratedRef.current) return;
+    if (status !== 'active') return;
+    try {
+      const payload: PersistedState = {
+        currentExerciseIndex,
+        completedSetsByExerciseId,
+        restDurationSeconds,
+      };
+      localStorage.setItem(storageKey(routine.id), JSON.stringify(payload));
+    } catch {
+      // localStorage may be full or unavailable — silently skip; the in-memory
+      // state still works for the current session.
+    }
+  }, [
+    routine,
+    status,
+    currentExerciseIndex,
+    completedSetsByExerciseId,
+    restDurationSeconds,
+  ]);
 
   // Tick del temporizador de descanso
   useEffect(() => {
@@ -151,11 +235,22 @@ export const useWorkoutState = (routine: Routine | null) => {
     setStatus('finishing');
   };
 
+  const clearPersisted = () => {
+    if (!routine) return;
+    try {
+      localStorage.removeItem(storageKey(routine.id));
+    } catch {
+      // ignore
+    }
+  };
+
   const markFinished = () => {
+    clearPersisted();
     setStatus('finished');
   };
 
   const cancelWorkout = () => {
+    clearPersisted();
     setStatus('cancelled');
   };
 
@@ -185,6 +280,7 @@ export const useWorkoutState = (routine: Routine | null) => {
     restRemainingSeconds,
     restDurationSeconds,
     completedSetsByExerciseId,
+    resumed,
     completeSet,
     removeLastSet,
     nextExercise,

@@ -16,18 +16,19 @@ type Props = {
   onChange: (next: TemplateFiltersValue) => void;
 };
 
+const LABEL_CLASS =
+  "font-['Press_Start_2P'] text-[8px] tracking-widest text-[#71717a]";
+
 const SELECT_CLASS =
-  "font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#1e1e2e] bg-[#0d0d14] text-[#e4e4e7] px-3 py-2.5 outline-none focus:border-green-500/60";
+  "font-['Press_Start_2P'] text-[9px] tracking-widest border border-[#27272a] bg-transparent text-[#e4e4e7] px-3 py-2 outline-none focus:border-green-500/60 hover:border-green-500/40 transition-colors [color-scheme:dark]";
 
 export const TemplateFilters = (props: Props): React.JSX.Element => {
   const { value, onChange } = props;
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       <label className="flex flex-col gap-1.5">
-        <span className="font-['Press_Start_2P'] text-[8px] tracking-widest text-[#a1a1aa]">
-          OBJETIVO
-        </span>
+        <span className={LABEL_CLASS}>OBJETIVO</span>
         <select
           className={SELECT_CLASS}
           value={value.goal}
@@ -44,9 +45,7 @@ export const TemplateFilters = (props: Props): React.JSX.Element => {
       </label>
 
       <label className="flex flex-col gap-1.5">
-        <span className="font-['Press_Start_2P'] text-[8px] tracking-widest text-[#a1a1aa]">
-          EQUIPAMIENTO
-        </span>
+        <span className={LABEL_CLASS}>EQUIPAMIENTO</span>
         <select
           className={SELECT_CLASS}
           value={value.equipment}
@@ -66,9 +65,7 @@ export const TemplateFilters = (props: Props): React.JSX.Element => {
       </label>
 
       <label className="flex flex-col gap-1.5">
-        <span className="font-['Press_Start_2P'] text-[8px] tracking-widest text-[#a1a1aa]">
-          NIVEL
-        </span>
+        <span className={LABEL_CLASS}>NIVEL</span>
         <select
           className={SELECT_CLASS}
           value={value.level}

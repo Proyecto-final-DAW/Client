@@ -14,15 +14,15 @@ type Props = {
 };
 
 const TIER_TITLE: Record<1 | 2 | 3, string> = {
-  1: 'ELIGE TU VOCACIÓN',
-  2: 'ELIGE TU ESPECIALIZACIÓN',
+  1: 'ELIGE TU VOCACION',
+  2: 'ELIGE TU ESPECIALIZACION',
   3: 'ELIGE TU LEGENDARIA',
 };
 
 const TIER_DESCRIPTION: Record<1 | 2 | 3, string> = {
-  1: 'Tu disciplina ha hablado por sí sola. Es momento de nombrarla.',
+  1: 'Tu disciplina ha hablado por si sola. Es momento de nombrarla.',
   2: 'Has cruzado el umbral. Tu camino se bifurca.',
-  3: 'Has alcanzado lo que pocos alcanzan. Elige cómo serás recordado.',
+  3: 'Has alcanzado lo que pocos alcanzan. Elige como seras recordado.',
 };
 
 const FOCUSABLE_SELECTOR =
@@ -154,7 +154,7 @@ export const TierUpModal = ({
 
             <header className="mb-5 text-center">
               <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
-                ─ TIER {tier} ALCANZADO ─
+                TIER {tier} ALCANZADO
               </p>
               <h2
                 id="tier-up-title"
@@ -164,7 +164,7 @@ export const TierUpModal = ({
               </h2>
               <p
                 id="tier-up-description"
-                className="mt-3 font-['VT323'] text-base italic text-[#a1a1aa]"
+                className="mt-3 font-['Press_Start_2P'] text-base italic text-[#a1a1aa]"
               >
                 {TIER_DESCRIPTION[tier]}
               </p>
@@ -197,7 +197,7 @@ export const TierUpModal = ({
                 disabled={choosing}
                 className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14] px-4 py-3 text-[#a1a1aa] transition-colors hover:border-[#3f3f46] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                MÁS TARDE
+                MAS TARDE
               </button>
               <button
                 type="button"

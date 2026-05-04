@@ -8,6 +8,9 @@ import type { AuthUser } from './AuthContext';
 
 const STORAGE_KEY_TOKEN = 'auth_token';
 const STORAGE_KEY_USER = 'auth_user';
+// Survives logout on purpose: lets the login form pre-fill the email so a
+// returning user only has to retype the password.
+export const STORAGE_KEY_LAST_EMAIL = 'last_email';
 
 const loadFromStorage = <T,>(key: string): T | null => {
   try {
@@ -88,6 +91,9 @@ export const AuthProvider = (props: {
     setUser(normalized);
     localStorage.setItem(STORAGE_KEY_TOKEN, newToken);
     localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(normalized));
+    if (normalized.email) {
+      localStorage.setItem(STORAGE_KEY_LAST_EMAIL, normalized.email);
+    }
   };
 
   const setUserOnly = (newUser: AuthUser) => {

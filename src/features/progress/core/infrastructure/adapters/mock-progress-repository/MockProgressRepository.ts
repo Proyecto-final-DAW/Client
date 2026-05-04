@@ -18,7 +18,7 @@ const EXERCISES: MockExercise[] = [
   { id: 'squat', name: 'Sentadilla', base: 70, gain: 2.5 },
   { id: 'deadlift', name: 'Peso muerto', base: 85, gain: 2.5 },
   { id: 'overhead-press', name: 'Press militar', base: 30, gain: 1.0 },
-  { id: 'bicep-curl', name: 'Curl bíceps', base: 12, gain: 0.5 },
+  { id: 'bicep-curl', name: 'Curl biceps', base: 12, gain: 0.5 },
 ];
 
 const SESSIONS = 10;

@@ -39,7 +39,7 @@ const goalOptions: GoalOption[] = [
   {
     value: 'HEALTH',
     title: 'MEJORAR SALUD',
-    description: 'Sentirse mejor y crear un hábito.',
+    description: 'Sentirse mejor y crear un habito.',
     icon: '❤️',
   },
 ];
@@ -56,11 +56,11 @@ export const StepGoal = (props: StepGoalProps): React.JSX.Element => {
 
   return (
     <div>
-      <h2 className="text-center font-['Press_Start_2P'] text-sm sm:text-base text-[#e4e4e7] mb-2 leading-relaxed tracking-wider">
+      <h2 className="text-center font-['Press_Start_2P'] text-lg sm:text-xl text-[#e4e4e7] mb-3 leading-relaxed tracking-wider [text-shadow:0_0_18px_rgba(34,197,94,0.35)]">
         ¿CUAL ES TU <span className="text-green-400">OBJETIVO?</span>
       </h2>
-      <p className="text-center font-['VT323'] text-base sm:text-lg text-[#a1a1aa] mb-5 tracking-wide leading-tight">
-        Puedes elegir uno o más.
+      <p className="text-center font-['VT323'] text-lg sm:text-xl text-[#a1a1aa] mb-5 leading-tight">
+        Puedes elegir uno o mas.
       </p>
 
       <div className="grid grid-cols-2 gap-2">
@@ -93,7 +93,7 @@ export const StepGoal = (props: StepGoalProps): React.JSX.Element => {
                   >
                     {option.title}
                   </div>
-                  <div className="font-['VT323'] text-sm text-[#a1a1aa] mt-1 tracking-wide leading-tight">
+                  <div className="font-['VT323'] text-base text-[#a1a1aa] mt-1 leading-tight">
                     {option.description}
                   </div>
                 </div>
@@ -103,7 +103,7 @@ export const StepGoal = (props: StepGoalProps): React.JSX.Element => {
         })}
       </div>
       {props.errors.goals && (
-        <p className="font-['VT323'] text-base text-red-400 mt-3 tracking-wide leading-none">
+        <p className="font-['Press_Start_2P'] text-base text-red-400 mt-3 tracking-wide leading-none">
           ✕ {props.errors.goals}
         </p>
       )}

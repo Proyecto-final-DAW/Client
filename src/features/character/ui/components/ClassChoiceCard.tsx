@@ -50,7 +50,7 @@ export const ClassChoiceCard = (props: Props): React.JSX.Element => {
         {props.name.toUpperCase()}
       </h3>
 
-      <p className="mt-3 font-['VT323'] text-base italic leading-tight text-[#d4d4d8]">
+      <p className="mt-3 font-['Press_Start_2P'] text-base italic leading-tight text-[#d4d4d8]">
         “{props.frase}”
       </p>
     </motion.button>
