@@ -9,5 +9,6 @@ export interface StatPilar {
   /** Lifetime level (1 → 99). */
   level: number;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
-  colorVar: string;
+  /** Hex color used only for the stat's icon (identity). Bars use green. */
+  accentColor: string;
 }

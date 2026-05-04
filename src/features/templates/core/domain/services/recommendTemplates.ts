@@ -13,7 +13,8 @@ const DAYS_TOLERANCE = 1;
 
 export const hasRecommendableProfile = (user: UserInfo | null): boolean => {
   if (!user) return false;
-  return Boolean(user.equipment && user.experience_level);
+  const hasEquipment = (user.equipment ?? []).length > 0;
+  return Boolean(hasEquipment && user.experience_level);
 };
 
 const matchesDaysPreference = (
@@ -35,7 +36,7 @@ const LEVEL_RANK: Record<string, number> = {
 const scoreTemplate = (template: RoutineTemplate, user: UserInfo): number => {
   let score = 0;
 
-  if (template.equipment === user.equipment) score += 5;
+  if ((user.equipment ?? []).includes(template.equipment)) score += 5;
   if (user.goals && user.goals.includes(template.goal)) score += 3;
 
   // Level matching with directional penalty: a beginner getting an advanced
@@ -67,10 +68,9 @@ const scoreTemplate = (template: RoutineTemplate, user: UserInfo): number => {
 /**
  * Recommends templates ranked by goal/equipment/level match.
  *
- * `days_per_week` is treated as a hard filter (within ±1 day of the user's
- * midpoint) so we never recommend a 3-day Full Body to someone who said
- * they want to train 4-5 days a week. Falls back to the unfiltered list
- * only if the days filter would leave nothing to suggest.
+ * `days_per_week` is treated as a hard filter: a template's daysPerWeek must
+ * be within ±1 day of any user-selected range midpoint. Falls back to the
+ * unfiltered list only if the days filter would leave nothing to suggest.
  */
 export const recommendTemplates = (
   templates: RoutineTemplate[],

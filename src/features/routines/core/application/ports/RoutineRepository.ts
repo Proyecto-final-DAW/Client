@@ -14,5 +14,10 @@ export interface RoutineRepository {
     exerciseId: string,
     token?: string
   ): Promise<Routine>;
+  reorderExercises(
+    routine: Routine,
+    exercises: Exercise[],
+    token?: string
+  ): Promise<Routine>;
   deleteRoutine(routineId: string, token?: string): Promise<void>;
 }

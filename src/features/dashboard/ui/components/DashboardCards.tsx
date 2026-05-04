@@ -20,7 +20,7 @@ export const DashboardCards = (props: Props): React.JSX.Element => {
       }}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3"
+      className="grid grid-cols-1 gap-5 md:grid-cols-3 items-start"
     >
       <StreakCard streak={props.streak} trainingDays={props.trainingDays} />
       <LastWorkoutCard lastWorkoutDaysAgo={props.lastWorkoutDaysAgo} />

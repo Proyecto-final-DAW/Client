@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { STORAGE_KEY_LAST_EMAIL } from '../../../../context/AuthProvider';
 import { useAuth } from '../../../../context/hooks/useAuth';
 import { userInfoRepository } from '../adapter';
 
@@ -16,8 +17,15 @@ export const useLogin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Explicit redirect (e.g. registration → login) wins over the remembered
+    // email so a brand-new sign-up doesn't get a previous user's address.
     const prefillEmail = (location.state as { email?: string } | null)?.email;
-    if (prefillEmail) setEmail(prefillEmail);
+    if (prefillEmail) {
+      setEmail(prefillEmail);
+      return;
+    }
+    const remembered = localStorage.getItem(STORAGE_KEY_LAST_EMAIL);
+    if (remembered) setEmail(remembered);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

@@ -1,6 +1,9 @@
+import { useState } from 'react';
+
 import { API_BASE_URL } from '../../../../config/api';
 import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type { Exercise } from '../../core/domain/models/Exercise';
+import { MuscleArt } from './MuscleArt';
 
 interface ExerciseCardProps {
   exercise: Exercise;
@@ -19,31 +22,62 @@ const DIFFICULTY_COLOR: Record<string, string> = {
   expert: 'text-red-400 border-red-500/40 bg-red-500/10',
 };
 
+// Pixel-grid background used when the upstream image is missing. Cheap
+// CSS-only texture that keeps the card looking intentional instead of empty.
+const PIXEL_GRID_BG = {
+  backgroundImage:
+    'linear-gradient(rgba(34,197,94,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(34,197,94,0.05) 1px, transparent 1px)',
+  backgroundSize: '8px 8px',
+};
+
 export const ExerciseCard = ({
   exercise,
   onSelect,
 }: ExerciseCardProps): React.JSX.Element => {
+  const [imgFailed, setImgFailed] = useState(false);
   const diffColor =
     DIFFICULTY_COLOR[exercise.difficulty] ??
     'text-[#a1a1aa] border-[#3f3f46] bg-[#18181b]';
   const diffLabel =
     DIFFICULTY_LABEL[exercise.difficulty] ?? exercise.difficulty;
-  const imgSrc = `${API_BASE_URL}${exercise.imageUrl}`;
+  // Absolute URL (https://…) → use as-is (the new ExerciseDB CDN). Relative
+  // (/exercises/image/:id) → prefix with our API base because that's the
+  // legacy server proxy.
+  const imgSrc = exercise.imageUrl
+    ? exercise.imageUrl.startsWith('http')
+      ? exercise.imageUrl
+      : `${API_BASE_URL}${exercise.imageUrl}`
+    : '';
+  const showFallback = !imgSrc || imgFailed;
 
   const content = (
     <>
       <PixelCorners size="sm" className="border-green-500/40" />
 
-      <div className="relative h-40 overflow-hidden border-b-2 border-[#1e1e2e] bg-[#0a0a0f]">
-        <img
-          src={imgSrc}
-          alt={exercise.name}
-          className="h-full w-full object-cover transition-transform group-hover:scale-105"
-          loading="lazy"
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).style.display = 'none';
-          }}
-        />
+      <div
+        className="relative h-28 overflow-hidden border-b-2 border-[#1e1e2e] bg-gradient-to-br from-[#0a0a0f] to-[#10101a]"
+        style={showFallback ? PIXEL_GRID_BG : undefined}
+      >
+        {!showFallback ? (
+          <img
+            src={imgSrc}
+            alt={exercise.name}
+            className="h-full w-full object-cover transition-transform group-hover:scale-105"
+            loading="lazy"
+            onError={() => setImgFailed(true)}
+          />
+        ) : (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-2">
+            <MuscleArt
+              target={exercise.target}
+              aria-hidden="true"
+              className="h-12 w-12 text-green-500/70 [filter:drop-shadow(0_0_6px_rgba(34,197,94,0.45))]"
+            />
+            <span className="font-['Press_Start_2P'] text-[8px] tracking-widest text-green-500/60 uppercase">
+              {exercise.target}
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col gap-2 p-3">

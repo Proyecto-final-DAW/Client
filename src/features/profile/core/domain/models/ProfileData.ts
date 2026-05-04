@@ -10,7 +10,7 @@ export interface ProfileData {
   activity_level: string | null;
   goals: string[];
   experience_level: string | null;
-  equipment: string | null;
+  equipment: string[];
   days_per_week: string | null;
   injuries: string[];
   sleep_hours: number | null;
@@ -36,7 +36,7 @@ export interface ProfileUpdateData {
   sleep_hours?: number;
   sex?: 'MALE' | 'FEMALE' | 'NON_BINARY';
   experience_level?: string;
-  equipment?: string;
+  equipment?: string[];
   days_per_week?: string;
   injuries?: string[];
 }

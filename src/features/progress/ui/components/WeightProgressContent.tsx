@@ -1,6 +1,7 @@
 import type React from 'react';
 import { useMemo, useState } from 'react';
 
+import { useAuth } from '../../../../context/hooks/useAuth';
 import { EmptyState } from '../../../../shared/components/EmptyState';
 import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import { useProgress } from '../hooks/useProgress';
@@ -15,6 +16,7 @@ const DATE_FORMAT = new Intl.DateTimeFormat('es-ES', {
 });
 
 export const WeightProgressContent = (): React.JSX.Element => {
+  const { user } = useAuth();
   const {
     weightHistory,
     loading,
@@ -39,6 +41,13 @@ export const WeightProgressContent = (): React.JSX.Element => {
   // "Registrar peso" button lets the user decide whether they need to add
   // a new measurement at all.
   const latest = entries.length > 0 ? entries[entries.length - 1] : null;
+  // When the user has no logged entries yet, surface the onboarding weight
+  // as the "starting point" so the panel never feels empty for someone who
+  // just finished onboarding.
+  const onboardingWeight =
+    typeof user?.weight === 'number' && Number.isFinite(user.weight)
+      ? user.weight
+      : null;
 
   if (loading) {
     return (
@@ -76,13 +85,20 @@ export const WeightProgressContent = (): React.JSX.Element => {
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
-            ◆ PESO ACTUAL
+            ◆ {latest ? 'PESO ACTUAL' : 'PESO INICIAL'}
           </p>
           {latest ? (
             <p className="mt-2 font-['Press_Start_2P'] text-lg text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)]">
               {latest.weight.toFixed(1)}
               <span className="ml-2 font-['Press_Start_2P'] text-base text-[#a1a1aa]">
                 kg · {DATE_FORMAT.format(latest.date)}
+              </span>
+            </p>
+          ) : onboardingWeight !== null ? (
+            <p className="mt-2 font-['Press_Start_2P'] text-lg text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)]">
+              {onboardingWeight.toFixed(1)}
+              <span className="ml-2 font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+                kg · onboarding
               </span>
             </p>
           ) : (

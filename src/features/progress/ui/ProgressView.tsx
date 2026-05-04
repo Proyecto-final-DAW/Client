@@ -58,7 +58,8 @@ export const ProgressView = (): React.JSX.Element => {
             empty={(e) => e.length === 0}
             loadingLabel="CARGANDO EJERCICIOS"
             emptyTitle="Sin sesiones"
-            emptyDescription="Aun no has registrado sesiones. Cuando entrenes podras ver tu progresion aqui."
+            emptyDescription="Aun no has registrado ninguna sesion. Empieza una para ver aqui tu progresion."
+            emptyCta={{ label: 'Empezar sesion', to: '/routines' }}
           >
             {(exercises) => (
               <>

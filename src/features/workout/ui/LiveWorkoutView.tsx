@@ -53,12 +53,12 @@ const WorkoutHeader = ({
   onCancelClick: () => void;
   onExitClick: () => void;
 }): React.JSX.Element => (
-  <header className="sticky top-0 z-30 h-24 flex items-center justify-between border-b-2 border-[#1e1e2e] bg-[#0a0a0f]/95 backdrop-blur-md px-4 sm:px-8">
+  <header className="sticky top-0 z-30 h-16 lg:h-24 flex items-center justify-between gap-2 border-b-2 border-[#1e1e2e] bg-[#0a0a0f]/95 backdrop-blur-md px-3 sm:px-6 lg:px-8">
     <Link to="/dashboard" className="flex items-center gap-3">
       <img
         src="/images/Logo.webp"
         alt="GymQuest"
-        className="h-28 w-auto -my-6 drop-shadow-lg object-contain"
+        className="h-16 w-auto -my-2 lg:h-28 lg:-my-6 drop-shadow-lg object-contain"
       />
     </Link>
 
@@ -70,7 +70,7 @@ const WorkoutHeader = ({
         className="inline-flex items-center gap-2 font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#1e1e2e] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400 px-3 py-2 transition-colors"
       >
         <HomeIcon className="h-3 w-3" />
-        INICIO
+        <span className="hidden sm:inline">INICIO</span>
       </button>
       <button
         type="button"
@@ -79,7 +79,7 @@ const WorkoutHeader = ({
         className="inline-flex items-center gap-2 font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-red-500/40 bg-[#0d0d14] text-red-400 hover:bg-red-500/10 px-3 py-2 transition-colors"
       >
         <XMarkIcon className="h-3 w-3" />
-        CANCELAR
+        <span className="hidden sm:inline">CANCELAR</span>
       </button>
     </div>
   </header>
@@ -281,13 +281,13 @@ export const LiveWorkoutView = (): React.JSX.Element => {
           main nav header so the user always sees how far they are. The
           background is intentionally transparent so the bg artwork can sit
           right under the main header without an opaque strip in between. */}
-      <div className="sticky top-24 z-20 px-4 py-4">
+      <div className="sticky top-16 lg:top-24 z-20 px-4 py-3 lg:py-4">
         <div className="mx-auto max-w-xl">
           <div className="flex items-baseline justify-between mb-2 gap-3">
-            <span className="font-['Press_Start_2P'] text-[11px] tracking-widest text-[#e4e4e7]">
+            <span className="font-['Press_Start_2P'] text-[10px] sm:text-[11px] tracking-widest text-[#e4e4e7]">
               EJERCICIO {workout.currentExerciseIndex + 1} / {totalExercises}
             </span>
-            <span className="font-['Press_Start_2P'] text-xs tracking-widest text-green-400 [text-shadow:0_0_8px_rgba(34,197,94,0.5)]">
+            <span className="font-['Press_Start_2P'] text-[11px] sm:text-xs tracking-widest text-green-400 [text-shadow:0_0_8px_rgba(34,197,94,0.5)]">
               {progressPercent}%
             </span>
           </div>

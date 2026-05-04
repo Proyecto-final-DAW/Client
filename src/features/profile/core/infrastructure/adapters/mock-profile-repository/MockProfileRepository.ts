@@ -16,7 +16,7 @@ const MOCK_PROFILE: ProfileData = {
   activity_level: 'ACTIVE',
   goals: ['GAIN_MUSCLE'],
   experience_level: 'INTERMEDIATE',
-  equipment: 'FULL_GYM',
+  equipment: ['FULL_GYM'],
   days_per_week: '4-5',
   injuries: ['NONE'],
   sleep_hours: 8,

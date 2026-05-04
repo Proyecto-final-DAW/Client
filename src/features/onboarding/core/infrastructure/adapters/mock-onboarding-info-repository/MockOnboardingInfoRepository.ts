@@ -20,7 +20,7 @@ export class MockOnboardingInfoRepository implements OnboardingRepository {
         activity_level: data.activityLevel?.toUpperCase(),
         goals: data.goals.map((g) => g.toUpperCase()),
         experience_level: data.experienceLevel?.toUpperCase(),
-        equipment: data.equipment?.toUpperCase(),
+        equipment: data.equipment.map((e) => e.toUpperCase()),
         days_per_week: data.daysPerWeek,
         injuries: data.injuries.map((i) => i.toUpperCase()),
         daily_calories: 2000,

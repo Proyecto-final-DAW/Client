@@ -43,32 +43,47 @@ export const DietSummaryCard = ({
     // is missing — even after onboarding flagged the user as completed. Send
     // them to /profile, where they can fill the missing field directly.
     const looksLikeOnboardingError = /onboarding/i.test(error);
+
+    if (looksLikeOnboardingError) {
+      return (
+        <section className="relative border-2 border-green-500/40 bg-[#0d0d14] p-5">
+          <PixelCorners size="md" className="border-green-500/40" />
+          <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500 mb-3">
+            ◆ DIETA
+          </p>
+          <h3 className="font-['Press_Start_2P'] text-base text-green-400 mb-2 [text-shadow:0_0_12px_rgba(34,197,94,0.4)]">
+            CALCULA TUS MACROS
+          </h3>
+          <p className="font-['VT323'] text-lg text-[#a1a1aa] mb-5 leading-tight">
+            Aún no hemos calculado tu nutrición. Completa tu perfil y aparecerán
+            aquí tus calorías diarias y macros recomendadas.
+          </p>
+          <Link
+            to="/profile"
+            className="inline-block font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)]"
+          >
+            ▶ COMPLETAR PERFIL
+          </Link>
+        </section>
+      );
+    }
+
     return (
       <section className="relative border-2 border-red-500/40 bg-[#0d0d14] p-5">
         <PixelCorners size="md" className="border-red-500/40" />
         <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-red-400 mb-3">
           ✕ ERROR
         </p>
-        <p className="font-['Press_Start_2P'] text-base text-red-300">
+        <p className="font-['VT323'] text-lg text-red-300 mb-4 leading-tight">
           {error}
         </p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={() => void onRefresh()}
-            className="font-['Press_Start_2P'] text-[9px] tracking-widest bg-red-500 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-red-700 hover:bg-red-400 hover:border-red-600 active:border-b-0 active:mt-1 transition-all"
-          >
-            ▶ REINTENTAR
-          </button>
-          {looksLikeOnboardingError && (
-            <Link
-              to="/profile"
-              className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-red-500/40 bg-[#0d0d14] text-red-300 hover:bg-red-500/10 px-4 py-2.5 transition-colors"
-            >
-              IR AL PERFIL
-            </Link>
-          )}
-        </div>
+        <button
+          type="button"
+          onClick={() => void onRefresh()}
+          className="font-['Press_Start_2P'] text-[9px] tracking-widest bg-red-500 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-red-700 hover:bg-red-400 hover:border-red-600 active:border-b-0 active:mt-1 transition-all"
+        >
+          ▶ REINTENTAR
+        </button>
       </section>
     );
   }

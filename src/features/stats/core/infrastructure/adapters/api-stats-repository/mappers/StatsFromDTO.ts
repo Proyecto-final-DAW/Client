@@ -42,7 +42,7 @@ export class StatsFromDTO {
         max: XP_PER_LEVEL,
         level: picker.level(dto),
         icon: config.icon,
-        colorVar: config.colorVar,
+        accentColor: config.accentColor,
       };
     });
 

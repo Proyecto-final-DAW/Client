@@ -14,7 +14,7 @@ type ProfileFormState = {
   activity_level: string;
   goals: string[];
   experience_level: string;
-  equipment: string;
+  equipment: string[];
   days_per_week: string;
   injuries: string[];
 };
@@ -28,7 +28,7 @@ const toFormState = (profile: ProfileData): ProfileFormState => ({
   activity_level: profile.activity_level ?? '',
   goals: profile.goals ?? [],
   experience_level: profile.experience_level ?? '',
-  equipment: profile.equipment ?? '',
+  equipment: profile.equipment ?? [],
   days_per_week: profile.days_per_week ?? '',
   injuries: profile.injuries ?? [],
 });
@@ -81,7 +81,7 @@ const buildUpdatePayload = (
   ) {
     data.experience_level = form.experience_level;
   }
-  if (form.equipment && form.equipment !== profile.equipment) {
+  if (!stringArraysEqual(form.equipment, profile.equipment ?? [])) {
     data.equipment = form.equipment;
   }
   if (form.days_per_week && form.days_per_week !== profile.days_per_week) {
@@ -105,17 +105,16 @@ export const useProfileForm = (props: UseProfileFormParams) => {
   );
 
   const handleChange = (
-    field: keyof Omit<ProfileFormState, 'goals' | 'injuries'>,
+    field: keyof Omit<ProfileFormState, 'goals' | 'injuries' | 'equipment'>,
     value: string
   ) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Multi-select helper for goals[] and injuries[]. The "NONE" injury is
-  // mutually exclusive with any other injury — picking it clears the others,
-  // and picking another clears NONE.
+  // Multi-select helper for array fields. Pass `exclusive` when one value
+  // (e.g. "NONE" injury) is mutually exclusive with the rest.
   const toggleInArray = (
-    field: 'goals' | 'injuries',
+    field: 'goals' | 'injuries' | 'equipment',
     value: string,
     options: { exclusive?: string } = {}
   ) => {
