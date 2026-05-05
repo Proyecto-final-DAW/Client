@@ -31,7 +31,13 @@ export const StatsPanel = (
       <p className="mb-4 font-pixel text-[10px] tracking-widest text-green-500">
         ◆ STATS DEL PERSONAJE
       </p>
-      <div className="flex flex-col gap-4">
+      {/* Single column. The previous attempt at sm:grid-cols-2 squeezed
+          StatBar's internal layout (icon + label + bar) into a column too
+          narrow for the label to live on one line, breaking the alignment.
+          Height is now controlled inside StatBar instead — tighter
+          vertical rhythm gets the panel under viewport without splitting
+          the bars two-up. */}
+      <div className="flex flex-col gap-3">
         {props.stats.map((pilar) => (
           <StatBar key={pilar.name} pilar={pilar} />
         ))}

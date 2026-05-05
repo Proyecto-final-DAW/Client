@@ -93,7 +93,12 @@ export const StatsPanelCompact = (
           VER TODO ▸
         </a>
       </div>
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
+      {/* Capped at 2 cols on desktop. The previous 3-col at xl made each
+          tile so wide that the bar stretched horizontally and visually
+          dwarfed the icon — every stat looked like a thin elongated strip
+          with a tiny pictogram in the corner. 2-col keeps tiles roughly
+          square at any width. */}
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {props.stats.map((pilar) => (
           <StatTile key={pilar.name} pilar={pilar} />
         ))}

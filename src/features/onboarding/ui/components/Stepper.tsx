@@ -71,7 +71,7 @@ export const Stepper = (props: StepperProps): React.JSX.Element => {
                 />
               </div>
               <span
-                className={`font-pixel text-[6px] sm:text-[7px] mt-2 tracking-wider text-center leading-tight ${
+                className={`hidden sm:block font-pixel text-[8px] mt-2 tracking-wider text-center leading-tight ${
                   isCompleted
                     ? 'text-green-400'
                     : isActive

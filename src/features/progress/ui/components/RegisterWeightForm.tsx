@@ -40,6 +40,7 @@ export const RegisterWeightForm = ({
 
       <input
         type="number"
+        inputMode="decimal"
         step="0.1"
         min="1"
         max="300"

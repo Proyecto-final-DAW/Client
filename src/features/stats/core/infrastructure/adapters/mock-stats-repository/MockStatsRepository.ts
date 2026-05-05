@@ -25,6 +25,7 @@ export class MockStatsRepository implements StatsRepository {
       level: mockData[key].level,
       icon: STAT_CONFIG[key].icon,
       accentColor: STAT_CONFIG[key].accentColor,
+      description: STAT_CONFIG[key].description,
     }));
 
     const heroLevel = Math.round(

@@ -25,6 +25,10 @@ export const NumericField = (props: NumericFieldProps): React.JSX.Element => {
       <input
         id={props.id}
         type="number"
+        // inputMode hints the mobile keyboard layout: integer-only steps get
+        // the simple numeric pad, decimal steps include the decimal point.
+        // Derived from `step` so callers don't have to set it explicitly.
+        inputMode={props.step && props.step !== '1' ? 'decimal' : 'numeric'}
         step={props.step ?? '1'}
         min={props.min}
         max={props.max}

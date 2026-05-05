@@ -46,16 +46,16 @@ const Section = ({
   items: { label: string; value: string }[];
 }): React.JSX.Element => (
   <div>
-    <p className="mb-3 font-pixel text-[10px] tracking-widest text-green-500 [text-shadow:0_0_8px_rgba(34,197,94,0.4)]">
+    <p className="mb-3 font-pixel text-[11px] sm:text-[12px] tracking-widest text-green-500 [text-shadow:0_0_8px_rgba(34,197,94,0.4)]">
       ▸ {title}
     </p>
     <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       {items.map((item) => (
         <div key={item.label} className="border-2 border-border bg-page p-3">
-          <dt className="font-pixel text-[8px] tracking-widest text-ink-faint">
+          <dt className="font-pixel text-[9px] sm:text-[10px] tracking-widest text-ink-faint">
             {item.label}
           </dt>
-          <dd className="mt-2 font-pixel-mono text-lg text-ink break-words">
+          <dd className="mt-2 font-pixel-mono text-lg sm:text-xl text-ink break-words leading-snug">
             {item.value}
           </dd>
         </div>
@@ -109,15 +109,15 @@ export const ProfileDataView = ({
       <PixelCorners size="md" className="border-green-500/40" />
 
       <header className="mb-6 flex items-center justify-between gap-3">
-        <p className="font-pixel text-[10px] tracking-widest text-green-500">
+        <p className="font-pixel text-[11px] sm:text-[12px] tracking-widest text-green-500">
           ◆ MI PERFIL
         </p>
         <button
           type="button"
           onClick={onEdit}
-          className="inline-flex items-center gap-2 font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted hover:border-green-500/50 hover:text-green-400 px-3 py-2 transition-colors"
+          className="inline-flex items-center gap-2 font-pixel text-[10px] tracking-widest border-2 border-green-500/50 bg-green-500/10 text-green-400 hover:border-green-500 hover:bg-green-500/20 px-3 py-2 transition-colors"
         >
-          <PencilIcon className="h-3 w-3" />
+          <PencilIcon className="h-3.5 w-3.5" />
           EDITAR
         </button>
       </header>

@@ -43,6 +43,7 @@ export class StatsFromDTO {
         level: picker.level(dto),
         icon: config.icon,
         accentColor: config.accentColor,
+        description: config.description,
       };
     });
 

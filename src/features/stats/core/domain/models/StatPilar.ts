@@ -11,4 +11,6 @@ export interface StatPilar {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   /** Hex color used only for the stat's icon (identity). Bars use green. */
   accentColor: string;
+  /** One-sentence explanation surfaced as a tooltip in StatBar. */
+  description: string;
 }

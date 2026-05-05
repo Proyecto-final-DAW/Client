@@ -36,7 +36,7 @@ export const RestTimer = (props: Props): React.JSX.Element => {
         DESCANSO
       </p>
 
-      <div className="relative w-40 h-40">
+      <div className="relative h-32 w-32 sm:h-40 sm:w-40">
         <svg
           className="w-full h-full -rotate-90"
           viewBox="0 0 144 144"
@@ -66,7 +66,7 @@ export const RestTimer = (props: Props): React.JSX.Element => {
         <div className="absolute inset-0 flex items-center justify-center">
           <span
             aria-live="polite"
-            className="font-pixel text-xl text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.6)]"
+            className="font-pixel text-2xl sm:text-3xl text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.6)]"
           >
             {formatSeconds(remainingSeconds)}
           </span>

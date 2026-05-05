@@ -281,7 +281,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
           main nav header so the user always sees how far they are. The
           background is intentionally transparent so the bg artwork can sit
           right under the main header without an opaque strip in between. */}
-      <div className="sticky top-16 lg:top-24 z-20 px-4 py-3 lg:py-4">
+      <div className="sticky top-16 lg:top-24 z-20 border-b border-border bg-page/85 backdrop-blur-md px-4 py-3 lg:py-4">
         <div className="mx-auto max-w-xl">
           <div className="flex items-baseline justify-between mb-2 gap-3">
             <span className="font-pixel text-[10px] sm:text-[11px] tracking-widest text-ink">

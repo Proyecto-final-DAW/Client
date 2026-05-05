@@ -38,7 +38,7 @@ const activityOptions: SelectableOption[] = [
   },
   {
     value: 'VERY_ACTIVE',
-    title: 'MUY ACTIVO',
+    title: 'ATLETA',
     description: 'Ejercicio 6-7 dias por semana y trabajo fisico diario.',
     icon: '🔥',
   },

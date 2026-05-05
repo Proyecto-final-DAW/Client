@@ -9,6 +9,9 @@ type MacroItem = {
   grams: number;
   percentage: number;
   color: string;
+  /** One-sentence "what is this macro for" surfaced as a hover/screen-reader
+   * tooltip — beginners see chips of grams without context otherwise. */
+  hint: string;
 };
 
 type DietSummaryCardProps = {
@@ -119,18 +122,21 @@ export const DietSummaryCard = ({
       grams: diet.proteinGrams,
       percentage: proteinPercentage,
       color: '#ef4444',
+      hint: 'Construye y repara músculo. Carne, pescado, huevos, lácteos, legumbres.',
     },
     {
       label: 'GRASA',
       grams: diet.fatGrams,
       percentage: fatPercentage,
       color: '#eab308',
+      hint: 'Energía sostenida y hormonas. Aceite de oliva, frutos secos, aguacate, pescado azul.',
     },
     {
       label: 'CARBOS',
       grams: diet.carbGrams,
       percentage: carbPercentage,
       color: '#22c55e',
+      hint: 'Combustible para entrenar. Arroz, pasta, pan, fruta, avena.',
     },
   ];
 
@@ -177,12 +183,19 @@ export const DietSummaryCard = ({
         </p>
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-3">
+      <p className="mt-4 font-pixel-mono text-base leading-snug text-ink-muted">
+        Reparte estas calorías a lo largo del día. Los macros son la guía de
+        cuánto debe venir de cada nutriente.
+      </p>
+
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
         {macros.map((macro) => (
           <article
             key={macro.label}
             className="border-2 border-border bg-page p-4 text-center"
             style={{ borderTopColor: macro.color, borderTopWidth: '4px' }}
+            title={macro.hint}
+            aria-label={`${macro.label}: ${macro.hint}`}
           >
             <p
               className="font-pixel text-[10px] tracking-widest"
@@ -193,6 +206,9 @@ export const DietSummaryCard = ({
             <p className="mt-2 font-pixel text-base text-ink">
               {macro.grams}
               <span className="ml-1 font-pixel text-sm text-ink-faint">g</span>
+            </p>
+            <p className="mt-1 font-pixel-mono text-base text-ink-faint">
+              al día
             </p>
             <p className="mt-1 font-pixel text-[10px] tracking-widest text-ink-faint">
               {macro.percentage}% DEL TOTAL

@@ -70,15 +70,29 @@ export const StepLimitations = (
         Puedes elegir una o mas.
       </p>
 
-      <div className="grid grid-cols-2 gap-2">
-        {injuryOptions.map((option) => (
+      {/* "Ninguna" lives on its own row as the headline default choice — also
+          the natural pick for most users — so the remaining four specific
+          injuries pair off cleanly in the 2-col grid below without a lone
+          orphan card on the last row. */}
+      <div className="flex flex-col gap-2">
+        {injuryOptions[0] && (
           <InjuryCard
-            key={option.value}
-            option={option}
-            isSelected={selected.includes(option.value)}
+            key={injuryOptions[0].value}
+            option={injuryOptions[0]}
+            isSelected={selected.includes(injuryOptions[0].value)}
             onToggle={toggle}
           />
-        ))}
+        )}
+        <div className="grid grid-cols-2 gap-2">
+          {injuryOptions.slice(1).map((option) => (
+            <InjuryCard
+              key={option.value}
+              option={option}
+              isSelected={selected.includes(option.value)}
+              onToggle={toggle}
+            />
+          ))}
+        </div>
       </div>
       {props.errors.injuries && (
         <p className="font-pixel text-base text-red-400 mt-3 tracking-wide leading-none">

@@ -29,6 +29,12 @@ type StatConfigEntry = {
    * Bars are unified to green for visual calm — see StatBar.
    */
   accentColor: string;
+  /**
+   * One-sentence explanation surfaced as a tooltip on the StatBar so a
+   * fitness novice can see what kind of training feeds each pillar without
+   * leaving the panel.
+   */
+  description: string;
 };
 
 export const STAT_CONFIG: Record<string, StatConfigEntry> = {
@@ -36,31 +42,41 @@ export const STAT_CONFIG: Record<string, StatConfigEntry> = {
     name: 'Fuerza',
     icon: SwordIcon,
     accentColor: '#f97316',
+    description:
+      'Sube con ejercicios de fuerza: pesos libres, máquinas, calistenia con carga.',
   },
   resistance: {
     name: 'Resistencia',
     icon: ShieldCheckIcon,
     accentColor: '#22c55e',
+    description:
+      'Sube con cardio sostenido: correr, bici, remo, sesiones largas.',
   },
   stamina: {
     name: 'Estamina',
     icon: StarIcon,
     accentColor: '#ec4899',
+    description:
+      'Sube con ejercicios explosivos: pliometría, halterofilia, sprints.',
   },
   agility: {
     name: 'Agilidad',
     icon: BoltIcon,
     accentColor: '#3b82f6',
+    description:
+      'Sube con flexibilidad y movilidad: estiramientos, yoga, técnica.',
   },
   tenacity: {
     name: 'Tenacidad',
     icon: SparklesIcon,
     accentColor: '#a855f7',
+    description: 'Sube por consistencia: cada día seguido entrenando suma.',
   },
   vigor: {
     name: 'Vigor',
     icon: HeartIcon,
     accentColor: '#eab308',
+    description: 'Sube con descanso, dieta y volumen total acumulado.',
   },
 };
 

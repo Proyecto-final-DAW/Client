@@ -1,12 +1,7 @@
 import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type { RoutineTemplate } from '../../core/domain/models/RoutineTemplate';
 import { countExercises } from '../../core/domain/services/templateMetrics';
-import {
-  EQUIPMENT_LABELS,
-  GOAL_LABELS,
-  LEVEL_LABELS,
-  totalExercises,
-} from '../labels';
+import { GOAL_LABELS, LEVEL_LABELS, totalExercises } from '../labels';
 
 type Props = {
   template: RoutineTemplate;
@@ -24,26 +19,28 @@ export const TemplateDetailHeader = (props: Props): React.JSX.Element => {
         {template.name}
       </h1>
 
-      <p className="font-pixel text-lg text-ink-muted mt-3">
+      <p className="font-pixel-mono text-lg leading-snug text-ink-muted mt-3">
         {template.description}
       </p>
 
+      {/* Single chip row collapses what used to be 3 chips + a prose meta
+          line into one scannable strip — duration / level / goal carry the
+          most decision-making weight; equipment is repeated on each
+          exercise card below so it's redundant here. */}
       <div className="flex flex-wrap gap-2 mt-4">
         <span className="font-pixel text-[8px] tracking-widest border border-green-500/40 bg-green-500/10 text-green-400 px-2 py-1">
+          {LEVEL_LABELS[template.level]}
+        </span>
+        <span className="font-pixel text-[8px] tracking-widest border border-[#3f3f46] bg-[#18181b] text-ink-muted px-2 py-1">
           {GOAL_LABELS[template.goal]}
         </span>
         <span className="font-pixel text-[8px] tracking-widest border border-[#3f3f46] bg-[#18181b] text-ink-muted px-2 py-1">
-          {EQUIPMENT_LABELS[template.equipment]}
+          {totalExercises(exerciseCount, template.daysPerWeek)}
         </span>
         <span className="font-pixel text-[8px] tracking-widest border border-[#3f3f46] bg-[#18181b] text-ink-muted px-2 py-1">
-          {LEVEL_LABELS[template.level]}
+          ~{template.estimatedDurationMin} MIN/SESION
         </span>
       </div>
-
-      <p className="font-pixel text-sm text-ink-faint mt-3">
-        {totalExercises(exerciseCount, template.daysPerWeek)} ·{' '}
-        {template.estimatedDurationMin} min/sesion
-      </p>
     </header>
   );
 };

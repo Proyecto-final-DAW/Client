@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 export const LandingNav = (): React.JSX.Element => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-page/85 backdrop-blur-md border-b-2 border-border">
-      <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14 h-24 flex items-center justify-between">
+      {/* No max-width: padding scales with breakpoint so the logo/buttons sit
+          at a consistent visual distance from the viewport edges instead of
+          floating in the middle of huge empty bands on >1600px screens. */}
+      <div className="px-4 sm:px-8 lg:px-12 xl:px-16 h-24 flex items-center justify-between">
         <Link to="/">
           <img
             src="/images/Logo.webp"

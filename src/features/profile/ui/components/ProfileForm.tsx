@@ -1,4 +1,4 @@
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type {
@@ -44,13 +44,15 @@ const Chip = ({ label, selected, onClick }: ChipProps): React.JSX.Element => (
     type="button"
     onClick={onClick}
     aria-pressed={selected}
-    className={`font-pixel text-[9px] tracking-widest border-2 px-3 py-2 transition-colors ${
+    className={`inline-flex items-center gap-1.5 font-pixel text-[9px] tracking-widest border-2 px-3 py-2 transition-colors ${
       selected
         ? 'border-green-500 bg-green-500/15 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.3)]'
         : 'border-border bg-subtle text-ink-muted hover:border-green-500/40 hover:text-green-400'
     }`}
   >
-    {selected ? '▶ ' : ''}
+    {/* Solid CheckIcon (not just color/border) so the selected state survives
+        for color-blind users and at low-contrast displays. */}
+    {selected && <CheckIcon className="h-3 w-3 shrink-0" aria-hidden="true" />}
     {label}
   </button>
 );
@@ -114,6 +116,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
             <input
               id="profile-age"
               type="number"
+              inputMode="numeric"
               min="14"
               max="100"
               value={form.age}
@@ -128,6 +131,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
             <input
               id="profile-weight"
               type="number"
+              inputMode="decimal"
               step="0.1"
               min="30"
               max="250"
@@ -143,6 +147,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
             <input
               id="profile-height"
               type="number"
+              inputMode="numeric"
               min="120"
               max="230"
               value={form.height}
