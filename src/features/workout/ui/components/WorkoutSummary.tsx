@@ -1,3 +1,5 @@
+import { motion, useReducedMotion } from 'framer-motion';
+
 import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type { UnlockedMilestonePreview } from '../../core/domain/models/WorkoutSummaryData';
 
@@ -17,15 +19,51 @@ const StatCell = (props: {
   label: string;
   value: string;
 }): React.JSX.Element => (
-  <div className="flex flex-col items-center gap-1 border-2 border-border bg-card px-4 py-5">
+  <motion.div
+    variants={{
+      hidden: { opacity: 0, y: 16 },
+      visible: { opacity: 1, y: 0 },
+    }}
+    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+    className="flex flex-col items-center gap-1 border-2 border-border bg-card px-4 py-5"
+  >
     <span className="font-pixel text-[8px] tracking-widest text-ink-muted">
       {props.label}
     </span>
     <span className="font-pixel text-base text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)]">
       {props.value}
     </span>
-  </div>
+  </motion.div>
 );
+
+// Eight star particles fired from the heading on mount. Pure decoration —
+// the celebration moment that turns the otherwise utilitarian summary into
+// something the player remembers. Hidden under prefers-reduced-motion.
+const SPARKLE_COUNT = 8;
+
+const Sparkle = ({
+  index,
+  total,
+}: {
+  index: number;
+  total: number;
+}): React.JSX.Element => {
+  const angle = (index / total) * Math.PI * 2;
+  const distance = 90;
+  const x = Math.cos(angle) * distance;
+  const y = Math.sin(angle) * distance;
+  return (
+    <motion.span
+      aria-hidden="true"
+      initial={{ x: 0, y: 0, opacity: 0, scale: 0.5 }}
+      animate={{ x, y, opacity: [0, 1, 0], scale: [0.5, 1.2, 0] }}
+      transition={{ duration: 1.1, delay: 0.15, ease: 'easeOut' }}
+      className="pointer-events-none absolute left-1/2 top-1/2 font-pixel text-base text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.8)]"
+    >
+      ✦
+    </motion.span>
+  );
+};
 
 export const WorkoutSummary = (props: Props): React.JSX.Element => {
   const {
@@ -40,52 +78,106 @@ export const WorkoutSummary = (props: Props): React.JSX.Element => {
     onFinish,
   } = props;
 
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <section className="text-ink">
       <div className="mx-auto max-w-3xl flex flex-col gap-6">
-        <header className="relative border-2 border-green-500/40 bg-card p-5 text-center">
+        <motion.header
+          initial={prefersReducedMotion ? false : { opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          className="relative border-2 border-green-500/40 bg-card p-5 text-center overflow-visible"
+        >
           <PixelCorners size="md" className="border-green-500/60" />
           <p className="font-pixel text-[9px] tracking-widest text-ink-muted">
             ENTRENO COMPLETADO
           </p>
-          <h1 className="font-pixel text-base sm:text-lg leading-relaxed text-green-400 mt-2 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
-            ¡BUEN TRABAJO!
-          </h1>
-        </header>
 
-        <div className="grid grid-cols-3 gap-3">
+          {/* Heading + sparkle burst stack so the particles emit from the
+              heading's center. `relative` on the wrapper anchors the
+              `absolute`-positioned sparkles. */}
+          <div className="relative mt-2 inline-block">
+            <motion.h1
+              initial={
+                prefersReducedMotion
+                  ? false
+                  : { scale: 0.7, opacity: 0, filter: 'blur(8px)' }
+              }
+              animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
+              transition={{
+                duration: 0.55,
+                delay: 0.1,
+                ease: [0.22, 1.4, 0.36, 1],
+              }}
+              className="font-pixel text-base sm:text-lg leading-relaxed text-green-400 [text-shadow:0_0_18px_rgba(34,197,94,0.7)]"
+            >
+              ¡BUEN TRABAJO!
+            </motion.h1>
+            {!prefersReducedMotion &&
+              Array.from({ length: SPARKLE_COUNT }, (_, i) => (
+                <Sparkle key={i} index={i} total={SPARKLE_COUNT} />
+              ))}
+          </div>
+        </motion.header>
+
+        <motion.div
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.08, delayChildren: 0.4 },
+            },
+          }}
+          initial={prefersReducedMotion ? false : 'hidden'}
+          animate="visible"
+          className="grid grid-cols-3 gap-3"
+        >
           <StatCell label="VOLUMEN" value={`${totalVolume} KG`} />
           <StatCell label="SETS" value={String(totalSets)} />
           <StatCell label="EJERCICIOS" value={String(exercisesCount)} />
-        </div>
+        </motion.div>
 
         {saved && unlockedMilestones.length > 0 && (
-          <div className="flex flex-col gap-3">
-            <h2 className="font-pixel text-[10px] tracking-widest text-green-400">
+          <motion.div
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-col gap-3"
+          >
+            <h2 className="font-pixel text-[10px] tracking-widest text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.6)]">
               ★ LOGROS DESBLOQUEADOS
             </h2>
             <ul className="flex flex-col gap-2">
-              {unlockedMilestones.map((milestone) => (
-                <li
+              {unlockedMilestones.map((milestone, idx) => (
+                <motion.li
                   key={milestone.id}
-                  className="border-2 border-green-500/50 bg-green-500/5 p-3"
+                  initial={
+                    prefersReducedMotion ? false : { opacity: 0, x: -16 }
+                  }
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    duration: 0.4,
+                    delay: 0.9 + idx * 0.12,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className="relative border-2 border-green-500/50 bg-green-500/5 p-3 shadow-[0_0_14px_rgba(34,197,94,0.2)]"
                 >
                   <p className="font-pixel text-[10px] text-green-400">
                     {milestone.name}
                   </p>
-                  <p className="font-pixel text-base text-ink-muted mt-1">
+                  <p className="font-pixel-mono text-lg text-ink-muted mt-1 leading-snug">
                     {milestone.description}
                   </p>
-                </li>
+                </motion.li>
               ))}
             </ul>
-          </div>
+          </motion.div>
         )}
 
         {error && (
           <p
             role="alert"
-            className="font-pixel text-base text-red-400 border-2 border-red-500/40 bg-red-500/10 px-4 py-3"
+            className="font-pixel-mono text-lg text-red-400 border-2 border-red-500/40 bg-red-500/10 px-4 py-3 leading-snug"
           >
             ✕ {error}
           </p>

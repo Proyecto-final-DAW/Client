@@ -3,10 +3,11 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../../context/hooks/useAuth';
 import { useCharacterState } from '../../../context/hooks/useCharacterState';
 import { AsyncState } from '../../../shared/components/AsyncState';
-import { ClassIntroModal } from '../../character/ui/components/ClassIntroModal';
+import { OriginStoryIntro } from '../../character/ui/components/OriginStoryIntro';
 import { TierUpModal } from '../../character/ui/components/TierUpModal';
 import { DietSummaryCard } from '../../diet/ui/components/DietSummaryCard';
 import { useDiet } from '../../diet/ui/hooks/useDiet';
+import { ProfileHeroBanner } from '../../profile/ui/components/ProfileHeroBanner';
 import { StatsPanelCompact } from '../../stats/ui/components/StatsPanelCompact';
 import { useStats } from '../../stats/ui/hooks/useStats';
 import { useStreakStatus } from '../../streak/ui/hooks/useStreakStatus';
@@ -56,22 +57,19 @@ export const Dashboard = (): React.JSX.Element => {
     }
   }, [pendingTier]);
 
-  // First-visit class system intro. Shown once per browser, only while the
-  // user is at tier 0 (novato) with no pending choice yet — a returning user
-  // who already chose a vocation never sees it. localStorage flag keeps the
-  // dismissal across reloads.
-  const [classIntroDismissed, setClassIntroDismissed] = useState(
-    () => localStorage.getItem('class_intro_seen') === '1'
+  // First-visit origin story. Fires once per browser, on the user's very
+  // first landing on the dashboard — typically right after onboarding. A
+  // 5-panel narrative that frames the user as an Iniciado at the start of
+  // a 7-rank journey. localStorage flag keeps the dismissal across reloads
+  // so returning users never see it twice.
+  const [originStoryDismissed, setOriginStoryDismissed] = useState(
+    () => localStorage.getItem('origin_story_seen') === '1'
   );
-  const showClassIntroModal =
-    characterState !== null &&
-    characterState.currentTier === 0 &&
-    characterState.pendingChoice === null &&
-    !classIntroDismissed;
+  const showOriginStory = !originStoryDismissed;
 
-  const handleDismissClassIntro = (): void => {
-    localStorage.setItem('class_intro_seen', '1');
-    setClassIntroDismissed(true);
+  const handleDismissOriginStory = (): void => {
+    localStorage.setItem('origin_story_seen', '1');
+    setOriginStoryDismissed(true);
   };
 
   const combinedData = cards && summary ? { cards, summary } : null;
@@ -110,51 +108,72 @@ export const Dashboard = (): React.JSX.Element => {
       loadingLabel="CARGANDO DASHBOARD"
     >
       {({ cards, summary }) => (
-        <div>
+        // max-w-7xl caps the dashboard on ultrawide monitors so cards don't
+        // grow into elongated horizontal slabs. Below 1280px (lg) it has
+        // no effect — the layout adapts via the 2-col grid further down.
+        <div className="mx-auto max-w-7xl">
           <DashboardHeader userName={user?.name} />
+
+          {/* Identity strip — full width since it's the user's "character
+              sheet" header, the same component is reused on /perfil. */}
+          <div className="my-4">
+            <ProfileHeroBanner
+              name={user?.name ?? 'Heroe'}
+              profileImage={user?.profileImage ?? null}
+              characterState={characterState}
+            />
+          </div>
+
           {streakStatus?.isAtRisk && (
             <div className="my-4">
               <StreakWarningCard status={streakStatus} />
             </div>
           )}
-          <div className="my-4">
+
+          {/* Primary CTA — auto-width centered (used to be a full-width
+              slab that visually dominated everything below it). */}
+          <div className="my-4 flex justify-center">
             <StartWorkoutButton />
           </div>
+
           {characterError && !characterState && (
             <div className="mt-4 border-2 border-red-500/40 bg-card p-3 text-center font-pixel-mono text-base text-red-300">
               {characterError}
             </div>
           )}
-          {/* Glance-only stats panel: tile grid with mini bars. The full
-              CharacterBadge + 6-bar StatsPanel live in /perfil so we don't
-              duplicate the visual weight here. "VER TODO" link bridges them. */}
-          <div className="mt-4">
-            <StatsPanelCompact
-              stats={stats?.pilpilar ?? null}
-              loading={statsLoading}
-              error={statsError}
-            />
-          </div>
-          <div className="mt-4">
-            <DashboardCards {...cards} />
-          </div>
-          {/* WeeklySummary alone on its row — its 3-row stat layout looks
-              right at full width. Recommended + Diet pair below in a 2-col
-              grid because both have similar visual weight and content
-              density, so neither one ends up orphaned. */}
+
+          {/* 2-col body. Left column (lg:col-span-2) holds action content
+              (rutina, dieta) — the things the user acts on. Right column is
+              passive context (stats glance, streak) — the things the user
+              checks. Splitting reduces total page height by ~40% and ends
+              the previous "long thin column of full-width slabs" feel. */}
+          <section className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <div className="flex flex-col gap-4 lg:col-span-2">
+              <RecommendedRoutineCard />
+              <DietSummaryCard
+                diet={diet}
+                loading={dietLoading}
+                refreshing={dietRefreshing}
+                error={dietError}
+                onRefresh={dietRefetch}
+              />
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <StatsPanelCompact
+                stats={stats?.pilpilar ?? null}
+                loading={statsLoading}
+                error={statsError}
+              />
+              <DashboardCards {...cards} />
+            </div>
+          </section>
+
+          {/* WeeklySummary alone on its row — its 3-row stat layout reads
+              right at full width below the 2-col body. */}
           <div className="mt-4">
             <WeeklySummaryCard summary={summary} />
           </div>
-          <section className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-            <RecommendedRoutineCard />
-            <DietSummaryCard
-              diet={diet}
-              loading={dietLoading}
-              refreshing={dietRefreshing}
-              error={dietError}
-              onRefresh={dietRefetch}
-            />
-          </section>
 
           {characterState?.pendingChoice && (
             <TierUpModal
@@ -166,13 +185,11 @@ export const Dashboard = (): React.JSX.Element => {
             />
           )}
 
-          {characterState && (
-            <ClassIntroModal
-              open={showClassIntroModal}
-              noviceName={characterState.novice.name}
-              onClose={handleDismissClassIntro}
-            />
-          )}
+          <OriginStoryIntro
+            name={user?.name ?? 'Heroe'}
+            open={showOriginStory}
+            onClose={handleDismissOriginStory}
+          />
         </div>
       )}
     </AsyncState>

@@ -1,6 +1,5 @@
 import {
   CalendarDaysIcon,
-  FireIcon,
   StarIcon,
   TrophyIcon,
 } from '@heroicons/react/24/outline';
@@ -8,11 +7,13 @@ import type { ComponentType, SVGProps } from 'react';
 
 import { PixelCorners } from '../../../../shared/components/PixelCorners';
 
+// `streak` removed from props because the dashboard StreakCard already shows
+// the same number on a much larger surface — duplicating it here was just
+// visual noise. RECORD (best streak) stays because it's a distinct metric.
 interface AccountSummaryProps {
   createdAt: string;
   totalSessions: number;
   bestStreak: number;
-  streak: number;
 }
 
 interface SummaryItem {
@@ -62,13 +63,6 @@ export const AccountSummary = (
       accent: '#22c55e',
     },
     {
-      label: 'RACHA',
-      icon: FireIcon,
-      value: String(props.streak),
-      unit: 'DIAS',
-      accent: '#f97316',
-    },
-    {
       label: 'RECORD',
       icon: TrophyIcon,
       value: String(props.bestStreak),
@@ -83,7 +77,7 @@ export const AccountSummary = (
       <p className="mb-4 font-pixel text-[10px] tracking-widest text-green-500">
         ◆ RESUMEN
       </p>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-3 gap-3">
         {items.map((item) => {
           const Icon = item.icon;
           return (

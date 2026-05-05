@@ -12,14 +12,6 @@ import { ProfileForm } from './components/ProfileForm';
 import { ProfileHeroBanner } from './components/ProfileHeroBanner';
 import { useProfile } from './hooks/useProfile';
 
-type ProfileTab = 'datos' | 'editar' | 'seguridad';
-
-const TABS: { id: ProfileTab; label: string }[] = [
-  { id: 'datos', label: 'DATOS' },
-  { id: 'editar', label: 'EDITAR' },
-  { id: 'seguridad', label: 'SEGURIDAD' },
-];
-
 export const ProfileView = (): React.JSX.Element => {
   const { user } = useAuth();
   const {
@@ -38,7 +30,7 @@ export const ProfileView = (): React.JSX.Element => {
   const { state: characterState } = useCharacterState();
   const { stats, loading: statsLoading, error: statsError } = useStats();
 
-  const [tab, setTab] = useState<ProfileTab>('datos');
+  const [editing, setEditing] = useState(false);
 
   return (
     <AsyncState
@@ -49,7 +41,7 @@ export const ProfileView = (): React.JSX.Element => {
     >
       {(profile) => (
         <div className="mx-auto max-w-6xl">
-          <header className="mb-6">
+          <header className="mb-6 text-center sm:text-left">
             <p className="font-pixel text-[9px] tracking-widest text-green-500">
               ▶ PERFIL
             </p>
@@ -76,67 +68,37 @@ export const ProfileView = (): React.JSX.Element => {
                 createdAt={profile.created_at}
                 totalSessions={profile.total_sessions}
                 bestStreak={profile.best_streak}
-                streak={profile.streak}
               />
             </aside>
 
-            {/* Right: data + edit + security as tabs. Replaces the previous
-                "EDITAR button toggles a form" pattern with a discoverable
-                tab strip the user can scan at a glance. */}
+            {/* Right: read-only data card by default, editor with profile form
+                AND password change when the user clicks EDITAR. No tab strip —
+                the card already exposes its own EDITAR button so a separate
+                row of tabs would just duplicate the action. */}
             <div className="flex flex-col gap-5 lg:col-span-2">
-              <nav
-                role="tablist"
-                aria-label="Secciones del perfil"
-                className="flex flex-wrap gap-2"
-              >
-                {TABS.map((t) => {
-                  const active = tab === t.id;
-                  return (
-                    <button
-                      key={t.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={active}
-                      onClick={() => setTab(t.id)}
-                      className={`font-pixel text-[10px] tracking-widest border-2 px-4 py-2.5 transition-colors ${
-                        active
-                          ? 'border-green-500 bg-green-500/10 text-green-400 shadow-[0_0_14px_rgba(34,197,94,0.3)]'
-                          : 'border-border bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400'
-                      }`}
-                    >
-                      {active ? '▶ ' : ''}
-                      {t.label}
-                    </button>
-                  );
-                })}
-              </nav>
-
-              {tab === 'datos' && (
+              {editing ? (
+                <>
+                  <ProfileForm
+                    profile={profile}
+                    onSubmit={async (data) => {
+                      await updateProfile(data);
+                    }}
+                    onCancel={() => setEditing(false)}
+                    updating={updating}
+                    error={updateError}
+                    success={updateSuccess}
+                  />
+                  <ChangePasswordForm
+                    onSubmit={changePassword}
+                    loading={changingPassword}
+                    error={passwordError}
+                    success={passwordSuccess}
+                  />
+                </>
+              ) : (
                 <ProfileDataView
                   profile={profile}
-                  onEdit={() => setTab('editar')}
-                />
-              )}
-
-              {tab === 'editar' && (
-                <ProfileForm
-                  profile={profile}
-                  onSubmit={async (data) => {
-                    await updateProfile(data);
-                  }}
-                  onCancel={() => setTab('datos')}
-                  updating={updating}
-                  error={updateError}
-                  success={updateSuccess}
-                />
-              )}
-
-              {tab === 'seguridad' && (
-                <ChangePasswordForm
-                  onSubmit={changePassword}
-                  loading={changingPassword}
-                  error={passwordError}
-                  success={passwordSuccess}
+                  onEdit={() => setEditing(true)}
                 />
               )}
             </div>

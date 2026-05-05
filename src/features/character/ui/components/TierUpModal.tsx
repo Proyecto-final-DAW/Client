@@ -19,10 +19,19 @@ const TIER_TITLE: Record<1 | 2 | 3, string> = {
   3: 'ELIGE TU LEGENDARIA',
 };
 
+// Two layers per tier: a flavor line (atmosphere) plus a plain instruction
+// line (action). The flavor alone left task-focused users wondering what
+// they were supposed to do.
 const TIER_DESCRIPTION: Record<1 | 2 | 3, string> = {
-  1: 'Tu disciplina ha hablado por si sola. Es momento de nombrarla.',
+  1: 'Tu disciplina ha hablado por sí sola. Es momento de nombrarla.',
   2: 'Has cruzado el umbral. Tu camino se bifurca.',
-  3: 'Has alcanzado lo que pocos alcanzan. Elige como seras recordado.',
+  3: 'Has alcanzado lo que pocos alcanzan. Elige cómo serás recordado.',
+};
+
+const TIER_INSTRUCTION: Record<1 | 2 | 3, string> = {
+  1: 'Elige tu vocación. Define cómo entrenarás de aquí en adelante.',
+  2: 'Elige tu especialización dentro de tu vocación.',
+  3: 'Elige tu rama legendaria. Es permanente.',
 };
 
 const FOCUSABLE_SELECTOR =
@@ -164,9 +173,12 @@ export const TierUpModal = ({
               </h2>
               <p
                 id="tier-up-description"
-                className="mt-3 font-pixel text-base italic text-ink-muted"
+                className="mt-3 font-pixel-mono text-lg italic leading-snug text-ink-muted"
               >
                 {TIER_DESCRIPTION[tier]}
+              </p>
+              <p className="mt-2 font-pixel text-[10px] tracking-widest text-green-400">
+                {TIER_INSTRUCTION[tier]}
               </p>
             </header>
 
