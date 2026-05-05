@@ -27,10 +27,11 @@ export default {
           muted: '#27272a',
         },
         // Foreground tokens, mirrored from the Tailwind zinc palette so the
-        // visual weight stays consistent. Keep the names semantic: `default`
-        // is body text, `muted` is metadata, `faint` is disabled / hint.
+        // visual weight stays consistent. Keep the names semantic: DEFAULT
+        // is body text, `muted` is metadata, `faint` is hint, `disabled`
+        // is fully de-emphasised.
         ink: {
-          default: '#e4e4e7',
+          DEFAULT: '#e4e4e7',
           muted: '#a1a1aa',
           faint: '#71717a',
           disabled: '#52525b',

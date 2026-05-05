@@ -12,7 +12,7 @@ export const PasswordField = (props: PasswordFieldProps): React.JSX.Element => {
 
   return (
     <label className="block mb-10">
-      <span className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider">
+      <span className="block font-pixel text-[9px] sm:text-[10px] text-ink-muted mb-2 tracking-wider">
         PASSWORD
       </span>
       <div className="relative">
@@ -22,7 +22,7 @@ export const PasswordField = (props: PasswordFieldProps): React.JSX.Element => {
           value={props.value}
           onChange={(e) => props.onChange(e.target.value)}
           autoComplete={props.autoComplete}
-          className="w-full bg-[#12121a] border-2 border-[#1e1e2e] focus:border-green-500/70 focus:outline-none pl-3 pr-11 py-2.5 font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] transition-colors"
+          className="w-full bg-subtle border-2 border-border focus:border-green-500/70 focus:outline-none pl-3 pr-11 py-2.5 font-pixel text-[9px] sm:text-[10px] text-ink placeholder:text-ink-disabled transition-colors"
         />
         <button
           type="button"
@@ -30,7 +30,7 @@ export const PasswordField = (props: PasswordFieldProps): React.JSX.Element => {
           aria-label={
             showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
           }
-          className="absolute inset-y-0 right-0 flex items-center justify-center w-10 text-[#71717a] hover:text-green-400 transition-colors"
+          className="absolute inset-y-0 right-0 flex items-center justify-center w-10 text-ink-faint hover:text-green-400 transition-colors"
         >
           {showPassword ? (
             <EyeSlashIcon className="h-5 w-5" />

@@ -43,7 +43,7 @@ const StatRow = ({ stat }: { stat: Stat }) => {
   return (
     <div className="flex items-center gap-3">
       <div
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border-2 border-[#1e1e2e]"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border-2 border-border"
         style={{ backgroundColor: `${stat.color}1f` }}
       >
         <Icon className="h-6 w-6" style={{ color: stat.color }} />
@@ -51,15 +51,15 @@ const StatRow = ({ stat }: { stat: Stat }) => {
 
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex items-baseline justify-between">
-          <span className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#e4e4e7]">
+          <span className="font-pixel text-[9px] sm:text-[10px] text-ink">
             {stat.name}
           </span>
           <span
-            className="font-['Press_Start_2P'] text-[9px] sm:text-[10px]"
+            className="font-pixel text-[9px] sm:text-[10px]"
             style={{ color: stat.color }}
           >
             {stat.value}
-            <span className="text-[#52525b]">/100</span>
+            <span className="text-ink-disabled">/100</span>
           </span>
         </div>
 
@@ -82,10 +82,10 @@ const StatRow = ({ stat }: { stat: Stat }) => {
 
 export const HeroStatsPanel = (): React.JSX.Element => {
   return (
-    <div className="w-full max-w-md mx-auto mt-8 sm:mt-10 border-2 border-green-500/60 bg-[#0d0d14] p-4 sm:p-5 relative shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(34,197,94,0.45),0_20px_50px_rgba(0,0,0,0.8)]">
+    <div className="w-full max-w-md mx-auto mt-8 sm:mt-10 border-2 border-green-500/60 bg-card p-4 sm:p-5 relative shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(34,197,94,0.45),0_20px_50px_rgba(0,0,0,0.8)]">
       <PixelCorners size="md" className="border-green-500/60" />
 
-      <div className="text-[9px] sm:text-[10px] font-['Press_Start_2P'] text-green-500 mb-4 text-left tracking-wider">
+      <div className="text-[9px] sm:text-[10px] font-pixel text-green-500 mb-4 text-left tracking-wider">
         STATS
       </div>
       <div className="space-y-3">

@@ -51,9 +51,9 @@ export const WeightProgressContent = (): React.JSX.Element => {
 
   if (loading) {
     return (
-      <section className="relative border-2 border-[#1e1e2e] bg-[#0d0d14] p-5">
+      <section className="relative border-2 border-border bg-card p-5">
         <PixelCorners size="sm" className="border-green-500/30" />
-        <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-[#a1a1aa]">
+        <p className="font-pixel text-[10px] tracking-widest text-ink-muted">
           CARGANDO PROGRESO…
         </p>
       </section>
@@ -62,15 +62,15 @@ export const WeightProgressContent = (): React.JSX.Element => {
 
   if (error) {
     return (
-      <section className="relative border-2 border-red-500/40 bg-[#0d0d14] p-5">
+      <section className="relative border-2 border-red-500/40 bg-card p-5">
         <PixelCorners size="sm" className="border-red-500/40" />
-        <p className="font-['VT323'] text-xl leading-snug text-red-300">
+        <p className="font-pixel-mono text-xl leading-snug text-red-300">
           {error}
         </p>
         <button
           type="button"
           onClick={refetch}
-          className="mt-4 font-['Press_Start_2P'] text-[9px] tracking-widest bg-red-500 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-red-700 hover:bg-red-400 active:border-b-0 active:mt-[1.0625rem] transition-all"
+          className="mt-4 font-pixel text-[9px] tracking-widest bg-red-500 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-red-700 hover:bg-red-400 active:border-b-0 active:mt-[1.0625rem] transition-all"
         >
           ▶ REINTENTAR
         </button>
@@ -79,30 +79,30 @@ export const WeightProgressContent = (): React.JSX.Element => {
   }
 
   return (
-    <section className="relative border-2 border-green-500/40 bg-[#0d0d14] p-5">
+    <section className="relative border-2 border-green-500/40 bg-card p-5">
       <PixelCorners size="md" className="border-green-500/40" />
 
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+          <p className="font-pixel text-[9px] tracking-widest text-green-500">
             ◆ {latest ? 'PESO ACTUAL' : 'PESO INICIAL'}
           </p>
           {latest ? (
-            <p className="mt-2 font-['Press_Start_2P'] text-lg text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)]">
+            <p className="mt-2 font-pixel text-lg text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)]">
               {latest.weight.toFixed(1)}
-              <span className="ml-2 font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+              <span className="ml-2 font-pixel text-base text-ink-muted">
                 kg · {DATE_FORMAT.format(latest.date)}
               </span>
             </p>
           ) : onboardingWeight !== null ? (
-            <p className="mt-2 font-['Press_Start_2P'] text-lg text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)]">
+            <p className="mt-2 font-pixel text-lg text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)]">
               {onboardingWeight.toFixed(1)}
-              <span className="ml-2 font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+              <span className="ml-2 font-pixel text-base text-ink-muted">
                 kg · onboarding
               </span>
             </p>
           ) : (
-            <p className="mt-2 font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+            <p className="mt-2 font-pixel text-base text-ink-muted">
               Sin registros aun
             </p>
           )}
@@ -110,7 +110,7 @@ export const WeightProgressContent = (): React.JSX.Element => {
         <button
           type="button"
           onClick={() => setShowForm((value) => !value)}
-          className="font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] self-start"
+          className="font-pixel text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] self-start"
         >
           {showForm ? '✕ CANCELAR' : '▶ REGISTRAR PESO'}
         </button>

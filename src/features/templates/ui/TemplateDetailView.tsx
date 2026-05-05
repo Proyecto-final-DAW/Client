@@ -31,12 +31,12 @@ export const TemplateDetailView = (): React.JSX.Element => {
       emptyCta={{ label: 'Volver al catalogo', to: '/templates' }}
     >
       {(template) => (
-        <section className="text-[#e4e4e7]">
+        <section className="text-ink">
           <div className="mx-auto max-w-4xl">
             <button
               type="button"
               onClick={() => navigate('/templates')}
-              className="font-['Press_Start_2P'] text-[8px] tracking-widest text-[#71717a] hover:text-green-400 transition-colors mb-4"
+              className="font-pixel text-[8px] tracking-widest text-ink-faint hover:text-green-400 transition-colors mb-4"
             >
               ◀ VOLVER
             </button>
@@ -48,7 +48,7 @@ export const TemplateDetailView = (): React.JSX.Element => {
             {applyError && (
               <p
                 role="alert"
-                className="mt-6 font-['Press_Start_2P'] text-base text-red-400 border-2 border-red-500/40 bg-red-500/10 px-4 py-3"
+                className="mt-6 font-pixel text-base text-red-400 border-2 border-red-500/40 bg-red-500/10 px-4 py-3"
               >
                 ✕ {applyError}
               </p>

@@ -6,7 +6,7 @@ interface NavProps {
 
 export const Nav = (props: NavProps): React.JSX.Element => {
   return (
-    <nav className="relative z-10 border-b-2 border-[#1e1e2e] bg-[#0a0a0f]/60 backdrop-blur-md">
+    <nav className="relative z-10 border-b-2 border-border bg-page/60 backdrop-blur-md">
       <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14 h-24 flex items-center justify-between">
         <Link to="/">
           <img
@@ -17,7 +17,7 @@ export const Nav = (props: NavProps): React.JSX.Element => {
         </Link>
         <Link
           to={props.backTo ?? '/'}
-          className="font-['Press_Start_2P'] text-[8px] sm:text-[10px] text-[#a1a1aa] hover:text-green-400 border-2 border-[#1e1e2e] hover:border-green-500/50 px-3 sm:px-4 py-2 sm:py-2.5 transition-colors"
+          className="font-pixel text-[8px] sm:text-[10px] text-ink-muted hover:text-green-400 border-2 border-border hover:border-green-500/50 px-3 sm:px-4 py-2 sm:py-2.5 transition-colors"
         >
           ← VOLVER
         </Link>

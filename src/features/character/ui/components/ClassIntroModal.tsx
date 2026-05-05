@@ -103,21 +103,21 @@ export const ClassIntroModal = ({
             aria-modal="true"
             aria-labelledby="class-intro-title"
             {...dialogMotion}
-            className="relative w-full max-w-lg border-2 border-green-500/60 bg-[#0d0d14] p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_80px_rgba(34,197,94,0.4)]"
+            className="relative w-full max-w-lg border-2 border-green-500/60 bg-card p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_80px_rgba(34,197,94,0.4)]"
           >
             <PixelCorners size="md" className="border-green-500/60" />
 
             <header className="mb-5 text-center">
-              <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+              <p className="font-pixel text-[9px] tracking-widest text-green-500">
                 BIENVENIDO HEROE
               </p>
               <h2
                 id="class-intro-title"
-                className="mt-3 font-['Press_Start_2P'] text-base leading-relaxed text-green-400 [text-shadow:0_0_18px_rgba(34,197,94,0.55)] sm:text-lg"
+                className="mt-3 font-pixel text-base leading-relaxed text-green-400 [text-shadow:0_0_18px_rgba(34,197,94,0.55)] sm:text-lg"
               >
                 EMPIEZAS COMO {noviceName.toUpperCase()}
               </h2>
-              <p className="mt-3 font-['Press_Start_2P'] text-base italic leading-tight text-[#a1a1aa]">
+              <p className="mt-3 font-pixel text-base italic leading-tight text-ink-muted">
                 Tu camino se forja entrenando.
               </p>
             </header>
@@ -129,20 +129,20 @@ export const ClassIntroModal = ({
                   className={`relative flex items-start gap-3 border-2 p-3 ${
                     index === 0
                       ? 'border-green-500/60 bg-green-500/5'
-                      : 'border-[#1e1e2e] bg-[#0a0a0f]'
+                      : 'border-border bg-page'
                   }`}
                 >
                   <span
-                    className={`shrink-0 font-['Press_Start_2P'] text-[10px] tracking-widest ${
-                      index === 0 ? 'text-green-400' : 'text-[#52525b]'
+                    className={`shrink-0 font-pixel text-[10px] tracking-widest ${
+                      index === 0 ? 'text-green-400' : 'text-ink-disabled'
                     }`}
                   >
                     {step.tier}
                   </span>
                   <div className="min-w-0 flex-1">
                     <p
-                      className={`font-['Press_Start_2P'] text-[10px] tracking-widest ${
-                        index === 0 ? 'text-green-400' : 'text-[#a1a1aa]'
+                      className={`font-pixel text-[10px] tracking-widest ${
+                        index === 0 ? 'text-green-400' : 'text-ink-muted'
                       }`}
                     >
                       {step.label}
@@ -152,7 +152,7 @@ export const ClassIntroModal = ({
                         </span>
                       )}
                     </p>
-                    <p className="mt-1.5 font-['VT323'] text-lg leading-snug text-[#a1a1aa]">
+                    <p className="mt-1.5 font-pixel-mono text-lg leading-snug text-ink-muted">
                       {step.hint}
                     </p>
                   </div>
@@ -160,7 +160,7 @@ export const ClassIntroModal = ({
               ))}
             </ol>
 
-            <p className="mt-5 text-center font-['VT323'] text-lg italic leading-snug text-[#71717a]">
+            <p className="mt-5 text-center font-pixel-mono text-lg italic leading-snug text-ink-faint">
               Cuando alcances el siguiente tier te avisaremos.
             </p>
 
@@ -169,7 +169,7 @@ export const ClassIntroModal = ({
                 ref={closeButtonRef}
                 type="button"
                 onClick={onClose}
-                className="font-['Press_Start_2P'] text-[10px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-6 py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+                className="font-pixel text-[10px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-6 py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
               >
                 ▶ ENTENDIDO
               </button>

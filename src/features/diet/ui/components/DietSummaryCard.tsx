@@ -28,9 +28,9 @@ export const DietSummaryCard = ({
 }: DietSummaryCardProps): React.JSX.Element => {
   if (loading) {
     return (
-      <section className="relative border-2 border-[#1e1e2e] bg-[#0d0d14] p-5">
+      <section className="relative border-2 border-border bg-card p-5">
         <PixelCorners size="md" className="border-green-500/30" />
-        <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-[#a1a1aa]">
+        <p className="font-pixel text-[10px] tracking-widest text-ink-muted">
           CARGANDO DIETA…
         </p>
       </section>
@@ -46,21 +46,21 @@ export const DietSummaryCard = ({
 
     if (looksLikeOnboardingError) {
       return (
-        <section className="relative border-2 border-green-500/40 bg-[#0d0d14] p-5">
+        <section className="relative border-2 border-green-500/40 bg-card p-5">
           <PixelCorners size="md" className="border-green-500/40" />
-          <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500 mb-3">
+          <p className="font-pixel text-[10px] tracking-widest text-green-500 mb-3">
             ◆ DIETA
           </p>
-          <h3 className="font-['Press_Start_2P'] text-base text-green-400 mb-2 [text-shadow:0_0_12px_rgba(34,197,94,0.4)]">
+          <h3 className="font-pixel text-base text-green-400 mb-2 [text-shadow:0_0_12px_rgba(34,197,94,0.4)]">
             CALCULA TUS MACROS
           </h3>
-          <p className="font-['VT323'] text-lg text-[#a1a1aa] mb-5 leading-tight">
+          <p className="font-pixel-mono text-lg text-ink-muted mb-5 leading-tight">
             Aún no hemos calculado tu nutrición. Completa tu perfil y aparecerán
             aquí tus calorías diarias y macros recomendadas.
           </p>
           <Link
             to="/profile"
-            className="inline-block font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)]"
+            className="inline-block font-pixel text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)]"
           >
             ▶ COMPLETAR PERFIL
           </Link>
@@ -69,18 +69,18 @@ export const DietSummaryCard = ({
     }
 
     return (
-      <section className="relative border-2 border-red-500/40 bg-[#0d0d14] p-5">
+      <section className="relative border-2 border-red-500/40 bg-card p-5">
         <PixelCorners size="md" className="border-red-500/40" />
-        <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-red-400 mb-3">
+        <p className="font-pixel text-[10px] tracking-widest text-red-400 mb-3">
           ✕ ERROR
         </p>
-        <p className="font-['VT323'] text-lg text-red-300 mb-4 leading-tight">
+        <p className="font-pixel-mono text-lg text-red-300 mb-4 leading-tight">
           {error}
         </p>
         <button
           type="button"
           onClick={() => void onRefresh()}
-          className="font-['Press_Start_2P'] text-[9px] tracking-widest bg-red-500 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-red-700 hover:bg-red-400 hover:border-red-600 active:border-b-0 active:mt-1 transition-all"
+          className="font-pixel text-[9px] tracking-widest bg-red-500 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-red-700 hover:bg-red-400 hover:border-red-600 active:border-b-0 active:mt-1 transition-all"
         >
           ▶ REINTENTAR
         </button>
@@ -90,9 +90,9 @@ export const DietSummaryCard = ({
 
   if (!diet) {
     return (
-      <section className="relative border-2 border-[#1e1e2e] bg-[#0d0d14] p-5">
+      <section className="relative border-2 border-border bg-card p-5">
         <PixelCorners size="md" className="border-green-500/30" />
-        <p className="font-['VT323'] text-xl leading-snug text-[#a1a1aa]">
+        <p className="font-pixel-mono text-xl leading-snug text-ink-muted">
           No hay datos de dieta disponibles.
         </p>
       </section>
@@ -135,16 +135,16 @@ export const DietSummaryCard = ({
   ];
 
   return (
-    <section className="relative border-2 border-green-500/50 bg-[#0d0d14] p-5 shadow-[0_0_18px_rgba(34,197,94,0.15)]">
+    <section className="relative border-2 border-green-500/50 bg-card p-5 shadow-[0_0_18px_rgba(34,197,94,0.15)]">
       <PixelCorners size="md" className="border-green-500/50" />
 
       <header className="mb-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+            <p className="font-pixel text-[10px] tracking-widest text-green-500">
               ◆ DIETA
             </p>
-            <h2 className="mt-2 font-['Press_Start_2P'] text-base text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)]">
+            <h2 className="mt-2 font-pixel text-base text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)]">
               OBJETIVO DIARIO
             </h2>
           </div>
@@ -153,7 +153,7 @@ export const DietSummaryCard = ({
             type="button"
             onClick={() => void onRefresh()}
             disabled={refreshing}
-            className="font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-60 disabled:cursor-not-allowed disabled:active:mt-0 whitespace-nowrap self-start"
+            className="font-pixel text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-60 disabled:cursor-not-allowed disabled:active:mt-0 whitespace-nowrap self-start"
           >
             {refreshing ? 'RECALCULANDO…' : '↻ RECALCULAR'}
           </button>
@@ -162,20 +162,18 @@ export const DietSummaryCard = ({
         {/* description spans the full card width — pinned inside the title
             column it would compete with the recalcular button and wrap into
             an awkward 2-line block ("...peso y / objetivo."). */}
-        <p className="mt-3 font-['VT323'] text-xl leading-snug text-[#a1a1aa]">
+        <p className="mt-3 font-pixel-mono text-xl leading-snug text-ink-muted">
           Calculado automaticamente desde tu peso y objetivo.
         </p>
       </header>
 
-      <div className="border-2 border-[#1e1e2e] bg-[#0a0a0f] p-5 text-center">
-        <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-[#71717a]">
+      <div className="border-2 border-border bg-page p-5 text-center">
+        <p className="font-pixel text-[9px] tracking-widest text-ink-faint">
           CALORIAS DIARIAS
         </p>
-        <p className="mt-2 font-['Press_Start_2P'] text-2xl text-green-400 [text-shadow:0_0_18px_rgba(34,197,94,0.6)]">
+        <p className="mt-2 font-pixel text-2xl text-green-400 [text-shadow:0_0_18px_rgba(34,197,94,0.6)]">
           {diet.dailyCalories.toLocaleString('es-ES')}
-          <span className="ml-2 font-['Press_Start_2P'] text-base text-[#a1a1aa]">
-            kcal
-          </span>
+          <span className="ml-2 font-pixel text-base text-ink-muted">kcal</span>
         </p>
       </div>
 
@@ -183,22 +181,20 @@ export const DietSummaryCard = ({
         {macros.map((macro) => (
           <article
             key={macro.label}
-            className="border-2 border-[#1e1e2e] bg-[#0a0a0f] p-4 text-center"
+            className="border-2 border-border bg-page p-4 text-center"
             style={{ borderTopColor: macro.color, borderTopWidth: '4px' }}
           >
             <p
-              className="font-['Press_Start_2P'] text-[10px] tracking-widest"
+              className="font-pixel text-[10px] tracking-widest"
               style={{ color: macro.color }}
             >
               {macro.label}
             </p>
-            <p className="mt-2 font-['Press_Start_2P'] text-base text-[#e4e4e7]">
+            <p className="mt-2 font-pixel text-base text-ink">
               {macro.grams}
-              <span className="ml-1 font-['Press_Start_2P'] text-sm text-[#71717a]">
-                g
-              </span>
+              <span className="ml-1 font-pixel text-sm text-ink-faint">g</span>
             </p>
-            <p className="mt-1 font-['Press_Start_2P'] text-[10px] tracking-widest text-[#71717a]">
+            <p className="mt-1 font-pixel text-[10px] tracking-widest text-ink-faint">
               {macro.percentage}% DEL TOTAL
             </p>
           </article>

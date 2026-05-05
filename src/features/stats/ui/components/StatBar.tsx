@@ -25,10 +25,10 @@ export const StatBar = (props: StatBarProps): React.JSX.Element => {
 
       <div className="min-w-0 flex-1">
         <div className="mb-1.5 flex items-baseline justify-between gap-2">
-          <span className="font-['Press_Start_2P'] text-[10px] tracking-widest uppercase text-[#e4e4e7]">
+          <span className="font-pixel text-[10px] tracking-widest uppercase text-ink">
             {props.pilar.name}
           </span>
-          <span className="font-['Press_Start_2P'] text-[10px] text-[#a1a1aa]">
+          <span className="font-pixel text-[10px] text-ink-muted">
             LVL{' '}
             <span className="font-bold text-green-400">
               {Math.floor(props.pilar.level)}
@@ -37,7 +37,7 @@ export const StatBar = (props: StatBarProps): React.JSX.Element => {
         </div>
 
         <div
-          className="h-3 w-full overflow-hidden rounded-sm border bg-[#0a0a0f]"
+          className="h-3 w-full overflow-hidden rounded-sm border bg-page"
           style={{
             borderColor: `color-mix(in srgb, ${accent} 35%, transparent)`,
           }}

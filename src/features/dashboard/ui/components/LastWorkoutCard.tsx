@@ -17,11 +17,11 @@ export const LastWorkoutCard = (props: Props): React.JSX.Element => {
         visible: { opacity: 1, y: 0 },
       }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      className="relative flex h-full flex-col border-2 border-green-500/60 bg-[#0d0d14] p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(34,197,94,0.35),0_20px_50px_rgba(0,0,0,0.8)]"
+      className="relative flex h-full flex-col border-2 border-green-500/60 bg-card p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(34,197,94,0.35),0_20px_50px_rgba(0,0,0,0.8)]"
     >
       <PixelCorners size="md" className="border-green-500/60" />
 
-      <div className="mb-5 text-center font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+      <div className="mb-5 text-center font-pixel text-[10px] tracking-widest text-green-500">
         ULTIMO COMBATE
       </div>
 
@@ -30,11 +30,11 @@ export const LastWorkoutCard = (props: Props): React.JSX.Element => {
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-sm border-2 border-blue-500/40 bg-blue-500/10">
             <CalendarDaysIcon className="h-8 w-8 text-blue-300" />
           </div>
-          <p className="font-['Press_Start_2P'] text-4xl leading-none text-[#e4e4e7] [text-shadow:2px_2px_0_#000,0_0_14px_rgba(59,130,246,0.45)]">
+          <p className="font-pixel text-4xl leading-none text-ink [text-shadow:2px_2px_0_#000,0_0_14px_rgba(59,130,246,0.45)]">
             {props.lastWorkoutDaysAgo}
           </p>
         </div>
-        <p className="text-center font-['VT323'] text-base tracking-wide text-[#a1a1aa]">
+        <p className="text-center font-pixel-mono text-base tracking-wide text-ink-muted">
           {isToday
             ? '¡Entrenado hoy!'
             : `Hace ${props.lastWorkoutDaysAgo} dias`}

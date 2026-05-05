@@ -45,11 +45,11 @@ export const ChoiceGroup = (props: ChoiceGroupProps): React.JSX.Element => {
   return (
     <div className="mb-4 last:mb-0">
       <div className="mb-2 flex items-baseline justify-between gap-3">
-        <label className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] tracking-wider">
+        <label className="block font-pixel text-[9px] sm:text-[10px] text-ink-muted tracking-wider">
           {props.label}
         </label>
         {props.hint && (
-          <span className="font-['VT323'] text-base text-[#52525b] leading-none">
+          <span className="font-pixel-mono text-base text-ink-disabled leading-none">
             {props.hint}
           </span>
         )}
@@ -71,16 +71,16 @@ export const ChoiceGroup = (props: ChoiceGroupProps): React.JSX.Element => {
               className={`px-2 py-3 border-2 text-center transition-all duration-150 ${
                 selected
                   ? 'bg-green-500/10 border-green-500/70 shadow-[0_0_12px_rgba(34,197,94,0.25)]'
-                  : 'bg-[#12121a] border-[#1e1e2e] hover:border-[#3f3f46]'
+                  : 'bg-subtle border-border hover:border-[#3f3f46]'
               }`}
             >
               <div
-                className={`font-['Press_Start_2P'] text-[8px] sm:text-[9px] tracking-wider ${selected ? 'text-green-400' : 'text-[#e4e4e7]'}`}
+                className={`font-pixel text-[8px] sm:text-[9px] tracking-wider ${selected ? 'text-green-400' : 'text-ink'}`}
               >
                 {c.label}
               </div>
               {c.sub && (
-                <div className="font-['VT323'] text-base text-[#71717a] mt-1 leading-none">
+                <div className="font-pixel-mono text-base text-ink-faint mt-1 leading-none">
                   {c.sub}
                 </div>
               )}
@@ -89,7 +89,7 @@ export const ChoiceGroup = (props: ChoiceGroupProps): React.JSX.Element => {
         })}
       </div>
       {props.error && (
-        <p className="font-['VT323'] text-base text-red-400 mt-2 leading-none">
+        <p className="font-pixel-mono text-base text-red-400 mt-2 leading-none">
           ✕ {props.error}
         </p>
       )}

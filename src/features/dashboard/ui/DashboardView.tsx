@@ -121,7 +121,7 @@ export const Dashboard = (): React.JSX.Element => {
             <StartWorkoutButton />
           </div>
           {characterError && !characterState && (
-            <div className="mt-4 border-2 border-red-500/40 bg-[#0d0d14] p-3 text-center font-['VT323'] text-base text-red-300">
+            <div className="mt-4 border-2 border-red-500/40 bg-card p-3 text-center font-pixel-mono text-base text-red-300">
               {characterError}
             </div>
           )}

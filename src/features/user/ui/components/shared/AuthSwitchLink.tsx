@@ -10,7 +10,7 @@ export const AuthSwitchLink = (
   props: AuthSwitchLinkProps
 ): React.JSX.Element => {
   return (
-    <p className="mt-6 text-center font-['Press_Start_2P'] text-[8px] sm:text-[10px] text-[#71717a] leading-loose tracking-wide">
+    <p className="mt-6 text-center font-pixel text-[8px] sm:text-[10px] text-ink-faint leading-loose tracking-wide">
       {props.question}{' '}
       <Link
         to={props.to}

@@ -27,11 +27,11 @@ interface ProfileFormProps {
 }
 
 const inputClass =
-  "w-full bg-[#12121a] border-2 border-[#1e1e2e] px-3 py-2.5 font-['Press_Start_2P'] text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] focus:border-green-500/70 focus:outline-none transition-colors [color-scheme:dark]";
+  'w-full bg-subtle border-2 border-border px-3 py-2.5 font-pixel text-[10px] text-ink placeholder:text-ink-disabled focus:border-green-500/70 focus:outline-none transition-colors [color-scheme:dark]';
 const labelClass =
-  "block font-['Press_Start_2P'] text-[8px] tracking-widest text-[#a1a1aa] mb-2";
+  'block font-pixel text-[8px] tracking-widest text-ink-muted mb-2';
 const sectionTitleClass =
-  "font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500 [text-shadow:0_0_8px_rgba(34,197,94,0.4)]";
+  'font-pixel text-[10px] tracking-widest text-green-500 [text-shadow:0_0_8px_rgba(34,197,94,0.4)]';
 
 type ChipProps = {
   label: string;
@@ -44,10 +44,10 @@ const Chip = ({ label, selected, onClick }: ChipProps): React.JSX.Element => (
     type="button"
     onClick={onClick}
     aria-pressed={selected}
-    className={`font-['Press_Start_2P'] text-[9px] tracking-widest border-2 px-3 py-2 transition-colors ${
+    className={`font-pixel text-[9px] tracking-widest border-2 px-3 py-2 transition-colors ${
       selected
         ? 'border-green-500 bg-green-500/15 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.3)]'
-        : 'border-[#1e1e2e] bg-[#12121a] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400'
+        : 'border-border bg-subtle text-ink-muted hover:border-green-500/40 hover:text-green-400'
     }`}
   >
     {selected ? '▶ ' : ''}
@@ -64,18 +64,18 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="relative border-2 border-green-500/40 bg-[#0d0d14] p-5 sm:p-6"
+      className="relative border-2 border-green-500/40 bg-card p-5 sm:p-6"
     >
       <PixelCorners size="md" className="border-green-500/40" />
 
       <header className="mb-6 flex items-center justify-between gap-3">
-        <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+        <p className="font-pixel text-[10px] tracking-widest text-green-500">
           ✎ EDITAR PERFIL
         </p>
         <button
           type="button"
           onClick={props.onCancel}
-          className="inline-flex items-center gap-2 font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14] text-[#a1a1aa] hover:border-[#3f3f46] px-3 py-2 transition-colors"
+          className="inline-flex items-center gap-2 font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted hover:border-[#3f3f46] px-3 py-2 transition-colors"
         >
           <XMarkIcon className="h-3 w-3" />
           CERRAR
@@ -83,7 +83,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
       </header>
 
       {/* SECTION 1 — Datos personales */}
-      <section className="mb-8 border-b-2 border-[#1e1e2e] pb-6">
+      <section className="mb-8 border-b-2 border-border pb-6">
         <p className={sectionTitleClass}>▸ DATOS PERSONALES</p>
 
         <div className="mt-5 mb-4">
@@ -101,7 +101,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
 
         <div className="mb-4">
           <span className={labelClass}>EMAIL</span>
-          <p className="border-2 border-[#1e1e2e] bg-[#0a0a0f] px-3 py-2.5 font-['Press_Start_2P'] text-[10px] text-[#71717a]">
+          <p className="border-2 border-border bg-page px-3 py-2.5 font-pixel text-[10px] text-ink-faint">
             {props.profile.email}
           </p>
         </div>
@@ -195,7 +195,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
       {/* SECTION 2 — Entrenamiento (onboarding) */}
       <section className="mb-6">
         <p className={sectionTitleClass}>▸ ENTRENAMIENTO</p>
-        <p className="mt-2 mb-5 font-['VT323'] text-base text-[#a1a1aa]">
+        <p className="mt-2 mb-5 font-pixel-mono text-base text-ink-muted">
           Cambia aqui las preferencias del onboarding. Las recomendaciones de
           rutinas se actualizan al guardar.
         </p>
@@ -300,7 +300,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
       <button
         type="submit"
         disabled={props.updating}
-        className="w-full font-['Press_Start_2P'] text-[10px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-6 py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
+        className="w-full font-pixel text-[10px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-6 py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
       >
         {props.updating ? 'GUARDANDO…' : '▶ GUARDAR CAMBIOS'}
       </button>

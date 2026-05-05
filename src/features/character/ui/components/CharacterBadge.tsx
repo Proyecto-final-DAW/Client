@@ -65,25 +65,25 @@ export const CharacterBadge = (props: Props): React.JSX.Element => {
   return (
     <motion.article
       {...motionProps}
-      className="relative border-2 border-green-500/60 bg-[#0d0d14] p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(34,197,94,0.35),0_20px_50px_rgba(0,0,0,0.8)]"
+      className="relative border-2 border-green-500/60 bg-card p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(34,197,94,0.35),0_20px_50px_rgba(0,0,0,0.8)]"
     >
       <PixelCorners size="md" className="border-green-500/60" />
 
-      <div className="mb-3 text-center font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+      <div className="mb-3 text-center font-pixel text-[9px] tracking-widest text-green-500">
         {subtitleFor(props.state)}
       </div>
 
-      <p className="text-center font-['Press_Start_2P'] text-base leading-tight text-[#e4e4e7] [text-shadow:2px_2px_0_#000,0_0_14px_rgba(34,197,94,0.45)]">
+      <p className="text-center font-pixel text-base leading-tight text-ink [text-shadow:2px_2px_0_#000,0_0_14px_rgba(34,197,94,0.45)]">
         {name}
       </p>
 
       {frase && (
-        <p className="mt-3 text-center font-['VT323'] text-lg italic leading-snug text-[#a1a1aa]">
+        <p className="mt-3 text-center font-pixel-mono text-lg italic leading-snug text-ink-muted">
           “{frase}”
         </p>
       )}
 
-      <p className="mt-4 text-center font-['Press_Start_2P'] text-[8px] tracking-widest text-green-400">
+      <p className="mt-4 text-center font-pixel text-[8px] tracking-widest text-green-400">
         HEROE LVL {props.state.heroLevel}
       </p>
     </motion.article>

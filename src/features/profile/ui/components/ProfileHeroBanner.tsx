@@ -78,7 +78,7 @@ export const ProfileHeroBanner = ({
   return (
     <motion.section
       {...motionProps}
-      className="relative border-2 border-green-500/60 bg-[#0d0d14] p-5 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(34,197,94,0.25)]"
+      className="relative border-2 border-green-500/60 bg-card p-5 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(34,197,94,0.25)]"
     >
       <PixelCorners size="md" className="border-green-500/60" />
 
@@ -92,32 +92,32 @@ export const ProfileHeroBanner = ({
             <img
               src={profileImage}
               alt={`Avatar de ${name}`}
-              className="h-24 w-24 sm:h-28 sm:w-28 border-2 border-[#1e1e2e] object-cover shadow-[0_0_24px_rgba(34,197,94,0.35)]"
+              className="h-24 w-24 sm:h-28 sm:w-28 border-2 border-border object-cover shadow-[0_0_24px_rgba(34,197,94,0.35)]"
             />
           ) : (
-            <div className="flex h-24 w-24 sm:h-28 sm:w-28 items-center justify-center border-2 border-[#1e1e2e] bg-green-500/10 shadow-[0_0_24px_rgba(34,197,94,0.35)]">
+            <div className="flex h-24 w-24 sm:h-28 sm:w-28 items-center justify-center border-2 border-border bg-green-500/10 shadow-[0_0_24px_rgba(34,197,94,0.35)]">
               <UserCircleIcon className="h-14 w-14 text-green-400" />
             </div>
           )}
           {heroLevel !== null && (
-            <span className="absolute -bottom-2 -right-2 inline-flex items-center justify-center border-2 border-green-700 bg-green-500 px-2 py-1 font-['Press_Start_2P'] text-[8px] tracking-widest text-[#0a0a0f] shadow-[0_0_10px_rgba(34,197,94,0.6)]">
+            <span className="absolute -bottom-2 -right-2 inline-flex items-center justify-center border-2 border-green-700 bg-green-500 px-2 py-1 font-pixel text-[8px] tracking-widest text-[#0a0a0f] shadow-[0_0_10px_rgba(34,197,94,0.6)]">
               LVL {heroLevel}
             </span>
           )}
         </div>
 
         <div className="min-w-0 flex-1 text-center sm:text-left">
-          <p className="font-['Press_Start_2P'] text-[8px] tracking-widest text-green-500">
+          <p className="font-pixel text-[8px] tracking-widest text-green-500">
             {subtitle}
           </p>
-          <h2 className="mt-2 font-['Press_Start_2P'] text-base leading-relaxed text-green-400 [text-shadow:2px_2px_0_#000,0_0_14px_rgba(34,197,94,0.45)] sm:text-lg break-words">
+          <h2 className="mt-2 font-pixel text-base leading-relaxed text-green-400 [text-shadow:2px_2px_0_#000,0_0_14px_rgba(34,197,94,0.45)] sm:text-lg break-words">
             {className}
           </h2>
-          <p className="mt-2 font-['Press_Start_2P'] text-[10px] tracking-widest text-[#e4e4e7]">
+          <p className="mt-2 font-pixel text-[10px] tracking-widest text-ink">
             {name.toUpperCase()}
           </p>
           {frase && (
-            <p className="mt-3 font-['Press_Start_2P'] text-base italic leading-tight text-[#a1a1aa]">
+            <p className="mt-3 font-pixel text-base italic leading-tight text-ink-muted">
               “{frase}”
             </p>
           )}

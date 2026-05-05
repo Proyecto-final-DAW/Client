@@ -30,7 +30,7 @@ export const ExerciseCard = ({
 }: ExerciseCardProps): React.JSX.Element => {
   const diffColor =
     DIFFICULTY_COLOR[exercise.difficulty] ??
-    'text-[#a1a1aa] border-[#3f3f46] bg-[#18181b]';
+    'text-ink-muted border-[#3f3f46] bg-[#18181b]';
   const diffLabel =
     DIFFICULTY_LABEL[exercise.difficulty] ?? exercise.difficulty.toUpperCase();
   const targetLabel = formatLabel(exercise.target, TARGET_LABEL);
@@ -41,10 +41,10 @@ export const ExerciseCard = ({
       <PixelCorners size="sm" className="border-green-500/40" />
 
       <div
-        className="relative flex h-28 items-center justify-center overflow-hidden border-b-2 border-[#1e1e2e] bg-[#0a0a0f] px-3"
+        className="relative flex h-28 items-center justify-center overflow-hidden border-b-2 border-border bg-page px-3"
         style={PIXEL_GRID_BG}
       >
-        <span className="relative z-10 text-center font-['Press_Start_2P'] text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_14px_rgba(34,197,94,0.55)] uppercase break-words">
+        <span className="relative z-10 text-center font-pixel text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_14px_rgba(34,197,94,0.55)] uppercase break-words">
           {targetLabel}
         </span>
         <span
@@ -58,18 +58,18 @@ export const ExerciseCard = ({
       </div>
 
       <div className="flex flex-col gap-2 p-3">
-        <h3 className="font-['Press_Start_2P'] text-[10px] leading-tight text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.5)] line-clamp-2">
+        <h3 className="font-pixel text-[10px] leading-tight text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.5)] line-clamp-2">
           {exercise.name.toUpperCase()}
         </h3>
 
         <div className="flex flex-wrap gap-1.5">
           {exercise.equipment && (
-            <span className="font-['Press_Start_2P'] text-[7px] tracking-widest border border-[#3f3f46] bg-[#18181b] text-[#a1a1aa] px-1.5 py-0.5 uppercase">
+            <span className="font-pixel text-[7px] tracking-widest border border-[#3f3f46] bg-[#18181b] text-ink-muted px-1.5 py-0.5 uppercase">
               {equipmentLabel}
             </span>
           )}
           <span
-            className={`font-['Press_Start_2P'] text-[7px] tracking-widest border px-1.5 py-0.5 uppercase ${diffColor}`}
+            className={`font-pixel text-[7px] tracking-widest border px-1.5 py-0.5 uppercase ${diffColor}`}
           >
             {diffLabel}
           </span>
@@ -83,7 +83,7 @@ export const ExerciseCard = ({
       <button
         type="button"
         onClick={() => onSelect(exercise)}
-        className="group relative mx-auto flex w-full max-w-[260px] flex-col overflow-hidden border-2 border-[#1e1e2e] bg-[#0d0d14] text-left transition-colors hover:border-green-500/60 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+        className="group relative mx-auto flex w-full max-w-[260px] flex-col overflow-hidden border-2 border-border bg-card text-left transition-colors hover:border-green-500/60 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
       >
         {content}
       </button>
@@ -91,7 +91,7 @@ export const ExerciseCard = ({
   }
 
   return (
-    <div className="group relative mx-auto flex w-full max-w-[260px] flex-col overflow-hidden border-2 border-[#1e1e2e] bg-[#0d0d14]">
+    <div className="group relative mx-auto flex w-full max-w-[260px] flex-col overflow-hidden border-2 border-border bg-card">
       {content}
     </div>
   );

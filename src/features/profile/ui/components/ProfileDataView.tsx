@@ -46,19 +46,16 @@ const Section = ({
   items: { label: string; value: string }[];
 }): React.JSX.Element => (
   <div>
-    <p className="mb-3 font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500 [text-shadow:0_0_8px_rgba(34,197,94,0.4)]">
+    <p className="mb-3 font-pixel text-[10px] tracking-widest text-green-500 [text-shadow:0_0_8px_rgba(34,197,94,0.4)]">
       ▸ {title}
     </p>
     <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       {items.map((item) => (
-        <div
-          key={item.label}
-          className="border-2 border-[#1e1e2e] bg-[#0a0a0f] p-3"
-        >
-          <dt className="font-['Press_Start_2P'] text-[8px] tracking-widest text-[#71717a]">
+        <div key={item.label} className="border-2 border-border bg-page p-3">
+          <dt className="font-pixel text-[8px] tracking-widest text-ink-faint">
             {item.label}
           </dt>
-          <dd className="mt-2 font-['VT323'] text-lg text-[#e4e4e7] break-words">
+          <dd className="mt-2 font-pixel-mono text-lg text-ink break-words">
             {item.value}
           </dd>
         </div>
@@ -108,17 +105,17 @@ export const ProfileDataView = ({
   ];
 
   return (
-    <section className="relative border-2 border-green-500/40 bg-[#0d0d14] p-5 sm:p-6">
+    <section className="relative border-2 border-green-500/40 bg-card p-5 sm:p-6">
       <PixelCorners size="md" className="border-green-500/40" />
 
       <header className="mb-6 flex items-center justify-between gap-3">
-        <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+        <p className="font-pixel text-[10px] tracking-widest text-green-500">
           ◆ MI PERFIL
         </p>
         <button
           type="button"
           onClick={onEdit}
-          className="inline-flex items-center gap-2 font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/50 hover:text-green-400 px-3 py-2 transition-colors"
+          className="inline-flex items-center gap-2 font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted hover:border-green-500/50 hover:text-green-400 px-3 py-2 transition-colors"
         >
           <PencilIcon className="h-3 w-3" />
           EDITAR

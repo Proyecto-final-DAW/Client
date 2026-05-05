@@ -6,7 +6,7 @@ import { QuestLogSection } from './QuestLogSection';
 
 export const Landing = (): React.JSX.Element => {
   return (
-    <div className="relative bg-[#0a0a0f] min-h-screen text-[#e4e4e7] scroll-smooth">
+    <div className="relative bg-page min-h-screen text-ink scroll-smooth">
       <div
         className="absolute inset-0 pointer-events-none z-0"
         style={{
@@ -33,12 +33,12 @@ export const Landing = (): React.JSX.Element => {
         <QuestLogSection />
         <CtaSection />
 
-        <footer className="border-t-2 border-[#1e1e2e]/60 py-6 sm:py-8 bg-[#0a0a0f]/30 backdrop-blur-sm">
+        <footer className="border-t-2 border-border/60 py-6 sm:py-8 bg-page/30 backdrop-blur-sm">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between">
-            <span className="font-['Press_Start_2P'] text-[7px] sm:text-[8px] text-[#71717a]">
+            <span className="font-pixel text-[7px] sm:text-[8px] text-ink-faint">
               © 2026 GYMQUEST
             </span>
-            <span className="font-['Press_Start_2P'] text-[7px] sm:text-[8px] text-[#71717a]">
+            <span className="font-pixel text-[7px] sm:text-[8px] text-ink-faint">
               LVL UP YOUR FITNESS
             </span>
           </div>

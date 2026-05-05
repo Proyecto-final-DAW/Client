@@ -64,7 +64,7 @@ export const OnboardingWizard = (
   }
 
   return (
-    <div className="relative min-h-screen bg-[#0a0a0f] text-[#e4e4e7] overflow-hidden">
+    <div className="relative min-h-screen bg-page text-ink overflow-hidden">
       <WizardBackground />
       <main className="relative z-10 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-8 min-h-screen">
         <div className="w-full max-w-xl">
