@@ -7,10 +7,10 @@ type ExerciseSearchProps = {
 };
 
 const inputClass =
-  "flex-1 bg-[#12121a] border-2 border-[#1e1e2e] px-3 py-2.5 font-['Press_Start_2P'] text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] focus:border-green-500/70 focus:outline-none transition-colors";
+  'flex-1 bg-subtle border-2 border-border px-3 py-2.5 font-pixel text-[10px] text-ink placeholder:text-ink-disabled focus:border-green-500/70 focus:outline-none transition-colors';
 
 const selectClass =
-  "bg-[#12121a] border-2 border-[#1e1e2e] px-3 py-2.5 font-['Press_Start_2P'] text-[10px] text-[#e4e4e7] focus:border-green-500/70 focus:outline-none transition-colors [color-scheme:dark]";
+  'bg-subtle border-2 border-border px-3 py-2.5 font-pixel text-[10px] text-ink focus:border-green-500/70 focus:outline-none transition-colors [color-scheme:dark]';
 
 export const ExerciseSearch = ({
   onSelectExercise,
@@ -66,19 +66,19 @@ export const ExerciseSearch = ({
       )}
 
       {error && !loading && (
-        <p className="border-2 border-red-500/40 bg-red-500/10 p-3 text-center font-['Press_Start_2P'] text-base text-red-300">
+        <p className="border-2 border-red-500/40 bg-red-500/10 p-3 text-center font-pixel text-base text-red-300">
           {error}
         </p>
       )}
 
       {!loading && !error && exercises.length === 0 && (search || muscle) && (
-        <p className="border-2 border-dashed border-[#27272a] bg-[#0a0a0f] p-4 text-center font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+        <p className="border-2 border-dashed border-border-muted bg-page p-4 text-center font-pixel text-base text-ink-muted">
           No se encontraron ejercicios.
         </p>
       )}
 
       {!loading && !error && !search && !muscle && (
-        <p className="border-2 border-dashed border-[#27272a] bg-[#0a0a0f] p-4 text-center font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+        <p className="border-2 border-dashed border-border-muted bg-page p-4 text-center font-pixel text-base text-ink-muted">
           Busca un ejercicio o selecciona un grupo muscular.
         </p>
       )}
@@ -103,7 +103,7 @@ export const ExerciseSearch = ({
               <button
                 onClick={() => goToPage(page - 1)}
                 disabled={page === 1}
-                className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400 disabled:opacity-30 disabled:cursor-not-allowed px-3 py-2 transition-colors"
+                className="font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400 disabled:opacity-30 disabled:cursor-not-allowed px-3 py-2 transition-colors"
               >
                 ◀
               </button>
@@ -116,10 +116,10 @@ export const ExerciseSearch = ({
                     onClick={() => goToPage(p)}
                     aria-label={`Pagina ${p}`}
                     aria-current={active ? 'page' : undefined}
-                    className={`min-w-[2rem] font-['Press_Start_2P'] text-[9px] tracking-widest border-2 px-2 py-2 transition-colors ${
+                    className={`min-w-[2rem] font-pixel text-[9px] tracking-widest border-2 px-2 py-2 transition-colors ${
                       active
                         ? 'border-green-500 bg-green-500/10 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.3)]'
-                        : 'border-[#27272a] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400'
+                        : 'border-border-muted bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400'
                     }`}
                   >
                     {p}
@@ -130,7 +130,7 @@ export const ExerciseSearch = ({
               <button
                 onClick={() => goToPage(page + 1)}
                 disabled={page === totalPages}
-                className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400 disabled:opacity-30 disabled:cursor-not-allowed px-3 py-2 transition-colors"
+                className="font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400 disabled:opacity-30 disabled:cursor-not-allowed px-3 py-2 transition-colors"
               >
                 ▶
               </button>

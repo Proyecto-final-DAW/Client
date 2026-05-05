@@ -47,10 +47,10 @@ const activityOptions: SelectableOption[] = [
 export const StepActivity = (props: StepActivityProps): React.JSX.Element => {
   return (
     <div>
-      <h2 className="text-center font-['Press_Start_2P'] text-lg sm:text-xl text-[#e4e4e7] mb-3 leading-relaxed tracking-wider [text-shadow:0_0_18px_rgba(34,197,94,0.35)]">
+      <h2 className="text-center font-pixel text-lg sm:text-xl text-ink mb-3 leading-relaxed tracking-wider [text-shadow:0_0_18px_rgba(34,197,94,0.35)]">
         TU NIVEL DE <span className="text-green-400">ACTIVIDAD</span>
       </h2>
-      <p className="text-center font-['VT323'] text-lg sm:text-xl text-[#a1a1aa] mb-5 leading-tight">
+      <p className="text-center font-pixel-mono text-lg sm:text-xl text-ink-muted mb-5 leading-tight">
         ¿Como es tu dia a dia?
       </p>
 

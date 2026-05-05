@@ -30,15 +30,15 @@ export const ProgressView = (): React.JSX.Element => {
   }, [exercises, selectedId]);
 
   return (
-    <section className="mx-auto max-w-5xl text-[#e4e4e7]">
+    <section className="mx-auto max-w-5xl text-ink">
       <header className="mb-6">
-        <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+        <p className="font-pixel text-[9px] tracking-widest text-green-500">
           ▶ PROGRESO
         </p>
-        <h1 className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
+        <h1 className="mt-2 font-pixel text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
           SEGUIMIENTO
         </h1>
-        <p className="mt-3 font-['VT323'] text-xl leading-snug text-[#a1a1aa]">
+        <p className="mt-3 font-pixel-mono text-xl leading-snug text-ink-muted">
           Visualiza como evolucionan tu peso y tus maximos por ejercicio.
         </p>
       </header>
@@ -46,8 +46,8 @@ export const ProgressView = (): React.JSX.Element => {
       <div className="flex flex-col gap-6">
         <WeightProgressContent />
 
-        <section className="relative border-2 border-green-500/40 bg-[#0d0d14] p-5">
-          <p className="mb-4 font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+        <section className="relative border-2 border-green-500/40 bg-card p-5">
+          <p className="mb-4 font-pixel text-[10px] tracking-widest text-green-500">
             ◆ PROGRESION POR EJERCICIO
           </p>
 

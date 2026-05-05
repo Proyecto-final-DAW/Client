@@ -30,12 +30,12 @@ export const SummaryRow = (props: Props): React.JSX.Element => {
   );
 
   return (
-    <div className="flex items-center justify-between border-b-2 border-[#1e1e2e] py-3 last:border-b-0">
-      <span className="font-['Press_Start_2P'] text-[9px] tracking-widest text-[#a1a1aa]">
+    <div className="flex items-center justify-between border-b-2 border-border py-3 last:border-b-0">
+      <span className="font-pixel text-[9px] tracking-widest text-ink-muted">
         {props.label.toUpperCase()}
       </span>
       <div className="flex items-center gap-3">
-        <span className="font-['Press_Start_2P'] text-xs text-green-400 [text-shadow:0_0_8px_rgba(34,197,94,0.4)]">
+        <span className="font-pixel text-xs text-green-400 [text-shadow:0_0_8px_rgba(34,197,94,0.4)]">
           {props.formattedValue}
         </span>
         <TrendIndicator

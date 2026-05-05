@@ -8,9 +8,9 @@ interface PasswordFieldProps {
 }
 
 const inputClass =
-  "w-full bg-[#12121a] border-2 border-[#1e1e2e] px-3 py-2.5 font-['Press_Start_2P'] text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] focus:border-green-500/70 focus:outline-none transition-colors";
+  'w-full bg-subtle border-2 border-border px-3 py-2.5 font-pixel text-[10px] text-ink placeholder:text-ink-disabled focus:border-green-500/70 focus:outline-none transition-colors';
 const labelClass =
-  "block font-['Press_Start_2P'] text-[8px] tracking-widest text-[#a1a1aa] mb-2";
+  'block font-pixel text-[8px] tracking-widest text-ink-muted mb-2';
 
 export const PasswordField = (props: PasswordFieldProps): React.JSX.Element => (
   <div className={props.className ?? 'mb-4'}>

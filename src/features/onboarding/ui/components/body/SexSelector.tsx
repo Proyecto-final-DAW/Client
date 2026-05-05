@@ -16,10 +16,10 @@ interface SexSelectorProps {
 export const SexSelector = (props: SexSelectorProps): React.JSX.Element => {
   return (
     <div>
-      <label className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider">
+      <label className="block font-pixel text-[9px] sm:text-[10px] text-ink-muted mb-2 tracking-wider">
         SEXO BIOLOGICO
       </label>
-      <p className="font-['Press_Start_2P'] text-sm text-[#71717a] mb-3 tracking-wide leading-tight">
+      <p className="font-pixel text-sm text-ink-faint mb-3 tracking-wide leading-tight">
         Necesario para el calculo metabolico, no define tu identidad.
       </p>
       <div className="grid grid-cols-2 gap-3">
@@ -30,10 +30,10 @@ export const SexSelector = (props: SexSelectorProps): React.JSX.Element => {
               key={option.value}
               type="button"
               onClick={() => props.onChange(option.value)}
-              className={`relative py-5 border-2 text-center font-['Press_Start_2P'] text-[10px] transition-all duration-150 ${
+              className={`relative py-5 border-2 text-center font-pixel text-[10px] transition-all duration-150 ${
                 isSelected
                   ? 'bg-green-500/10 border-green-500/70 text-green-400 shadow-[0_0_16px_rgba(34,197,94,0.3)]'
-                  : 'bg-[#12121a] border-[#1e1e2e] text-[#a1a1aa] hover:border-[#3f3f46]'
+                  : 'bg-subtle border-border text-ink-muted hover:border-[#3f3f46]'
               }`}
             >
               <UserIcon
@@ -46,7 +46,7 @@ export const SexSelector = (props: SexSelectorProps): React.JSX.Element => {
         })}
       </div>
       {props.error && (
-        <p className="font-['Press_Start_2P'] text-base text-red-400 mt-2 tracking-wide leading-none">
+        <p className="font-pixel text-base text-red-400 mt-2 tracking-wide leading-none">
           ✕ {props.error}
         </p>
       )}

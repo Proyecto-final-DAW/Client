@@ -40,12 +40,12 @@ export const RoutineDetail = ({
 
   if (!routine) {
     return (
-      <section className="relative border-2 border-[#1e1e2e] bg-[#0d0d14] p-6 text-center">
+      <section className="relative border-2 border-border bg-card p-6 text-center">
         <PixelCorners size="md" className="border-green-500/30" />
-        <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-[#a1a1aa]">
+        <p className="font-pixel text-[10px] tracking-widest text-ink-muted">
           ◆ SIN SESION SELECCIONADA
         </p>
-        <p className="mt-3 font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+        <p className="mt-3 font-pixel text-base text-ink-muted">
           Selecciona una sesion arriba o crea una nueva.
         </p>
       </section>
@@ -56,18 +56,18 @@ export const RoutineDetail = ({
   const hasExercises = exerciseCount > 0;
 
   return (
-    <section className="relative border-2 border-green-500/60 bg-[#0d0d14] p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.6),0_0_60px_rgba(34,197,94,0.18)]">
+    <section className="relative border-2 border-green-500/60 bg-card p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.6),0_0_60px_rgba(34,197,94,0.18)]">
       <PixelCorners size="md" className="border-green-500/60" />
 
-      <header className="border-b-2 border-[#1e1e2e] pb-5">
+      <header className="border-b-2 border-border pb-5">
         <div className="min-w-0">
-          <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+          <p className="font-pixel text-[9px] tracking-widest text-green-500">
             ◆ SESION ACTIVA
           </p>
-          <h2 className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg leading-relaxed text-green-400 [text-shadow:0_0_14px_rgba(34,197,94,0.5)] break-words">
+          <h2 className="mt-2 font-pixel text-base sm:text-lg leading-relaxed text-green-400 [text-shadow:0_0_14px_rgba(34,197,94,0.5)] break-words">
             {formatRoutineName(routine).toUpperCase()}
           </h2>
-          <p className="mt-2 font-['Press_Start_2P'] text-[10px] tracking-wider text-[#a1a1aa]">
+          <p className="mt-2 font-pixel text-[10px] tracking-wider text-ink-muted">
             {exerciseCount} {exerciseCount === 1 ? 'ejercicio' : 'ejercicios'}
           </p>
         </div>
@@ -76,7 +76,7 @@ export const RoutineDetail = ({
           <button
             type="button"
             onClick={() => navigate(`/workout/${routine.id}`)}
-            className="mt-4 w-full font-['Press_Start_2P'] text-[11px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-5 py-3.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-[1.0625rem] transition-all duration-150 shadow-[0_0_18px_rgba(34,197,94,0.4)]"
+            className="mt-4 w-full font-pixel text-[11px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-5 py-3.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-[1.0625rem] transition-all duration-150 shadow-[0_0_18px_rgba(34,197,94,0.4)]"
           >
             ▶ EMPEZAR SESION
           </button>
@@ -86,10 +86,10 @@ export const RoutineDetail = ({
           <button
             type="button"
             onClick={() => setEditing((value) => !value)}
-            className={`inline-flex items-center gap-2 font-['Press_Start_2P'] text-[8px] tracking-widest border px-2.5 py-2 transition-colors ${
+            className={`inline-flex items-center gap-2 font-pixel text-[8px] tracking-widest border px-2.5 py-2 transition-colors ${
               editing
                 ? 'border-green-500/60 bg-green-500/10 text-green-400'
-                : 'border-[#27272a] bg-transparent text-[#71717a] hover:border-green-500/40 hover:text-green-400'
+                : 'border-border-muted bg-transparent text-ink-faint hover:border-green-500/40 hover:text-green-400'
             }`}
           >
             {editing ? (
@@ -107,7 +107,7 @@ export const RoutineDetail = ({
           <button
             type="button"
             onClick={onDeleteRoutine}
-            className="inline-flex items-center gap-2 font-['Press_Start_2P'] text-[8px] tracking-widest border border-[#27272a] bg-transparent text-[#71717a] px-2.5 py-2 hover:border-red-500/50 hover:text-red-400 transition-colors"
+            className="inline-flex items-center gap-2 font-pixel text-[8px] tracking-widest border border-border-muted bg-transparent text-ink-faint px-2.5 py-2 hover:border-red-500/50 hover:text-red-400 transition-colors"
           >
             <TrashIcon className="h-3 w-3" />
             BORRAR
@@ -129,7 +129,7 @@ export const RoutineDetail = ({
             />
           ))
         ) : (
-          <p className="border-2 border-dashed border-[#27272a] bg-[#0a0a0f] p-4 text-center font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+          <p className="border-2 border-dashed border-border-muted bg-page p-4 text-center font-pixel text-base text-ink-muted">
             Esta rutina aun no tiene ejercicios. Pulsa "EDITAR" para añadir el
             primero.
           </p>
@@ -137,15 +137,15 @@ export const RoutineDetail = ({
       </div>
 
       {editing && (
-        <div className="mt-6 border-t-2 border-[#1e1e2e] pt-5">
+        <div className="mt-6 border-t-2 border-border pt-5">
           <button
             type="button"
             onClick={() => setSearchOpen((open) => !open)}
             aria-expanded={searchOpen}
-            className="mb-3 flex w-full items-center justify-between gap-3 font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500 transition-colors hover:text-green-400"
+            className="mb-3 flex w-full items-center justify-between gap-3 font-pixel text-[9px] tracking-widest text-green-500 transition-colors hover:text-green-400"
           >
             <span>{searchOpen ? '▾' : '▸'} AÑADIR EJERCICIO</span>
-            <span className="font-['Press_Start_2P'] text-[8px] text-[#a1a1aa]">
+            <span className="font-pixel text-[8px] text-ink-muted">
               {searchOpen ? 'OCULTAR' : 'MOSTRAR'}
             </span>
           </button>

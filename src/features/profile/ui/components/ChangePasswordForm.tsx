@@ -43,13 +43,13 @@ export const ChangePasswordForm = (
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="relative w-full border-2 border-red-500/30 bg-[#0d0d14] p-4 text-left hover:border-red-500/60 transition-colors group"
+        className="relative w-full border-2 border-red-500/30 bg-card p-4 text-left hover:border-red-500/60 transition-colors group"
       >
         <PixelCorners size="sm" className="border-red-500/30" />
-        <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-red-400/80 group-hover:text-red-400">
+        <p className="font-pixel text-[10px] tracking-widest text-red-400/80 group-hover:text-red-400">
           ⚠ CAMBIAR CONTRASEÑA
         </p>
-        <p className="mt-2 font-['Press_Start_2P'] text-base text-[#71717a]">
+        <p className="mt-2 font-pixel text-base text-ink-faint">
           Cierra sesion en todos los dispositivos al cambiarla.
         </p>
       </button>
@@ -59,18 +59,18 @@ export const ChangePasswordForm = (
   return (
     <form
       onSubmit={handleSubmit}
-      className="relative border-2 border-red-500/40 bg-[#0d0d14] p-5"
+      className="relative border-2 border-red-500/40 bg-card p-5"
     >
       <PixelCorners size="md" className="border-red-500/40" />
 
       <header className="mb-4 flex items-center justify-between">
-        <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-red-400">
+        <p className="font-pixel text-[10px] tracking-widest text-red-400">
           ⚠ CAMBIAR CONTRASEÑA
         </p>
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14] text-[#a1a1aa] hover:border-[#3f3f46] px-3 py-2 transition-colors"
+          className="font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted hover:border-[#3f3f46] px-3 py-2 transition-colors"
         >
           CERRAR
         </button>
@@ -111,7 +111,7 @@ export const ChangePasswordForm = (
       <button
         type="submit"
         disabled={props.loading}
-        className="w-full font-['Press_Start_2P'] text-[10px] tracking-widest bg-red-500 hover:bg-red-400 text-[#0a0a0f] px-6 py-3 border-b-4 border-red-700 hover:border-red-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(239,68,68,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
+        className="w-full font-pixel text-[10px] tracking-widest bg-red-500 hover:bg-red-400 text-[#0a0a0f] px-6 py-3 border-b-4 border-red-700 hover:border-red-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(239,68,68,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
       >
         {props.loading ? 'CAMBIANDO…' : '▶ CAMBIAR CONTRASEÑA'}
       </button>

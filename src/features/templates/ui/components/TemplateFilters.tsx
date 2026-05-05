@@ -16,11 +16,10 @@ type Props = {
   onChange: (next: TemplateFiltersValue) => void;
 };
 
-const LABEL_CLASS =
-  "font-['Press_Start_2P'] text-[8px] tracking-widest text-[#71717a]";
+const LABEL_CLASS = 'font-pixel text-[8px] tracking-widest text-ink-faint';
 
 const SELECT_CLASS =
-  "font-['Press_Start_2P'] text-[9px] tracking-widest border border-[#27272a] bg-transparent text-[#e4e4e7] px-3 py-2 outline-none focus:border-green-500/60 hover:border-green-500/40 transition-colors [color-scheme:dark]";
+  'font-pixel text-[9px] tracking-widest border border-border-muted bg-transparent text-ink px-3 py-2 outline-none focus:border-green-500/60 hover:border-green-500/40 transition-colors [color-scheme:dark]';
 
 export const TemplateFilters = (props: Props): React.JSX.Element => {
   const { value, onChange } = props;

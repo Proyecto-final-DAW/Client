@@ -9,7 +9,7 @@ export type Trend = 'up' | 'down' | 'flat';
 const TREND_STYLES: Record<Trend, { color: string; prefix: string }> = {
   up: { color: 'text-green-400', prefix: '+' },
   down: { color: 'text-red-400', prefix: '' },
-  flat: { color: 'text-[#71717a]', prefix: '' },
+  flat: { color: 'text-ink-faint', prefix: '' },
 };
 
 type Props = {
@@ -24,7 +24,7 @@ export const TrendIndicator = (props: Props): React.JSX.Element => {
 
   return (
     <span
-      className={`flex items-center gap-1 font-['Press_Start_2P'] text-[9px] tracking-widest ${color}`}
+      className={`flex items-center gap-1 font-pixel text-[9px] tracking-widest ${color}`}
       title={`Semana anterior: ${props.previousValue}`}
     >
       {props.trend === 'up' && <ArrowUpIcon className={iconClassName} />}

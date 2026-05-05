@@ -148,23 +148,23 @@ export const TierUpModal = ({
             aria-labelledby="tier-up-title"
             aria-describedby="tier-up-description"
             {...dialogMotion}
-            className="relative w-full max-w-3xl border-2 border-green-500/60 bg-[#0d0d14] p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_80px_rgba(34,197,94,0.4)]"
+            className="relative w-full max-w-3xl border-2 border-green-500/60 bg-card p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_80px_rgba(34,197,94,0.4)]"
           >
             <PixelCorners size="md" className="border-green-500/60" />
 
             <header className="mb-5 text-center">
-              <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+              <p className="font-pixel text-[9px] tracking-widest text-green-500">
                 TIER {tier} ALCANZADO
               </p>
               <h2
                 id="tier-up-title"
-                className="mt-3 font-['Press_Start_2P'] text-base leading-relaxed text-green-400 [text-shadow:0_0_18px_rgba(34,197,94,0.55)] sm:text-lg"
+                className="mt-3 font-pixel text-base leading-relaxed text-green-400 [text-shadow:0_0_18px_rgba(34,197,94,0.55)] sm:text-lg"
               >
                 {TIER_TITLE[tier]}
               </h2>
               <p
                 id="tier-up-description"
-                className="mt-3 font-['Press_Start_2P'] text-base italic text-[#a1a1aa]"
+                className="mt-3 font-pixel text-base italic text-ink-muted"
               >
                 {TIER_DESCRIPTION[tier]}
               </p>
@@ -195,7 +195,7 @@ export const TierUpModal = ({
                 type="button"
                 onClick={onClose}
                 disabled={choosing}
-                className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14] px-4 py-3 text-[#a1a1aa] transition-colors hover:border-[#3f3f46] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card px-4 py-3 text-ink-muted transition-colors hover:border-[#3f3f46] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 MAS TARDE
               </button>
@@ -203,7 +203,7 @@ export const TierUpModal = ({
                 type="button"
                 onClick={handleConfirm}
                 disabled={!selectedId || choosing}
-                className="font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-6 py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
+                className="font-pixel text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-6 py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
               >
                 {choosing ? 'ELIGIENDO…' : '▶ CONFIRMAR'}
               </button>

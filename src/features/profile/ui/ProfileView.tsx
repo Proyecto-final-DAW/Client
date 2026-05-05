@@ -50,10 +50,10 @@ export const ProfileView = (): React.JSX.Element => {
       {(profile) => (
         <div className="mx-auto max-w-6xl">
           <header className="mb-6">
-            <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+            <p className="font-pixel text-[9px] tracking-widest text-green-500">
               ▶ PERFIL
             </p>
-            <h1 className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
+            <h1 className="mt-2 font-pixel text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
               MI PERSONAJE
             </h1>
           </header>
@@ -98,10 +98,10 @@ export const ProfileView = (): React.JSX.Element => {
                       role="tab"
                       aria-selected={active}
                       onClick={() => setTab(t.id)}
-                      className={`font-['Press_Start_2P'] text-[10px] tracking-widest border-2 px-4 py-2.5 transition-colors ${
+                      className={`font-pixel text-[10px] tracking-widest border-2 px-4 py-2.5 transition-colors ${
                         active
                           ? 'border-green-500 bg-green-500/10 text-green-400 shadow-[0_0_14px_rgba(34,197,94,0.3)]'
-                          : 'border-[#1e1e2e] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400'
+                          : 'border-border bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400'
                       }`}
                     >
                       {active ? '▶ ' : ''}

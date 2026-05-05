@@ -22,11 +22,11 @@ export const ExerciseHeader = (props: Props): React.JSX.Element => {
     : null;
 
   return (
-    <header className="relative border-2 border-green-500/40 bg-[#0d0d14] p-5 sm:p-6 flex flex-col items-center gap-4 sm:flex-row sm:items-center">
+    <header className="relative border-2 border-green-500/40 bg-card p-5 sm:p-6 flex flex-col items-center gap-4 sm:flex-row sm:items-center">
       <PixelCorners size="md" className="border-green-500/60" />
 
       {imgSrc && (
-        <div className="hidden sm:block h-20 w-20 shrink-0 overflow-hidden border-2 border-[#1e1e2e] bg-[#0a0a0f]">
+        <div className="hidden sm:block h-20 w-20 shrink-0 overflow-hidden border-2 border-border bg-page">
           <img
             src={imgSrc}
             alt={props.exercise.name}
@@ -41,14 +41,14 @@ export const ExerciseHeader = (props: Props): React.JSX.Element => {
       )}
 
       <div className="min-w-0 flex-1 text-center">
-        <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+        <p className="font-pixel text-[9px] tracking-widest text-green-500">
           SET {props.setNumber}
         </p>
-        <h1 className="font-['Press_Start_2P'] text-sm sm:text-base leading-relaxed text-green-400 mt-3 [text-shadow:0_0_16px_rgba(34,197,94,0.55)] break-words">
+        <h1 className="font-pixel text-sm sm:text-base leading-relaxed text-green-400 mt-3 [text-shadow:0_0_16px_rgba(34,197,94,0.55)] break-words">
           {props.exercise.name}
         </h1>
         {props.exercise.target && (
-          <p className="font-['Press_Start_2P'] text-lg text-[#a1a1aa] mt-2 uppercase">
+          <p className="font-pixel text-lg text-ink-muted mt-2 uppercase">
             {formatLabel(props.exercise.target, TARGET_LABEL)}
           </p>
         )}

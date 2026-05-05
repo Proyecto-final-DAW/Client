@@ -35,10 +35,10 @@ export const RoutineSwitcher = ({
             onClick={() => onSelect(routine.id)}
             aria-pressed={active}
             title={done ? 'Hecha esta semana' : undefined}
-            className={`inline-flex items-center gap-2 max-w-xs truncate font-['Press_Start_2P'] text-[9px] tracking-widest border-2 px-3 py-2 transition-colors ${
+            className={`inline-flex items-center gap-2 max-w-xs truncate font-pixel text-[9px] tracking-widest border-2 px-3 py-2 transition-colors ${
               active
                 ? 'border-green-500 bg-green-500/10 text-green-400 shadow-[0_0_12px_rgba(34,197,94,0.3)]'
-                : 'border-[#1e1e2e] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400'
+                : 'border-border bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400'
             }`}
           >
             {done && (
@@ -55,7 +55,7 @@ export const RoutineSwitcher = ({
       <button
         type="button"
         onClick={onCreateNew}
-        className="inline-flex items-center gap-2 font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-dashed border-[#3f3f46] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/50 hover:text-green-400 px-3 py-2 transition-colors"
+        className="inline-flex items-center gap-2 font-pixel text-[9px] tracking-widest border-2 border-dashed border-[#3f3f46] bg-card text-ink-muted hover:border-green-500/50 hover:text-green-400 px-3 py-2 transition-colors"
       >
         <PlusIcon className="h-3 w-3" />
         NUEVA

@@ -11,14 +11,14 @@ export const CompletedSetsList = (props: Props): React.JSX.Element | null => {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-baseline justify-between">
-        <p className="font-['Press_Start_2P'] text-[8px] tracking-widest text-[#a1a1aa]">
+        <p className="font-pixel text-[8px] tracking-widest text-ink-muted">
           SETS COMPLETADOS
         </p>
         {props.onUndoLast && (
           <button
             type="button"
             onClick={props.onUndoLast}
-            className="font-['Press_Start_2P'] text-[8px] tracking-widest text-[#71717a] hover:text-red-400 transition-colors"
+            className="font-pixel text-[8px] tracking-widest text-ink-faint hover:text-red-400 transition-colors"
           >
             ↶ DESHACER ULTIMO
           </button>
@@ -29,12 +29,12 @@ export const CompletedSetsList = (props: Props): React.JSX.Element | null => {
         {props.sets.map((set, index) => (
           <li
             key={index}
-            className="flex justify-between items-center border-2 border-[#1e1e2e] bg-[#0d0d14] px-3 py-2"
+            className="flex justify-between items-center border-2 border-border bg-card px-3 py-2"
           >
-            <span className="font-['Press_Start_2P'] text-base text-[#71717a]">
+            <span className="font-pixel text-base text-ink-faint">
               Set {index + 1}
             </span>
-            <span className="font-['Press_Start_2P'] text-[10px] text-green-400">
+            <span className="font-pixel text-[10px] text-green-400">
               {set.weight} KG × {set.reps}
             </span>
           </li>

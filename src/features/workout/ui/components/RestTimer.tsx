@@ -31,8 +31,8 @@ export const RestTimer = (props: Props): React.JSX.Element => {
   const dashOffset = CIRCLE_CIRCUMFERENCE * (1 - progress);
 
   return (
-    <div className="flex flex-col items-center gap-5 border-2 border-green-500/40 bg-[#0d0d14] p-6">
-      <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-[#a1a1aa]">
+    <div className="flex flex-col items-center gap-5 border-2 border-green-500/40 bg-card p-6">
+      <p className="font-pixel text-[9px] tracking-widest text-ink-muted">
         DESCANSO
       </p>
 
@@ -66,7 +66,7 @@ export const RestTimer = (props: Props): React.JSX.Element => {
         <div className="absolute inset-0 flex items-center justify-center">
           <span
             aria-live="polite"
-            className="font-['Press_Start_2P'] text-xl text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.6)]"
+            className="font-pixel text-xl text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.6)]"
           >
             {formatSeconds(remainingSeconds)}
           </span>
@@ -82,10 +82,10 @@ export const RestTimer = (props: Props): React.JSX.Element => {
               type="button"
               onClick={() => onSelectPreset(seconds)}
               aria-pressed={isSelected}
-              className={`font-['Press_Start_2P'] text-[9px] tracking-widest px-3 py-2.5 border-2 transition-colors ${
+              className={`font-pixel text-[9px] tracking-widest px-3 py-2.5 border-2 transition-colors ${
                 isSelected
                   ? 'border-green-500 bg-green-500/10 text-green-400'
-                  : 'border-[#1e1e2e] bg-[#18181b] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400'
+                  : 'border-border bg-[#18181b] text-ink-muted hover:border-green-500/40 hover:text-green-400'
               }`}
             >
               {seconds}s
@@ -97,7 +97,7 @@ export const RestTimer = (props: Props): React.JSX.Element => {
       <button
         type="button"
         onClick={onSkip}
-        className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#1e1e2e] bg-[#0d0d14] text-[#a1a1aa] px-5 py-3 hover:border-green-500/40 hover:text-green-400 transition-colors"
+        className="font-pixel text-[9px] tracking-widest border-2 border-border bg-card text-ink-muted px-5 py-3 hover:border-green-500/40 hover:text-green-400 transition-colors"
       >
         ▶ SALTAR DESCANSO
       </button>

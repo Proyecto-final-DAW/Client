@@ -15,7 +15,7 @@ const StatTile = ({ pilar }: { pilar: StatPilar }): React.JSX.Element => {
   const Icon = pilar.icon;
 
   return (
-    <div className="flex items-center gap-2.5 border border-[#1e1e2e] bg-[#0a0a0f] p-2.5">
+    <div className="flex items-center gap-2.5 border border-border bg-page p-2.5">
       <div
         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-sm border"
         style={{
@@ -27,17 +27,17 @@ const StatTile = ({ pilar }: { pilar: StatPilar }): React.JSX.Element => {
       </div>
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex items-baseline justify-between gap-1">
-          <span className="truncate font-['Press_Start_2P'] text-[8px] tracking-widest uppercase text-[#e4e4e7]">
+          <span className="truncate font-pixel text-[8px] tracking-widest uppercase text-ink">
             {pilar.name}
           </span>
           <span
-            className="shrink-0 font-['Press_Start_2P'] text-[8px]"
+            className="shrink-0 font-pixel text-[8px]"
             style={{ color: accent }}
           >
             {Math.floor(pilar.level)}
           </span>
         </div>
-        <div className="h-2 w-full overflow-hidden rounded-sm bg-[#0a0a0f] border border-[#27272a]">
+        <div className="h-2 w-full overflow-hidden rounded-sm bg-page border border-border-muted">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${percentage}%` }}
@@ -59,9 +59,9 @@ export const StatsPanelCompact = (
 ): React.JSX.Element | null => {
   if (props.loading) {
     return (
-      <section className="relative border-2 border-green-500/30 bg-[#0d0d14] p-4">
+      <section className="relative border-2 border-green-500/30 bg-card p-4">
         <PixelCorners size="sm" className="border-green-500/30" />
-        <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500/60">
+        <p className="font-pixel text-[9px] tracking-widest text-green-500/60">
           CARGANDO STATS…
         </p>
       </section>
@@ -70,11 +70,9 @@ export const StatsPanelCompact = (
 
   if (props.error) {
     return (
-      <section className="relative border-2 border-red-500/40 bg-[#0d0d14] p-4">
+      <section className="relative border-2 border-red-500/40 bg-card p-4">
         <PixelCorners size="sm" className="border-red-500/40" />
-        <p className="font-['Press_Start_2P'] text-base text-red-300">
-          {props.error}
-        </p>
+        <p className="font-pixel text-base text-red-300">{props.error}</p>
       </section>
     );
   }
@@ -82,15 +80,15 @@ export const StatsPanelCompact = (
   if (!props.stats || props.stats.length === 0) return null;
 
   return (
-    <section className="relative border-2 border-green-500/50 bg-[#0d0d14] p-4 shadow-[0_0_18px_rgba(34,197,94,0.15)]">
+    <section className="relative border-2 border-green-500/50 bg-card p-4 shadow-[0_0_18px_rgba(34,197,94,0.15)]">
       <PixelCorners size="md" className="border-green-500/50" />
       <div className="mb-3 flex items-baseline justify-between">
-        <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+        <p className="font-pixel text-[9px] tracking-widest text-green-500">
           ◆ STATS
         </p>
         <a
           href="/profile"
-          className="font-['Press_Start_2P'] text-[8px] tracking-widest text-[#71717a] hover:text-green-400 transition-colors"
+          className="font-pixel text-[8px] tracking-widest text-ink-faint hover:text-green-400 transition-colors"
         >
           VER TODO ▸
         </a>

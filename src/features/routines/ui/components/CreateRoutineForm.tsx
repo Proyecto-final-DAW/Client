@@ -41,16 +41,16 @@ export const CreateRoutineForm = ({
   };
 
   return (
-    <section className="relative border-2 border-dashed border-green-500/40 bg-[#0d0d14] p-4">
+    <section className="relative border-2 border-dashed border-green-500/40 bg-card p-4">
       <PixelCorners size="sm" className="border-green-500/40" />
 
-      <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-green-400">
+      <p className="font-pixel text-[10px] tracking-widest text-green-400">
         ✦ NUEVA SESION
       </p>
 
       <label
         htmlFor="new-routine-name"
-        className="mt-3 block font-['Press_Start_2P'] text-[9px] tracking-widest text-[#a1a1aa]"
+        className="mt-3 block font-pixel text-[9px] tracking-widest text-ink-muted"
       >
         NOMBRE
       </label>
@@ -65,14 +65,14 @@ export const CreateRoutineForm = ({
           if (event.key === 'Escape') onClose();
         }}
         placeholder="Ej. Dia 1 - Tren superior"
-        className="mt-2 w-full bg-[#12121a] border-2 border-[#1e1e2e] px-3 py-2.5 font-['Press_Start_2P'] text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] focus:border-green-500/70 focus:outline-none"
+        className="mt-2 w-full bg-subtle border-2 border-border px-3 py-2.5 font-pixel text-[10px] text-ink placeholder:text-ink-disabled focus:border-green-500/70 focus:outline-none"
       />
 
       <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
         <button
           type="button"
           onClick={onClose}
-          className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14] text-[#a1a1aa] px-4 py-2.5 hover:border-[#3f3f46] transition-colors"
+          className="font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted px-4 py-2.5 hover:border-[#3f3f46] transition-colors"
         >
           CANCELAR
         </button>
@@ -80,7 +80,7 @@ export const CreateRoutineForm = ({
           type="button"
           onClick={() => void handleCreateRoutine()}
           disabled={!newRoutineName.trim() || submitting}
-          className="font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:bg-green-400 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
+          className="font-pixel text-[9px] tracking-widest bg-green-500 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:bg-green-400 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
         >
           {submitting ? 'GUARDANDO…' : '▶ GUARDAR'}
         </button>

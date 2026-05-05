@@ -23,7 +23,7 @@ export const TrainingCalendar = (
 
   return (
     <div className="mt-5 flex flex-col items-center">
-      <p className="mb-3 font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500 uppercase">
+      <p className="mb-3 font-pixel text-[9px] tracking-widest text-green-500 uppercase">
         {monthName}
       </p>
       <div className="flex flex-col gap-1.5">
@@ -31,7 +31,7 @@ export const TrainingCalendar = (
           {weekdayLabels.map((label) => (
             <span
               key={label}
-              className="flex h-5 w-5 items-center justify-center font-['Press_Start_2P'] text-[8px] leading-none text-zinc-500"
+              className="flex h-5 w-5 items-center justify-center font-pixel text-[8px] leading-none text-zinc-500"
             >
               {label}
             </span>

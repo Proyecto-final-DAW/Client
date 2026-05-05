@@ -64,7 +64,7 @@ export const RoutinesView = (): React.JSX.Element => {
       loadingLabel="CARGANDO SESIONES"
     >
       {(routines) => (
-        <section className="text-[#e4e4e7]">
+        <section className="text-ink">
           <div className="mx-auto max-w-5xl">
             <RoutinesHeader />
 

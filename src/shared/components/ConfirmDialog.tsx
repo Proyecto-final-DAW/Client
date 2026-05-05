@@ -28,9 +28,9 @@ const VARIANT_GLOW: Record<Variant, string> = {
 
 const VARIANT_TITLE: Record<Variant, string> = {
   danger:
-    "font-['Press_Start_2P'] text-[11px] tracking-widest text-red-400 [text-shadow:0_0_12px_rgba(239,68,68,0.55)]",
+    'font-pixel text-[11px] tracking-widest text-red-400 [text-shadow:0_0_12px_rgba(239,68,68,0.55)]',
   neutral:
-    "font-['Press_Start_2P'] text-[11px] tracking-widest text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.55)]",
+    'font-pixel text-[11px] tracking-widest text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.55)]',
 };
 
 const VARIANT_PREFIX: Record<Variant, string> = {
@@ -40,9 +40,9 @@ const VARIANT_PREFIX: Record<Variant, string> = {
 
 const VARIANT_BUTTON: Record<Variant, string> = {
   danger:
-    "font-['Press_Start_2P'] text-[9px] tracking-widest bg-red-500 text-[#0a0a0f] px-4 py-3 border-b-4 border-red-700 hover:bg-red-400 hover:border-red-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(239,68,68,0.35)]",
+    'font-pixel text-[9px] tracking-widest bg-red-500 text-[#0a0a0f] px-4 py-3 border-b-4 border-red-700 hover:bg-red-400 hover:border-red-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(239,68,68,0.35)]',
   neutral:
-    "font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 text-[#0a0a0f] px-4 py-3 border-b-4 border-green-700 hover:bg-green-400 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)]",
+    'font-pixel text-[9px] tracking-widest bg-green-500 text-[#0a0a0f] px-4 py-3 border-b-4 border-green-700 hover:bg-green-400 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)]',
 };
 
 /**
@@ -87,7 +87,7 @@ export const ConfirmDialog = ({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
     >
       <div
-        className={`relative w-full max-w-md border-2 bg-[#0d0d14] p-6 ${VARIANT_BORDER[variant]} ${VARIANT_GLOW[variant]}`}
+        className={`relative w-full max-w-md border-2 bg-card p-6 ${VARIANT_BORDER[variant]} ${VARIANT_GLOW[variant]}`}
       >
         <PixelCorners size="md" className={VARIANT_BORDER[variant]} />
 
@@ -96,7 +96,7 @@ export const ConfirmDialog = ({
         </h3>
 
         {description && (
-          <p className="mt-3 font-['VT323'] text-lg leading-snug text-[#a1a1aa]">
+          <p className="mt-3 font-pixel-mono text-lg leading-snug text-ink-muted">
             {description}
           </p>
         )}
@@ -106,7 +106,7 @@ export const ConfirmDialog = ({
             ref={cancelRef}
             type="button"
             onClick={onCancel}
-            className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14] text-[#a1a1aa] px-4 py-3 hover:border-[#3f3f46] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 transition-colors"
+            className="font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted px-4 py-3 hover:border-[#3f3f46] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 transition-colors"
           >
             {cancelLabel}
           </button>

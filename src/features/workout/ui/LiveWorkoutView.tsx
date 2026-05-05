@@ -24,15 +24,15 @@ const ErrorScreen = (props: {
   message: string;
   onBack: () => void;
 }): React.JSX.Element => (
-  <section className="text-[#e4e4e7]">
+  <section className="text-ink">
     <div className="mx-auto max-w-2xl text-center py-16">
-      <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-red-400">
+      <p className="font-pixel text-[10px] tracking-widest text-red-400">
         ✕ {props.message}
       </p>
       <button
         type="button"
         onClick={props.onBack}
-        className="mt-6 font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#1e1e2e] bg-[#0d0d14] text-[#a1a1aa] px-4 py-3 hover:border-green-500/40 hover:text-green-400 transition-colors"
+        className="mt-6 font-pixel text-[9px] tracking-widest border-2 border-border bg-card text-ink-muted px-4 py-3 hover:border-green-500/40 hover:text-green-400 transition-colors"
       >
         VOLVER A SESIONES
       </button>
@@ -53,7 +53,7 @@ const WorkoutHeader = ({
   onCancelClick: () => void;
   onExitClick: () => void;
 }): React.JSX.Element => (
-  <header className="sticky top-0 z-30 h-16 lg:h-24 flex items-center justify-between gap-2 border-b-2 border-[#1e1e2e] bg-[#0a0a0f]/95 backdrop-blur-md px-3 sm:px-6 lg:px-8">
+  <header className="sticky top-0 z-30 h-16 lg:h-24 flex items-center justify-between gap-2 border-b-2 border-border bg-page/95 backdrop-blur-md px-3 sm:px-6 lg:px-8">
     <Link to="/dashboard" className="flex items-center gap-3">
       <img
         src="/images/Logo.webp"
@@ -67,7 +67,7 @@ const WorkoutHeader = ({
         type="button"
         onClick={onExitClick}
         aria-label="Volver al inicio"
-        className="inline-flex items-center gap-2 font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#1e1e2e] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400 px-3 py-2 transition-colors"
+        className="inline-flex items-center gap-2 font-pixel text-[9px] tracking-widest border-2 border-border bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400 px-3 py-2 transition-colors"
       >
         <HomeIcon className="h-3 w-3" />
         <span className="hidden sm:inline">INICIO</span>
@@ -76,7 +76,7 @@ const WorkoutHeader = ({
         type="button"
         onClick={onCancelClick}
         aria-label="Cancelar entreno"
-        className="inline-flex items-center gap-2 font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-red-500/40 bg-[#0d0d14] text-red-400 hover:bg-red-500/10 px-3 py-2 transition-colors"
+        className="inline-flex items-center gap-2 font-pixel text-[9px] tracking-widest border-2 border-red-500/40 bg-card text-red-400 hover:bg-red-500/10 px-3 py-2 transition-colors"
       >
         <XMarkIcon className="h-3 w-3" />
         <span className="hidden sm:inline">CANCELAR</span>
@@ -110,16 +110,16 @@ const HomeExitDialog = ({
       }}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
     >
-      <div className="relative w-full max-w-md border-2 border-green-500/60 bg-[#0d0d14] p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(34,197,94,0.35)]">
+      <div className="relative w-full max-w-md border-2 border-green-500/60 bg-card p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(34,197,94,0.35)]">
         <PixelCorners size="md" className="border-green-500/60" />
 
         <h3
           id="home-exit-title"
-          className="font-['Press_Start_2P'] text-[11px] tracking-widest text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.55)]"
+          className="font-pixel text-[11px] tracking-widest text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.55)]"
         >
           ◆ SALIR AL INICIO
         </h3>
-        <p className="mt-3 font-['Press_Start_2P'] text-base leading-tight text-[#a1a1aa]">
+        <p className="mt-3 font-pixel text-base leading-tight text-ink-muted">
           ¿Quieres mantener el progreso de esta sesion para retomarla luego o
           descartarlo?
         </p>
@@ -128,21 +128,21 @@ const HomeExitDialog = ({
           <button
             type="button"
             onClick={onCancel}
-            className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14] text-[#a1a1aa] px-4 py-3 hover:border-[#3f3f46] transition-colors"
+            className="font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted px-4 py-3 hover:border-[#3f3f46] transition-colors"
           >
             VOLVER
           </button>
           <button
             type="button"
             onClick={onDiscard}
-            className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-red-500/40 bg-[#0d0d14] text-red-400 px-4 py-3 hover:bg-red-500/10 transition-colors"
+            className="font-pixel text-[9px] tracking-widest border-2 border-red-500/40 bg-card text-red-400 px-4 py-3 hover:bg-red-500/10 transition-colors"
           >
             DESCARTAR
           </button>
           <button
             type="button"
             onClick={onKeep}
-            className="font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 text-[#0a0a0f] px-4 py-3 border-b-4 border-green-700 hover:bg-green-400 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)]"
+            className="font-pixel text-[9px] tracking-widest bg-green-500 text-[#0a0a0f] px-4 py-3 border-b-4 border-green-700 hover:bg-green-400 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)]"
           >
             ▶ MANTENER
           </button>
@@ -173,7 +173,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
 
   if (loading) {
     return (
-      <div className="relative min-h-screen flex items-center justify-center text-[#e4e4e7]">
+      <div className="relative min-h-screen flex items-center justify-center text-ink">
         <WorkoutBackground />
         <div className="relative z-10">
           <LoadingPixel label="CARGANDO SESION" />
@@ -184,7 +184,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
 
   if (routineError || !routine) {
     return (
-      <div className="relative min-h-screen text-[#e4e4e7]">
+      <div className="relative min-h-screen text-ink">
         <WorkoutBackground />
         <div className="relative z-10 p-6">
           <ErrorScreen
@@ -203,7 +203,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
     };
 
     return (
-      <div className="relative min-h-screen text-[#e4e4e7]">
+      <div className="relative min-h-screen text-ink">
         <WorkoutBackground />
         <div className="relative z-10 p-6">
           <WorkoutSummary
@@ -224,7 +224,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
 
   if (!workout.currentExercise) {
     return (
-      <div className="relative min-h-screen text-[#e4e4e7]">
+      <div className="relative min-h-screen text-ink">
         <WorkoutBackground />
         <div className="relative z-10 p-6">
           <ErrorScreen
@@ -269,7 +269,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
       : Math.round((workout.currentExerciseIndex / totalExercises) * 100);
 
   return (
-    <div className="relative min-h-screen text-[#e4e4e7]">
+    <div className="relative min-h-screen text-ink">
       <WorkoutBackground />
 
       <WorkoutHeader
@@ -284,15 +284,15 @@ export const LiveWorkoutView = (): React.JSX.Element => {
       <div className="sticky top-16 lg:top-24 z-20 px-4 py-3 lg:py-4">
         <div className="mx-auto max-w-xl">
           <div className="flex items-baseline justify-between mb-2 gap-3">
-            <span className="font-['Press_Start_2P'] text-[10px] sm:text-[11px] tracking-widest text-[#e4e4e7]">
+            <span className="font-pixel text-[10px] sm:text-[11px] tracking-widest text-ink">
               EJERCICIO {workout.currentExerciseIndex + 1} / {totalExercises}
             </span>
-            <span className="font-['Press_Start_2P'] text-[11px] sm:text-xs tracking-widest text-green-400 [text-shadow:0_0_8px_rgba(34,197,94,0.5)]">
+            <span className="font-pixel text-[11px] sm:text-xs tracking-widest text-green-400 [text-shadow:0_0_8px_rgba(34,197,94,0.5)]">
               {progressPercent}%
             </span>
           </div>
           <div
-            className="h-4 border border-green-500/30 bg-[#0a0a0f] overflow-hidden rounded-sm"
+            className="h-4 border border-green-500/30 bg-page overflow-hidden rounded-sm"
             role="progressbar"
             aria-valuenow={progressPercent}
             aria-valuemin={0}
@@ -311,7 +311,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
         <div className="mx-auto max-w-xl flex flex-col gap-6">
           {/* Day label — short body part name. Template prefix and
               methodology suffix are stripped so the label stays scannable. */}
-          <p className="text-center font-['Press_Start_2P'] text-[10px] sm:text-xs tracking-widest text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.5)] break-words">
+          <p className="text-center font-pixel text-[10px] sm:text-xs tracking-widest text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.5)] break-words">
             {formatRoutineName(routine).toUpperCase()}
           </p>
 
@@ -351,7 +351,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
               type="button"
               onClick={workout.previousExercise}
               disabled={workout.isFirstExercise}
-              className="inline-flex items-center justify-center gap-2 font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14]/90 text-[#a1a1aa] px-4 py-3 hover:border-green-500/40 hover:text-green-400 transition-colors disabled:text-[#52525b] disabled:cursor-not-allowed disabled:hover:border-[#27272a] disabled:hover:text-[#52525b]"
+              className="inline-flex items-center justify-center gap-2 font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card/90 text-ink-muted px-4 py-3 hover:border-green-500/40 hover:text-green-400 transition-colors disabled:text-ink-disabled disabled:cursor-not-allowed disabled:hover:border-border-muted disabled:hover:text-ink-disabled"
             >
               <ArrowLeftIcon className="h-3 w-3" />
               ANTERIOR
@@ -361,7 +361,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
                 type="button"
                 onClick={workout.beginFinishing}
                 disabled={!canFinish}
-                className="font-['Press_Start_2P'] text-[10px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-5 py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
+                className="font-pixel text-[10px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-5 py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
               >
                 ▶ TERMINAR SESION
               </button>
@@ -369,7 +369,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
               <button
                 type="button"
                 onClick={workout.nextExercise}
-                className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-green-500/40 bg-[#0d0d14] text-green-400 px-4 py-3 hover:border-green-500 hover:bg-green-500/10 transition-colors"
+                className="font-pixel text-[9px] tracking-widest border-2 border-green-500/40 bg-card text-green-400 px-4 py-3 hover:border-green-500 hover:bg-green-500/10 transition-colors"
               >
                 SIGUIENTE ▶
               </button>

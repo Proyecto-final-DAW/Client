@@ -14,23 +14,23 @@ const formatRest = (seconds: number): string => {
 
 export const ExerciseTable = (props: Props): React.JSX.Element => {
   return (
-    <div className="overflow-x-auto border-2 border-[#1e1e2e] bg-[#0d0d14]">
+    <div className="overflow-x-auto border-2 border-border bg-card">
       <table className="w-full text-left">
         <thead>
-          <tr className="border-b-2 border-[#1e1e2e] bg-[#18181b]">
-            <th className="font-['Press_Start_2P'] text-[8px] tracking-widest text-[#a1a1aa] px-3 py-3 w-10">
+          <tr className="border-b-2 border-border bg-[#18181b]">
+            <th className="font-pixel text-[8px] tracking-widest text-ink-muted px-3 py-3 w-10">
               #
             </th>
-            <th className="font-['Press_Start_2P'] text-[8px] tracking-widest text-[#a1a1aa] px-3 py-3">
+            <th className="font-pixel text-[8px] tracking-widest text-ink-muted px-3 py-3">
               EJERCICIO
             </th>
-            <th className="font-['Press_Start_2P'] text-[8px] tracking-widest text-[#a1a1aa] px-3 py-3 hidden sm:table-cell">
+            <th className="font-pixel text-[8px] tracking-widest text-ink-muted px-3 py-3 hidden sm:table-cell">
               GRUPO
             </th>
-            <th className="font-['Press_Start_2P'] text-[8px] tracking-widest text-[#a1a1aa] px-3 py-3 text-center">
+            <th className="font-pixel text-[8px] tracking-widest text-ink-muted px-3 py-3 text-center">
               SETS × REPS
             </th>
-            <th className="font-['Press_Start_2P'] text-[8px] tracking-widest text-[#a1a1aa] px-3 py-3 text-center">
+            <th className="font-pixel text-[8px] tracking-widest text-ink-muted px-3 py-3 text-center">
               DESCANSO
             </th>
           </tr>
@@ -39,21 +39,21 @@ export const ExerciseTable = (props: Props): React.JSX.Element => {
           {props.exercises.map((exercise, index) => (
             <tr
               key={`${exercise.name}-${index}`}
-              className="border-b border-[#1e1e2e] last:border-b-0"
+              className="border-b border-border last:border-b-0"
             >
-              <td className="font-['Press_Start_2P'] text-[10px] text-[#71717a] px-3 py-2.5">
+              <td className="font-pixel text-[10px] text-ink-faint px-3 py-2.5">
                 {index + 1}
               </td>
-              <td className="font-['Press_Start_2P'] text-[10px] leading-relaxed text-[#e4e4e7] px-3 py-2.5">
+              <td className="font-pixel text-[10px] leading-relaxed text-ink px-3 py-2.5">
                 {exercise.name}
               </td>
-              <td className="font-['Press_Start_2P'] text-[9px] text-[#a1a1aa] px-3 py-2.5 hidden sm:table-cell">
+              <td className="font-pixel text-[9px] text-ink-muted px-3 py-2.5 hidden sm:table-cell">
                 {exercise.muscleGroup}
               </td>
-              <td className="font-['Press_Start_2P'] text-[10px] text-green-400 px-3 py-2.5 text-center whitespace-nowrap">
+              <td className="font-pixel text-[10px] text-green-400 px-3 py-2.5 text-center whitespace-nowrap">
                 {exercise.sets} × {exercise.reps}
               </td>
-              <td className="font-['Press_Start_2P'] text-[9px] text-[#a1a1aa] px-3 py-2.5 text-center whitespace-nowrap">
+              <td className="font-pixel text-[9px] text-ink-muted px-3 py-2.5 text-center whitespace-nowrap">
                 {formatRest(exercise.restSeconds)}
               </td>
             </tr>

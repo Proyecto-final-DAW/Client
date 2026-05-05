@@ -78,9 +78,9 @@ export const AccountSummary = (
   ];
 
   return (
-    <section className="relative border-2 border-green-500/40 bg-[#0d0d14] p-5">
+    <section className="relative border-2 border-green-500/40 bg-card p-5">
       <PixelCorners size="md" className="border-green-500/40" />
-      <p className="mb-4 font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+      <p className="mb-4 font-pixel text-[10px] tracking-widest text-green-500">
         ◆ RESUMEN
       </p>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -89,7 +89,7 @@ export const AccountSummary = (
           return (
             <div
               key={item.label}
-              className="relative flex flex-col items-center justify-center border-2 border-[#1e1e2e] bg-[#0a0a0f] p-4 text-center"
+              className="relative flex flex-col items-center justify-center border-2 border-border bg-page p-4 text-center"
               style={{
                 boxShadow: `inset 0 0 24px color-mix(in srgb, ${item.accent} 8%, transparent)`,
               }}
@@ -100,7 +100,7 @@ export const AccountSummary = (
                 aria-hidden="true"
               />
               <p
-                className="font-['Press_Start_2P'] text-2xl leading-none [text-shadow:2px_2px_0_#000]"
+                className="font-pixel text-2xl leading-none [text-shadow:2px_2px_0_#000]"
                 style={{
                   color: item.accent,
                   textShadow: `0 0 14px color-mix(in srgb, ${item.accent} 60%, transparent), 2px 2px 0 #000`,
@@ -109,11 +109,11 @@ export const AccountSummary = (
                 {item.value}
               </p>
               {item.unit && (
-                <p className="mt-2 font-['Press_Start_2P'] text-[7px] tracking-widest text-[#71717a]">
+                <p className="mt-2 font-pixel text-[7px] tracking-widest text-ink-faint">
                   {item.unit}
                 </p>
               )}
-              <p className="mt-2 font-['Press_Start_2P'] text-[8px] tracking-widest text-[#a1a1aa]">
+              <p className="mt-2 font-pixel text-[8px] tracking-widest text-ink-muted">
                 {item.label}
               </p>
             </div>

@@ -28,14 +28,14 @@ export const ExerciseRow = ({
   const isLast = index === total - 1;
 
   return (
-    <article className="relative flex items-center gap-3 border-2 border-[#1e1e2e] bg-[#0d0d14] p-3">
+    <article className="relative flex items-center gap-3 border-2 border-border bg-card p-3">
       <PixelCorners size="sm" className="border-green-500/30" />
 
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-[#27272a] bg-[#12121a] font-['Press_Start_2P'] text-[10px] text-green-400">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-border-muted bg-subtle font-pixel text-[10px] text-green-400">
         {String(index + 1).padStart(2, '0')}
       </div>
 
-      <h3 className="flex-1 font-['Press_Start_2P'] text-[10px] sm:text-[11px] leading-relaxed text-[#e4e4e7]">
+      <h3 className="flex-1 font-pixel text-[10px] sm:text-[11px] leading-relaxed text-ink">
         {exercise.name}
       </h3>
 
@@ -48,7 +48,7 @@ export const ExerciseRow = ({
                 onClick={() => onMove(exercise.id, 'up')}
                 disabled={isFirst}
                 aria-label={`Subir ${exercise.name}`}
-                className="border border-[#27272a] bg-[#12121a] p-1 text-[#a1a1aa] transition-colors hover:border-green-500/50 hover:text-green-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-[#27272a] disabled:hover:text-[#a1a1aa]"
+                className="border border-border-muted bg-subtle p-1 text-ink-muted transition-colors hover:border-green-500/50 hover:text-green-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-border-muted disabled:hover:text-ink-muted"
               >
                 <ChevronUpIcon className="h-3 w-3" />
               </button>
@@ -57,7 +57,7 @@ export const ExerciseRow = ({
                 onClick={() => onMove(exercise.id, 'down')}
                 disabled={isLast}
                 aria-label={`Bajar ${exercise.name}`}
-                className="border border-t-0 border-[#27272a] bg-[#12121a] p-1 text-[#a1a1aa] transition-colors hover:border-green-500/50 hover:text-green-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-[#27272a] disabled:hover:text-[#a1a1aa]"
+                className="border border-t-0 border-border-muted bg-subtle p-1 text-ink-muted transition-colors hover:border-green-500/50 hover:text-green-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-border-muted disabled:hover:text-ink-muted"
               >
                 <ChevronDownIcon className="h-3 w-3" />
               </button>

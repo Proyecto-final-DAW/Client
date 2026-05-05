@@ -32,20 +32,20 @@ export const AchievementsView = (): React.JSX.Element => {
           return 0;
         });
         return (
-          <div className="mx-auto max-w-4xl text-[#e4e4e7]">
+          <div className="mx-auto max-w-4xl text-ink">
             <header className="mb-6">
-              <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+              <p className="font-pixel text-[9px] tracking-widest text-green-500">
                 ▶ LOGROS
               </p>
               <div className="mt-2 flex flex-wrap items-baseline justify-between gap-3">
-                <h1 className="font-['Press_Start_2P'] text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
+                <h1 className="font-pixel text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
                   HALL OF FAME
                 </h1>
-                <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-[#a1a1aa]">
+                <p className="font-pixel text-[10px] tracking-widest text-ink-muted">
                   <span className="text-green-400">{unlockedCount}</span>
-                  <span className="mx-1 text-[#52525b]">/</span>
+                  <span className="mx-1 text-ink-disabled">/</span>
                   <span>{milestones.length}</span>
-                  <span className="ml-2 text-[#71717a]">DESBLOQUEADOS</span>
+                  <span className="ml-2 text-ink-faint">DESBLOQUEADOS</span>
                 </p>
               </div>
             </header>
