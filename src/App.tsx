@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider';
 import { CharacterProvider } from './context/CharacterProvider';
 import { AchievementsView } from './features/achievements/ui/AchievementsView';
+import { ClassTreeView } from './features/character/ui/ClassTreeView';
 import { Dashboard } from './features/dashboard/ui/DashboardView';
 import { DietView } from './features/diet/ui/DietView';
 import { ExercisesView } from './features/exercises/ui/ExercisesView';
@@ -44,6 +45,7 @@ export const App = (): React.JSX.Element => {
                   <Route path="/exercises" element={<ExercisesView />} />
                   <Route path="/diet" element={<DietView />} />
                   <Route path="/achievements" element={<AchievementsView />} />
+                  <Route path="/clases" element={<ClassTreeView />} />
                   <Route path="/templates" element={<TemplatesView />} />
                   <Route
                     path="/templates/:id"

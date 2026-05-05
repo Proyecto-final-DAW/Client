@@ -5,6 +5,7 @@ import {
   ClipboardDocumentListIcon,
   HeartIcon,
   HomeIcon,
+  Squares2X2Icon,
   TrophyIcon,
   UserCircleIcon,
   XMarkIcon,
@@ -55,6 +56,7 @@ const MENU_GROUPS: MenuGroup[] = [
   {
     label: 'PERSONAJE',
     items: [
+      { to: '/clases', label: 'CLASES', icon: Squares2X2Icon },
       { to: '/diet', label: 'DIETA', icon: HeartIcon },
       { to: '/achievements', label: 'LOGROS', icon: TrophyIcon },
       { to: '/profile', label: 'PERFIL', icon: UserCircleIcon },

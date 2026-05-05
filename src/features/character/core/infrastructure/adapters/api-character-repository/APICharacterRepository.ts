@@ -7,6 +7,7 @@ import type {
   CharacterStateOrOnboarding,
 } from '../../../application/ports/CharacterRepository';
 import type { PendingChoiceTier } from '../../../domain/models/CharacterState';
+import type { ClassCatalog } from '../../../domain/models/ClassCatalog';
 import {
   isOnboardingRequired,
   type GetCharacterStateDTO,
@@ -49,6 +50,19 @@ export class APICharacterRepository implements CharacterRepository {
       return toResult(response.data);
     } catch (error) {
       throw surface(error, 'Error al elegir clase');
+    }
+  }
+
+  // The server emits the catalog using the same shape the domain expects,
+  // so no mapper is needed — only a typed read.
+  async getCatalog(): Promise<ClassCatalog> {
+    try {
+      const response = await axios.get<ClassCatalog>(
+        API_ENDPOINTS.getCharacterCatalog
+      );
+      return response.data;
+    } catch (error) {
+      throw surface(error, 'Error al cargar el catálogo de clases');
     }
   }
 }
