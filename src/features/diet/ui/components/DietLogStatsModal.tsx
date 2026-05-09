@@ -2,7 +2,9 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 import { PixelCorners } from '@shared/components/PixelCorners';
-import { STAT_CONFIG, STAT_ORDER } from '../../../stats/core/domain/models/StatConfig';
+import { useBodyScrollLock } from '@shared/hooks/useBodyScrollLock';
+import { useEscapeClose } from '@shared/hooks/useEscapeClose';
+import { STAT_CONFIG, STAT_ORDER } from '@features/stats/ui/StatConfig';
 import type { UserStats } from '../../../stats/core/domain/models/UserStats';
 import type { DietLogGains } from '../../core/domain/models/DietLogGains';
 
@@ -161,6 +163,8 @@ export const DietLogStatsModal = (
   props: DietLogStatsModalProps
 ): React.JSX.Element | null => {
   const reducedMotion = useReducedMotion() ?? false;
+  useBodyScrollLock(props.open);
+  useEscapeClose(props.open, props.onClose);
 
   if (!props.open) return null;
 

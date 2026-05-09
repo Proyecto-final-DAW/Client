@@ -96,10 +96,15 @@ export const ExerciseSearch = ({
               aria-label="Paginacion de ejercicios"
               className="flex flex-wrap justify-center items-center gap-2"
             >
+              {/* Pagination tap targets bumped to 40×40 (h-10 w-10) to
+                  clear the WCAG 2.5.5 24×24 floor and match the
+                  AchievementsView / TemplatePaginatedBrowser buttons —
+                  consistent across the app. */}
               <button
                 onClick={() => goToPage(page - 1)}
                 disabled={page === 1}
-                className="font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400 disabled:opacity-30 disabled:cursor-not-allowed px-3 py-2 transition-colors"
+                aria-label="Pagina anterior"
+                className="inline-flex h-10 w-10 items-center justify-center font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
                 ◀
               </button>
@@ -112,7 +117,7 @@ export const ExerciseSearch = ({
                     onClick={() => goToPage(p)}
                     aria-label={`Pagina ${p}`}
                     aria-current={active ? 'page' : undefined}
-                    className={`min-w-[2rem] font-pixel text-[9px] tracking-widest border-2 px-2 py-2 transition-colors ${
+                    className={`inline-flex h-10 w-10 items-center justify-center font-pixel text-[9px] tracking-widest border-2 transition-colors ${
                       active
                         ? 'border-green-500 bg-green-500/10 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.3)]'
                         : 'border-border-muted bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400'
@@ -126,7 +131,8 @@ export const ExerciseSearch = ({
               <button
                 onClick={() => goToPage(page + 1)}
                 disabled={page === totalPages}
-                className="font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400 disabled:opacity-30 disabled:cursor-not-allowed px-3 py-2 transition-colors"
+                aria-label="Pagina siguiente"
+                className="inline-flex h-10 w-10 items-center justify-center font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
                 ▶
               </button>

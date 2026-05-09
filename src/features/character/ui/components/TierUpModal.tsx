@@ -2,7 +2,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
 import { PixelCorners } from '@shared/components/PixelCorners';
-import { statConfigFor } from '../../../stats/core/domain/models/StatConfig';
+import { statConfigFor } from '@features/stats/ui/StatConfig';
 import type {
   PendingChoice,
   PendingChoiceTier,

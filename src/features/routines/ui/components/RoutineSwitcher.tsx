@@ -40,6 +40,16 @@ export const RoutineSwitcher = ({
             type="button"
             onClick={() => onSelect(routine.id)}
             aria-pressed={active}
+            // Surface the "done" status via the button's accessible name
+            // instead of an aria-label on the SVG inside it — that
+            // strategy made screen readers stutter with the icon's label
+            // colliding with the button text. The CheckIcon is now
+            // purely decorative (aria-hidden).
+            aria-label={
+              done
+                ? `${formatRoutineName(routine)} (hecha esta semana)`
+                : undefined
+            }
             title={done ? 'Hecha esta semana' : undefined}
             className={`inline-flex shrink-0 items-center gap-2 max-w-xs truncate [scroll-snap-align:start] font-pixel text-[9px] tracking-widest border-2 px-3 py-2 transition-colors ${
               active
@@ -50,7 +60,7 @@ export const RoutineSwitcher = ({
             {done && (
               <CheckIcon
                 className="h-3 w-3 shrink-0 text-green-400"
-                aria-label="Hecha esta semana"
+                aria-hidden="true"
               />
             )}
             {active ? '▶ ' : ''}

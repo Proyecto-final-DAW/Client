@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 
 import type { StatPilar } from '../../core/domain/models/StatPilar';
+import { statIconFor } from '../StatConfig';
 
 interface StatBarProps {
   pilar: StatPilar;
@@ -36,7 +37,11 @@ export const StatBar = (props: StatBarProps): React.JSX.Element => {
   const totalProgress = (props.pilar.level + withinLevel) / MAX_LEVEL;
   const percentage = Math.min(100, Math.max(0, totalProgress * 100));
   const accent = props.pilar.accentColor;
-  const Icon = props.pilar.icon;
+  // Icon binding lives in `stats/ui/StatConfig.tsx`; the domain
+  // pillar carries only the stable key. statIconFor returns
+  // undefined for unknown keys (defensive), in which case we render
+  // an empty 9×9 box rather than crashing.
+  const Icon = statIconFor(props.pilar.key);
   const showXp = props.showXp ?? true;
 
   return (
@@ -54,7 +59,7 @@ export const StatBar = (props: StatBarProps): React.JSX.Element => {
           backgroundColor: `color-mix(in srgb, ${accent} 12%, transparent)`,
         }}
       >
-        <Icon className="h-5 w-5" style={{ color: accent }} />
+        {Icon && <Icon className="h-5 w-5" style={{ color: accent }} />}
       </div>
 
       <div className="min-w-0 flex-1">

@@ -65,7 +65,7 @@ export const CreateRoutineForm = ({
           if (event.key === 'Escape') onClose();
         }}
         placeholder="Ej. Dia 1 - Tren superior"
-        className="mt-2 w-full bg-subtle border-2 border-border px-3 py-2.5 font-pixel text-[10px] text-ink placeholder:text-ink-disabled focus:border-green-500/70 focus:outline-none"
+        className="mt-2 w-full bg-subtle border-2 border-border px-3 py-3 font-pixel-mono text-base text-ink placeholder:text-ink-disabled focus:border-green-500/70 focus:outline-none"
       />
 
       <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">

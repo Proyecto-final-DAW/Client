@@ -2,10 +2,8 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 
 import { PixelCorners } from '@shared/components/PixelCorners';
-import {
-  STAT_CONFIG,
-  STAT_ORDER,
-} from '../../../stats/core/domain/models/StatConfig';
+import { useBodyScrollLock } from '@shared/hooks/useBodyScrollLock';
+import { STAT_CONFIG, STAT_ORDER } from '@features/stats/ui/StatConfig';
 import { RANK_LETTERS, styleForRank } from '../../core/domain/models/RankLabels';
 
 type StatKey = (typeof STAT_ORDER)[number];
@@ -171,6 +169,7 @@ export const OriginStoryIntro = ({
 }: OriginStoryIntroProps): React.JSX.Element | null => {
   const [index, setIndex] = useState(0);
   const prefersReducedMotion = useReducedMotion();
+  useBodyScrollLock(open);
 
   // Close handler reused by Skip and final CTA. Wrapped in useCallback so
   // the keyboard-shortcut effect below doesn't tear down on every render.

@@ -83,9 +83,9 @@ export const RoutinesView = (): React.JSX.Element => {
                 <EmptyState
                   icon="⚔"
                   title="Sin sesiones"
-                  description="Crea tu primera sesion o aplica una rutina entera."
+                  description="Crea tu primera sesión o aplica una rutina entera."
                   cta={{
-                    label: 'Crear sesion',
+                    label: 'Crear sesión',
                     onClick: () => setCreating(true),
                   }}
                   secondaryCta={{
@@ -130,8 +130,8 @@ export const RoutinesView = (): React.JSX.Element => {
 
             <ConfirmDialog
               open={routineToDelete !== null}
-              title="Eliminar sesion"
-              description="¿Seguro que quieres borrar esta sesion? Esta accion no se puede deshacer."
+              title="Eliminar sesión"
+              description="¿Seguro que quieres borrar esta sesión? Esta acción no se puede deshacer."
               onCancel={() => setRoutineToDelete(null)}
               onConfirm={() => {
                 if (routineToDelete === null) return;

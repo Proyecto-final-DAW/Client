@@ -52,10 +52,10 @@ export const RoutineDetail = ({
       <section className="relative border-2 border-border bg-card p-6 text-center">
         <PixelCorners size="md" className="border-green-500/30" />
         <p className="font-pixel text-[10px] tracking-widest text-ink-muted">
-          ◆ SIN SESION SELECCIONADA
+          ◆ SIN SESIÓN SELECCIONADA
         </p>
         <p className="mt-3 font-pixel text-base text-ink-muted">
-          Selecciona una sesion arriba o crea una nueva.
+          Selecciona una sesión arriba o crea una nueva.
         </p>
       </section>
     );

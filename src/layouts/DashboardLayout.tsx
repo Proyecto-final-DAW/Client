@@ -110,7 +110,7 @@ const SidebarContent = ({
             <p className="font-pixel text-[10px] text-green-400 truncate [text-shadow:0_0_12px_rgba(34,197,94,0.6)]">
               {userName.toUpperCase()}
             </p>
-            <p className="font-pixel text-[8px] text-ink-muted tracking-widest mt-1">
+            <p className="font-pixel text-[9px] text-ink-muted tracking-widest mt-1">
               RANGO {rankLetter}
             </p>
           </div>
@@ -284,9 +284,9 @@ export const DashboardLayout = (): React.JSX.Element => {
                     type="button"
                     onClick={() => setDrawerOpen(false)}
                     aria-label="Cerrar menu"
-                    className="inline-flex h-9 w-9 items-center justify-center border-2 border-border bg-card text-ink-muted hover:border-green-500/50 hover:text-green-400 transition-colors"
+                    className="inline-flex h-10 w-10 items-center justify-center border-2 border-border bg-card text-ink-muted hover:border-green-500/50 hover:text-green-400 transition-colors"
                   >
-                    <XMarkIcon className="h-4 w-4" />
+                    <XMarkIcon className="h-5 w-5" />
                   </button>
                 </div>
                 <SidebarContent

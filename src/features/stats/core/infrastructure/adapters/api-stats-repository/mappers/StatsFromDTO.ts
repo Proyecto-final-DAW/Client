@@ -1,4 +1,7 @@
-import { STAT_CONFIG, STAT_ORDER } from '@features/stats/core/domain/models/StatConfig';
+import {
+  STAT_METADATA,
+  STAT_ORDER,
+} from '@features/stats/core/domain/models/StatMetadata';
 import type { StatPilar } from '@features/stats/core/domain/models/StatPilar';
 import type { UserStats } from '@features/stats/core/domain/models/UserStats';
 import type { GetStatsDTO } from '../dtos/GetStatsDTO';
@@ -15,9 +18,9 @@ import type { GetStatsDTO } from '../dtos/GetStatsDTO';
 const xpThresholdForLevel = (level: number): number => 100 + level * 15;
 
 /**
- * The stat config keys are the client-facing names (`strength`, `resistance`,
- * `stamina`, …). The server emits `endurance` instead of `resistance` (the
- * column name in DB), so we explicitly translate.
+ * The metadata keys are the client-facing names (`strength`,
+ * `resistance`, `stamina`, …). The server emits `endurance` instead of
+ * `resistance` (the column name in DB), so we explicitly translate.
  */
 const STAT_PICKER: Record<
   (typeof STAT_ORDER)[number],
@@ -43,17 +46,17 @@ const titleFor = (level: number): string => {
 export class StatsFromDTO {
   static fromDTO(dto: GetStatsDTO): UserStats {
     const pillar: StatPilar[] = STAT_ORDER.map((key) => {
-      const config = STAT_CONFIG[key];
+      const meta = STAT_METADATA[key];
       const picker = STAT_PICKER[key];
       const level = picker.level(dto);
       return {
-        name: config.name,
+        key,
+        name: meta.name,
         value: picker.xp(dto),
         max: xpThresholdForLevel(level),
         level,
-        icon: config.icon,
-        accentColor: config.accentColor,
-        description: config.description,
+        accentColor: meta.accentColor,
+        description: meta.description,
       };
     });
 

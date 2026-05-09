@@ -62,14 +62,18 @@ export const ExerciseCard = ({
           {exercise.name.toUpperCase()}
         </h3>
 
+        {/* Press Start 2P below 9px renders as illegible blocks ("ant
+            tracks"). VT323 (font-pixel-mono) at text-base is far more
+            readable at chip size and lets long labels like
+            "INTERMEDIATE" / "HOME WEIGHTS" fit without overflow. */}
         <div className="flex flex-wrap gap-1.5">
           {exercise.equipment && (
-            <span className="font-pixel text-[7px] tracking-widest border border-[#3f3f46] bg-[#18181b] text-ink-muted px-1.5 py-0.5 uppercase">
+            <span className="font-pixel-mono text-base leading-none border border-[#3f3f46] bg-[#18181b] text-ink-muted px-2 py-1 uppercase">
               {equipmentLabel}
             </span>
           )}
           <span
-            className={`font-pixel text-[7px] tracking-widest border px-1.5 py-0.5 uppercase ${diffColor}`}
+            className={`font-pixel-mono text-base leading-none border px-2 py-1 uppercase ${diffColor}`}
           >
             {diffLabel}
           </span>

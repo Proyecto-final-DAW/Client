@@ -1,5 +1,13 @@
 import type { ComponentType, SVGProps } from 'react';
 
+import {
+  STAT_METADATA,
+  STAT_ORDER as STAT_ORDER_DOMAIN,
+  statMetadataFor,
+  statMetadataKeyFor,
+  type StatMetadataEntry,
+} from '@features/stats/core/domain/models/StatMetadata';
+
 type IconCmp = ComponentType<SVGProps<SVGSVGElement>>;
 
 /*
@@ -8,6 +16,10 @@ type IconCmp = ComponentType<SVGProps<SVGSVGElement>>;
  * felt like generic SaaS chrome glued onto a retro game. Each glyph
  * here is hand-built from rects/paths in a chunky 24×24 grid so the
  * stat panel looks like an RPG character sheet, not a dashboard widget.
+ *
+ * Lives in `ui/` (not `core/domain/`) because React types belong on the
+ * outer hex ring; the stat metadata (name/colour/description) lives in
+ * `core/domain/StatMetadata.ts` and the mapper consumes only that.
  *
  * `currentColor` + `{...props}` lets the StatBar style the icon via
  * `className`/`style`, so accent colours and sizing live in the call
@@ -138,98 +150,50 @@ const HeartIcon: IconCmp = (props) => (
   </svg>
 );
 
-type StatConfigEntry = {
-  /** Display name in Spanish (shown in the UI). */
-  name: string;
+/** Icon registry keyed by the same stat keys used in StatMetadata. */
+const STAT_ICONS: Record<string, IconCmp> = {
+  strength: SwordIcon,
+  resistance: ShieldIcon,
+  stamina: BoltIcon,
+  agility: FeatherIcon,
+  tenacity: DiamondIcon,
+  vigor: HeartIcon,
+};
+
+export type StatConfigEntry = StatMetadataEntry & {
   /** Pixel-art icon — same chunky style across all 6 stats. */
   icon: IconCmp;
-  /**
-   * Accent color applied only to the icon (identity per stat).
-   * Bars are unified to green for visual calm — see StatBar.
-   */
-  accentColor: string;
-  /**
-   * One-sentence explanation surfaced as a tooltip on the StatBar so a
-   * fitness novice can see what kind of training feeds each pillar without
-   * leaving the panel.
-   */
-  description: string;
 };
-
-export const STAT_CONFIG: Record<string, StatConfigEntry> = {
-  strength: {
-    name: 'Fuerza',
-    icon: SwordIcon,
-    accentColor: '#f97316',
-    description:
-      'Sube con ejercicios de fuerza: pesos libres, maquinas, calistenia con carga.',
-  },
-  resistance: {
-    name: 'Resistencia',
-    icon: ShieldIcon,
-    accentColor: '#22c55e',
-    description:
-      'Sube con cardio sostenido: correr, bici, remo, sesiones largas.',
-  },
-  stamina: {
-    name: 'Estamina',
-    icon: BoltIcon,
-    accentColor: '#ec4899',
-    description:
-      'Sube con ejercicios explosivos: pliometria, halterofilia, sprints.',
-  },
-  agility: {
-    name: 'Agilidad',
-    icon: FeatherIcon,
-    accentColor: '#3b82f6',
-    description:
-      'Sube con flexibilidad y movilidad: estiramientos, yoga, tecnica.',
-  },
-  tenacity: {
-    name: 'Tenacidad',
-    icon: DiamondIcon,
-    accentColor: '#a855f7',
-    description: 'Sube por consistencia: cada dia seguido entrenando suma.',
-  },
-  vigor: {
-    name: 'Vigor',
-    icon: HeartIcon,
-    accentColor: '#eab308',
-    description: 'Sube con descanso, dieta y volumen total acumulado.',
-  },
-};
-
-export const STAT_ORDER = [
-  'strength',
-  'resistance',
-  'stamina',
-  'agility',
-  'tenacity',
-  'vigor',
-] as const;
 
 /**
- * Server `endurance` ↔ client `resistance` bridge. The character /
- * stats domain on the server uses `endurance` (matches the BE DB
- * column `endurance_level`), but this StatConfig — the source of
- * truth for icons + accent colors — keys the same pillar under
- * `resistance` (the Spanish-localised display name "Resistencia"
- * starts with R, and renaming the key everywhere would touch every
- * mapper). Single helper avoids the five sites that previously each
- * inlined `key === 'endurance' ? 'resistance' : key` or a 6-entry
- * Record. Pass any client StatKey and get back the StatConfig key.
+ * UI-side stat config: metadata + icon binding. Most components want
+ * both, so we expose a single record that combines them. The mapper
+ * (which lives in the infrastructure layer) imports `STAT_METADATA`
+ * directly from the domain instead, to keep React out of the inner
+ * hex ring.
  */
-export const STAT_CONFIG_KEY: Record<string, string> = {
-  strength: 'strength',
-  endurance: 'resistance',
-  stamina: 'stamina',
-  agility: 'agility',
-  tenacity: 'tenacity',
-  vigor: 'vigor',
-};
+export const STAT_CONFIG: Record<string, StatConfigEntry> = Object.fromEntries(
+  Object.entries(STAT_METADATA).map(([key, meta]) => {
+    const icon = STAT_ICONS[key];
+    if (!icon) {
+      throw new Error(`StatConfig: missing icon for stat key "${key}"`);
+    }
+    return [key, { ...meta, icon }];
+  })
+);
 
-export const statConfigKeyFor = (statKey: string): string =>
-  STAT_CONFIG_KEY[statKey] ?? statKey;
+export const STAT_ORDER = STAT_ORDER_DOMAIN;
 
 export const statConfigFor = (statKey: string): StatConfigEntry | undefined =>
-  STAT_CONFIG[statConfigKeyFor(statKey)];
+  STAT_CONFIG[statMetadataKeyFor(statKey)];
+
+export const statConfigKeyFor = statMetadataKeyFor;
+
+/** Lookup just the icon component for a stat key — used by callers
+ *  that already have the metadata and only need the React binding. */
+export const statIconFor = (statKey: string): IconCmp | undefined =>
+  STAT_ICONS[statMetadataKeyFor(statKey)];
+
+// Re-export the domain helpers so legacy callers can keep importing
+// from here without learning two paths.
+export { statMetadataFor };

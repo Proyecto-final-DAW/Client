@@ -107,12 +107,13 @@ export const Dashboard = (): React.JSX.Element => {
   const hasTrainedBefore =
     stats?.pillar.some((p) => p.level > 1 || p.value > 0) ?? false;
 
-  // `lastWorkoutDaysAgo` is mapped null→0 in CardsFromDTO, so the
-  // 0-value alone can't distinguish "trained today" from "never
-  // trained". Combine with hasTrainedBefore to catch the new-user
-  // case where the field is structurally 0.
+  // `lastWorkoutDaysAgo` now preserves null for "never trained"
+  // (CardsFromDTO no longer coerces null → 0), so 0 unambiguously
+  // means "trained today". The hasTrainedBefore guard remains as a
+  // belt-and-braces check while the wider migration through the rest
+  // of the app catches up.
   const trainedToday =
-    hasTrainedBefore && (cards?.lastWorkoutDaysAgo ?? -1) === 0;
+    hasTrainedBefore && cards?.lastWorkoutDaysAgo === 0;
 
   return (
     <div className="mx-auto max-w-4xl space-y-5 sm:space-y-6">

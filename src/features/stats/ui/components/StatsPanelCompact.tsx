@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 
 import { PixelCorners } from '@shared/components/PixelCorners';
 import type { StatPilar } from '../../core/domain/models/StatPilar';
+import { statIconFor } from '../StatConfig';
 
 interface StatsPanelCompactProps {
   stats: StatPilar[] | null;
@@ -12,7 +13,7 @@ interface StatsPanelCompactProps {
 const StatTile = ({ pilar }: { pilar: StatPilar }): React.JSX.Element => {
   const percentage = Math.min(100, (pilar.value / pilar.max) * 100);
   const accent = pilar.accentColor;
-  const Icon = pilar.icon;
+  const Icon = statIconFor(pilar.key);
 
   return (
     <div className="flex items-center gap-2.5 border border-border bg-page p-2.5">
@@ -23,7 +24,7 @@ const StatTile = ({ pilar }: { pilar: StatPilar }): React.JSX.Element => {
           backgroundColor: `color-mix(in srgb, ${accent} 12%, transparent)`,
         }}
       >
-        <Icon className="h-4 w-4" style={{ color: accent }} />
+        {Icon && <Icon className="h-4 w-4" style={{ color: accent }} />}
       </div>
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex items-baseline justify-between gap-1">

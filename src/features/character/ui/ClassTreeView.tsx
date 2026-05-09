@@ -5,10 +5,7 @@ import { createPortal } from 'react-dom';
 import { useCharacterState } from '../../../context/hooks/useCharacterState';
 import { AsyncState } from '../../../shared/components/AsyncState';
 import { PixelCorners } from '../../../shared/components/PixelCorners';
-import {
-  STAT_CONFIG,
-  statConfigFor,
-} from '../../stats/core/domain/models/StatConfig';
+import { STAT_CONFIG, statConfigFor } from '@features/stats/ui/StatConfig';
 import type {
   LegendaryClass,
   SpecializationClass,

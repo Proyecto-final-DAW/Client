@@ -2,6 +2,7 @@ import axios, { AxiosError } from 'axios';
 
 import { API_ENDPOINTS } from '@config/api';
 import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
+import { toISODate } from '@shared/utils/date';
 import type { ProgressRepository } from '../../../application/ports/ProgressRepository';
 import type { ExerciseProgressPoint } from '../../../domain/models/ExerciseProgressPoint';
 import type { PerformedExercise } from '../../../domain/models/PerformedExercise';
@@ -16,7 +17,11 @@ import { ExerciseProgressFromDTO } from './mappers/ExerciseProgressFromDTO';
 import { PerformedExercisesFromDTO } from './mappers/PerformedExercisesFromDTO';
 import { WeightHistoryFromDTO } from './mappers/WeightHistoryFromDTO';
 
-const toIsoDate = (date: Date): string => date.toISOString().split('T')[0];
+// Use the shared `toISODate` helper instead of the previous local
+// `date.toISOString().split('T')[0]` — that variant is the exact UTC-
+// shift bug the helper was created to avoid: a user in a TZ ahead of
+// UTC who picks today's date can persist yesterday's date because the
+// midnight-local parses to yesterday-UTC.
 
 export class APIProgressRepository implements ProgressRepository {
   async getPerformedExercises(userId: number): Promise<PerformedExercise[]> {
@@ -68,7 +73,7 @@ export class APIProgressRepository implements ProgressRepository {
     try {
       const body: RegisterWeightDTO = {
         weight: input.weight,
-        date: toIsoDate(input.date),
+        date: toISODate(input.date),
       };
       const response = await axios.post<GetProgressDTO>(
         API_ENDPOINTS.getWeightHistory(userId),

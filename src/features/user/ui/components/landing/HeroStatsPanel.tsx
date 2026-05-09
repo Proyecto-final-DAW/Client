@@ -2,10 +2,7 @@ import { UserCircleIcon } from '@heroicons/react/24/solid';
 import { motion } from 'framer-motion';
 
 import { PixelCorners } from '@shared/components/PixelCorners';
-import {
-  STAT_CONFIG,
-  STAT_ORDER,
-} from '@features/stats/core/domain/models/StatConfig';
+import { STAT_CONFIG, STAT_ORDER } from '@features/stats/ui/StatConfig';
 
 type StatKey = (typeof STAT_ORDER)[number];
 

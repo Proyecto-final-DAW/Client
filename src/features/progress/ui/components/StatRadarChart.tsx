@@ -10,10 +10,7 @@ import {
 
 import { PixelCorners } from '@shared/components/PixelCorners';
 import { PixelSelect } from '@shared/components/PixelSelect';
-import {
-  STAT_CONFIG,
-  STAT_ORDER,
-} from '../../../stats/core/domain/models/StatConfig';
+import { STAT_CONFIG, STAT_ORDER } from '@features/stats/ui/StatConfig';
 import type { UserStats } from '../../../stats/core/domain/models/UserStats';
 import type { StatsHistoryPoint } from '../hooks/useStatsHistory';
 

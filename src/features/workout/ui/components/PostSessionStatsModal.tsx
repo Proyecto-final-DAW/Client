@@ -2,7 +2,9 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 import { PixelCorners } from '@shared/components/PixelCorners';
-import { statConfigFor } from '../../../stats/core/domain/models/StatConfig';
+import { useBodyScrollLock } from '@shared/hooks/useBodyScrollLock';
+import { useEscapeClose } from '@shared/hooks/useEscapeClose';
+import { statConfigFor } from '@features/stats/ui/StatConfig';
 import type {
   SessionGainEntry,
   SessionGains,
@@ -179,6 +181,8 @@ export const PostSessionStatsModal = (
   props: PostSessionStatsModalProps
 ): React.JSX.Element | null => {
   const reducedMotion = useReducedMotion() ?? false;
+  useBodyScrollLock(props.open);
+  useEscapeClose(props.open, props.onClose);
 
   if (!props.open) return null;
 

@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
+import { useEscapeClose } from '../hooks/useEscapeClose';
 import { PixelCorners } from './PixelCorners';
 
 type Variant = 'danger' | 'neutral';
@@ -64,15 +66,13 @@ export const ConfirmDialog = ({
 }: ConfirmDialogProps) => {
   const cancelRef = useRef<HTMLButtonElement | null>(null);
 
+  useBodyScrollLock(open);
+  useEscapeClose(open, onCancel);
+
   useEffect(() => {
     if (!open) return;
     cancelRef.current?.focus();
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onCancel();
-    };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [open, onCancel]);
+  }, [open]);
 
   if (!open) return null;
 

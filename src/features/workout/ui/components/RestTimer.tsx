@@ -63,9 +63,15 @@ export const RestTimer = (props: Props): React.JSX.Element => {
             style={{ transition: 'stroke-dashoffset 1s linear' }}
           />
         </svg>
+        {/* Removed `aria-live="polite"` from the second-by-second
+            counter — screen readers were announcing every tick
+            ("00:30", "00:29", "00:28"…) which drowned out everything
+            else. The timer is decorative for sighted users; the
+            countdown completion / start signals fire elsewhere via
+            sound + the Set logger button focus. */}
         <div className="absolute inset-0 flex items-center justify-center">
           <span
-            aria-live="polite"
+            aria-hidden="true"
             className="font-pixel text-2xl sm:text-3xl text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.6)]"
           >
             {formatSeconds(remainingSeconds)}

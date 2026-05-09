@@ -9,6 +9,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ConfirmDialog } from '../../../shared/components/ConfirmDialog';
 import { LoadingPixel } from '../../../shared/components/LoadingPixel';
 import { PixelCorners } from '../../../shared/components/PixelCorners';
+import { useBodyScrollLock } from '../../../shared/hooks/useBodyScrollLock';
+import { useEscapeClose } from '../../../shared/hooks/useEscapeClose';
 import { hasTrainedToday } from '../../../shared/utils/date';
 import { formatRoutineName } from '../../routines/ui/formatRoutineName';
 import { CompletedSetsList } from './components/CompletedSetsList';
@@ -135,6 +137,9 @@ const HomeExitDialog = ({
   onDiscard: () => void;
   onCancel: () => void;
 }): React.JSX.Element | null => {
+  useBodyScrollLock(open);
+  useEscapeClose(open, onCancel);
+
   if (!open) return null;
 
   return (

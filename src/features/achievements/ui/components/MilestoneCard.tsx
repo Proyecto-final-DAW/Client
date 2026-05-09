@@ -80,9 +80,16 @@ export const MilestoneCard = (props: Props): React.JSX.Element => {
               (VT323) so it reads at single-line widths in the wider
               2-col layout. The previous chunky pixel font wrapped
               "100 kg acumulados" into 4 lines on narrow cards. */}
+          {/* Locked-milestone description used `text-ink-disabled`
+              (#52525b) on `bg-page/80` ≈ 2.4:1 contrast — failed
+              WCAG AA. `text-ink-faint` (#71717a) is ~4.6:1, which
+              still reads as "muted/inactive" but is actually legible.
+              Reserve `text-ink-disabled` for genuinely disabled
+              controls, not for "not yet unlocked" copy the user
+              specifically needs to read. */}
           <p
             className={`mt-1.5 font-pixel-mono text-base leading-snug ${
-              isUnlocked ? 'text-[#d4d4d8]' : 'text-ink-disabled'
+              isUnlocked ? 'text-[#d4d4d8]' : 'text-ink-faint'
             }`}
           >
             {props.milestone.description}
