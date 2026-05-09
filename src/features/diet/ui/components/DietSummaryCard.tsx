@@ -71,11 +71,15 @@ const MacroCard = ({ macro }: { macro: MacroItem }): React.JSX.Element => {
         <span className="ml-1 font-pixel text-xs text-ink-faint">g</span>
       </p>
 
-      <ul className="mt-3 flex flex-col gap-1.5 border-t-2 border-border-muted pt-2.5">
+      {/* Hanging indent (`pl-3 -indent-3`) keeps the leading "≈" flush
+          left and indents wrapped continuation lines, so a 3-line
+          "≈ 4 rebanadas pan integral + 2 platanos + 2 tazas avena"
+          reads as one item instead of three orphaned lines. */}
+      <ul className="mt-3 flex flex-col gap-2 border-t-2 border-border-muted pt-2.5">
         {examples.map((example) => (
           <li
             key={example}
-            className="font-pixel-mono text-base leading-snug text-ink-muted"
+            className="font-pixel-mono text-base leading-snug text-ink-muted pl-3 -indent-3 break-words"
           >
             {example}
           </li>
@@ -277,7 +281,7 @@ export const DietSummaryCard = ({
       {/* Detail per-macro cards under the donut. Same data as the legend
           but with a percentage bar and a food example so the user can
           map the gram figure to something tangible. */}
-      <div className="mt-5 grid gap-3 sm:grid-cols-3">
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
         {macros.map((macro) => (
           <MacroCard key={macro.label} macro={macro} />
         ))}

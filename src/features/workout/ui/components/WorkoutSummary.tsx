@@ -30,12 +30,12 @@ const StatCell = (props: {
       visible: { opacity: 1, y: 0 },
     }}
     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-    className="flex flex-col items-center gap-1 border-2 border-border bg-[#08080d]/95 backdrop-blur-md px-4 py-5 shadow-[0_4px_18px_rgba(0,0,0,0.55)]"
+    className="flex flex-col items-center justify-center gap-1.5 border-2 border-border bg-[#08080d]/95 backdrop-blur-md px-2 py-4 sm:px-4 sm:py-5 shadow-[0_4px_18px_rgba(0,0,0,0.55)] text-center"
   >
     <span className="font-pixel text-[8px] tracking-widest text-ink-muted">
       {props.label}
     </span>
-    <span className="font-pixel text-base text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)]">
+    <span className="font-pixel text-xs sm:text-base text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.5)] leading-tight break-all">
       {props.value}
     </span>
   </motion.div>
@@ -137,7 +137,7 @@ export const WorkoutSummary = (props: Props): React.JSX.Element => {
           }}
           initial={prefersReducedMotion ? false : 'hidden'}
           animate="visible"
-          className="grid grid-cols-3 gap-3"
+          className="grid grid-cols-3 gap-2 sm:gap-3"
         >
           <StatCell label="VOLUMEN" value={`${totalVolume} KG`} />
           <StatCell label="SETS" value={String(totalSets)} />

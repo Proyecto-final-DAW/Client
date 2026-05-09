@@ -74,10 +74,14 @@ export const AchievementsView = (): React.JSX.Element => {
               </div>
             </header>
 
-            {/* 2-col grid (was 3 on lg). Wider cards mean descriptions
-                fit on 1-2 lines instead of wrapping awkwardly across
-                4-5 narrow lines. */}
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {/* Phone: 1 col (full readability). Tablet: 2 cols. Desktop:
+                3 cols — once the description switched from Press Start 2P
+                to VT323 (font-pixel-mono), the line fits ~32 chars at
+                3-col width on lg, which is plenty for the short
+                achievement descriptions ("100 kg acumulados", "5 dias
+                seguidos"). 2 cols on a 1280px screen left the right rail
+                noticeably empty. */}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {visible.map((milestone) => (
                 <MilestoneCard key={milestone.id} milestone={milestone} />
               ))}

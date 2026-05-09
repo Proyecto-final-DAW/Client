@@ -104,16 +104,18 @@ export const HeroStatsPanel = (): React.JSX.Element => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      className="relative w-full max-w-md mx-auto border-2 border-green-500/60 bg-card p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_50px_rgba(34,197,94,0.4),0_20px_50px_rgba(0,0,0,0.8)]"
+      className="relative w-full max-w-md mx-auto border-2 border-green-500/60 bg-card p-4 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_50px_rgba(34,197,94,0.4),0_20px_50px_rgba(0,0,0,0.8)]"
     >
       <PixelCorners size="md" className="border-green-500/60" />
 
       {/* Identity row — anonymous avatar (placeholder until per-class
-          icons exist) + name + rank pill */}
-      <div className="flex items-center gap-4 mb-4 pb-4 border-b-2 border-border">
+          icons exist) + name + rank pill. Tighter on mobile so the
+          panel doesn't push the landing CTA below the fold on a 667px
+          phone viewport — every dropped pixel up here saves a swipe. */}
+      <div className="flex items-center gap-3 sm:gap-4 mb-3 pb-3 sm:mb-4 sm:pb-4 border-b-2 border-border">
         <div className="relative shrink-0">
-          <div className="flex h-16 w-16 items-center justify-center border-2 border-green-500/40 bg-green-500/10 shadow-[0_0_18px_rgba(34,197,94,0.35)]">
-            <UserCircleIcon className="h-10 w-10 text-green-400" />
+          <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center border-2 border-green-500/40 bg-green-500/10 shadow-[0_0_18px_rgba(34,197,94,0.35)]">
+            <UserCircleIcon className="h-8 w-8 sm:h-10 sm:w-10 text-green-400" />
           </div>
           <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 inline-flex items-center justify-center border-2 border-green-700 bg-green-500 px-1.5 py-0.5 font-pixel text-[7px] tracking-widest text-[#0a0a0f] shadow-[0_0_8px_rgba(34,197,94,0.55)]">
             LVL {HERO_LEVEL}
@@ -123,20 +125,22 @@ export const HeroStatsPanel = (): React.JSX.Element => {
           <p className="font-pixel text-[8px] tracking-widest text-green-500">
             ◆ VOCACION
           </p>
-          <p className="mt-1 font-pixel text-base text-green-400 [text-shadow:2px_2px_0_#000,0_0_14px_rgba(34,197,94,0.45)]">
+          <p className="mt-1 font-pixel text-sm sm:text-base text-green-400 [text-shadow:2px_2px_0_#000,0_0_14px_rgba(34,197,94,0.45)]">
             GUERRERO
           </p>
         </div>
       </div>
 
-      <p className="mb-4 font-pixel-mono text-base italic leading-snug text-ink">
+      <p className="mb-3 sm:mb-4 font-pixel-mono text-base italic leading-snug text-ink">
         “La fuerza que entrenas hoy es el escudo que llevas mañana.”
       </p>
 
-      {/* All six stats. Two columns on small screens up so a 6-row
-          column doesn't push the panel taller than the headline next
-          to it. */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
+      {/* Stats laid out in 2 columns from mobile so the panel stays
+          short — single-column on mobile rendered six 30px rows that
+          stacked the panel taller than the next-to-it headline and
+          shoved the landing CTA below the fold. The bar is `min-w-0`
+          so it shrinks fine in narrower mobile cells. */}
+      <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 sm:gap-x-4 sm:gap-y-3">
         {STAT_ORDER.map((key) => (
           <StatRow key={key} statKey={key} />
         ))}

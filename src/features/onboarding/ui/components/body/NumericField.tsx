@@ -1,5 +1,9 @@
+// VT323 (font-pixel-mono) at text-base for the input value: typing
+// numbers in Press Start 2P at 9px was hostile, and the 16px floor
+// also keeps iOS Safari from auto-zooming on focus. Label stays on
+// Press Start 2P since it's static and the brand cue.
 const inputBase =
-  'w-full bg-subtle border-2 px-3 py-2.5 font-["Press_Start_2P"] text-[9px] sm:text-[10px] text-ink placeholder:text-ink-disabled focus:outline-none transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
+  'w-full bg-subtle border-2 px-3 py-3 font-pixel-mono text-base text-ink placeholder:text-ink-disabled focus:outline-none transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
 
 interface NumericFieldProps {
   id: string;

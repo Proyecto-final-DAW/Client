@@ -68,19 +68,19 @@ export const ChoiceGroup = (props: ChoiceGroupProps): React.JSX.Element => {
               type="button"
               onClick={() => handleClick(c.value)}
               aria-pressed={selected}
-              className={`px-2 py-3 border-2 text-center transition-all duration-150 ${
+              className={`px-3 py-3.5 border-2 text-center transition-all duration-150 min-h-[44px] ${
                 selected
                   ? 'bg-green-500/10 border-green-500/70 shadow-[0_0_12px_rgba(34,197,94,0.25)]'
                   : 'bg-subtle border-border hover:border-[#3f3f46]'
               }`}
             >
               <div
-                className={`font-pixel text-[8px] sm:text-[9px] tracking-wider ${selected ? 'text-green-400' : 'text-ink'}`}
+                className={`font-pixel text-[9px] sm:text-[10px] tracking-wider leading-tight ${selected ? 'text-green-400' : 'text-ink'}`}
               >
                 {c.label}
               </div>
               {c.sub && (
-                <div className="font-pixel-mono text-base text-ink-faint mt-1 leading-none">
+                <div className="font-pixel-mono text-base text-ink-faint mt-1 leading-tight">
                   {c.sub}
                 </div>
               )}

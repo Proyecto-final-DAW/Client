@@ -114,7 +114,7 @@ export const DashboardHero = (
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_left_center,rgba(34,197,94,0.22)_0%,rgba(34,197,94,0.04)_45%,transparent_70%)]"
       />
 
-      <div className="relative flex flex-col items-center gap-5 px-5 py-6 sm:flex-row sm:items-center sm:gap-7 sm:px-10 sm:py-8 lg:px-12">
+      <div className="relative flex flex-col items-center gap-5 px-4 py-5 sm:flex-row sm:items-center sm:gap-7 sm:px-10 sm:py-8 lg:px-12">
         {/* Avatar — sized so the card has actual presence; the LVL
             badge anchors to the bottom-centre so it travels with the
             avatar and reads like a class card. */}
@@ -129,10 +129,10 @@ export const DashboardHero = (
               <img
                 src={props.profileImage}
                 alt={`Avatar de ${props.name}`}
-                className="h-36 w-36 sm:h-44 sm:w-44 border-2 border-border object-cover shadow-[0_0_30px_rgba(34,197,94,0.5)]"
+                className="h-32 w-32 sm:h-44 sm:w-44 border-2 border-border object-cover shadow-[0_0_30px_rgba(34,197,94,0.5)]"
               />
             ) : (
-              <div className="flex h-36 w-36 sm:h-44 sm:w-44 items-center justify-center border-2 border-border bg-green-500/10 shadow-[0_0_30px_rgba(34,197,94,0.5)]">
+              <div className="flex h-32 w-32 sm:h-44 sm:w-44 items-center justify-center border-2 border-border bg-green-500/10 shadow-[0_0_30px_rgba(34,197,94,0.5)]">
                 <UserCircleIcon className="h-20 w-20 sm:h-24 sm:w-24 text-green-400" />
               </div>
             )}
@@ -162,16 +162,16 @@ export const DashboardHero = (
               shoved to the side. */}
           <dl className="mx-auto w-full max-w-md space-y-3">
             <div className="flex items-center gap-3 sm:gap-4">
-              <dt className="flex items-center gap-2 w-24 sm:w-28 shrink-0 font-pixel text-[10px] sm:text-[11px] tracking-widest text-green-500/70">
+              <dt className="flex items-center gap-2 w-20 sm:w-28 shrink-0 font-pixel text-[10px] sm:text-[11px] tracking-widest text-green-500/70">
                 <UserCircleIcon className="h-3.5 w-3.5 text-green-500/80" />
                 NOMBRE
               </dt>
-              <dd className="font-pixel text-xs sm:text-sm text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.4)] break-words">
+              <dd className="min-w-0 flex-1 font-pixel text-xs sm:text-sm text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.4)] break-words">
                 {titleName.toUpperCase()}
               </dd>
             </div>
             <div className="flex items-center gap-3 sm:gap-4">
-              <dt className="flex items-center gap-2 w-24 sm:w-28 shrink-0 font-pixel text-[10px] sm:text-[11px] tracking-widest text-green-500/70">
+              <dt className="flex items-center gap-2 w-20 sm:w-28 shrink-0 font-pixel text-[10px] sm:text-[11px] tracking-widest text-green-500/70">
                 <ShieldCheckIcon className="h-3.5 w-3.5 text-green-500/80" />
                 CLASE
               </dt>
@@ -180,7 +180,7 @@ export const DashboardHero = (
               </dd>
             </div>
             <div className="flex items-center gap-3 sm:gap-4">
-              <dt className="flex items-center gap-2 w-24 sm:w-28 shrink-0 font-pixel text-[10px] sm:text-[11px] tracking-widest text-green-500/70">
+              <dt className="flex items-center gap-2 w-20 sm:w-28 shrink-0 font-pixel text-[10px] sm:text-[11px] tracking-widest text-green-500/70">
                 <StarIcon className="h-3.5 w-3.5 text-green-500/80" />
                 RANGO
               </dt>
