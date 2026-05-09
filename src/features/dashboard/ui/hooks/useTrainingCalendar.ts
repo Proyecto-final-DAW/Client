@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { toISODate } from '../../../../shared/utils/date';
+import { toISODate } from '@shared/utils/date';
 
 export interface CalendarCell {
   day: number | null;

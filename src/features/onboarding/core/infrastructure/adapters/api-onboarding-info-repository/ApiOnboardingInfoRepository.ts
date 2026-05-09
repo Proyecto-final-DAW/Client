@@ -1,8 +1,8 @@
 import type { AxiosError } from 'axios';
 import axios from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
+import { API_ENDPOINTS } from '@config/api';
+import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
 import type { OnboardingRepository } from '../../../application/ports/OnboardingRepository';
 import type { OnboardingFormData } from '../../../domain/models/OnboardingFormData';
 import type {

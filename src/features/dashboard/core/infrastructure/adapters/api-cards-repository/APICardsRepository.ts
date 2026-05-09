@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
+import { API_ENDPOINTS } from '@config/api';
+import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
 import type { CardsRepository } from '../../../application/ports/CardsRepository';
 import type { Cards } from '../../../domain/models/Cards';
 import type { GetCardsDTO } from './dtos/GetCardsDTO';

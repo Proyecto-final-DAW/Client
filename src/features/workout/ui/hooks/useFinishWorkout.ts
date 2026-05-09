@@ -1,8 +1,11 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useState } from 'react';
 
-import { API_BASE_URL } from '../../../../config/api';
-import { useAuth } from '../../../../context/hooks/useAuth';
+import { API_BASE_URL } from '@config/api';
+import { useAuth } from '@context/hooks/useAuth';
+import { SESSION_CHANGED_EVENT } from '../../../sessionHistory/ui/hooks/useSessionHistory';
+import { STATS_CHANGED_EVENT } from '../../../stats/ui/hooks/useStats';
+import type { SessionGains } from '../../core/domain/models/SessionGains';
 import type { UnlockedMilestonePreview } from '../../core/domain/models/WorkoutSummaryData';
 import type { WorkoutPayloadExercise } from './useWorkoutState';
 
@@ -28,6 +31,7 @@ type RawSessionResponse = {
     description: string;
     icon: string;
   }>;
+  gains?: SessionGains;
 };
 
 export const useFinishWorkout = () => {
@@ -37,6 +41,7 @@ export const useFinishWorkout = () => {
   const [unlockedMilestones, setUnlockedMilestones] = useState<
     UnlockedMilestonePreview[]
   >([]);
+  const [gains, setGains] = useState<SessionGains | null>(null);
 
   const finish = async (
     routineId: string,
@@ -75,10 +80,41 @@ export const useFinishWorkout = () => {
           icon: milestone.icon,
         }))
       );
+      setGains(response.data.gains ?? null);
+
+      // Notify any mounted hook that depends on session-derived data
+      // so they refresh without a manual reload. Without these the
+      // dashboard's "trained today" banner kept saying "no has
+      // entrenado hoy" right after a save, and the stats panel kept
+      // showing the pre-session XP/levels until the user navigated
+      // away and back. Two events because the consumers are split:
+      // session listings vs stats values.
+      window.dispatchEvent(new Event(SESSION_CHANGED_EVENT));
+      window.dispatchEvent(new Event(STATS_CHANGED_EVENT));
       return true;
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Error al guardar la sesion.';
+      // Surface the server's first validation issue (path + message) so a
+      // 400 from validateBody is actually debuggable from the UI instead
+      // of the generic axios "Request failed with status code 400".
+      let message = 'Error al guardar la sesion.';
+      if (err instanceof AxiosError) {
+        const data = err.response?.data as
+          | {
+              message?: string;
+              issues?: Array<{ path?: string; message?: string }>;
+            }
+          | undefined;
+        const issue = data?.issues?.[0];
+        if (issue) {
+          message = `${data?.message ?? 'Datos invalidos'}: ${issue.path ?? ''} ${issue.message ?? ''}`.trim();
+        } else if (data?.message) {
+          message = data.message;
+        } else if (err.message) {
+          message = err.message;
+        }
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
       setError(message);
       return false;
     } finally {
@@ -86,5 +122,5 @@ export const useFinishWorkout = () => {
     }
   };
 
-  return { finish, saving, error, unlockedMilestones };
+  return { finish, saving, error, unlockedMilestones, gains };
 };

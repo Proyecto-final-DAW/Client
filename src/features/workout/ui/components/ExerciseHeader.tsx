@@ -1,5 +1,5 @@
-import { API_BASE_URL } from '../../../../config/api';
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { API_BASE_URL } from '@config/api';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import {
   TARGET_LABEL,
   formatLabel,
@@ -40,15 +40,20 @@ export const ExerciseHeader = (props: Props): React.JSX.Element => {
         </div>
       )}
 
-      <div className="min-w-0 flex-1 text-center">
+      <div className="min-w-0 flex-1 text-center sm:text-left">
         <p className="font-pixel text-[9px] tracking-widest text-green-500">
           SET {props.setNumber}
         </p>
-        <h1 className="font-pixel text-sm sm:text-base leading-relaxed text-green-400 mt-3 [text-shadow:0_0_16px_rgba(34,197,94,0.55)] break-words">
+        {/* Hierarchy: exercise name is the heading (largest), target
+            muscle is its subordinate eyebrow (smaller, font-pixel-mono
+            for contrast). Previously the target was rendered at
+            text-lg while the name was text-sm — secondary metadata
+            literally outweighed the primary heading. */}
+        <h1 className="mt-3 font-pixel text-base sm:text-lg leading-relaxed text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)] break-words">
           {props.exercise.name}
         </h1>
         {props.exercise.target && (
-          <p className="font-pixel text-lg text-ink-muted mt-2 uppercase">
+          <p className="mt-2 font-pixel-mono text-base text-ink-muted uppercase tracking-wide">
             {formatLabel(props.exercise.target, TARGET_LABEL)}
           </p>
         )}

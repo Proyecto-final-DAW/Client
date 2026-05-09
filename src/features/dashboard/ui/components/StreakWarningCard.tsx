@@ -2,7 +2,7 @@ import { FireIcon } from '@heroicons/react/24/solid';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type { StreakStatus } from '../../../streak/core/domain/models/StreakStatus';
 
 type Props = {
@@ -14,6 +14,12 @@ export const StreakWarningCard = (props: Props): React.JSX.Element | null => {
   const { currentStreak, hoursRemaining, isAtRisk } = props.status;
 
   if (!isAtRisk) return null;
+
+  // hoursRemaining converts to days_remaining (rough). The streak is
+  // saved by ANY single session this week, so we only message the
+  // runway in days, not the target gap — the latter belongs on the
+  // weekly-progress card, not on a streak alarm.
+  const daysRemaining = Math.max(1, Math.ceil(hoursRemaining / 24));
 
   return (
     <motion.article
@@ -35,8 +41,10 @@ export const StreakWarningCard = (props: Props): React.JSX.Element | null => {
             ⚠ RACHA EN PELIGRO
           </p>
           <p className="mt-2 font-pixel text-lg leading-tight text-ink">
-            Entrena en las proximas {hoursRemaining}h o pierdes tu racha de{' '}
-            {currentStreak} dias.
+            Aun no has entrenado esta semana. Te quedan {daysRemaining}{' '}
+            {daysRemaining === 1 ? 'dia' : 'dias'} para hacer una
+            sesion y mantener tu racha de {currentStreak}{' '}
+            {currentStreak === 1 ? 'semana' : 'semanas'}.
           </p>
         </div>
       </div>

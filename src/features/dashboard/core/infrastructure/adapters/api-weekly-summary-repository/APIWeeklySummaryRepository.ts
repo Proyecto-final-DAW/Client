@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
+import { API_ENDPOINTS } from '@config/api';
+import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
 import type { WeeklySummaryRepository } from '../../../application/ports/WeeklySummaryRepository';
 import type { WeeklySummary } from '../../../domain/models/WeeklySummary';
 import type { GetWeeklySummaryDTO } from './dtos/GetWeeklySummaryDTO';

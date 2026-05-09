@@ -41,47 +41,60 @@ export const ProfileView = (): React.JSX.Element => {
     >
       {(profile) => (
         <div className="mx-auto max-w-6xl">
-          <header className="mb-6 text-center sm:text-left">
+          {/* Slim eyebrow only — the ProfileHeroBanner directly below
+              already carries the page identity (rank + class + name +
+              level). The previous "MI PERSONAJE" h1 duplicated that
+              role and pushed the banner further down the fold. */}
+          <header className="mb-4 text-center sm:text-left">
             <p className="font-pixel text-[9px] tracking-widest text-green-500">
               ▶ PERFIL
             </p>
-            <h1 className="mt-2 font-pixel text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
-              MI PERSONAJE
-            </h1>
           </header>
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-            {/* Left: identity + character sheet. Sticky on desktop so it stays
-                visible while the user scrolls long forms on the right. */}
-            <aside className="flex flex-col gap-5 lg:col-span-1 lg:sticky lg:top-24 lg:self-start">
+            {/* Left column — banner + character metrics + stats.
+                Order: banner (identity) → resumen (dias/combates/record)
+                → stats (6 pillars).
+
+                No `lg:self-start`: the aside stretches to the grid row
+                height so it ends at the exact same Y as the main
+                column (the previous self-start left a small vertical
+                offset between the two columns). Sticky still works
+                because the parent (the grid container itself) has no
+                overflow constraint. */}
+            <aside className="flex flex-col gap-5 lg:col-span-1 lg:sticky lg:top-24">
               <ProfileHeroBanner
                 name={profile.name || user?.name || 'Heroe'}
                 profileImage={user?.profileImage ?? null}
                 characterState={characterState}
-              />
-              <StatsPanel
-                stats={stats?.pilpilar ?? null}
-                loading={statsLoading}
-                error={statsError}
               />
               <AccountSummary
                 createdAt={profile.created_at}
                 totalSessions={profile.total_sessions}
                 bestStreak={profile.best_streak}
               />
+              <StatsPanel
+                stats={stats?.pillar ?? null}
+                loading={statsLoading}
+                error={statsError}
+              />
             </aside>
 
             {/* Right: read-only data card by default, editor with profile form
-                AND password change when the user clicks EDITAR. No tab strip —
-                the card already exposes its own EDITAR button so a separate
-                row of tabs would just duplicate the action. */}
+                AND password change when the user clicks EDITAR. */}
             <div className="flex flex-col gap-5 lg:col-span-2">
               {editing ? (
                 <>
                   <ProfileForm
                     profile={profile}
                     onSubmit={async (data) => {
-                      await updateProfile(data);
+                      // Close the editor on a clean save. Without this
+                      // the form stayed open and the user could keep
+                      // editing — making "Guardar" feel like a no-op
+                      // when nothing visibly changed (the read-only
+                      // view was hidden behind the form).
+                      const ok = await updateProfile(data);
+                      if (ok) setEditing(false);
                     }}
                     onCancel={() => setEditing(false)}
                     updating={updating}

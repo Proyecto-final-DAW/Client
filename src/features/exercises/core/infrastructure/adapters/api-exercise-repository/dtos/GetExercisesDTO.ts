@@ -5,4 +5,5 @@ export interface GetExercisesDTO {
   equipment: string;
   difficulty: string;
   imageUrl: string;
+  category?: string;
 }

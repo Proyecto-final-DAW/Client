@@ -2,9 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
+html,
+body {
   scroll-behavior: smooth;
   scrollbar-gutter: stable;
+  /* Match the in-app `bg-page` token so route transitions
+     (onboarding → dashboard, dashboard → workout, etc.) don't flash
+     a white frame between the previous view's unmount and the new
+     view's first paint. Without this, lazy-loaded routes briefly
+     showed the browser default white before the chunk hydrated and
+     painted its own dark background. */
+  background-color: #0a0a0f;
 }
 
 /* Stat color palette consumed by StatBar via `var(--stat-…)`. Without these
@@ -160,4 +168,26 @@ img[src*='Logo'] {
 
 .animate-orb-alt {
   animation: orbFloatAlt 11s ease-in-out infinite;
+}
+
+/* Pixel-themed scrollbar for the PixelSelect dropdown. The default
+ * browser bar (light grey thumb on white track) clashes badly with
+ * the dark RPG palette — tinting it green keeps the menu coherent
+ * when the option list overflows. */
+.pixel-select-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 197, 94, 0.55) transparent;
+}
+.pixel-select-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.pixel-select-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.pixel-select-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(34, 197, 94, 0.45);
+  border: 1px solid rgba(34, 197, 94, 0.7);
+}
+.pixel-select-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(34, 197, 94, 0.65);
 }

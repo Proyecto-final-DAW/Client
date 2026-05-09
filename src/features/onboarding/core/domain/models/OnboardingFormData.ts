@@ -23,6 +23,12 @@ export interface OnboardingFormData {
   equipment: Equipment[];
   daysPerWeek?: DaysPerWeek;
   injuries: Injury[];
+  /** Free-text detail surfaced when the user marks `OTHER` in the
+   *  injuries step. Optional — the SubmitOnboardingFromDTO mapper does
+   *  not forward it to the server (no column on the backend yet),
+   *  but it persists in localStorage so the user keeps their input
+   *  across reloads. */
+  injuryNotes?: string;
 }
 
 export type FormErrors = Partial<Record<keyof OnboardingFormData, string>>;
@@ -39,4 +45,5 @@ export const INITIAL_FORM_DATA: OnboardingFormData = {
   equipment: [],
   daysPerWeek: undefined,
   injuries: [],
+  injuryNotes: '',
 };

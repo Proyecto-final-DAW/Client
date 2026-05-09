@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useAuth } from '../../../../context/hooks/useAuth';
+import { useAuth } from '@context/hooks/useAuth';
 import type { Milestone } from '../../core/domain/models/Milestone';
 import { milestonesRepository } from '../adapter';
 

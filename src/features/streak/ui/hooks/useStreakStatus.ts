@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useAuth } from '../../../../context/hooks/useAuth';
+import { useAuth } from '@context/hooks/useAuth';
 import type { StreakStatus } from '../../core/domain/models/StreakStatus';
 import { streakRepository } from '../adapter';
 

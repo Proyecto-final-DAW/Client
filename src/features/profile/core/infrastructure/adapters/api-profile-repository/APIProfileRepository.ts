@@ -1,8 +1,8 @@
 import axios from 'axios';
 import type { AxiosError } from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
+import { API_ENDPOINTS } from '@config/api';
+import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
 import type { ProfileRepository } from '../../../application/ports/ProfileRepository';
 import type {
   ChangePasswordData,

@@ -1,6 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
 
-import type { MacrosRepository } from '../../core/application/ports/MacrosRepository';
 import type { OnboardingRepository } from '../../core/application/ports/OnboardingRepository';
 import type { StatsInitRepository } from '../../core/application/ports/StatsInitRepository';
 import type { OnboardingResponse } from '../../core/domain/models/OnboardingResponse';
@@ -11,6 +10,7 @@ import { StepGoal } from './StepGoal';
 import { StepLimitations } from './StepLimitations';
 import { Stepper } from './Stepper';
 import { StepPersonal } from './StepPersonal';
+import { StepPreview } from './StepPreview';
 import { StepTraining } from './StepTraining';
 import { WizardBackground } from './wizard/WizardBackground';
 import { WizardFrame } from './wizard/WizardFrame';
@@ -24,7 +24,6 @@ interface OnboardingWizardProps {
   initialName: string;
   onboardingService: OnboardingRepository;
   statsInitService: StatsInitRepository;
-  macrosService: MacrosRepository;
   onComplete: (response: OnboardingResponse) => void;
 }
 
@@ -58,6 +57,8 @@ export const OnboardingWizard = (
         return <StepTraining {...stepProps} />;
       case 6:
         return <StepLimitations {...stepProps} />;
+      case 7:
+        return <StepPreview data={formData} />;
       default:
         return null;
     }
@@ -67,18 +68,29 @@ export const OnboardingWizard = (
     <div className="relative min-h-screen bg-page text-ink overflow-hidden">
       <WizardBackground />
       <main className="relative z-10 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-8 min-h-screen">
-        <div className="w-full max-w-xl">
-          <WizardHeader />
+        <div className="w-full max-w-2xl">
+          <WizardHeader showWelcome={currentStep === 1} />
           <WizardFrame>
             <Stepper currentStep={currentStep} totalSteps={totalSteps} />
             <div className="relative overflow-hidden">
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.div
                   key={currentStep}
-                  initial={{ opacity: 0, x: 40 }}
+                  initial={{ opacity: 0, x: 60 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -40 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  exit={{ opacity: 0, x: -60 }}
+                  // Spring-based transition replaces the fixed-duration
+                  // ease — slightly heavier slide (60 → 0) plus the
+                  // spring's natural overshoot makes step changes feel
+                  // alive instead of rubber-stamped, which the previous
+                  // 300ms timed easing was missing on quick clicks.
+                  transition={{
+                    type: 'spring',
+                    stiffness: 220,
+                    damping: 26,
+                    mass: 0.9,
+                    opacity: { duration: 0.25 },
+                  }}
                 >
                   {renderStep()}
                 </motion.div>

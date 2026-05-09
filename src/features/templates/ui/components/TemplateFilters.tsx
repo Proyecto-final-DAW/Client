@@ -1,3 +1,7 @@
+import {
+  PixelSelect,
+  type PixelSelectOption,
+} from '@shared/components/PixelSelect';
 import type {
   TemplateEquipment,
   TemplateGoal,
@@ -18,67 +22,60 @@ type Props = {
 
 const LABEL_CLASS = 'font-pixel text-[8px] tracking-widest text-ink-faint';
 
-const SELECT_CLASS =
-  'font-pixel text-[9px] tracking-widest border border-border-muted bg-transparent text-ink px-3 py-2 outline-none focus:border-green-500/60 hover:border-green-500/40 transition-colors [color-scheme:dark]';
+// The labels arrays from `../labels` already include the empty-value
+// option as their first entry (e.g. "Todos los objetivos") so they map
+// directly to PixelSelect — the placeholder string is only shown if no
+// such empty option is present, which would never happen here.
+const toOptions = (
+  list: ReadonlyArray<{ value: string; label: string }>
+): PixelSelectOption[] => list.map((o) => ({ value: o.value, label: o.label }));
 
 export const TemplateFilters = (props: Props): React.JSX.Element => {
   const { value, onChange } = props;
 
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-      <label className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1.5">
         <span className={LABEL_CLASS}>OBJETIVO</span>
-        <select
-          className={SELECT_CLASS}
+        <PixelSelect
+          ariaLabel="Filtrar por objetivo"
+          placeholder="Todos los objetivos"
+          options={toOptions(GOAL_OPTIONS)}
           value={value.goal}
-          onChange={(e) =>
-            onChange({ ...value, goal: e.target.value as TemplateGoal | '' })
+          onChange={(next) =>
+            onChange({ ...value, goal: next as TemplateGoal | '' })
           }
-        >
-          {GOAL_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </label>
+        />
+      </div>
 
-      <label className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1.5">
         <span className={LABEL_CLASS}>EQUIPAMIENTO</span>
-        <select
-          className={SELECT_CLASS}
+        <PixelSelect
+          ariaLabel="Filtrar por equipamiento"
+          placeholder="Todo el equipamiento"
+          options={toOptions(EQUIPMENT_OPTIONS)}
           value={value.equipment}
-          onChange={(e) =>
+          onChange={(next) =>
             onChange({
               ...value,
-              equipment: e.target.value as TemplateEquipment | '',
+              equipment: next as TemplateEquipment | '',
             })
           }
-        >
-          {EQUIPMENT_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </label>
+        />
+      </div>
 
-      <label className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1.5">
         <span className={LABEL_CLASS}>NIVEL</span>
-        <select
-          className={SELECT_CLASS}
+        <PixelSelect
+          ariaLabel="Filtrar por nivel"
+          placeholder="Todos los niveles"
+          options={toOptions(LEVEL_OPTIONS)}
           value={value.level}
-          onChange={(e) =>
-            onChange({ ...value, level: e.target.value as TemplateLevel | '' })
+          onChange={(next) =>
+            onChange({ ...value, level: next as TemplateLevel | '' })
           }
-        >
-          {LEVEL_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </label>
+        />
+      </div>
     </div>
   );
 };

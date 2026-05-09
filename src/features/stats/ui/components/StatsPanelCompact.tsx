@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type { StatPilar } from '../../core/domain/models/StatPilar';
 
 interface StatsPanelCompactProps {
@@ -98,11 +98,38 @@ export const StatsPanelCompact = (
           dwarfed the icon — every stat looked like a thin elongated strip
           with a tiny pictogram in the corner. 2-col keeps tiles roughly
           square at any width. */}
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+      {/* Same staggered cascade as StatsPanel — each tile slides up
+          and fades in 70ms after the previous, so the dashboard feels
+          like the character sheet is materializing. Tighter timing
+          here than in the big panel because the tiles are smaller and
+          a slow cascade reads as sluggish at this size. */}
+      <motion.div
+        className="grid grid-cols-1 gap-2 sm:grid-cols-2"
+        variants={{
+          hidden: {},
+          visible: {
+            transition: { staggerChildren: 0.07, delayChildren: 0.08 },
+          },
+        }}
+        initial="hidden"
+        animate="visible"
+      >
         {props.stats.map((pilar) => (
-          <StatTile key={pilar.name} pilar={pilar} />
+          <motion.div
+            key={pilar.name}
+            variants={{
+              hidden: { opacity: 0, y: 6 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
+              },
+            }}
+          >
+            <StatTile pilar={pilar} />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 };

@@ -1,23 +1,66 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import type { Routine } from '../../../routines/core/domain/models/Routine';
+import {
+  findCardioActivity,
+  type CardioActivity,
+} from '../../core/domain/models/CardioActivity';
 import type { WorkoutSet } from '../../core/domain/models/WorkoutSet';
 import type { WorkoutStatus } from '../../core/domain/models/WorkoutStatus';
 
 export const REST_PRESETS_SECONDS = [60, 90, 120, 180] as const;
 export const DEFAULT_REST_SECONDS = 90;
 
+/** Catalog exercises ride as 'strength' (the server overrides per-id);
+ *  cardio log entries ride as 'cardio' / 'explosive' / 'stretch' and the
+ *  server trusts the client's type because the id won't be in the
+ *  catalog. */
+export type WorkoutPayloadExerciseType =
+  | 'strength'
+  | 'cardio'
+  | 'explosive'
+  | 'stretch';
+
+/**
+ * Wire shape for a single set inside a session payload. The server
+ * validator accepts `duration_seconds` only when the set comes from a
+ * stretch / mobility exercise (reps may be 0 in that case); for
+ * weighted / bodyweight cadence sets the field stays absent.
+ */
+export type WorkoutPayloadSet = {
+  reps: number;
+  weight: number;
+  duration_seconds?: number;
+};
+
 export type WorkoutPayloadExercise = {
   exercise_api_id: string;
   name: string;
-  type: 'strength';
-  sets: WorkoutSet[];
+  type: WorkoutPayloadExerciseType;
+  sets: WorkoutPayloadSet[];
+  duration_minutes?: number;
+  intensity?: 'LOW' | 'MEDIUM' | 'HIGH';
+  distance_km?: number;
+};
+
+const setToWire = (set: WorkoutSet): WorkoutPayloadSet => {
+  if (set.durationSeconds !== undefined && set.durationSeconds !== null) {
+    return {
+      reps: set.reps,
+      weight: set.weight,
+      duration_seconds: set.durationSeconds,
+    };
+  }
+  return { reps: set.reps, weight: set.weight };
 };
 
 type PersistedState = {
   currentExerciseIndex: number;
   completedSetsByExerciseId: Record<string, WorkoutSet[]>;
   restDurationSeconds: number;
+  /** Optional cardio entry the user logged at the summary screen. Persisted
+   *  so resuming a workout after a refresh keeps any partially-typed entry. */
+  cardio?: CardioActivity | null;
 };
 
 const STORAGE_PREFIX = 'gymquest:workout:';
@@ -60,6 +103,7 @@ export const useWorkoutState = (routine: Routine | null) => {
   const [restRemainingSeconds, setRestRemainingSeconds] = useState<number>(0);
   const [isResting, setIsResting] = useState<boolean>(false);
   const [resumed, setResumed] = useState<boolean>(false);
+  const [cardio, setCardio] = useState<CardioActivity | null>(null);
 
   // Tracks whether the initial hydration from localStorage has happened for
   // the current routine. Save effects skip until this is true so they can't
@@ -88,12 +132,14 @@ export const useWorkoutState = (routine: Routine | null) => {
         Math.min(persisted.currentExerciseIndex, routine.exercises.length - 1)
       );
       setRestDurationSeconds(persisted.restDurationSeconds);
+      setCardio(persisted.cardio ?? null);
       setStatus('active');
       setResumed(true);
     } else {
       setCompletedSetsByExerciseId(buildEmptySetsByExercise(routine));
       setCurrentExerciseIndex(0);
       setRestDurationSeconds(DEFAULT_REST_SECONDS);
+      setCardio(null);
       setStatus('active');
       setResumed(false);
     }
@@ -112,6 +158,7 @@ export const useWorkoutState = (routine: Routine | null) => {
         currentExerciseIndex,
         completedSetsByExerciseId,
         restDurationSeconds,
+        cardio,
       };
       localStorage.setItem(storageKey(routine.id), JSON.stringify(payload));
     } catch {
@@ -124,6 +171,7 @@ export const useWorkoutState = (routine: Routine | null) => {
     currentExerciseIndex,
     completedSetsByExerciseId,
     restDurationSeconds,
+    cardio,
   ]);
 
   // Tick del temporizador de descanso
@@ -256,14 +304,37 @@ export const useWorkoutState = (routine: Routine | null) => {
 
   const buildPayloadExercises = (): WorkoutPayloadExercise[] => {
     if (!routine) return [];
-    return routine.exercises
+    const strengthEntries: WorkoutPayloadExercise[] = routine.exercises
       .map<WorkoutPayloadExercise>((exercise) => ({
         exercise_api_id: exercise.id,
         name: exercise.name,
         type: 'strength',
-        sets: completedSetsByExerciseId[exercise.id] ?? [],
+        sets: (completedSetsByExerciseId[exercise.id] ?? []).map(setToWire),
       }))
       .filter((exercise) => exercise.sets.length > 0);
+
+    // Append the optional cardio log entry (HIIT, bike, yoga…) as an
+    // extra session_exercise. Synthetic id `cardio:<ID>` so the server
+    // skips the catalog lookup and trusts the client-provided type
+    // (see resolveExerciseTypes on the server).
+    if (cardio && cardio.durationMinutes > 0) {
+      const meta = findCardioActivity(cardio.activityId);
+      if (meta) {
+        strengthEntries.push({
+          exercise_api_id: `cardio:${cardio.activityId}`,
+          name: meta.label,
+          type: meta.statType,
+          sets: [],
+          duration_minutes: cardio.durationMinutes,
+          intensity: cardio.intensity,
+          ...(cardio.distanceKm !== undefined && cardio.distanceKm > 0
+            ? { distance_km: cardio.distanceKm }
+            : {}),
+        });
+      }
+    }
+
+    return strengthEntries;
   };
 
   return {
@@ -281,6 +352,8 @@ export const useWorkoutState = (routine: Routine | null) => {
     restDurationSeconds,
     completedSetsByExerciseId,
     resumed,
+    cardio,
+    setCardio,
     completeSet,
     removeLastSet,
     nextExercise,

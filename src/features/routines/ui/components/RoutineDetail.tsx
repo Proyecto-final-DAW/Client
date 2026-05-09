@@ -1,8 +1,9 @@
 import { PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type { Exercise } from '../../../exercises/core/domain/models/Exercise';
 import { ExerciseSearch } from '../../../exercises/ui/components/ExerciseSearch';
 import type { Routine } from '../../core/domain/models/Routine';
@@ -11,6 +12,13 @@ import { ExerciseRow } from './ExerciseRow';
 
 type RoutineDetailProps = {
   routine: Routine | null;
+  /**
+   * True iff the user already saved a session today. Mirrors the
+   * server's one-session-per-day rule (POST /sessions returns 409) so
+   * the gate is communicated up-front rather than after the user has
+   * logged every set and pressed save — the previous failure mode.
+   */
+  trainedToday?: boolean;
   onAddExercise: (exercise: Exercise) => void | Promise<void>;
   onRemoveExercise: (exerciseId: string) => void | Promise<void>;
   onMoveExercise?: (
@@ -22,6 +30,7 @@ type RoutineDetailProps = {
 
 export const RoutineDetail = ({
   routine,
+  trainedToday = false,
   onAddExercise,
   onRemoveExercise,
   onMoveExercise,
@@ -72,34 +81,48 @@ export const RoutineDetail = ({
           </p>
         </div>
 
-        {hasExercises && (
-          <button
-            type="button"
-            onClick={() => navigate(`/workout/${routine.id}`)}
-            className="mt-4 w-full font-pixel text-[11px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-5 py-3.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-[1.0625rem] transition-all duration-150 shadow-[0_0_18px_rgba(34,197,94,0.4)]"
-          >
-            ▶ EMPEZAR SESION
-          </button>
-        )}
+        {hasExercises &&
+          (trainedToday ? (
+            <button
+              type="button"
+              disabled
+              className="mt-4 w-full font-pixel text-[11px] tracking-widest bg-green-500/15 text-green-400/70 border-b-4 border-green-500/30 px-5 py-3.5 cursor-default inline-flex items-center justify-center gap-2"
+            >
+              <CheckCircleIcon className="h-4 w-4" />
+              ENTRENO COMPLETADO HOY
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => navigate(`/workout/${routine.id}`)}
+              className="mt-4 w-full font-pixel text-[11px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-5 py-3.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-[1.0625rem] transition-all duration-150 shadow-[0_0_18px_rgba(34,197,94,0.4)]"
+            >
+              ▶ EMPEZAR SESION
+            </button>
+          ))}
 
+        {/* Bumped from text-[8px] / py-2 (~28px tall) to text-[9px] /
+            py-2.5 with thicker border so the touch target clears the
+            ~36px floor. Also added gap-2.5 so the icon doesn't kiss
+            the text on narrow viewports. */}
         <div className="mt-3 flex flex-wrap gap-2">
           <button
             type="button"
             onClick={() => setEditing((value) => !value)}
-            className={`inline-flex items-center gap-2 font-pixel text-[8px] tracking-widest border px-2.5 py-2 transition-colors ${
+            className={`inline-flex items-center gap-2 font-pixel text-[9px] tracking-widest border-2 px-3 py-2.5 transition-colors ${
               editing
                 ? 'border-green-500/60 bg-green-500/10 text-green-400'
-                : 'border-border-muted bg-transparent text-ink-faint hover:border-green-500/40 hover:text-green-400'
+                : 'border-border bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400'
             }`}
           >
             {editing ? (
               <>
-                <XMarkIcon className="h-3 w-3" />
+                <XMarkIcon className="h-3.5 w-3.5" />
                 CERRAR EDICION
               </>
             ) : (
               <>
-                <PencilIcon className="h-3 w-3" />
+                <PencilIcon className="h-3.5 w-3.5" />
                 EDITAR
               </>
             )}
@@ -107,7 +130,7 @@ export const RoutineDetail = ({
           <button
             type="button"
             onClick={onDeleteRoutine}
-            className="inline-flex items-center gap-2 font-pixel text-[8px] tracking-widest border border-border-muted bg-transparent text-ink-faint px-2.5 py-2 hover:border-red-500/50 hover:text-red-400 transition-colors"
+            className="inline-flex items-center gap-2 font-pixel text-[9px] tracking-widest border-2 border-border bg-card text-ink-muted px-3 py-2.5 hover:border-red-500/50 hover:text-red-400 transition-colors"
           >
             <TrashIcon className="h-3 w-3" />
             BORRAR

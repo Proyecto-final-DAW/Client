@@ -1,8 +1,8 @@
 import type { AxiosError } from 'axios';
 import axios from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
+import { API_ENDPOINTS } from '@config/api';
+import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
 import type { StatsInitRepository } from '../../../application/ports/StatsInitRepository';
 
 export class ApiStatsInitRepository implements StatsInitRepository {

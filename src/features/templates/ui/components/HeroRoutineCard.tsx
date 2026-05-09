@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type { RoutineTemplate } from '../../core/domain/models/RoutineTemplate';
 import { LEVEL_LABELS } from '../labels';
 

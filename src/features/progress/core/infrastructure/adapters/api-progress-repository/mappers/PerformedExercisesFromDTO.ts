@@ -1,4 +1,4 @@
-import type { PerformedExercise } from '../../../../domain/models/PerformedExercise';
+import type { PerformedExercise } from '@features/progress/core/domain/models/PerformedExercise';
 import type { GetPerformedExercisesDTO } from '../dtos/GetPerformedExercisesDTO';
 
 export class PerformedExercisesFromDTO {

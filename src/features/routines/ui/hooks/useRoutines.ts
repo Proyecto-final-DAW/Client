@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { useAuth } from '../../../../context/hooks/useAuth';
+import { useAuth } from '@context/hooks/useAuth';
 import type { Routine } from '../../core/domain/models/Routine';
 import { routineRepository } from '../adapter';
 

@@ -9,9 +9,11 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ConfirmDialog } from '../../../shared/components/ConfirmDialog';
 import { LoadingPixel } from '../../../shared/components/LoadingPixel';
 import { PixelCorners } from '../../../shared/components/PixelCorners';
+import { hasTrainedToday } from '../../../shared/utils/date';
 import { formatRoutineName } from '../../routines/ui/formatRoutineName';
 import { CompletedSetsList } from './components/CompletedSetsList';
 import { ExerciseHeader } from './components/ExerciseHeader';
+import { PostSessionStatsModal } from './components/PostSessionStatsModal';
 import { RestTimer } from './components/RestTimer';
 import { SetLogger } from './components/SetLogger';
 import { WorkoutBackground } from './components/WorkoutBackground';
@@ -19,6 +21,41 @@ import { WorkoutSummary } from './components/WorkoutSummary';
 import { useFinishWorkout } from './hooks/useFinishWorkout';
 import { useWorkoutRoutine } from './hooks/useWorkoutRoutine';
 import { REST_PRESETS_SECONDS, useWorkoutState } from './hooks/useWorkoutState';
+import type { SetLoggerMode } from './components/SetLogger';
+import type { Exercise } from '../../exercises/core/domain/models/Exercise';
+import { useSessionHistory } from '../../sessionHistory/ui/hooks/useSessionHistory';
+
+// Both categories pre-emptively swap reps for a duration input — a
+// 30s plank counts as work, not "30 reps", and a moderate-pace walk is
+// time-based too. Cardio entries logged via the post-workout cardio
+// form take a separate path; this only matters when the cardio /
+// stretch lives inside the routine itself.
+const DURATION_CATEGORIES = new Set(['stretching', 'cardio']);
+
+const normalizeEquipment = (raw: string): string =>
+  raw.toLowerCase().replace(/\s+/g, '');
+
+/**
+ * Picks the logger layout from the catalog metadata that the routine
+ * endpoint hydrated for us. Stretch / mobility / cardio moves don't
+ * have a meaningful weight or rep count, so they swap to a duration
+ * field; bodyweight moves keep reps but drop weight; everything else
+ * is the classic weight + reps pair.
+ *
+ * Falls back to 'weighted' when the catalog had no match — keeps the
+ * pre-category behaviour for any legacy routine_exercises rows whose
+ * `exercise_api_id` no longer resolves in the bundled dataset.
+ */
+const resolveSetLoggerMode = (exercise: Exercise): SetLoggerMode => {
+  if (DURATION_CATEGORIES.has(exercise.category.toLowerCase())) {
+    return 'duration';
+  }
+  const equipment = normalizeEquipment(exercise.equipment);
+  if (equipment === 'bodyweight' || equipment === 'bodyonly') {
+    return 'bodyweight';
+  }
+  return 'weighted';
+};
 
 const ErrorScreen = (props: {
   message: string;
@@ -161,15 +198,32 @@ export const LiveWorkoutView = (): React.JSX.Element => {
     loading,
     error: routineError,
   } = useWorkoutRoutine(routineId);
+  const { sessions } = useSessionHistory();
   const workout = useWorkoutState(routine);
+  // Direct-URL guard. The dashboard CTA and /routines button already
+  // disable themselves when trainedToday is true, but a bookmark or a
+  // browser-back can land the user here past those gates. Block at
+  // entry instead of letting them log every set just to fail at save.
+  const trainedToday = sessions ? hasTrainedToday(sessions) : false;
   const {
     finish,
     saving,
     error: saveError,
     unlockedMilestones,
+    gains,
   } = useFinishWorkout();
 
   const [exitIntent, setExitIntent] = useState<ExitIntent>(null);
+  // Stats popup is the post-save celebration. Auto-opens on successful
+  // save, dismissed via CONTINUAR — once closed we don't reopen so the
+  // user can scroll the underlying summary and milestones in peace.
+  const [showStatsModal, setShowStatsModal] = useState<boolean>(false);
+  // Local pre-save validation error — used to flag a cardio entry the
+  // user enabled but never filled out (no minutes). Without this the
+  // payload silently dropped the cardio entry (`durationMinutes > 0`
+  // guard) and the session saved without the cardio XP — the user
+  // expected an explicit error, not a silent loss.
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   if (loading) {
     return (
@@ -196,10 +250,49 @@ export const LiveWorkoutView = (): React.JSX.Element => {
     );
   }
 
+  // One-session-per-day guard, matching the server. We block only when
+  // the user hasn't started typing yet (no sets logged, no resumed
+  // state from localStorage) so a mid-session continuation isn't
+  // kicked out — but a fresh entry with the day already logged gets
+  // the friendly screen instead of logging every set just to fail at
+  // save with the 409.
+  const freshEntry = !workout.resumed && workout.totalSets === 0;
+  if (trainedToday && freshEntry) {
+    return (
+      <div className="relative min-h-screen text-ink">
+        <WorkoutBackground />
+        <div className="relative z-10 p-6">
+          <ErrorScreen
+            message="Ya entrenaste hoy. Solo cuenta una sesion por dia."
+            onBack={() => navigate('/dashboard')}
+          />
+        </div>
+      </div>
+    );
+  }
+
   if (workout.status === 'finished' || workout.status === 'finishing') {
     const handleSave = async () => {
+      // Cardio enabled but no minutes typed → block with an inline
+      // error instead of saving a session that silently drops the
+      // cardio entry (the build-payload step skips entries with
+      // `durationMinutes <= 0`).
+      if (
+        workout.cardio !== null &&
+        (!workout.cardio.durationMinutes || workout.cardio.durationMinutes <= 0)
+      ) {
+        setValidationError(
+          'Indica los minutos de cardio o desactiva la actividad.'
+        );
+        return;
+      }
+      setValidationError(null);
+
       const ok = await finish(routine.id, workout.buildPayloadExercises());
-      if (ok) workout.markFinished();
+      if (ok) {
+        workout.markFinished();
+        setShowStatsModal(true);
+      }
     };
 
     return (
@@ -212,12 +305,30 @@ export const LiveWorkoutView = (): React.JSX.Element => {
             exercisesCount={workout.exercisesWithSetsCount}
             saved={workout.status === 'finished'}
             saving={saving}
-            error={saveError}
+            // Validation error takes precedence — it's actionable
+            // ("fill the field") whereas saveError is a network /
+            // server failure surfaced after the click. They're never
+            // both relevant at the same time anyway: a validation
+            // failure short-circuits before the request fires.
+            error={validationError ?? saveError}
             unlockedMilestones={unlockedMilestones}
+            cardio={workout.cardio}
+            onCardioChange={(next) => {
+              setValidationError(null);
+              workout.setCardio(next);
+            }}
             onSave={handleSave}
             onFinish={() => navigate('/dashboard')}
           />
         </div>
+
+        {gains !== null && (
+          <PostSessionStatsModal
+            open={showStatsModal}
+            gains={gains}
+            onClose={() => setShowStatsModal(false)}
+          />
+        )}
       </div>
     );
   }
@@ -333,6 +444,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
             <SetLogger
               exerciseId={workout.currentExercise.id}
               previousSet={previousSet}
+              mode={resolveSetLoggerMode(workout.currentExercise)}
               onComplete={workout.completeSet}
             />
           )}

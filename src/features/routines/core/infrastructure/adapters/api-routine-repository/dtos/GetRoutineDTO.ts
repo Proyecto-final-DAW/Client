@@ -6,6 +6,10 @@ export interface GetRoutineExerciseDTO {
   sets: number | null;
   reps: number | null;
   order_index: number | null;
+  /** Hydrated server-side from the bundled catalog. Optional because
+   *  legacy routine_exercises rows could exist without a catalog match. */
+  category?: string;
+  equipment?: string;
 }
 
 export interface GetRoutineDTO {

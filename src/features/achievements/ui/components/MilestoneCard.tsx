@@ -8,7 +8,7 @@ import {
   TrophyIcon,
 } from '@heroicons/react/24/outline';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type { Milestone } from '../../core/domain/models/Milestone';
 
 type Props = {
@@ -76,8 +76,12 @@ export const MilestoneCard = (props: Props): React.JSX.Element => {
           >
             {props.milestone.name.toUpperCase()}
           </h3>
+          {/* Description switched from font-pixel to font-pixel-mono
+              (VT323) so it reads at single-line widths in the wider
+              2-col layout. The previous chunky pixel font wrapped
+              "100 kg acumulados" into 4 lines on narrow cards. */}
           <p
-            className={`mt-2 font-pixel text-base leading-tight ${
+            className={`mt-1.5 font-pixel-mono text-base leading-snug ${
               isUnlocked ? 'text-[#d4d4d8]' : 'text-ink-disabled'
             }`}
           >

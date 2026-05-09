@@ -1,8 +1,8 @@
 import axios, { AxiosError } from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
-import type { LoginResponse } from '../../../../../../shared/core/domain/models/UserInfo';
+import { API_ENDPOINTS } from '@config/api';
+import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
+import type { LoginResponse } from '@shared/core/domain/models/UserInfo';
 import type { UserInfoRepository } from '../../../application/ports/UserInfoRepository';
 
 export class APIUserInfoRepository implements UserInfoRepository {

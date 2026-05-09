@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
+import { API_ENDPOINTS } from '@config/api';
+import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
 import type { StreakRepository } from '../../../application/ports/StreakRepository';
 import type { StreakStatus } from '../../../domain/models/StreakStatus';
 import type { GetStreakStatusDTO } from './dtos/GetStreakStatusDTO';

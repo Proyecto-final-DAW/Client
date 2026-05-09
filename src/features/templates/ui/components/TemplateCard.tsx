@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type { RoutineTemplate } from '../../core/domain/models/RoutineTemplate';
 import { LEVEL_LABELS } from '../labels';
 
@@ -10,7 +10,7 @@ type Props = {
 };
 
 /**
- * Mini card used in the templates browse grid and the "También para ti" rail.
+ * Mini card used in the templates browse grid and the "Tambien para ti" rail.
  * Stripped to the essentials — name, level, days/week — to keep the page
  * scannable for new users. Full description / per-day breakdown lives on the
  * detail page.
@@ -37,7 +37,7 @@ export const TemplateCard = (props: Props): React.JSX.Element => {
       </h3>
 
       <p className="mt-auto font-pixel-mono text-base text-ink-muted leading-tight">
-        {LEVEL_LABELS[template.level]} · {template.daysPerWeek} días/sem
+        {LEVEL_LABELS[template.level]} · {template.daysPerWeek} dias/sem
       </p>
     </Link>
   );

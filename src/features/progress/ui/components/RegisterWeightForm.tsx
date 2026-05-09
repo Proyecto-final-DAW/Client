@@ -1,6 +1,6 @@
 import type React from 'react';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type { RegisterWeightInput } from '../../core/domain/models/Progress';
 import { useProgressForm } from '../hooks/useProgressForm';
 

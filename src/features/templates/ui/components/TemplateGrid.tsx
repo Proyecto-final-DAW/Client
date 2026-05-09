@@ -1,4 +1,4 @@
-import { EmptyState } from '../../../../shared/components/EmptyState';
+import { EmptyState } from '@shared/components/EmptyState';
 import type { RoutineTemplate } from '../../core/domain/models/RoutineTemplate';
 import { TemplateCard } from './TemplateCard';
 

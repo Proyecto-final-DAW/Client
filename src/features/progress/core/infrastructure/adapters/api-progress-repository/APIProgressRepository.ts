@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
+import { API_ENDPOINTS } from '@config/api';
+import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
 import type { ProgressRepository } from '../../../application/ports/ProgressRepository';
 import type { ExerciseProgressPoint } from '../../../domain/models/ExerciseProgressPoint';
 import type { PerformedExercise } from '../../../domain/models/PerformedExercise';

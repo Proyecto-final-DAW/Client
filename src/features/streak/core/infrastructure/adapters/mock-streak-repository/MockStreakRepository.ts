@@ -3,8 +3,11 @@ import type { StreakStatus } from '../../../domain/models/StreakStatus';
 
 const MOCK_STATUS: StreakStatus = {
   currentStreak: 5,
-  hoursRemaining: 12,
+  sessionsThisWeek: 1,
+  sessionsRemaining: 2,
+  hoursRemaining: 36,
   isAtRisk: true,
+  target: 3,
 };
 
 export class MockStreakRepository implements StreakRepository {

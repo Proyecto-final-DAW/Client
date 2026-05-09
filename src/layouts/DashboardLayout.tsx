@@ -21,6 +21,11 @@ import {
 } from 'react-router-dom';
 
 import { useAuth } from '../context/hooks/useAuth';
+import { useCharacterState } from '../context/hooks/useCharacterState';
+import {
+  rankLetterFromTier,
+  tierIndexFromState,
+} from '../features/character/core/domain/models/RankLabels';
 import { DashboardBackground } from '../shared/components/DashboardBackground';
 import { PixelCorners } from '../shared/components/PixelCorners';
 
@@ -67,12 +72,14 @@ const MENU_GROUPS: MenuGroup[] = [
 type SidebarContentProps = {
   isLoggedIn: boolean;
   user: ReturnType<typeof useAuth>['user'];
+  rankLetter: string;
   onNavigate?: () => void;
 };
 
 const SidebarContent = ({
   isLoggedIn,
   user,
+  rankLetter,
   onNavigate,
 }: SidebarContentProps): React.JSX.Element => {
   const userName = user?.name ?? 'Usuario';
@@ -95,11 +102,16 @@ const SidebarContent = ({
           )}
 
           <div className="min-w-0">
-            <p className="font-pixel text-[8px] text-ink-muted tracking-widest mb-1">
-              HEROE
-            </p>
+            {/* Name on top (the user is the protagonist — their own
+                name should read first), rank as a smaller label below.
+                Replaced the previous "HEROE" placeholder eyebrow with
+                "RANGO F" so the line carries actual progression info
+                instead of a generic gendered noun. */}
             <p className="font-pixel text-[10px] text-green-400 truncate [text-shadow:0_0_12px_rgba(34,197,94,0.6)]">
               {userName.toUpperCase()}
+            </p>
+            <p className="font-pixel text-[8px] text-ink-muted tracking-widest mt-1">
+              RANGO {rankLetter}
             </p>
           </div>
         </div>
@@ -143,8 +155,17 @@ export const DashboardLayout = (): React.JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { state: characterState } = useCharacterState();
   const isLoggedIn = Boolean(user);
   const prefersReducedMotion = useReducedMotion();
+
+  // Default to F when we don't yet have the character state — matches
+  // the starting rank, so a brand-new user (or a momentarily slow
+  // character fetch) still sees a sensible label instead of an empty
+  // "RANGO " or a flash of placeholder text.
+  const rankLetter = characterState
+    ? rankLetterFromTier(tierIndexFromState(characterState))
+    : 'F';
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -223,7 +244,11 @@ export const DashboardLayout = (): React.JSX.Element => {
         <aside
           className={`hidden lg:flex sticky ${HEADER_OFFSET} ${HEADER_HEIGHT_PX} w-56 shrink-0 self-start overflow-y-auto border-r-2 border-border bg-page p-4 flex-col gap-6`}
         >
-          <SidebarContent isLoggedIn={isLoggedIn} user={user} />
+          <SidebarContent
+            isLoggedIn={isLoggedIn}
+            user={user}
+            rankLetter={rankLetter}
+          />
         </aside>
 
         {/* Mobile/tablet: slide-in drawer. */}
@@ -267,6 +292,7 @@ export const DashboardLayout = (): React.JSX.Element => {
                 <SidebarContent
                   isLoggedIn={isLoggedIn}
                   user={user}
+                  rankLetter={rankLetter}
                   onNavigate={() => setDrawerOpen(false)}
                 />
               </motion.aside>

@@ -13,6 +13,7 @@ export interface UserInfo {
   equipment?: string[];
   days_per_week?: string;
   injuries?: string[];
+  injury_notes?: string | null;
   age?: number;
   sleep_hours?: number;
   daily_calories?: number;

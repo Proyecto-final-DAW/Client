@@ -1,4 +1,4 @@
-import type { OnboardingResponseUser } from '../../../../domain/models/OnboardingResponse';
+import type { OnboardingResponseUser } from '@features/onboarding/core/domain/models/OnboardingResponse';
 
 export class OnboardingResponseUserFromDTO {
   static fromDTO(dto: OnboardingResponseUser): OnboardingResponseUser {

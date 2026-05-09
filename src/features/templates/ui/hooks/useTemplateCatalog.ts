@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { useAuth } from '../../../../context/hooks/useAuth';
+import { useAuth } from '@context/hooks/useAuth';
 import type { RoutineTemplate } from '../../core/domain/models/RoutineTemplate';
 import { recommendTemplates } from '../../core/domain/services/recommendTemplates';
 import { templateRepository } from '../adapter';

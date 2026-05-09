@@ -1,4 +1,4 @@
-import type { LoginResponse } from '../../../../../../shared/core/domain/models/UserInfo';
+import type { LoginResponse } from '@shared/core/domain/models/UserInfo';
 import type { UserInfoRepository } from '../../../application/ports/UserInfoRepository';
 
 export class MockUserInfoRepository implements UserInfoRepository {

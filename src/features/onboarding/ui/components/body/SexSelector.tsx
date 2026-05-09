@@ -19,7 +19,7 @@ export const SexSelector = (props: SexSelectorProps): React.JSX.Element => {
       <label className="block font-pixel text-[9px] sm:text-[10px] text-ink-muted mb-2 tracking-wider">
         SEXO BIOLOGICO
       </label>
-      <p className="font-pixel text-sm text-ink-faint mb-3 tracking-wide leading-tight">
+      <p className="font-pixel-mono text-base text-ink-faint mb-3 leading-tight">
         Necesario para el calculo metabolico, no define tu identidad.
       </p>
       <div className="grid grid-cols-2 gap-3">
@@ -46,7 +46,7 @@ export const SexSelector = (props: SexSelectorProps): React.JSX.Element => {
         })}
       </div>
       {props.error && (
-        <p className="font-pixel text-base text-red-400 mt-2 tracking-wide leading-none">
+        <p className="font-pixel-mono text-base text-red-400 mt-2 tracking-wide leading-none">
           ✕ {props.error}
         </p>
       )}

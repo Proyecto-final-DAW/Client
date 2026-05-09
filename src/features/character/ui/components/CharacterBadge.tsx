@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type { CharacterState } from '../../core/domain/models/CharacterState';
 
 type Props = {
@@ -78,7 +78,7 @@ export const CharacterBadge = (props: Props): React.JSX.Element => {
       </p>
 
       {frase && (
-        <p className="mt-3 text-center font-pixel-mono text-lg italic leading-snug text-ink-muted">
+        <p className="mt-3 text-center font-pixel-mono text-base italic leading-snug text-ink-muted">
           “{frase}”
         </p>
       )}

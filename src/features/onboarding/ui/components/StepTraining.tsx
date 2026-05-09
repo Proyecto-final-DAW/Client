@@ -45,10 +45,10 @@ export const StepTraining = (props: StepTrainingProps): React.JSX.Element => {
 
   return (
     <div>
-      <h2 className="text-center font-pixel text-lg sm:text-xl text-ink mb-3 leading-relaxed tracking-wider [text-shadow:0_0_18px_rgba(34,197,94,0.35)]">
+      <h2 className="text-center font-pixel text-base sm:text-lg text-ink mb-3 leading-tight tracking-wider [text-shadow:0_0_12px_rgba(34,197,94,0.35)]">
         TU <span className="text-green-400">ENTRENAMIENTO</span>
       </h2>
-      <p className="text-center font-pixel-mono text-lg sm:text-xl text-ink-muted mb-5 leading-tight">
+      <p className="text-center font-pixel-mono text-base text-ink-muted mb-5 leading-tight">
         Como, cuando y con que entrenas.
       </p>
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
 
 type CreateRoutineFormProps = {
   open: boolean;

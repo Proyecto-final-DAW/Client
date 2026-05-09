@@ -1,7 +1,9 @@
 import { motion, useReducedMotion } from 'framer-motion';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
+import type { CardioActivity } from '../../core/domain/models/CardioActivity';
 import type { UnlockedMilestonePreview } from '../../core/domain/models/WorkoutSummaryData';
+import { CardioActivityForm } from './CardioActivityForm';
 
 type Props = {
   totalVolume: number;
@@ -11,6 +13,9 @@ type Props = {
   saving: boolean;
   error: string | null;
   unlockedMilestones: UnlockedMilestonePreview[];
+  /** Optional cardio entry the user logs at the end of the session. */
+  cardio: CardioActivity | null;
+  onCardioChange: (value: CardioActivity | null) => void;
   onSave: () => void;
   onFinish: () => void;
 };
@@ -25,7 +30,7 @@ const StatCell = (props: {
       visible: { opacity: 1, y: 0 },
     }}
     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-    className="flex flex-col items-center gap-1 border-2 border-border bg-card px-4 py-5"
+    className="flex flex-col items-center gap-1 border-2 border-border bg-[#08080d]/95 backdrop-blur-md px-4 py-5 shadow-[0_4px_18px_rgba(0,0,0,0.55)]"
   >
     <span className="font-pixel text-[8px] tracking-widest text-ink-muted">
       {props.label}
@@ -74,6 +79,8 @@ export const WorkoutSummary = (props: Props): React.JSX.Element => {
     saving,
     error,
     unlockedMilestones,
+    cardio,
+    onCardioChange,
     onSave,
     onFinish,
   } = props;
@@ -87,7 +94,7 @@ export const WorkoutSummary = (props: Props): React.JSX.Element => {
           initial={prefersReducedMotion ? false : { opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className="relative border-2 border-green-500/40 bg-card p-5 text-center overflow-visible"
+          className="relative border-2 border-green-500/40 bg-[#08080d]/95 backdrop-blur-md p-5 text-center overflow-visible shadow-[0_4px_22px_rgba(0,0,0,0.55)]"
         >
           <PixelCorners size="md" className="border-green-500/60" />
           <p className="font-pixel text-[9px] tracking-widest text-ink-muted">
@@ -160,7 +167,7 @@ export const WorkoutSummary = (props: Props): React.JSX.Element => {
                     delay: 0.9 + idx * 0.12,
                     ease: [0.22, 1, 0.36, 1],
                   }}
-                  className="relative border-2 border-green-500/50 bg-green-500/5 p-3 shadow-[0_0_14px_rgba(34,197,94,0.2)]"
+                  className="relative border-2 border-green-500/50 bg-[#08080d]/95 backdrop-blur-md p-3 shadow-[0_0_14px_rgba(34,197,94,0.25),0_4px_18px_rgba(0,0,0,0.55)]"
                 >
                   <p className="font-pixel text-[10px] text-green-400">
                     {milestone.name}
@@ -174,6 +181,13 @@ export const WorkoutSummary = (props: Props): React.JSX.Element => {
           </motion.div>
         )}
 
+        {/* Cardio log — only relevant before saving. After save, the
+            entry is already in the payload so showing the form again
+            would be confusing. */}
+        {!saved && (
+          <CardioActivityForm value={cardio} onChange={onCardioChange} />
+        )}
+
         {error && (
           <p
             role="alert"
@@ -183,7 +197,7 @@ export const WorkoutSummary = (props: Props): React.JSX.Element => {
           </p>
         )}
 
-        <div className="flex justify-end">
+        <div className="flex justify-center">
           {saved ? (
             <button
               type="button"

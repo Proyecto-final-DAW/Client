@@ -1,8 +1,8 @@
 import axios, { AxiosError } from 'axios';
 
-import { API_BASE_URL } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
-import type { Exercise } from '../../../../../exercises/core/domain/models/Exercise';
+import { API_BASE_URL } from '@config/api';
+import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
+import type { Exercise } from '@features/exercises/core/domain/models/Exercise';
 import type { RoutineRepository } from '../../../application/ports/RoutineRepository';
 import type { Routine } from '../../../domain/models/Routine';
 import type { GetRoutineDTO } from './dtos/GetRoutineDTO';

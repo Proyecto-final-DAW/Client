@@ -1,4 +1,4 @@
-import type { Exercise } from '../../../../exercises/core/domain/models/Exercise';
+import type { Exercise } from '@features/exercises/core/domain/models/Exercise';
 import type { Routine } from '../../domain/models/Routine';
 
 export interface RoutineRepository {

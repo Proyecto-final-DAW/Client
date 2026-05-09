@@ -16,6 +16,25 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Path aliases — keep in sync with `vite.config.ts:resolve.alias`.
+       The hexagonal feature layout produces paths like
+       `features/x/core/infrastructure/adapters/y/mappers/file.ts`,
+       and a cross-feature import to `shared/utils/date` would otherwise
+       need 7 `..` segments — easy to miscount and Vite catches the
+       typo at runtime, not tsc (bundler resolution is permissive).
+       Aliases turn `../../../../../../../shared/utils/date` into
+       `@shared/utils/date`. */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@shared/*": ["src/shared/*"],
+      "@features/*": ["src/features/*"],
+      "@config/*": ["src/config/*"],
+      "@context/*": ["src/context/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@routes/*": ["src/routes/*"]
+    },
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../../../../context/hooks/useAuth';
+import { useAuth } from '@context/hooks/useAuth';
 import { userInfoRepository, userRepository } from '../adapter';
 
 export const useRegister = () => {

@@ -9,19 +9,22 @@ interface StepPersonalProps {
   onChange: (field: keyof OnboardingFormData, value: string) => void;
 }
 
+// Bigger touch target + VT323 (legible at the date input's tiny separators
+// — Press Start 2P shrinks the slashes to ant-tracks at small sizes).
+// Vertical padding matches the SIGUIENTE button below it.
 const inputBase =
-  'w-full bg-subtle border-2 px-3 py-2.5 font-["Press_Start_2P"] text-[9px] sm:text-[10px] text-ink placeholder:text-ink-disabled focus:outline-none transition-colors [color-scheme:dark]';
+  'w-full bg-subtle border-2 px-4 py-4 font-pixel-mono text-base sm:text-lg text-ink placeholder:text-ink-disabled focus:outline-none transition-colors [color-scheme:dark]';
 
 export const StepPersonal = (props: StepPersonalProps): React.JSX.Element => {
-  // The name was already captured during registration; asking again would
-  // duplicate the prompt. The form state still carries `name` (pre-filled
-  // from the auth user in OnboardingView) so the submit payload is unchanged.
+  // Name was already captured during registration; the wizard does not
+  // re-prompt. The form state still carries `name` (pre-filled in
+  // OnboardingView) so the submit payload is unchanged.
   return (
     <div>
-      <h2 className="text-center font-pixel text-lg sm:text-xl text-ink mb-3 leading-relaxed tracking-wider [text-shadow:0_0_18px_rgba(34,197,94,0.35)]">
+      <h2 className="text-center font-pixel text-base sm:text-lg text-ink mb-3 leading-tight tracking-wider [text-shadow:0_0_12px_rgba(34,197,94,0.35)]">
         ¿CUANDO <span className="text-green-400">NACISTE?</span>
       </h2>
-      <p className="text-center font-pixel-mono text-lg sm:text-xl text-ink-muted mb-5 leading-tight">
+      <p className="text-center font-pixel-mono text-base text-ink-muted mb-5 leading-tight">
         Calculamos tu edad para personalizar tus macros.
       </p>
 
@@ -42,7 +45,7 @@ export const StepPersonal = (props: StepPersonalProps): React.JSX.Element => {
           className={`${inputBase} ${props.errors.birthDate ? 'border-red-500/70 focus:border-red-400' : 'border-border focus:border-green-500/70'}`}
         />
         {props.errors.birthDate && (
-          <p className="font-pixel text-base text-red-400 mt-2 tracking-wide leading-none">
+          <p className="font-pixel-mono text-base text-red-400 mt-2 leading-snug">
             ✕ {props.errors.birthDate}
           </p>
         )}

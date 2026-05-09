@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
+import { API_ENDPOINTS } from '@config/api';
+import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
 import type { StatsRepository } from '../../../application/ports/StatsRepository';
 import type { UserStats } from '../../../domain/models/UserStats';
 import type { GetStatsDTO } from './dtos/GetStatsDTO';

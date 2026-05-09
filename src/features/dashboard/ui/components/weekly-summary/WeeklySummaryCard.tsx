@@ -1,6 +1,6 @@
 import { TrophyIcon } from '@heroicons/react/24/outline';
 
-import { PixelCorners } from '../../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type { WeeklySummary } from '../../../core/domain/models/WeeklySummary';
 import { SummaryRow } from './SummaryRow';
 

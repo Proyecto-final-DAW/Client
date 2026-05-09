@@ -1,3 +1,4 @@
+import { PixelSelect } from '@shared/components/PixelSelect';
 import type { Exercise } from '../../core/domain/models/Exercise';
 import { MUSCLE_OPTIONS, useExerciseSearch } from '../hooks/useExerciseSearch';
 import { ExerciseCard } from './ExerciseCard';
@@ -8,9 +9,6 @@ type ExerciseSearchProps = {
 
 const inputClass =
   'flex-1 bg-subtle border-2 border-border px-3 py-2.5 font-pixel text-[10px] text-ink placeholder:text-ink-disabled focus:border-green-500/70 focus:outline-none transition-colors';
-
-const selectClass =
-  'bg-subtle border-2 border-border px-3 py-2.5 font-pixel text-[10px] text-ink focus:border-green-500/70 focus:outline-none transition-colors [color-scheme:dark]';
 
 export const ExerciseSearch = ({
   onSelectExercise,
@@ -42,21 +40,19 @@ export const ExerciseSearch = ({
           onChange={(e) => setSearch(e.target.value)}
           className={inputClass}
         />
-        <label htmlFor="exercise-muscle" className="sr-only">
-          Filtrar por grupo muscular
-        </label>
-        <select
-          id="exercise-muscle"
+        {/* Native `<select>` was rendering with the browser default
+            popup (white text on system blue) that completely broke the
+            pixel-art aesthetic on demo. PixelSelect is the
+            green-bordered drop-down used in the rest of the app
+            (templates filters, etc.) — same component, same look. */}
+        <PixelSelect
           value={muscle}
-          onChange={(e) => setMuscle(e.target.value)}
-          className={selectClass}
-        >
-          {MUSCLE_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+          options={MUSCLE_OPTIONS}
+          placeholder="Todos"
+          onChange={setMuscle}
+          ariaLabel="Filtrar por grupo muscular"
+          className="w-full sm:w-56"
+        />
       </div>
 
       {loading && (

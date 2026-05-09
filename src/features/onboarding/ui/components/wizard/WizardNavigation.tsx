@@ -40,7 +40,7 @@ export const WizardNavigation = (
           'GUARDANDO...'
         ) : isLast ? (
           <>
-            FINALIZAR
+            ▶ EMPEZAR
             <CheckIcon className="h-3 w-3" />
           </>
         ) : (

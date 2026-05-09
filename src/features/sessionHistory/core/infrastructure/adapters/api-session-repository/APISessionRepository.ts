@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
+import { API_ENDPOINTS } from '@config/api';
+import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
 import type { SessionRepository } from '../../../application/ports/SessionRepository';
 import type { Session } from '../../../domain/models/Session';
 import type { GetSessionHistoryDTO } from './dtos/GetSessionDTO';

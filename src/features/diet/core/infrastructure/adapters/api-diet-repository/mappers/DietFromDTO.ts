@@ -1,4 +1,4 @@
-import type { Diet } from '../../../../domain/models/Diet';
+import type { Diet } from '@features/diet/core/domain/models/Diet';
 import type { GetDietDTO } from '../dtos/GetDietDTO';
 
 export class DietFromDTO {

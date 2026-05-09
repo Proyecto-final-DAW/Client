@@ -18,10 +18,13 @@ export class MockStatsRepository implements StatsRepository {
       vigor: { xp: 70, level: 12 },
     };
 
-    const pilpilar = STAT_ORDER.map((key) => ({
+    const pillar = STAT_ORDER.map((key) => ({
       name: STAT_CONFIG[key].name,
       value: mockData[key].xp,
-      max: 100,
+      // Mirror server's xpThresholdForLevel(level) = 100 + level * 15.
+      // Keeping the mock in sync with the API mapper so the bars and
+      // "X / Y XP" labels read consistently in dev.
+      max: 100 + mockData[key].level * 15,
       level: mockData[key].level,
       icon: STAT_CONFIG[key].icon,
       accentColor: STAT_CONFIG[key].accentColor,
@@ -29,11 +32,11 @@ export class MockStatsRepository implements StatsRepository {
     }));
 
     const heroLevel = Math.round(
-      pilpilar.reduce((sum, p) => sum + p.level, 0) / STAT_ORDER.length
+      pillar.reduce((sum, p) => sum + p.level, 0) / STAT_ORDER.length
     );
 
     return {
-      pilpilar,
+      pillar,
       level: heroLevel,
       title: 'Especialista',
     };

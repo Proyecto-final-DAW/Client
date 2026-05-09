@@ -1,9 +1,18 @@
-import { STAT_CONFIG, STAT_ORDER } from '../../../../domain/models/StatConfig';
-import type { StatPilar } from '../../../../domain/models/StatPilar';
-import type { UserStats } from '../../../../domain/models/UserStats';
+import { STAT_CONFIG, STAT_ORDER } from '@features/stats/core/domain/models/StatConfig';
+import type { StatPilar } from '@features/stats/core/domain/models/StatPilar';
+import type { UserStats } from '@features/stats/core/domain/models/UserStats';
 import type { GetStatsDTO } from '../dtos/GetStatsDTO';
 
-const XP_PER_LEVEL = 100;
+/**
+ * Mirrors the server's `xpThresholdForLevel` from
+ * progression.service.ts (`100 + level * 15`). Hardcoding the
+ * formula client-side keeps the bar fill and the "X / Y XP" label
+ * accurate without a network round-trip; if the server formula
+ * changes, both places need updating — the duplication is
+ * intentional and noted at the server too. The previous flat 100 cap
+ * over-filled the bar at low levels and under-filled at high ones.
+ */
+const xpThresholdForLevel = (level: number): number => 100 + level * 15;
 
 /**
  * The stat config keys are the client-facing names (`strength`, `resistance`,
@@ -33,14 +42,15 @@ const titleFor = (level: number): string => {
 
 export class StatsFromDTO {
   static fromDTO(dto: GetStatsDTO): UserStats {
-    const pilpilar: StatPilar[] = STAT_ORDER.map((key) => {
+    const pillar: StatPilar[] = STAT_ORDER.map((key) => {
       const config = STAT_CONFIG[key];
       const picker = STAT_PICKER[key];
+      const level = picker.level(dto);
       return {
         name: config.name,
         value: picker.xp(dto),
-        max: XP_PER_LEVEL,
-        level: picker.level(dto),
+        max: xpThresholdForLevel(level),
+        level,
         icon: config.icon,
         accentColor: config.accentColor,
         description: config.description,
@@ -48,11 +58,11 @@ export class StatsFromDTO {
     });
 
     const heroLevel = Math.round(
-      pilpilar.reduce((sum, p) => sum + p.level, 0) / STAT_ORDER.length
+      pillar.reduce((sum, p) => sum + p.level, 0) / STAT_ORDER.length
     );
 
     return {
-      pilpilar,
+      pillar,
       level: heroLevel,
       title: titleFor(heroLevel),
     };

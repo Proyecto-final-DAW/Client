@@ -12,6 +12,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'barbell',
     difficulty: 'intermediate',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0030',
@@ -20,6 +21,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'barbell',
     difficulty: 'intermediate',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0035',
@@ -28,6 +30,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'dumbbell',
     difficulty: 'beginner',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0662',
@@ -36,6 +39,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'body weight',
     difficulty: 'beginner',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0652',
@@ -44,6 +48,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'body weight',
     difficulty: 'intermediate',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0655',
@@ -52,6 +57,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'cable',
     difficulty: 'beginner',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0660',
@@ -60,6 +66,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'barbell',
     difficulty: 'intermediate',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0100',
@@ -68,6 +75,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'barbell',
     difficulty: 'intermediate',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0105',
@@ -76,6 +84,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'dumbbell',
     difficulty: 'beginner',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0200',
@@ -84,6 +93,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'barbell',
     difficulty: 'beginner',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0205',
@@ -92,6 +102,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'dumbbell',
     difficulty: 'beginner',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0300',
@@ -100,6 +111,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'cable',
     difficulty: 'beginner',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0305',
@@ -108,6 +120,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'dumbbell',
     difficulty: 'intermediate',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0043',
@@ -116,6 +129,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'barbell',
     difficulty: 'intermediate',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0045',
@@ -124,6 +138,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'leverage machine',
     difficulty: 'beginner',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0046',
@@ -132,6 +147,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'leverage machine',
     difficulty: 'beginner',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0050',
@@ -140,6 +156,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'barbell',
     difficulty: 'intermediate',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0055',
@@ -148,6 +165,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'leverage machine',
     difficulty: 'beginner',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0032',
@@ -156,6 +174,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'barbell',
     difficulty: 'expert',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0033',
@@ -164,6 +183,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'barbell',
     difficulty: 'intermediate',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0400',
@@ -172,6 +192,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'body weight',
     difficulty: 'beginner',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0405',
@@ -180,6 +201,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'body weight',
     difficulty: 'intermediate',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0500',
@@ -188,6 +210,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'leverage machine',
     difficulty: 'beginner',
     imageUrl: '',
+    category: 'strength',
   },
   {
     id: '0600',
@@ -196,6 +219,7 @@ const MOCK_EXERCISES: Exercise[] = [
     equipment: 'barbell',
     difficulty: 'beginner',
     imageUrl: '',
+    category: 'strength',
   },
 ];
 

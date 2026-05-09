@@ -12,6 +12,7 @@ const stepLabels = [
   'OBJETIVO',
   'PLAN',
   'LIMITES',
+  'RESUMEN',
 ];
 
 export const Stepper = (props: StepperProps): React.JSX.Element => {
@@ -41,7 +42,7 @@ export const Stepper = (props: StepperProps): React.JSX.Element => {
             >
               <div className="flex items-center w-full">
                 <div
-                  className={`flex-1 h-0.5 transition-colors ${
+                  className={`flex-1 h-1 transition-colors ${
                     i === 0
                       ? 'bg-transparent'
                       : prevCompleted
@@ -71,7 +72,7 @@ export const Stepper = (props: StepperProps): React.JSX.Element => {
                 />
               </div>
               <span
-                className={`hidden sm:block font-pixel text-[8px] mt-2 tracking-wider text-center leading-tight ${
+                className={`hidden sm:block font-pixel text-[8px] mt-1.5 tracking-wider text-center leading-tight ${
                   isCompleted
                     ? 'text-green-400'
                     : isActive

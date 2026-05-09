@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { AsyncState } from '../../../shared/components/AsyncState';
 import { ConfirmDialog } from '../../../shared/components/ConfirmDialog';
 import { EmptyState } from '../../../shared/components/EmptyState';
+import { hasTrainedToday } from '../../../shared/utils/date';
 import { useSessionHistory } from '../../sessionHistory/ui/hooks/useSessionHistory';
 import { CreateRoutineForm } from './components/CreateRoutineForm';
 import { RoutineDetail } from './components/RoutineDetail';
@@ -47,6 +48,15 @@ export const RoutinesView = (): React.JSX.Element => {
     );
   }, [sessions]);
 
+  // Surface "ya entrenaste hoy" here too — the post-save 409 was
+  // correct but a frustrating wall to hit AFTER logging every set, so
+  // we gate the CTA up front. Same local-day comparison helper as
+  // LiveWorkoutView's direct-URL guard.
+  const trainedToday = useMemo<boolean>(
+    () => (sessions ? hasTrainedToday(sessions) : false),
+    [sessions]
+  );
+
   const { addExercise, removeExercise, moveExercise } = useRoutineExercises({
     routine: selectedRoutine,
     onRoutineUpdated: replaceRoutine,
@@ -73,13 +83,13 @@ export const RoutinesView = (): React.JSX.Element => {
                 <EmptyState
                   icon="⚔"
                   title="Sin sesiones"
-                  description="Crea tu primera sesion o aplica una rutina entera desde plantillas."
+                  description="Crea tu primera sesion o aplica una rutina entera."
                   cta={{
                     label: 'Crear sesion',
                     onClick: () => setCreating(true),
                   }}
                   secondaryCta={{
-                    label: 'Ver plantillas',
+                    label: 'Ver rutinas',
                     to: '/templates',
                   }}
                 />
@@ -107,6 +117,7 @@ export const RoutinesView = (): React.JSX.Element => {
 
                 <RoutineDetail
                   routine={selectedRoutine}
+                  trainedToday={trainedToday}
                   onAddExercise={addExercise}
                   onRemoveExercise={removeExercise}
                   onMoveExercise={moveExercise}

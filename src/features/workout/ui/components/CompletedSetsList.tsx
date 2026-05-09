@@ -35,7 +35,9 @@ export const CompletedSetsList = (props: Props): React.JSX.Element | null => {
               Set {index + 1}
             </span>
             <span className="font-pixel text-[10px] text-green-400">
-              {set.weight} KG × {set.reps}
+              {set.durationSeconds != null
+                ? `${set.durationSeconds} S`
+                : `${set.weight} KG × ${set.reps}`}
             </span>
           </li>
         ))}

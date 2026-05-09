@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../../../../context/hooks/useAuth';
+import { useAuth } from '@context/hooks/useAuth';
 import type {
   ChangePasswordData,
   ProfileData,
@@ -52,8 +52,15 @@ export const useProfile = () => {
     };
   }, []);
 
-  const updateProfile = async (data: ProfileUpdateData) => {
-    if (!token) return;
+  /**
+   * Returns true on success so the caller can close the edit form on
+   * a clean save and keep it open on error. Errors are still surfaced
+   * via `updateError` for inline messaging — the boolean is just the
+   * "should I leave edit mode?" signal that the caller couldn't read
+   * before from the awaited promise alone.
+   */
+  const updateProfile = async (data: ProfileUpdateData): Promise<boolean> => {
+    if (!token) return false;
     setUpdating(true);
     setUpdateError(null);
     setUpdateSuccess(false);
@@ -63,10 +70,12 @@ export const useProfile = () => {
       setProfile((prev) => (prev ? { ...prev, ...updated } : null));
       setUpdateSuccess(true);
       successTimerRef.current = setTimeout(() => setUpdateSuccess(false), 3000);
+      return true;
     } catch (err) {
       setUpdateError(
         err instanceof Error ? err.message : 'Error al actualizar'
       );
+      return false;
     } finally {
       setUpdating(false);
     }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type { ChangePasswordData } from '../../core/domain/models/ProfileData';
 import { FormFeedback } from './FormFeedback';
 import { PasswordField } from './PasswordField';

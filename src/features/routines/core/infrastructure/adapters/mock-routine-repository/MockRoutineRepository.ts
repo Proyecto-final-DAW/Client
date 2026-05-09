@@ -1,4 +1,4 @@
-import type { Exercise } from '../../../../../exercises/core/domain/models/Exercise';
+import type { Exercise } from '@features/exercises/core/domain/models/Exercise';
 import type { RoutineRepository } from '../../../application/ports/RoutineRepository';
 import type { Routine } from '../../../domain/models/Routine';
 
@@ -10,6 +10,7 @@ const MOCK_EXERCISE_CATALOG: Exercise[] = [
     equipment: 'barbell',
     difficulty: 'intermediate',
     imageUrl: '/images/exercises/bench-press.jpg',
+    category: 'strength',
   },
   {
     id: 'incline-dumbbell-press',
@@ -18,6 +19,7 @@ const MOCK_EXERCISE_CATALOG: Exercise[] = [
     equipment: 'dumbbell',
     difficulty: 'intermediate',
     imageUrl: '/images/exercises/incline-dumbbell-press.jpg',
+    category: 'strength',
   },
   {
     id: 'dips',
@@ -26,6 +28,7 @@ const MOCK_EXERCISE_CATALOG: Exercise[] = [
     equipment: 'bodyweight',
     difficulty: 'intermediate',
     imageUrl: '/images/exercises/dips.jpg',
+    category: 'strength',
   },
   {
     id: 'lateral-raises',
@@ -34,6 +37,7 @@ const MOCK_EXERCISE_CATALOG: Exercise[] = [
     equipment: 'dumbbell',
     difficulty: 'beginner',
     imageUrl: '/images/exercises/lateral-raises.jpg',
+    category: 'strength',
   },
   {
     id: 'squat',
@@ -42,6 +46,7 @@ const MOCK_EXERCISE_CATALOG: Exercise[] = [
     equipment: 'barbell',
     difficulty: 'intermediate',
     imageUrl: '/images/exercises/squat.jpg',
+    category: 'strength',
   },
   {
     id: 'leg-press',
@@ -50,6 +55,7 @@ const MOCK_EXERCISE_CATALOG: Exercise[] = [
     equipment: 'machine',
     difficulty: 'beginner',
     imageUrl: '/images/exercises/leg-press.jpg',
+    category: 'strength',
   },
   {
     id: 'romanian-deadlift',
@@ -58,6 +64,7 @@ const MOCK_EXERCISE_CATALOG: Exercise[] = [
     equipment: 'barbell',
     difficulty: 'intermediate',
     imageUrl: '/images/exercises/romanian-deadlift.jpg',
+    category: 'strength',
   },
   {
     id: 'pull-up',
@@ -66,6 +73,7 @@ const MOCK_EXERCISE_CATALOG: Exercise[] = [
     equipment: 'bodyweight',
     difficulty: 'intermediate',
     imageUrl: '/images/exercises/pull-up.jpg',
+    category: 'strength',
   },
   {
     id: 'barbell-row',
@@ -74,6 +82,7 @@ const MOCK_EXERCISE_CATALOG: Exercise[] = [
     equipment: 'barbell',
     difficulty: 'intermediate',
     imageUrl: '/images/exercises/barbell-row.jpg',
+    category: 'strength',
   },
   {
     id: 'biceps-curl',
@@ -82,6 +91,7 @@ const MOCK_EXERCISE_CATALOG: Exercise[] = [
     equipment: 'dumbbell',
     difficulty: 'beginner',
     imageUrl: '/images/exercises/biceps-curl.jpg',
+    category: 'strength',
   },
 ];
 

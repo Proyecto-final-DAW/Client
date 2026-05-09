@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useAuth } from '../../../../context/hooks/useAuth';
+import { useAuth } from '@context/hooks/useAuth';
 import type { ExerciseProgressPoint } from '../../core/domain/models/ExerciseProgressPoint';
 import { progressRepository } from '../adapter';
 

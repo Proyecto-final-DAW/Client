@@ -1,6 +1,7 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
+import { PixelSelect } from '@shared/components/PixelSelect';
 import type {
   ProfileData,
   ProfileUpdateData,
@@ -128,11 +129,16 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
             <label htmlFor="profile-weight" className={labelClass}>
               PESO (KG)
             </label>
+            {/* `step="1"` so the spinner buttons increment kilogram by
+                kilogram — the previous `0.1` made each click change by
+                100g, which felt absurdly granular for body weight. The
+                user can still type a decimal (e.g. 75.5) by keyboard
+                if they really want fine resolution. */}
             <input
               id="profile-weight"
               type="number"
               inputMode="decimal"
-              step="0.1"
+              step="1"
               min="30"
               max="250"
               value={form.weight}
@@ -159,40 +165,24 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="profile-sex" className={labelClass}>
-              SEXO
-            </label>
-            <select
-              id="profile-sex"
+            <span className={labelClass}>SEXO</span>
+            <PixelSelect
               value={form.sex}
-              onChange={(e) => handleChange('sex', e.target.value)}
-              className={inputClass}
-            >
-              <option value="">— Seleccionar —</option>
-              {SEX_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              options={SEX_OPTIONS}
+              placeholder="— Seleccionar —"
+              onChange={(value) => handleChange('sex', value)}
+              ariaLabel="Sexo"
+            />
           </div>
           <div>
-            <label htmlFor="profile-activity" className={labelClass}>
-              NIVEL DE ACTIVIDAD
-            </label>
-            <select
-              id="profile-activity"
+            <span className={labelClass}>NIVEL DE ACTIVIDAD</span>
+            <PixelSelect
               value={form.activity_level}
-              onChange={(e) => handleChange('activity_level', e.target.value)}
-              className={inputClass}
-            >
-              <option value="">— Seleccionar —</option>
-              {ACTIVITY_LEVEL_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              options={ACTIVITY_LEVEL_OPTIONS}
+              placeholder="— Seleccionar —"
+              onChange={(value) => handleChange('activity_level', value)}
+              ariaLabel="Nivel de actividad"
+            />
           </div>
         </div>
       </section>
@@ -221,40 +211,24 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
 
         <div className="mb-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="profile-experience" className={labelClass}>
-              EXPERIENCIA
-            </label>
-            <select
-              id="profile-experience"
+            <span className={labelClass}>EXPERIENCIA</span>
+            <PixelSelect
               value={form.experience_level}
-              onChange={(e) => handleChange('experience_level', e.target.value)}
-              className={inputClass}
-            >
-              <option value="">— Seleccionar —</option>
-              {EXPERIENCE_LEVEL_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              options={EXPERIENCE_LEVEL_OPTIONS}
+              placeholder="— Seleccionar —"
+              onChange={(value) => handleChange('experience_level', value)}
+              ariaLabel="Nivel de experiencia"
+            />
           </div>
           <div>
-            <label htmlFor="profile-days" className={labelClass}>
-              DIAS POR SEMANA
-            </label>
-            <select
-              id="profile-days"
+            <span className={labelClass}>DIAS POR SEMANA</span>
+            <PixelSelect
               value={form.days_per_week}
-              onChange={(e) => handleChange('days_per_week', e.target.value)}
-              className={inputClass}
-            >
-              <option value="">— Seleccionar —</option>
-              {DAYS_PER_WEEK_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              options={DAYS_PER_WEEK_OPTIONS}
+              placeholder="— Seleccionar —"
+              onChange={(value) => handleChange('days_per_week', value)}
+              ariaLabel="Dias por semana"
+            />
           </div>
         </div>
 

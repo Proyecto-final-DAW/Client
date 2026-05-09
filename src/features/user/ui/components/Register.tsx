@@ -40,7 +40,7 @@ export const Register = (): React.JSX.Element => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full font-pixel text-[10px] sm:text-xs bg-green-500 hover:bg-green-400 disabled:bg-[#1e1e2e] disabled:text-ink-disabled text-[#0a0a0f] px-6 py-3.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 disabled:border-b-0 disabled:active:mt-0 shadow-[0_0_16px_rgba(34,197,94,0.35)] disabled:shadow-none"
+              className="w-full mt-2 font-pixel text-xs sm:text-sm tracking-widest bg-green-500 hover:bg-green-400 disabled:bg-[#1e1e2e] disabled:text-ink-disabled text-[#0a0a0f] px-6 py-4 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-3 transition-all duration-150 disabled:border-b-0 disabled:active:mt-2 shadow-[0_0_18px_rgba(34,197,94,0.4)] disabled:shadow-none"
             >
               {loading ? 'CARGANDO...' : '▶ REGISTRAR'}
             </button>

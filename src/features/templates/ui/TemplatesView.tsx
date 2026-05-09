@@ -5,7 +5,7 @@ import { AsyncState } from '../../../shared/components/AsyncState';
 import { HeroRoutineCard } from './components/HeroRoutineCard';
 import { TemplateCard } from './components/TemplateCard';
 import { TemplateFilters } from './components/TemplateFilters';
-import { TemplateGrid } from './components/TemplateGrid';
+import { TemplatePaginatedBrowser } from './components/TemplatePaginatedBrowser';
 import { useTemplateCatalog } from './hooks/useTemplateCatalog';
 
 export const TemplatesView = (): React.JSX.Element => {
@@ -42,7 +42,7 @@ export const TemplatesView = (): React.JSX.Element => {
                   TU PLAN
                 </h1>
                 <p className="mt-2 font-pixel-mono text-lg text-ink-muted">
-                  Aplica un plan y se crearán tus sesiones automaticamente.
+                  Aplica un plan y se crearan tus sesiones automaticamente.
                 </p>
               </header>
 
@@ -94,7 +94,7 @@ export const TemplatesView = (): React.JSX.Element => {
                 {browseOpen && (
                   <div className="border-t-2 border-border/80 px-4 pb-5 pt-4 flex flex-col gap-5">
                     <TemplateFilters value={filters} onChange={setFilters} />
-                    <TemplateGrid
+                    <TemplatePaginatedBrowser
                       templates={filteredTemplates}
                       recommendedTemplateIds={recommendedTemplateIds}
                       emptyTitle="Sin resultados"

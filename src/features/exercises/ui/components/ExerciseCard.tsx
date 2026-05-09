@@ -1,4 +1,4 @@
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import {
   DIFFICULTY_LABEL,
   EQUIPMENT_LABEL,

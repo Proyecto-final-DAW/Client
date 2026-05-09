@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
+import { API_ENDPOINTS } from '@config/api';
+import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
 import type {
   CharacterRepository,
   CharacterStateOrOnboarding,
@@ -62,7 +62,7 @@ export class APICharacterRepository implements CharacterRepository {
       );
       return response.data;
     } catch (error) {
-      throw surface(error, 'Error al cargar el catálogo de clases');
+      throw surface(error, 'Error al cargar el catalogo de clases');
     }
   }
 }

@@ -1,7 +1,7 @@
 import { PlayIcon } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
 
-import { PixelCorners } from '../../../../../shared/components/PixelCorners';
+import { PixelCorners } from '@shared/components/PixelCorners';
 
 export const CtaSection = (): React.JSX.Element => {
   return (
@@ -13,11 +13,11 @@ export const CtaSection = (): React.JSX.Element => {
           <div className="mx-auto mb-4 inline-flex h-16 w-16 items-center justify-center rounded-sm border-2 border-green-500/40 bg-green-500/10">
             <PlayIcon className="h-9 w-9 text-green-400" />
           </div>
-          <h2 className="font-pixel text-sm sm:text-lg md:text-xl text-ink mb-2 leading-relaxed [text-shadow:2px_2px_0_#000,0_0_10px_rgba(0,0,0,0.8)]">
+          <h2 className="font-pixel text-sm sm:text-lg md:text-xl text-ink mb-6 leading-tight [text-shadow:2px_2px_0_#000,0_0_10px_rgba(0,0,0,0.8)]">
             ¿LISTO PARA
-          </h2>
-          <h2 className="font-pixel text-sm sm:text-lg md:text-xl text-green-500 mb-6 leading-relaxed [text-shadow:2px_2px_0_#000,0_0_12px_rgba(34,197,94,0.5)]">
-            TU QUEST?
+            <span className="block mt-2 text-green-500 [text-shadow:2px_2px_0_#000,0_0_12px_rgba(34,197,94,0.5)]">
+              TU QUEST?
+            </span>
           </h2>
           <p className="font-pixel text-[9px] sm:text-[11px] text-ink-faint leading-loose tracking-wide mb-8">
             Unete gratis y empieza a entrenar hoy.

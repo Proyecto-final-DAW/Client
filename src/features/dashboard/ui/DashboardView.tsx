@@ -2,52 +2,45 @@ import { useEffect, useState } from 'react';
 
 import { useAuth } from '../../../context/hooks/useAuth';
 import { useCharacterState } from '../../../context/hooks/useCharacterState';
-import { AsyncState } from '../../../shared/components/AsyncState';
 import { OriginStoryIntro } from '../../character/ui/components/OriginStoryIntro';
 import { TierUpModal } from '../../character/ui/components/TierUpModal';
-import { DietSummaryCard } from '../../diet/ui/components/DietSummaryCard';
-import { useDiet } from '../../diet/ui/hooks/useDiet';
-import { ProfileHeroBanner } from '../../profile/ui/components/ProfileHeroBanner';
-import { StatsPanelCompact } from '../../stats/ui/components/StatsPanelCompact';
 import { useStats } from '../../stats/ui/hooks/useStats';
 import { useStreakStatus } from '../../streak/ui/hooks/useStreakStatus';
-import { DashboardCards } from './components/DashboardCards';
-import { DashboardHeader } from './components/DashboardHeader';
-import { RecommendedRoutineCard } from './components/RecommendedRoutineCard';
-import { StartWorkoutButton } from './components/StartWorkoutButton';
+import { DashboardCTAHero } from './components/DashboardCTAHero';
+import { DashboardHero } from './components/DashboardHero';
+import { DashboardStatsCard } from './components/DashboardStatsCard';
+import { StreakCard } from './components/StreakCard';
 import { StreakWarningCard } from './components/StreakWarningCard';
-import { WeeklySummaryCard } from './components/weekly-summary/WeeklySummaryCard';
 import { useCards } from './hooks/useCards';
-import { useWeeklySummary } from './hooks/useWeeklySummary';
 
+/**
+ * Dashboard — 4 purpose-driven cards instead of one bloated panel.
+ *
+ *  Row 1: Hero card (full width). Identity, class, frase. The "wow"
+ *         opener — substantial, not a slim strip.
+ *  Row 2: CTA (2/3) + Racha (1/3). Action and recurring habit, side
+ *         by side. Heights match because both are flex-h-full.
+ *  Row 3: Stats card (full width). 6 pillars in 2 columns + link to
+ *         /perfil for the full character sheet.
+ *
+ * Earlier versions either crammed everything into a single mega-panel
+ * (info overload) or used a slim identity strip that read as empty.
+ * Cards-with-purpose is the right shape; what was missing was visual
+ * weight inside each card — fixed here with bigger avatars, the class
+ * frase, halos and shadow rings.
+ */
 export const Dashboard = (): React.JSX.Element => {
   const { user } = useAuth();
-  const { cards, loading, error, refetch: refetchCards } = useCards();
-  const {
-    summary,
-    loading: summaryLoading,
-    error: summaryError,
-    refetch: refetchSummary,
-  } = useWeeklySummary();
-  const {
-    diet,
-    loading: dietLoading,
-    refreshing: dietRefreshing,
-    error: dietError,
-    refetch: dietRefetch,
-  } = useDiet();
+  const { cards } = useCards();
   const { status: streakStatus } = useStreakStatus();
+  const { stats, loading: statsLoading, error: statsError } = useStats();
   const {
     state: characterState,
     error: characterError,
     choosing: characterChoosing,
     chooseClass,
   } = useCharacterState();
-  const { stats, loading: statsLoading, error: statsError } = useStats();
 
-  // Per-tier dismissal: clicking "MAS TARDE" hides the modal for the current
-  // tier only. When a new pending choice arrives (e.g. T2 after T1), the
-  // modal opens again automatically.
   const [dismissedTier, setDismissedTier] = useState<number | null>(null);
   const pendingTier = characterState?.pendingChoice?.tier ?? null;
 
@@ -57,25 +50,37 @@ export const Dashboard = (): React.JSX.Element => {
     }
   }, [pendingTier]);
 
-  // First-visit origin story. Fires once per browser, on the user's very
-  // first landing on the dashboard — typically right after onboarding. A
-  // 5-panel narrative that frames the user as an Iniciado at the start of
-  // a 7-rank journey. localStorage flag keeps the dismissal across reloads
-  // so returning users never see it twice.
+  // Per-user flag — the previous global `origin_story_seen` key meant a
+  // second account on the same browser would never see the intro because
+  // someone (or a previous test run) had already dismissed it. Scoping
+  // to user.id makes every freshly-onboarded user see the popup once.
+  const originStoryStorageKey =
+    user?.id != null ? `origin_story_seen_${user.id}` : null;
+
   const [originStoryDismissed, setOriginStoryDismissed] = useState(
-    () => localStorage.getItem('origin_story_seen') === '1'
+    () =>
+      originStoryStorageKey !== null &&
+      localStorage.getItem(originStoryStorageKey) === '1'
   );
-  const showOriginStory = !originStoryDismissed;
+
+  useEffect(() => {
+    if (originStoryStorageKey === null) {
+      setOriginStoryDismissed(true);
+      return;
+    }
+    setOriginStoryDismissed(
+      localStorage.getItem(originStoryStorageKey) === '1'
+    );
+  }, [originStoryStorageKey]);
+
+  const showOriginStory =
+    originStoryStorageKey !== null && !originStoryDismissed;
 
   const handleDismissOriginStory = (): void => {
-    localStorage.setItem('origin_story_seen', '1');
+    if (originStoryStorageKey !== null) {
+      localStorage.setItem(originStoryStorageKey, '1');
+    }
     setOriginStoryDismissed(true);
-  };
-
-  const combinedData = cards && summary ? { cards, summary } : null;
-  const handleRetry = (): void => {
-    void refetchCards();
-    void refetchSummary();
   };
 
   const showTierUpModal =
@@ -87,11 +92,8 @@ export const Dashboard = (): React.JSX.Element => {
     if (!characterState?.pendingChoice) return;
     try {
       await chooseClass(characterState.pendingChoice.tier, classId);
-      // Success: state updates automatically via context. If the next tier
-      // also has a pending choice, the modal will re-open with it.
     } catch {
-      // Error message is already in characterError; the modal stays open so
-      // the user can retry or dismiss.
+      // characterError carries the message; modal stays open for retry.
     }
   };
 
@@ -99,99 +101,83 @@ export const Dashboard = (): React.JSX.Element => {
     if (pendingTier !== null) setDismissedTier(pendingTier);
   };
 
+  // Brand-new users start with all 6 stats at level 1 / 0 XP. Any
+  // training nudges at least one stat past that floor, so a single
+  // pillar showing progress is a reliable "has trained before" signal.
+  const hasTrainedBefore =
+    stats?.pillar.some((p) => p.level > 1 || p.value > 0) ?? false;
+
+  // `lastWorkoutDaysAgo` is mapped null→0 in CardsFromDTO, so the
+  // 0-value alone can't distinguish "trained today" from "never
+  // trained". Combine with hasTrainedBefore to catch the new-user
+  // case where the field is structurally 0.
+  const trainedToday =
+    hasTrainedBefore && (cards?.lastWorkoutDaysAgo ?? -1) === 0;
+
   return (
-    <AsyncState
-      loading={loading || summaryLoading}
-      error={error ?? summaryError}
-      data={combinedData}
-      onRetry={handleRetry}
-      loadingLabel="CARGANDO DASHBOARD"
-    >
-      {({ cards, summary }) => (
-        // max-w-7xl caps the dashboard on ultrawide monitors so cards don't
-        // grow into elongated horizontal slabs. Below 1280px (lg) it has
-        // no effect — the layout adapts via the 2-col grid further down.
-        <div className="mx-auto max-w-7xl">
-          <DashboardHeader userName={user?.name} />
+    <div className="mx-auto max-w-4xl space-y-5 sm:space-y-6">
+      {streakStatus?.isAtRisk && <StreakWarningCard status={streakStatus} />}
 
-          {/* Identity strip — full width since it's the user's "character
-              sheet" header, the same component is reused on /perfil. */}
-          <div className="my-4">
-            <ProfileHeroBanner
-              name={user?.name ?? 'Heroe'}
-              profileImage={user?.profileImage ?? null}
-              characterState={characterState}
-            />
-          </div>
-
-          {streakStatus?.isAtRisk && (
-            <div className="my-4">
-              <StreakWarningCard status={streakStatus} />
-            </div>
-          )}
-
-          {/* Primary CTA — auto-width centered (used to be a full-width
-              slab that visually dominated everything below it). */}
-          <div className="my-4 flex justify-center">
-            <StartWorkoutButton />
-          </div>
-
-          {characterError && !characterState && (
-            <div className="mt-4 border-2 border-red-500/40 bg-card p-3 text-center font-pixel-mono text-base text-red-300">
-              {characterError}
-            </div>
-          )}
-
-          {/* 2-col body. Left column (lg:col-span-2) holds action content
-              (rutina, dieta) — the things the user acts on. Right column is
-              passive context (stats glance, streak) — the things the user
-              checks. Splitting reduces total page height by ~40% and ends
-              the previous "long thin column of full-width slabs" feel. */}
-          <section className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <div className="flex flex-col gap-4 lg:col-span-2">
-              <RecommendedRoutineCard />
-              <DietSummaryCard
-                diet={diet}
-                loading={dietLoading}
-                refreshing={dietRefreshing}
-                error={dietError}
-                onRefresh={dietRefetch}
-              />
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <StatsPanelCompact
-                stats={stats?.pilpilar ?? null}
-                loading={statsLoading}
-                error={statsError}
-              />
-              <DashboardCards {...cards} />
-            </div>
-          </section>
-
-          {/* WeeklySummary alone on its row — its 3-row stat layout reads
-              right at full width below the 2-col body. */}
-          <div className="mt-4">
-            <WeeklySummaryCard summary={summary} />
-          </div>
-
-          {characterState?.pendingChoice && (
-            <TierUpModal
-              open={showTierUpModal}
-              pendingChoice={characterState.pendingChoice}
-              choosing={characterChoosing}
-              onConfirm={handleConfirmChoice}
-              onClose={handleDismiss}
-            />
-          )}
-
-          <OriginStoryIntro
-            name={user?.name ?? 'Heroe'}
-            open={showOriginStory}
-            onClose={handleDismissOriginStory}
-          />
+      {characterError && !characterState && (
+        <div className="border-2 border-red-500/40 bg-card p-3 text-center font-pixel-mono text-base text-red-300">
+          {characterError}
         </div>
       )}
-    </AsyncState>
+
+      <DashboardHero
+        name={user?.name ?? 'Heroe'}
+        profileImage={user?.profileImage ?? null}
+        characterState={characterState}
+      />
+
+      <DashboardCTAHero
+        hasTrainedBefore={hasTrainedBefore}
+        trainedToday={trainedToday}
+      />
+
+      {/* Stats + racha side by side from md (tablet) onwards, heights
+          matched. Previous breakpoint was lg (1024px), which made the
+          768-1023px range stack both as full-width — wasted real
+          estate on every tablet. `items-stretch` forces both cards to
+          the same row height (the taller one wins — usually the racha
+          card with its full month calendar); stats card uses
+          `flex-1 auto-rows-fr` internally to spread its 3 rows so the
+          bars don't leave a void at the bottom. */}
+      <section className="grid grid-cols-1 items-stretch gap-5 sm:gap-6 md:grid-cols-3">
+        <div className="md:col-span-2">
+          <DashboardStatsCard
+            stats={stats?.pillar ?? null}
+            loading={statsLoading}
+            error={statsError}
+          />
+        </div>
+        <div className="md:col-span-1">
+          {cards && (
+            <StreakCard
+              streak={cards.streak}
+              trainingDays={cards.trainingDays}
+              sessionsThisWeek={cards.sessionsThisWeek}
+              weeklyTarget={cards.weeklyTarget}
+            />
+          )}
+        </div>
+      </section>
+
+      {characterState?.pendingChoice && (
+        <TierUpModal
+          open={showTierUpModal}
+          pendingChoice={characterState.pendingChoice}
+          choosing={characterChoosing}
+          onConfirm={handleConfirmChoice}
+          onClose={handleDismiss}
+        />
+      )}
+
+      <OriginStoryIntro
+        name={user?.name ?? 'Heroe'}
+        open={showOriginStory}
+        onClose={handleDismissOriginStory}
+      />
+    </div>
   );
 };

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useAuth } from '../../../../context/hooks/useAuth';
+import { useAuth } from '@context/hooks/useAuth';
 import type { Exercise } from '../../core/domain/models/Exercise';
 import { exerciseRepository } from '../adapter';
 
