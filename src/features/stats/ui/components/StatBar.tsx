@@ -16,26 +16,20 @@ interface StatBarProps {
   showXp?: boolean;
 }
 
-/** Apex level — matches `MAX_STAT_LEVEL` in progression.service.ts.
- *  Hardcoded here too so the bar can render the journey-to-cap fill
- *  without an extra round-trip; if the cap ever changes both places
- *  need updating, same trade-off as `xpThresholdForLevel`. */
-const MAX_LEVEL = 99;
-
 export const StatBar = (props: StatBarProps): React.JSX.Element => {
-  // Fill represents the journey from 1 to MAX_LEVEL, blending the
-  // current level + the within-level XP progress so the bar inches
-  // forward smoothly between level-ups instead of jumping in chunky
-  // 1% steps. Previously the bar showed `xp / threshold-for-this-
-  // level`, which read as "almost there!" at level 5 even though the
-  // user still had 94 levels to go — the wrong story for an RPG with
-  // a hard 99 cap.
-  const withinLevel = Math.max(
-    0,
-    Math.min(1, props.pilar.value / props.pilar.max)
+  // Bar fills with within-level XP (`value / max`). The earlier
+  // version mapped fill to `(level + withinLevel) / 99` (journey to
+  // cap), which made the bar feel disconnected from the "X / Y XP"
+  // label below it — at level 39 with 50 / 685 XP the user saw a
+  // ~40%-filled bar even though they were 7% into the next level.
+  // Tying the bar to the same number the label shows makes the
+  // level-up moment land: bar fills, hits 100%, jumps to 0%, level
+  // bumps. The level number on the right of the row carries the
+  // "where am I in the 1-99 journey" story.
+  const percentage = Math.min(
+    100,
+    Math.max(0, (props.pilar.value / props.pilar.max) * 100)
   );
-  const totalProgress = (props.pilar.level + withinLevel) / MAX_LEVEL;
-  const percentage = Math.min(100, Math.max(0, totalProgress * 100));
   const accent = props.pilar.accentColor;
   // Icon binding lives in `stats/ui/StatConfig.tsx`; the domain
   // pillar carries only the stable key. statIconFor returns
@@ -97,11 +91,8 @@ export const StatBar = (props: StatBarProps): React.JSX.Element => {
           />
         </div>
 
-        {/* Within-level XP readout. Pair note: the bar fill above
-            represents the macro journey (level / 99), while this
-            label represents the micro progress to the next level.
-            Different abstractions on purpose — the bar tells "how
-            close to cap", the label tells "how close to ding". */}
+        {/* Within-level XP readout. Same denominator as the bar fill
+            above: bar at 50% means 50% of the way to the next level. */}
         {showXp && (
           <p className="mt-1 text-right font-pixel-mono text-base text-ink-faint tabular-nums">
             {Math.floor(props.pilar.value)} / {props.pilar.max}{' '}

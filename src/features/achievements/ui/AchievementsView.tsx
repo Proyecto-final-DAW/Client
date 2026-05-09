@@ -6,7 +6,10 @@ import type { Milestone } from '../core/domain/models/Milestone';
 import { MilestoneCard } from './components/MilestoneCard';
 import { useMilestones } from './hooks/useMilestones';
 
-const PAGE_SIZE = 8;
+// 9 = 3 rows × 3 cols at lg, so the grid never leaves orphan empty
+// cells in the last row. Page size of 8 left a gap on a 3-col layout
+// (3 + 3 + 2) that the user flagged as visually broken.
+const PAGE_SIZE = 9;
 
 const sortMilestones = (milestones: Milestone[]): Milestone[] =>
   [...milestones].sort((a, b) => {

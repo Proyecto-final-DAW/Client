@@ -81,17 +81,19 @@ const LOOKBACK_DAYS: Record<Exclude<TimeWindow, 'now' | 'start'>, number> = {
 };
 
 /**
- * Short labels used on the radar's axis ticks. The Spanish stat names
- * are long (RESISTENCIA, TENACIDAD, ESTAMINA, AGILIDAD) and clip the
- * SVG bounds at the polygon-friendly outerRadius (82%). Truncating
- * them only on the radar — full names still appear in the StatsPanel
- * — keeps the hexagon big without sacrificing legibility.
+ * Short labels for the radar's axis ticks. All six stats truncated to
+ * a uniform 3-letter code so the hexagon reads symmetrically — the
+ * earlier mix of FUERZA / RESIST / ESTAM / AGIL / TENAC / VIGOR was
+ * legible but visually unbalanced (a 6-char tick next to a 4-char
+ * tick across the polygon). Full names still appear in the StatsPanel.
  */
 const SHORT_LABELS: Record<string, string> = {
-  RESISTENCIA: 'RESIST',
-  TENACIDAD: 'TENAC',
-  ESTAMINA: 'ESTAM',
-  AGILIDAD: 'AGIL',
+  FUERZA: 'FUE',
+  RESISTENCIA: 'RES',
+  ESTAMINA: 'EST',
+  AGILIDAD: 'AGI',
+  TENACIDAD: 'TEN',
+  VIGOR: 'VIG',
 };
 
 const pickSnapshot = (
