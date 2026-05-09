@@ -5,27 +5,13 @@ import { statIconFor } from '../StatConfig';
 
 interface StatBarProps {
   pilar: StatPilar;
-  /**
-   * When true, renders a small "X / Y XP" line below the bar so the
-   * user can see exactly how much XP is left to the next level.
-   * Defaults to true because that's the dashboard treatment; the
-   * profile's StatsPanel sets it false to keep the panel compact —
-   * users on /perfil are looking at the radar/banner for a "where
-   * am I" snapshot, not at level-up math.
-   */
-  showXp?: boolean;
 }
 
 export const StatBar = (props: StatBarProps): React.JSX.Element => {
-  // Bar fills with within-level XP (`value / max`). The earlier
-  // version mapped fill to `(level + withinLevel) / 99` (journey to
-  // cap), which made the bar feel disconnected from the "X / Y XP"
-  // label below it — at level 39 with 50 / 685 XP the user saw a
-  // ~40%-filled bar even though they were 7% into the next level.
-  // Tying the bar to the same number the label shows makes the
-  // level-up moment land: bar fills, hits 100%, jumps to 0%, level
-  // bumps. The level number on the right of the row carries the
-  // "where am I in the 1-99 journey" story.
+  // Bar fills with within-level XP (`value / max`). The level number
+  // on the right of the row carries the 1-99 progress story; the
+  // numeric "X / Y XP" caption that used to live below the bar was
+  // redundant given the bar already encodes the same fraction visually.
   const percentage = Math.min(
     100,
     Math.max(0, (props.pilar.value / props.pilar.max) * 100)
@@ -36,7 +22,6 @@ export const StatBar = (props: StatBarProps): React.JSX.Element => {
   // undefined for unknown keys (defensive), in which case we render
   // an empty 9×9 box rather than crashing.
   const Icon = statIconFor(props.pilar.key);
-  const showXp = props.showXp ?? true;
 
   return (
     // Tooltip via title= + aria-label so the description reaches both
@@ -90,15 +75,6 @@ export const StatBar = (props: StatBarProps): React.JSX.Element => {
             }}
           />
         </div>
-
-        {/* Within-level XP readout. Same denominator as the bar fill
-            above: bar at 50% means 50% of the way to the next level. */}
-        {showXp && (
-          <p className="mt-1 text-right font-pixel-mono text-base text-ink-faint tabular-nums">
-            {Math.floor(props.pilar.value)} / {props.pilar.max}{' '}
-            <span className="text-ink-muted">XP</span>
-          </p>
-        )}
       </div>
     </div>
   );
