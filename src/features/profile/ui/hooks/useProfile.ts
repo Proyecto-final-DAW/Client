@@ -25,7 +25,7 @@ export const useProfile = () => {
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [passwordSuccess, setPasswordSuccess] = useState(false);
 
-  const successTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const successTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fetchProfile = useCallback(async () => {
     if (!token) return;
@@ -69,6 +69,9 @@ export const useProfile = () => {
       const updated = await profileRepository.updateProfile(data);
       setProfile((prev) => (prev ? { ...prev, ...updated } : null));
       setUpdateSuccess(true);
+      // Mirror the pre-clear pattern from `changePassword` so a user
+      // who saves twice within 3s doesn't leak the first timer.
+      if (successTimerRef.current) clearTimeout(successTimerRef.current);
       successTimerRef.current = setTimeout(() => setUpdateSuccess(false), 3000);
       return true;
     } catch (err) {
