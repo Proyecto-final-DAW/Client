@@ -90,7 +90,13 @@ export const useProfile = () => {
     try {
       await profileRepository.changePassword(data);
       setPasswordSuccess(true);
-      setTimeout(() => {
+      // Track the timer so the unmount effect can clear it. Without
+      // this, a user who navigates away within 1.5s (back button,
+      // route change) still gets `logout() + navigate()` after the
+      // component is gone — mutating context that the next page is
+      // already rendering.
+      if (successTimerRef.current) clearTimeout(successTimerRef.current);
+      successTimerRef.current = setTimeout(() => {
         logout();
         navigate('/', { replace: true });
       }, 1500);

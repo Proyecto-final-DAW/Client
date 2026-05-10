@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type {
   CharacterState,
@@ -122,18 +122,25 @@ export const CharacterProvider = (props: {
     await fetchState();
   }, [fetchState]);
 
+  // Memoize the context value so consumers don't re-render on every
+  // provider render. Without this, `useCharacterState()` triggered a
+  // re-render in every page that read it whenever any unrelated state
+  // bumped this provider's tree — and `data` is updated frequently.
+  const value = useMemo(
+    () => ({
+      state: data.state,
+      loading: data.loading,
+      error: data.error,
+      requiresOnboarding: data.requiresOnboarding,
+      refetch,
+      chooseClass,
+      choosing,
+    }),
+    [data, refetch, chooseClass, choosing]
+  );
+
   return (
-    <CharacterContext.Provider
-      value={{
-        state: data.state,
-        loading: data.loading,
-        error: data.error,
-        requiresOnboarding: data.requiresOnboarding,
-        refetch,
-        chooseClass,
-        choosing,
-      }}
-    >
+    <CharacterContext.Provider value={value}>
       {props.children}
     </CharacterContext.Provider>
   );

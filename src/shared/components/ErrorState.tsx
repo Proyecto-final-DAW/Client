@@ -1,5 +1,3 @@
-import { motion, useReducedMotion } from 'framer-motion';
-
 import { PixelCorners } from './PixelCorners';
 
 type Props = {
@@ -7,26 +5,23 @@ type Props = {
   onRetry?: () => void;
 };
 
+/**
+ * Critical-path error fallback. Like LoadingPixel, this lives on the
+ * first-paint bundle (it's the ErrorBoundary's render), so importing
+ * `framer-motion` here just for an entrance scale was a 127KB tax
+ * paid by every user. The CSS animation respects reduced-motion via
+ * the `@media` rule so the previous reduce-motion guard is preserved.
+ */
 export const ErrorState = (props: Props): React.JSX.Element => {
-  // Reduce-motion users skip the entrance scale; assistive tech
-  // gets the message immediately via role="alert".
-  const reducedMotion = useReducedMotion() ?? false;
-
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <motion.div
-        initial={reducedMotion ? false : { opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.2 }}
-        className="relative max-w-md border-2 border-red-500/50 bg-card px-8 py-6"
-      >
+      <div className="error-state-card relative max-w-md border-2 border-red-500/50 bg-card px-8 py-6">
         <PixelCorners className="border-red-500/50" />
         <p className="mb-3 font-pixel text-[10px] tracking-widest text-red-400 [text-shadow:2px_2px_0_#000,0_0_12px_rgba(239,68,68,0.45)]">
           ✕ ERROR
         </p>
-        {/* role="alert" makes screen readers announce the message
-            when this component appears — without it, blind users got
-            no feedback that an action errored, just silence. */}
+        {/* role="alert" so screen readers announce the message when
+            this component appears. */}
         <p
           role="alert"
           className="font-pixel-mono text-xl leading-snug text-zinc-200"
@@ -42,7 +37,21 @@ export const ErrorState = (props: Props): React.JSX.Element => {
             ▶ REINTENTAR
           </button>
         )}
-      </motion.div>
+      </div>
+      <style>{`
+        @keyframes errorStateEnter {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        .error-state-card {
+          animation: errorStateEnter 0.2s ease-out;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .error-state-card {
+            animation: none;
+          }
+        }
+      `}</style>
     </div>
   );
 };

@@ -45,7 +45,11 @@ export class MockCardsRepository implements CardsRepository {
       streak: STREAK,
       weeklyTarget: 4,
       sessionsThisWeek: 2,
-      lastWorkoutDaysAgo: 0,
+      // 1 day, not 0 — the domain says `null` for "never trained" and
+      // `0` for "trained today". Hardcoding 0 in the mock made every
+      // dev session look like the user had already trained today,
+      // hiding the brand-new-user flow.
+      lastWorkoutDaysAgo: 1,
       trainingDays: buildMockTrainingDays(),
     };
   }

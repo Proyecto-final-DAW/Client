@@ -97,8 +97,12 @@ axios.interceptors.response.use(
       localStorage.removeItem('auth_token');
       localStorage.removeItem('auth_user');
 
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
+      // Redirect to `/` (the marketing landing) instead of `/login` so
+      // the post-401 destination matches `ProtectedRoute`'s redirect
+      // for unauthenticated users — both flows now land in the same
+      // place. The landing has the explicit "iniciar sesion" CTA.
+      if (window.location.pathname !== '/') {
+        window.location.href = '/';
       }
     }
 

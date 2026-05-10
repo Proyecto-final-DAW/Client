@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { useAuth } from '../../../../context/hooks/useAuth';
 import type { Routine } from '../../../routines/core/domain/models/Routine';
 import {
   findCardioActivity,
@@ -64,11 +65,33 @@ type PersistedState = {
 };
 
 const STORAGE_PREFIX = 'gymquest:workout:';
-const storageKey = (routineId: string) => `${STORAGE_PREFIX}${routineId}`;
+// Scope the key by user id so user A's in-progress workout never
+// surfaces to user B on the same browser. Earlier the key was just
+// `gymquest:workout:<routineId>`, and a sequence "user A starts a
+// workout, logs out, user B logs in, opens the same routine id" would
+// hand B user A's sets. Including userId makes the keys disjoint.
+const storageKey = (userId: string | number, routineId: string) =>
+  `${STORAGE_PREFIX}${userId}:${routineId}`;
+const STORAGE_PREFIX_REGEX = /^gymquest:workout:/;
 
-const loadPersisted = (routineId: string): PersistedState | null => {
+/** Wipe every persisted workout key. Called on logout to make sure
+ *  the next user on the same browser gets a clean slate even if
+ *  they happen to open a routine the previous user was working on. */
+export const clearAllPersistedWorkouts = (): void => {
+  const toRemove: string[] = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && STORAGE_PREFIX_REGEX.test(key)) toRemove.push(key);
+  }
+  toRemove.forEach((k) => localStorage.removeItem(k));
+};
+
+const loadPersisted = (
+  userId: string | number,
+  routineId: string
+): PersistedState | null => {
   try {
-    const raw = localStorage.getItem(storageKey(routineId));
+    const raw = localStorage.getItem(storageKey(userId, routineId));
     if (!raw) return null;
     const parsed = JSON.parse(raw) as PersistedState;
     if (
@@ -93,6 +116,12 @@ const buildEmptySetsByExercise = (
   }, {});
 
 export const useWorkoutState = (routine: Routine | null) => {
+  const { user } = useAuth();
+  // No persistence at all when there's no authenticated user — the
+  // hook still works in-memory but won't write anything to
+  // localStorage that another user could later read.
+  const userKey = user?.id ?? null;
+
   const [status, setStatus] = useState<WorkoutStatus>('active');
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [completedSetsByExerciseId, setCompletedSetsByExerciseId] = useState<
@@ -116,7 +145,7 @@ export const useWorkoutState = (routine: Routine | null) => {
     hydratedRef.current = false;
     if (!routine) return;
 
-    const persisted = loadPersisted(routine.id);
+    const persisted = userKey ? loadPersisted(userKey, routine.id) : null;
     if (persisted) {
       const empty = buildEmptySetsByExercise(routine);
       // Only keep sets for exercises that still exist in the routine — if the
@@ -145,13 +174,13 @@ export const useWorkoutState = (routine: Routine | null) => {
     }
 
     hydratedRef.current = true;
-  }, [routine]);
+  }, [routine, userKey]);
 
   // Persist on every relevant state change once hydrated. The rest timer
   // (isResting / restRemainingSeconds) is intentionally NOT persisted — when
   // the user resumes, they shouldn't land mid-countdown of a stale rest.
   useEffect(() => {
-    if (!routine || !hydratedRef.current) return;
+    if (!routine || !hydratedRef.current || !userKey) return;
     if (status !== 'active') return;
     try {
       const payload: PersistedState = {
@@ -160,13 +189,17 @@ export const useWorkoutState = (routine: Routine | null) => {
         restDurationSeconds,
         cardio,
       };
-      localStorage.setItem(storageKey(routine.id), JSON.stringify(payload));
+      localStorage.setItem(
+        storageKey(userKey, routine.id),
+        JSON.stringify(payload)
+      );
     } catch {
       // localStorage may be full or unavailable — silently skip; the in-memory
       // state still works for the current session.
     }
   }, [
     routine,
+    userKey,
     status,
     currentExerciseIndex,
     completedSetsByExerciseId,
@@ -284,9 +317,9 @@ export const useWorkoutState = (routine: Routine | null) => {
   };
 
   const clearPersisted = () => {
-    if (!routine) return;
+    if (!routine || !userKey) return;
     try {
-      localStorage.removeItem(storageKey(routine.id));
+      localStorage.removeItem(storageKey(userKey, routine.id));
     } catch {
       // ignore
     }

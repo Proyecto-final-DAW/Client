@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { API_ENDPOINTS } from '../config/api';
+import { clearAllPersistedWorkouts } from '../features/workout/ui/hooks/useWorkoutState';
 import type { UserInfo } from '../shared/core/domain/models/UserInfo';
 import { AuthContext } from './AuthContext';
 import type { AuthUser } from './AuthContext';
@@ -85,7 +86,12 @@ export const AuthProvider = (props: {
     return stored ? normalizeAuthUser(stored) : null;
   });
 
-  const setSession = (newToken: string, newUser: AuthUser) => {
+  // useCallback on every action so the context value's identity stays
+  // stable across renders. Without this, every consumer of `useAuth()`
+  // (DashboardLayout, ProtectedRoute, every page that reads it) would
+  // re-render whenever this provider re-rendered, even when token /
+  // user hadn't changed — undermining every memoization further down.
+  const setSession = useCallback((newToken: string, newUser: AuthUser) => {
     const normalized = normalizeAuthUser(newUser);
     setToken(newToken);
     setUser(normalized);
@@ -94,22 +100,22 @@ export const AuthProvider = (props: {
     if (normalized.email) {
       localStorage.setItem(STORAGE_KEY_LAST_EMAIL, normalized.email);
     }
-  };
+  }, []);
 
-  const setUserOnly = (newUser: AuthUser) => {
+  const setUserOnly = useCallback((newUser: AuthUser) => {
     const normalized = normalizeAuthUser(newUser);
     setToken(null);
     setUser(normalized);
     localStorage.removeItem(STORAGE_KEY_TOKEN);
     localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(normalized));
-  };
+  }, []);
 
-  const updateUser = (newUser: UserInfo) => {
+  const updateUser = useCallback((newUser: UserInfo) => {
     setUser(newUser);
     localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(newUser));
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     const currentToken = localStorage.getItem(STORAGE_KEY_TOKEN);
     if (currentToken) {
       axios
@@ -125,20 +131,27 @@ export const AuthProvider = (props: {
     setUser(null);
     localStorage.removeItem(STORAGE_KEY_TOKEN);
     localStorage.removeItem(STORAGE_KEY_USER);
-  };
+    // Wipe any in-progress workout state so the next user on this
+    // browser doesn't inherit the previous user's sets.
+    clearAllPersistedWorkouts();
+  }, []);
+
+  // useMemo so the value object's identity is stable when its inputs
+  // are. The previous inline literal rebuilt on every render — with
+  // React Context that means every consumer re-renders unconditionally.
+  const value = useMemo(
+    () => ({
+      token,
+      user,
+      setSession,
+      setUser: setUserOnly,
+      updateUser,
+      logout,
+    }),
+    [token, user, setSession, setUserOnly, updateUser, logout]
+  );
 
   return (
-    <AuthContext.Provider
-      value={{
-        token,
-        user,
-        setSession,
-        setUser: setUserOnly,
-        updateUser,
-        logout,
-      }}
-    >
-      {props.children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>
   );
 };

@@ -36,7 +36,11 @@ export const useRegister = () => {
         replace: true,
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Ha ocurrido un error. Intentalo de nuevo.'
+      );
     } finally {
       setLoading(false);
     }

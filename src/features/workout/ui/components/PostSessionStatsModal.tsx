@@ -51,20 +51,16 @@ interface StatRowProps {
  * Per-session caps mean a single stat can level up at most once per
  * session in normal play, so this models 0- or 1-level-up paths only.
  */
-const StatRow = (props: StatRowProps): React.JSX.Element => {
+const StatRow = (props: StatRowProps): React.JSX.Element | null => {
   const { statKey, entry, delay, reducedMotion } = props;
   const config = statConfigFor(statKey);
-  if (!config) return <></>;
-  const Icon = config.icon;
-  const accent = config.accentColor;
 
+  // Hooks MUST be called unconditionally — moved above the early-return
+  // gate. The previous version returned `<></>` before the
+  // `useState`/`useEffect` calls, so a stat key the server emits but
+  // the client doesn't recognise (any future drift) crashed React with
+  // "Rendered fewer hooks than during the previous render".
   const leveledUp = entry.afterLevel > entry.beforeLevel;
-  const beforePct =
-    (entry.beforeXp / xpThresholdForLevel(entry.beforeLevel)) * 100;
-  const afterPct = (entry.afterXp / xpThresholdForLevel(entry.afterLevel)) * 100;
-
-  // Drive the level-up flash off the same delay the bar uses, so the
-  // badge appears exactly when the bar wraps.
   const [flashLevelUp, setFlashLevelUp] = useState(false);
   useEffect(() => {
     if (!leveledUp || reducedMotion) return;
@@ -72,6 +68,14 @@ const StatRow = (props: StatRowProps): React.JSX.Element => {
     const timer = setTimeout(() => setFlashLevelUp(true), flashAt);
     return () => clearTimeout(timer);
   }, [leveledUp, reducedMotion, delay]);
+
+  if (!config) return null;
+  const Icon = config.icon;
+  const accent = config.accentColor;
+
+  const beforePct =
+    (entry.beforeXp / xpThresholdForLevel(entry.beforeLevel)) * 100;
+  const afterPct = (entry.afterXp / xpThresholdForLevel(entry.afterLevel)) * 100;
 
   // Reduced-motion path: skip the cascade entirely, just snap to the
   // final fill. The +XP and LVL UP badges still render because they're

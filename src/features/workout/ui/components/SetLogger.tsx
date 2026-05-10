@@ -118,9 +118,28 @@ export const SetLogger = (props: Props): React.JSX.Element => {
           min={0}
           max={max}
           value={value}
-          onChange={(event) =>
-            setValue(clamp(Number(event.target.value), 0, max))
-          }
+          onChange={(event) => {
+            // Empty input must NOT immediately become 0 — that
+            // collapses "user is mid-typing" with "user wants zero",
+            // and a fast-tapping user could submit a 0kg/0rep set
+            // because the field just snapped to 0 between keystrokes.
+            // Treat empty as "leave at 0 in state but don't clamp"
+            // so the user can keep typing; the SET COMPLETADO button
+            // is already gated on reps>0 / duration>0.
+            const raw = event.target.value;
+            if (raw === '') {
+              setValue(0);
+              return;
+            }
+            const parsed = Number(raw);
+            if (!Number.isFinite(parsed)) return;
+            // For reps, snap any decimal input to an integer — server
+            // rejects `1.5` reps with a cryptic Zod message; rounding
+            // here surfaces the nearest valid value before the request.
+            const snapped =
+              inputMode === 'numeric' ? Math.round(parsed) : parsed;
+            setValue(clamp(snapped, 0, max));
+          }}
           className="font-pixel text-lg w-24 h-14 text-center bg-[#18181b] border-2 border-border text-green-400 outline-none focus:border-green-500/60 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
         <button
