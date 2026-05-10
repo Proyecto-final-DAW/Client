@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { PixelCorners } from '@shared/components/PixelCorners';
 import { useBodyScrollLock } from '@shared/hooks/useBodyScrollLock';
@@ -172,34 +172,39 @@ export const DietLogStatsModal = (
 
   // Build a per-pillar map. The 5 non-vigor entries sit at current
   // XP/level (no delta); vigor pulls before/after from the server gain.
-  const entriesByKey = STAT_ORDER.reduce<
-    Record<(typeof STAT_ORDER)[number], StatRowEntry>
-  >(
-    (acc, key) => {
-      const pilar = currentStats?.pillar.find(
-        (p) => p.name === STAT_CONFIG[key].name
-      );
-      const xp = pilar?.value ?? 0;
-      const level = pilar?.level ?? 1;
-      acc[key] = {
-        delta: 0,
-        beforeXp: xp,
-        beforeLevel: level,
-        afterXp: xp,
-        afterLevel: level,
-      };
-      return acc;
-    },
-    {} as Record<(typeof STAT_ORDER)[number], StatRowEntry>
-  );
-
-  entriesByKey.vigor = {
-    delta: gains.delta,
-    beforeXp: gains.beforeXp,
-    beforeLevel: gains.beforeLevel,
-    afterXp: gains.afterXp,
-    afterLevel: gains.afterLevel,
-  };
+  // Memoized to skip the O(n²) `find` per render — the modal stays
+  // mounted with framer-motion animations re-rendering it 60Hz, so
+  // this used to rebuild the whole map twice per frame.
+  const entriesByKey = useMemo(() => {
+    const acc = STAT_ORDER.reduce<
+      Record<(typeof STAT_ORDER)[number], StatRowEntry>
+    >(
+      (out, key) => {
+        const pilar = currentStats?.pillar.find(
+          (p) => p.name === STAT_CONFIG[key].name
+        );
+        const xp = pilar?.value ?? 0;
+        const level = pilar?.level ?? 1;
+        out[key] = {
+          delta: 0,
+          beforeXp: xp,
+          beforeLevel: level,
+          afterXp: xp,
+          afterLevel: level,
+        };
+        return out;
+      },
+      {} as Record<(typeof STAT_ORDER)[number], StatRowEntry>
+    );
+    acc.vigor = {
+      delta: gains.delta,
+      beforeXp: gains.beforeXp,
+      beforeLevel: gains.beforeLevel,
+      afterXp: gains.afterXp,
+      afterLevel: gains.afterLevel,
+    };
+    return acc;
+  }, [currentStats, gains]);
 
   return (
     <div

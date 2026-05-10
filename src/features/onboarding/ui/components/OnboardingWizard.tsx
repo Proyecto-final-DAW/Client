@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
+import { useMemo } from 'react';
 
 import type { OnboardingRepository } from '../../core/application/ports/OnboardingRepository';
 import type { StatsInitRepository } from '../../core/application/ports/StatsInitRepository';
@@ -42,8 +43,15 @@ export const OnboardingWizard = (
     handlePrev,
   } = useOnboardingWizard(props);
 
+  // Memo so the inner Step components don't see a fresh `stepProps`
+  // identity on every wizard render (errors mutate per keystroke,
+  // but the object pointer didn't need to change for the same data).
+  const stepProps = useMemo(
+    () => ({ data: formData, errors, onChange: handleChange }),
+    [formData, errors, handleChange]
+  );
+
   function renderStep() {
-    const stepProps = { data: formData, errors, onChange: handleChange };
     switch (currentStep) {
       case 1:
         return <StepPersonal {...stepProps} />;

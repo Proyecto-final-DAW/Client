@@ -68,6 +68,8 @@ export const useStats = () => {
 
   // Public `refetch` is non-silent (caller-initiated refreshes deserve
   // the spinner). The silent path is reserved for the internal event
-  // listener above.
-  return { stats, loading, error, refetch: () => fetchStats(false) };
+  // listener above. Wrapped in useCallback so it's a stable
+  // reference — consumers using it as an effect dep don't re-run.
+  const refetch = useCallback(() => fetchStats(false), [fetchStats]);
+  return { stats, loading, error, refetch };
 };

@@ -7,6 +7,7 @@ import { DashboardLayout } from './layouts/DashboardLayout';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 import { ErrorBoundary } from './shared/components/ErrorBoundary';
 import { LoadingPixel } from './shared/components/LoadingPixel';
+import { RouteFocusManager } from './shared/components/RouteFocusManager';
 
 // Every route is code-split. Each `lazy(import(...))` becomes its own
 // chunk that's only fetched when the user navigates to that path.
@@ -105,6 +106,17 @@ export const App = (): React.JSX.Element => {
       <AuthProvider>
         <CharacterProvider>
           <BrowserRouter>
+            {/* Skip-link sits before the router output and reveals
+                on focus. Lets keyboard users jump past the layout
+                chrome (logo, side nav, drawer) straight to the page
+                content on every screen. */}
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-green-500 focus:text-[#0a0a0f] focus:px-3 focus:py-2 focus:font-pixel focus:text-[10px] focus:tracking-widest"
+            >
+              Saltar al contenido
+            </a>
+            <RouteFocusManager />
             <Suspense fallback={<LoadingPixel />}>
               <Routes>
                 <Route path="/" element={<Landing />} />

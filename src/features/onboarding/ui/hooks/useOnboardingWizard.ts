@@ -74,16 +74,24 @@ export function useOnboardingWizard({
   // every render. Without the lazy form, React still throws away the
   // computed value after the first render but still calls the function
   // — wasted JSON.parse on every keystroke in the wizard.
-  const [currentStep, setCurrentStep] = useState(
-    () => loadPersistedProgress()?.step ?? 1
-  );
-  const [formData, setFormData] = useState<OnboardingFormData>(() => ({
-    ...INITIAL_FORM_DATA,
-    ...(loadPersistedProgress()?.data ?? {}),
-    // The auth user's name always wins — even if persisted storage held
-    // a stale value from a different account on the same browser.
-    name: initialName,
-  }));
+  // Read persisted progress ONCE during the lazy initialiser pass so
+  // both `currentStep` and `formData` consume the same parsed value.
+  // Earlier shape called `loadPersistedProgress()` twice — two
+  // localStorage reads + two JSON.parse for the same data.
+  const [currentStep, setCurrentStep] = useState(() => {
+    const persisted = loadPersistedProgress();
+    return persisted?.step ?? 1;
+  });
+  const [formData, setFormData] = useState<OnboardingFormData>(() => {
+    const persisted = loadPersistedProgress();
+    return {
+      ...INITIAL_FORM_DATA,
+      ...(persisted?.data ?? {}),
+      // The auth user's name always wins — even if persisted storage held
+      // a stale value from a different account on the same browser.
+      name: initialName,
+    };
+  });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);

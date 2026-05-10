@@ -1,6 +1,6 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { AsyncState } from '../../../shared/components/AsyncState';
 import { ErrorState } from '../../../shared/components/ErrorState';
@@ -29,12 +29,14 @@ export const ProgressView = (): React.JSX.Element => {
   } = useStatsHistory();
   // Account age drives which time-window options the radar exposes —
   // showing "HACE 30D" on a 2-day-old account would always fall back
-  // to the first snapshot, which is misleading.
-  const accountCreatedAt = ((): Date | null => {
+  // to the first snapshot, which is misleading. Memoized: useStats /
+  // useStatsHistory / usePerformedExercises all bump state independently
+  // and the IIFE re-parsed the same `created_at` 4-5 times per render.
+  const accountCreatedAt = useMemo((): Date | null => {
     if (!user?.created_at) return null;
     const parsed = new Date(user.created_at);
     return Number.isNaN(parsed.getTime()) ? null : parsed;
-  })();
+  }, [user?.created_at]);
   const {
     exercises,
     loading: loadingExercises,

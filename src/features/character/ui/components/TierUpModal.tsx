@@ -110,7 +110,7 @@ export const TierUpModal = ({
 }: Props): React.JSX.Element => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDivElement | null>(null);
-  const initialFocusRef = useRef<HTMLButtonElement | null>(null);
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
@@ -128,9 +128,22 @@ export const TierUpModal = ({
   useEffect(() => {
     if (!open) return;
     previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
-    initialFocusRef.current?.focus();
+    // Focus the heading rather than the cancel button. The previous
+    // pattern made pressing Enter the moment the modal opened
+    // dismiss the celebration immediately — hostile for a tier-up
+    // screen the user just *earned*. Heading has tabIndex=-1 so it
+    // can receive programmatic focus without entering the tab order.
+    headingRef.current?.focus();
     return () => {
-      previouslyFocusedRef.current?.focus();
+      const target = previouslyFocusedRef.current;
+      // Trigger element may have unmounted (e.g. dashboard re-render
+      // hid the CTA that opened the modal). Falls back to body if
+      // the previous element is gone.
+      if (target && document.contains(target)) {
+        target.focus();
+      } else {
+        document.body.focus();
+      }
     };
   }, [open]);
 
@@ -293,6 +306,8 @@ export const TierUpModal = ({
               </div>
 
               <motion.h2
+                ref={headingRef}
+                tabIndex={-1}
                 id="tier-up-title"
                 initial={
                   prefersReducedMotion
@@ -360,7 +375,6 @@ export const TierUpModal = ({
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <button
-                ref={initialFocusRef}
                 type="button"
                 onClick={onClose}
                 disabled={choosing}

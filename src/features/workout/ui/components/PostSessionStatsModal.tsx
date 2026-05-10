@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { PixelCorners } from '@shared/components/PixelCorners';
 import { useBodyScrollLock } from '@shared/hooks/useBodyScrollLock';
@@ -79,14 +79,19 @@ const StatRow = (props: StatRowProps): React.JSX.Element | null => {
 
   // Reduced-motion path: skip the cascade entirely, just snap to the
   // final fill. The +XP and LVL UP badges still render because they're
-  // information, not animation.
-  const animation = reducedMotion
-    ? { width: `${afterPct}%` }
-    : leveledUp
-      ? {
-          width: [`${beforePct}%`, '100%', '0%', `${afterPct}%`],
-        }
-      : { width: [`${beforePct}%`, `${afterPct}%`] };
+  // information, not animation. Memoized so framer-motion doesn't
+  // see a new animation object every render of the staggered cascade.
+  const animation = useMemo(
+    () =>
+      reducedMotion
+        ? { width: `${afterPct}%` }
+        : leveledUp
+          ? {
+              width: [`${beforePct}%`, '100%', '0%', `${afterPct}%`],
+            }
+          : { width: [`${beforePct}%`, `${afterPct}%`] },
+    [reducedMotion, leveledUp, beforePct, afterPct]
+  );
 
   const animationTimes = reducedMotion
     ? undefined

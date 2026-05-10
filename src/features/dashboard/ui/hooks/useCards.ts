@@ -11,27 +11,31 @@ export const useCards = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchCards = useCallback(async (): Promise<void> => {
-    if (!token) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await cardsRepository.getCards();
-      setCards(result);
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Error al cargar las cards';
-      setError(message);
-    } finally {
-      setLoading(false);
-    }
-  }, [token]);
+  // Single fetch implementation, parameterised on a cancellation
+  // ref the effect can flip on unmount/token-change. Caller-side
+  // `refetch` runs without a guard (it's an explicit action). The
+  // earlier shape duplicated the body across `fetchCards` and the
+  // useEffect's inline promise chain.
+  const runFetch = useCallback(
+    async (cancelled?: { current: boolean }): Promise<void> => {
+      if (!token) return;
+      setLoading(true);
+      setError(null);
+      try {
+        const result = await cardsRepository.getCards();
+        if (!cancelled?.current) setCards(result);
+      } catch (err) {
+        if (cancelled?.current) return;
+        const message =
+          err instanceof Error ? err.message : 'Error al cargar las cards';
+        setError(message);
+      } finally {
+        if (!cancelled?.current) setLoading(false);
+      }
+    },
+    [token]
+  );
 
-  // Effect-scoped fetch with a `cancelled` guard so a token change
-  // (logout → login as a different user) can't apply the previous
-  // user's response on top of the new auth state. The caller-side
-  // `refetch` keeps the un-guarded version because it's an explicit
-  // user action that's expected to flash loading.
   useEffect(() => {
     if (!token) {
       setCards(null);
@@ -39,27 +43,14 @@ export const useCards = () => {
       setLoading(false);
       return;
     }
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-    cardsRepository
-      .getCards()
-      .then((result) => {
-        if (!cancelled) setCards(result);
-      })
-      .catch((err: unknown) => {
-        if (cancelled) return;
-        const message =
-          err instanceof Error ? err.message : 'Error al cargar las cards';
-        setError(message);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
+    const cancelled = { current: false };
+    void runFetch(cancelled);
     return () => {
-      cancelled = true;
+      cancelled.current = true;
     };
-  }, [token]);
+  }, [token, runFetch]);
 
-  return { cards, loading, error, refetch: fetchCards };
+  const refetch = useCallback((): Promise<void> => runFetch(), [runFetch]);
+
+  return { cards, loading, error, refetch };
 };

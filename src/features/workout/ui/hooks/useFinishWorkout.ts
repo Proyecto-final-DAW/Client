@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { API_BASE_URL } from '@config/api';
 import { useAuth } from '@context/hooks/useAuth';
@@ -43,7 +43,11 @@ export const useFinishWorkout = () => {
   >([]);
   const [gains, setGains] = useState<SessionGains | null>(null);
 
-  const finish = async (
+  // useCallback so the LiveWorkoutView's useEffect deps (and any
+  // memoized child) don't think `finish` is a new function on every
+  // render. Token is the only meaningful dep — exercises/routineId
+  // come in via arguments.
+  const finish = useCallback(async (
     routineId: string,
     exercises: WorkoutPayloadExercise[]
   ): Promise<boolean> => {
@@ -120,7 +124,7 @@ export const useFinishWorkout = () => {
     } finally {
       setSaving(false);
     }
-  };
+  }, [token]);
 
   return { finish, saving, error, unlockedMilestones, gains };
 };
