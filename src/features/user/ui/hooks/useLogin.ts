@@ -51,6 +51,15 @@ export const useLogin = () => {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setClientError(null);
+    // Only gate on missing fields and an obviously-malformed email
+    // here. Any other password the user types is sent to the server,
+    // which is the only thing that can tell "wrong password" from
+    // "right password" — including a 7-char typo of an 8-char real
+    // password. The previous `password.length < 8` check showed
+    // "PASSWORD MINIMO 8 CARACTERES" on a typo, which was wrong
+    // (the password isn't too short, it's incorrect). The 8-char
+    // floor lives at REGISTER time (auth.ts validator) where it's a
+    // real requirement.
     if (!email.trim()) {
       setClientError('INGRESA TU EMAIL');
       return;
@@ -61,10 +70,6 @@ export const useLogin = () => {
     }
     if (!password) {
       setClientError('INGRESA TU PASSWORD');
-      return;
-    }
-    if (password.length < 8) {
-      setClientError('PASSWORD MINIMO 8 CARACTERES');
       return;
     }
     void handleSubmit(e);
