@@ -88,19 +88,26 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
+// Endpoints whose 401 means "wrong credentials", not "session expired".
+// The page-level redirect must NOT fire on those — the user's looking
+// at a login form, getting an error, and expecting to fix it inline,
+// not be bounced to the marketing landing mid-attempt.
+const AUTH_ENDPOINTS_RE = /\/users\/auth\/(login|register|logout)$/;
+
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error?.response?.status;
+    const url = (error?.config?.url as string | undefined) ?? '';
+    const isAuthEndpoint = AUTH_ENDPOINTS_RE.test(url);
 
-    if (status === 401 && typeof window !== 'undefined') {
+    if (status === 401 && typeof window !== 'undefined' && !isAuthEndpoint) {
+      // Real session expiry on a protected request — clear stored
+      // creds and bounce to the marketing landing. ProtectedRoute
+      // also redirects unauthenticated users there, so both flows
+      // converge on the same destination.
       localStorage.removeItem('auth_token');
       localStorage.removeItem('auth_user');
-
-      // Redirect to `/` (the marketing landing) instead of `/login` so
-      // the post-401 destination matches `ProtectedRoute`'s redirect
-      // for unauthenticated users — both flows now land in the same
-      // place. The landing has the explicit "iniciar sesion" CTA.
       if (window.location.pathname !== '/') {
         window.location.href = '/';
       }
