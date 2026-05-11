@@ -1,5 +1,6 @@
-import { parseLocalDate } from '@shared/utils/date';
 import type { Session } from '@features/sessionHistory/core/domain/models/Session';
+import { parseLocalDate } from '@shared/utils/date';
+
 import type { SessionDTO } from '../dtos/GetSessionDTO';
 
 export class SessionsFromDTO {

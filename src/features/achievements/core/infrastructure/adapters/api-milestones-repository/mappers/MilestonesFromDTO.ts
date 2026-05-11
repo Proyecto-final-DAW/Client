@@ -1,4 +1,5 @@
 import type { Milestone } from '@features/achievements/core/domain/models/Milestone';
+
 import type {
   GetAllMilestonesDTO,
   GetUnlockedMilestonesDTO,

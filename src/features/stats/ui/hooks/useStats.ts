@@ -1,6 +1,6 @@
+import { useAuth } from '@context/hooks/useAuth';
 import { useCallback, useEffect, useState } from 'react';
 
-import { useAuth } from '@context/hooks/useAuth';
 import type { UserStats } from '../../core/domain/models/UserStats';
 import { statsRepository } from '../adapter';
 

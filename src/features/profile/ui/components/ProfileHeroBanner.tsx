@@ -3,9 +3,9 @@ import {
   StarIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/solid';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import { motion, useReducedMotion } from 'framer-motion';
 
-import { PixelCorners } from '@shared/components/PixelCorners';
 import type { CharacterState } from '../../../character/core/domain/models/CharacterState';
 import {
   RANK_LETTERS,
@@ -172,14 +172,17 @@ const RankLadder = ({
                   : undefined
               }
               style={tileStyle}
-              // Tiles bumped from h-8 w-6 → h-9 w-7 so the letter sits
-              // with a touch more breathing room on each side and
-              // doesn't read as cramped. `leading-none` neutralises
-              // Press Start 2P's chunky line-box so the glyph centers
-              // properly inside the tile (the prior version sat a
-              // pixel high). 7 × 28px tiles + 6 × ~10px arrows still
-              // fit comfortably inside the lg sidebar column.
-              className="flex h-9 w-7 items-center justify-center border-2 font-pixel text-sm leading-none"
+              // Tiles bumped from h-8 w-6 → h-9 w-7 so the letter
+              // sits with a touch more breathing room on each side
+              // and doesn't read as cramped. Press Start 2P's
+              // glyphs include a ~2-px ascender padding inside the
+              // line box that `leading-none` alone doesn't strip,
+              // so the letter optically floats above centre. The
+              // `pt-[2px]` nudge brings F-E-D-C-B-A-S into the
+              // visual middle of each tile. 7 × 28px tiles + 6 ×
+              // ~10px arrows still fit comfortably inside the lg
+              // sidebar column.
+              className="flex h-9 w-7 items-center justify-center pt-[2px] border-2 font-pixel text-sm leading-none"
             >
               {letter}
             </motion.div>
@@ -235,7 +238,12 @@ export const ProfileHeroBanner = ({
     if (len <= 14) return 'text-[10px] sm:text-[11px]';
     return 'text-[9px] sm:text-[10px]';
   };
-  const nameUpper = titleName.toUpperCase();
+  // Name renders in title-case ("Blue") because uppercase ("BLUE") on
+  // a Press Start 2P column read as a header label and clashed with
+  // the all-caps NOMBRE/CLASE/RANGO eyebrows next to it. Class stays
+  // uppercase — RPG class names are a label style, not a personal
+  // identifier.
+  const nameDisplay = titleName;
   const classUpper = realClass ? realClass.name.toUpperCase() : '—';
   // Falls back to the novice frase pre-vocation so the lore line is
   // still visible at rank F — the user has no class yet but they do
@@ -249,17 +257,16 @@ export const ProfileHeroBanner = ({
     >
       <PixelCorners size="md" className="border-green-500/60" />
 
-      {/* Identity row — avatar + cartilla. Mirrors the dashboard hero's
-          NOMBRE / CLASE / RANGO labelled-rows pattern so a user opening
-          /perfil isn't greeted with a different layout from the one
-          they just left. LVL badge is anchored to the bottom-centre of
-          the avatar (matching dashboard), since the previous top-right
-          corner placement clipped at narrow widths and felt detached.
-          When the user hasn't picked a class yet, CLASE shows "—" — the
-          old version surfaced the novice placeholder ("ESCUDERO"),
-          which contradicted the design rule "no class until you choose
-          one". */}
-      <div className="flex items-center gap-4 sm:gap-5">
+      {/* Identity block — avatar centred on top, cartilla underneath
+          at full width. The earlier side-by-side layout fought the
+          left aside's narrow column (~256px in the lg grid): the
+          avatar took 80-96px + gap, leaving ~150px for the data,
+          which was less than "Carlo Magno" needed at any readable
+          font size and forced the name to wrap. Stacking gives the
+          cartilla the entire banner width so any name up to ~20
+          characters fits on one line. The LVL badge stays pinned
+          below the avatar; the dl below it is centred and wide. */}
+      <div className="flex flex-col items-center gap-6 sm:gap-7">
         <div className="relative shrink-0">
           <div className="absolute inset-0 -m-1 border-2 border-green-500/40 [clip-path:polygon(0_8px,8px_0,calc(100%-8px)_0,100%_8px,100%_calc(100%-8px),calc(100%-8px)_100%,8px_100%,0_calc(100%-8px))] pointer-events-none" />
           {profileImage ? (
@@ -280,44 +287,62 @@ export const ProfileHeroBanner = ({
           )}
         </div>
 
-        <div className="min-w-0 flex-1">
-          <dl className="space-y-2 sm:space-y-3">
-            <div className="flex items-baseline gap-2">
-              <dt className="flex shrink-0 items-center gap-1.5 w-16 font-pixel text-[9px] sm:text-[10px] tracking-widest text-green-500/70">
-                <UserCircleIcon className="h-3.5 w-3.5 text-green-500/80" />
-                NOMBRE
-              </dt>
-              <dd
-                title={nameUpper}
-                className={`min-w-0 truncate font-pixel ${valueFontClass(nameUpper)} text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.45)] leading-snug`}
-              >
-                {nameUpper}
-              </dd>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <dt className="flex shrink-0 items-center gap-1.5 w-16 font-pixel text-[9px] sm:text-[10px] tracking-widest text-green-500/70">
-                <ShieldCheckIcon className="h-3.5 w-3.5 text-green-500/80" />
-                CLASE
-              </dt>
-              <dd
-                title={classUpper}
-                className={`min-w-0 truncate font-pixel ${valueFontClass(classUpper)} text-ink leading-snug`}
-              >
-                {classUpper}
-              </dd>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <dt className="flex shrink-0 items-center gap-1.5 w-16 font-pixel text-[9px] sm:text-[10px] tracking-widest text-green-500/70">
-                <StarIcon className="h-3.5 w-3.5 text-green-500/80" />
-                RANGO
-              </dt>
-              <dd
-                className="font-pixel text-sm sm:text-base"
-                style={{ color: styleForRank(rankLabel).text }}
-              >
-                {rankLabel}
-              </dd>
-            </div>
+        <div className="min-w-0 w-full">
+          {/* CSS grid with `auto 1fr` columns: the label column sizes
+              to fit "NOMBRE" / "CLASE" / "RANGO" + their icons (no
+              hard-coded width to overflow), and the value column
+              takes whatever's left. `gap-x-4` puts a guaranteed 16
+              px between label and value so "NOMBREBlue" can't paint
+              as one word, and `valueFontClass` already steps a long
+              name down to fit the remaining space. Stays a 3-row
+              layout instead of stacking — keeps the cartilla short
+              enough that the avatar's height matches the data
+              column. */}
+          {/* `items-center` (not items-baseline) so the small icon
+              + 10-px label on the left share a vertical centre with
+              the larger value on the right. With baseline alignment
+              the labels' shorter line-box made the icons sit
+              visually above the value's mid-line, which read as
+              "icons floating high". */}
+          <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-3 sm:gap-y-4 items-center">
+            <dt className="flex items-center gap-1.5 font-pixel text-[9px] sm:text-[10px] tracking-widest text-green-500/70">
+              <UserCircleIcon className="h-3.5 w-3.5 text-green-500/80" />
+              NOMBRE
+            </dt>
+            <dd
+              title={nameDisplay}
+              // No `truncate` — the user's name has to render in
+              // full ("Carlo Magno" can't disappear behind an
+              // ellipsis just because it's 11 chars). break-words +
+              // wrapping lets a long name flow onto a second line
+              // instead of getting clipped; valueFontClass already
+              // steps the size down so most names fit on one line.
+              className={`min-w-0 break-words font-pixel ${valueFontClass(nameDisplay)} text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.45)] leading-snug`}
+            >
+              {nameDisplay}
+            </dd>
+
+            <dt className="flex items-center gap-1.5 font-pixel text-[9px] sm:text-[10px] tracking-widest text-green-500/70">
+              <ShieldCheckIcon className="h-3.5 w-3.5 text-green-500/80" />
+              CLASE
+            </dt>
+            <dd
+              title={classUpper}
+              className={`min-w-0 truncate font-pixel ${valueFontClass(classUpper)} text-ink leading-snug`}
+            >
+              {classUpper}
+            </dd>
+
+            <dt className="flex items-center gap-1.5 font-pixel text-[9px] sm:text-[10px] tracking-widest text-green-500/70">
+              <StarIcon className="h-3.5 w-3.5 text-green-500/80" />
+              RANGO
+            </dt>
+            <dd
+              className="font-pixel text-sm sm:text-base"
+              style={{ color: styleForRank(rankLabel).text }}
+            >
+              {rankLabel}
+            </dd>
           </dl>
         </div>
       </div>

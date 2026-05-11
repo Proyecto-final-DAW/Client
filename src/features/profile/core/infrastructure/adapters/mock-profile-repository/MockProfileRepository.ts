@@ -45,6 +45,6 @@ export class MockProfileRepository implements ProfileRepository {
 
   async changePassword(): Promise<{ message: string }> {
     await new Promise((resolve) => setTimeout(resolve, 400));
-    return { message: 'Contraseña actualizada correctamente' };
+    return { message: 'Contrasena actualizada correctamente' };
   }
 }

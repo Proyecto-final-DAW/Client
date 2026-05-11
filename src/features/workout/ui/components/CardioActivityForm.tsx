@@ -1,9 +1,9 @@
-import { motion } from 'framer-motion';
-
 import {
   PixelSelect,
   type PixelSelectOption,
 } from '@shared/components/PixelSelect';
+import { motion } from 'framer-motion';
+
 import {
   CARDIO_CATALOG,
   findCardioActivity,

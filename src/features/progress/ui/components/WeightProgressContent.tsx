@@ -1,9 +1,9 @@
-import type React from 'react';
-import { useMemo, useState } from 'react';
-
 import { useAuth } from '@context/hooks/useAuth';
 import { EmptyState } from '@shared/components/EmptyState';
 import { PixelCorners } from '@shared/components/PixelCorners';
+import type React from 'react';
+import { useMemo, useState } from 'react';
+
 import { useProgress } from '../hooks/useProgress';
 import { RegisterWeightForm } from './RegisterWeightForm';
 import { WeightProgressChart } from './WeightProgressChart';
@@ -189,8 +189,8 @@ export const WeightProgressContent = (): React.JSX.Element => {
             // redundant with the chart's x-axis and the "PESO ACTUAL"
             // header.
             <p className="text-center font-pixel-mono text-base leading-snug text-ink-muted">
-              Solo tienes tu punto de partida. Registra tu peso actual
-              para ver la evolucion.
+              Solo tienes tu punto de partida. Registra tu peso actual para ver
+              la evolucion.
             </p>
           )}
         </div>

@@ -2,6 +2,7 @@ import {
   PixelSelect,
   type PixelSelectOption,
 } from '@shared/components/PixelSelect';
+
 import type {
   TemplateEquipment,
   TemplateGoal,

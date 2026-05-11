@@ -1,10 +1,14 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { useCallback, useEffect, useState } from 'react';
-
+import { STAT_CONFIG, STAT_ORDER } from '@features/stats/ui/StatConfig';
 import { PixelCorners } from '@shared/components/PixelCorners';
 import { useBodyScrollLock } from '@shared/hooks/useBodyScrollLock';
-import { STAT_CONFIG, STAT_ORDER } from '@features/stats/ui/StatConfig';
-import { RANK_LETTERS, styleForRank } from '../../core/domain/models/RankLabels';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { useCallback, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+
+import {
+  RANK_LETTERS,
+  styleForRank,
+} from '../../core/domain/models/RankLabels';
 
 type StatKey = (typeof STAT_ORDER)[number];
 
@@ -109,7 +113,7 @@ const PANELS: Panel[] = [
     title: `RANGO ${FIRST_RANK}`,
     body: [
       '“Todo heroe empezo siendo nadie.”',
-      `Empiezas en rango ${FIRST_RANK} — el peldaño mas bajo. Aqui no hay enemigos: el monstruo eres tu mismo. Cuando alcances NIVEL 5 en cualquier stat, subiras a rango ${SECOND_RANK} y elegiras tu primera clase.`,
+      `Empiezas SIN CLASE — en rango ${FIRST_RANK}, el peldaño mas bajo. Aqui no hay enemigos: el monstruo eres tu mismo. Cuando alcances NIVEL 5 en cualquier stat, subiras a rango ${SECOND_RANK} y elegiras tu primera clase.`,
     ],
   },
   {
@@ -219,7 +223,7 @@ export const OriginStoryIntro = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="origin-story-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a0f]/85 backdrop-blur-md p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-[#0a0a0f]/85 backdrop-blur-md p-4"
     >
       <motion.div
         initial={
@@ -280,16 +284,17 @@ export const OriginStoryIntro = ({
               // yet) and the user already sees their real avatar on the
               // dashboard and profile — duplicating a fake one here only
               // weakened the moment. Now it's a clean two-tier:
-              // "◆ RANGO F" eyebrow → "ESCUDERO" h2.
+              // "RANGO F" eyebrow → "SIN CLASE" h2 (matches the
+              // server's NOVICE.name; the user starts unclassed).
               <div className="flex flex-col items-center">
                 <p className="font-pixel text-[10px] sm:text-[11px] tracking-widest text-green-500">
-                  ◆ {panel.title}
+                  {panel.title}
                 </p>
                 <h2
                   id="origin-story-title"
                   className="mt-2 font-pixel text-xl sm:text-2xl text-green-400 [text-shadow:2px_2px_0_#000,0_0_18px_rgba(34,197,94,0.55)]"
                 >
-                  ESCUDERO
+                  SIN CLASE
                 </h2>
               </div>
             ) : (

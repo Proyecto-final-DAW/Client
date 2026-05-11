@@ -1,4 +1,5 @@
 import type { Exercise } from '@features/exercises/core/domain/models/Exercise';
+
 import type { RoutineRepository } from '../../../application/ports/RoutineRepository';
 import type { Routine } from '../../../domain/models/Routine';
 
@@ -141,8 +142,16 @@ export class MockRoutineRepository implements RoutineRepository {
   async createRoutine(name: string, _token?: string): Promise<Routine> {
     await this.delay();
 
+    // Numeric-string IDs (matching the API server's autoincrement int)
+    // so `parseRoutineId` in useFinishWorkout doesn't reject them. The
+    // previous `crypto.randomUUID()` produced UUIDs that `Number(uuid)`
+    // turned into NaN, which broke the workout-save path the moment a
+    // user tried to start a session against a mock-created routine.
+    const nextId = (
+      Math.max(0, ...this.routines.map((r) => Number(r.id) || 0)) + 1
+    ).toString();
     const newRoutine: Routine = {
-      id: crypto.randomUUID(),
+      id: nextId,
       name,
       description: null,
       exercises: [],

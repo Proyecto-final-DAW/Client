@@ -1,8 +1,8 @@
+import { API_BASE_URL } from '@config/api';
+import { useAuth } from '@context/hooks/useAuth';
 import axios from 'axios';
 import { useState } from 'react';
 
-import { API_BASE_URL } from '@config/api';
-import { useAuth } from '@context/hooks/useAuth';
 import type { RoutineTemplate } from '../../core/domain/models/RoutineTemplate';
 import type { TemplateExercise } from '../../core/domain/models/TemplateExercise';
 
@@ -95,7 +95,7 @@ export const useApplyTemplate = () => {
 
   const apply = async (template: RoutineTemplate): Promise<boolean> => {
     if (!token) {
-      setError('Sesion no valida.');
+      setError('Tu sesion ha caducado. Vuelve a iniciar sesion.');
       return false;
     }
 

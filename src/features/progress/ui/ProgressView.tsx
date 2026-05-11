@@ -2,10 +2,10 @@ import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import type React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 
+import { useAuth } from '../../../context/hooks/useAuth';
 import { AsyncState } from '../../../shared/components/AsyncState';
 import { ErrorState } from '../../../shared/components/ErrorState';
 import { LoadingPixel } from '../../../shared/components/LoadingPixel';
-import { useAuth } from '../../../context/hooks/useAuth';
 import { useStats } from '../../stats/ui/hooks/useStats';
 import { ExerciseProgressChart } from './components/ExerciseProgressChart';
 import { ExerciseSelector } from './components/ExerciseSelector';

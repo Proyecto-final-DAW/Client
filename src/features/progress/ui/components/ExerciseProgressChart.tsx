@@ -1,3 +1,4 @@
+import { PixelCorners } from '@shared/components/PixelCorners';
 import {
   CartesianGrid,
   Line,
@@ -8,7 +9,6 @@ import {
   YAxis,
 } from 'recharts';
 
-import { PixelCorners } from '@shared/components/PixelCorners';
 import type { ExerciseProgressPoint } from '../../core/domain/models/ExerciseProgressPoint';
 
 type Props = {

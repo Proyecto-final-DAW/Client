@@ -1,3 +1,4 @@
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type React from 'react';
 import {
   CartesianGrid,
@@ -9,7 +10,6 @@ import {
   YAxis,
 } from 'recharts';
 
-import { PixelCorners } from '@shared/components/PixelCorners';
 import type { Progress } from '../../core/domain/models/Progress';
 
 type WeightProgressChartProps = {

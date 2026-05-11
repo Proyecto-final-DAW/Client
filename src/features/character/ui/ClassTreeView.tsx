@@ -1,3 +1,4 @@
+import { statConfigFor } from '@features/stats/ui/StatConfig';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -5,7 +6,8 @@ import { createPortal } from 'react-dom';
 import { useCharacterState } from '../../../context/hooks/useCharacterState';
 import { AsyncState } from '../../../shared/components/AsyncState';
 import { PixelCorners } from '../../../shared/components/PixelCorners';
-import { STAT_CONFIG, statConfigFor } from '@features/stats/ui/StatConfig';
+import { useBodyScrollLock } from '../../../shared/hooks/useBodyScrollLock';
+import { ClassPixelArt, hasPixelArt } from './components/ClassPixelArt';
 import type {
   LegendaryClass,
   SpecializationClass,
@@ -114,10 +116,7 @@ const specializationStatus = (
   return 'alternate';
 };
 
-const legendaryStatus = (
-  leg: LegendaryClass,
-  owned: OwnedIds
-): NodeStatus => {
+const legendaryStatus = (leg: LegendaryClass, owned: OwnedIds): NodeStatus => {
   if (owned.userTier < 3) return 'future';
   if (owned.legendaryId === leg.id) {
     return owned.userTier >= 4 ? 'owned' : 'current';
@@ -262,9 +261,7 @@ const buildPanteon = (
   // RANGO B · TRASCENDENTE — 1 card, the stage-2 form of the user's
   // chosen legendary. Hidden until the legendary is set (T3+).
   if (owned.userTier >= 3 && owned.legendaryId) {
-    const userLeg = catalog.legendaries.find(
-      (l) => l.id === owned.legendaryId
-    );
+    const userLeg = catalog.legendaries.find((l) => l.id === owned.legendaryId);
     if (userLeg) {
       sections.push({
         tier: 4,
@@ -332,19 +329,42 @@ const buildPanteon = (
 const ClassCard = ({
   node,
   index,
+  compact = false,
 }: {
   node: PanteonNode;
   /** Used to drive a small entry-stagger so the cards "draw in" rather
    *  than appearing all at once. Stagger is capped at 12 cards' worth so
    *  large rows (T2 has 18 specs) don't trail too long. */
   index: number;
+  /** When true, the card opts into the dense mobile layout: half-width
+   *  (so 2 fit per row at < sm), tighter padding, smaller icon,
+   *  description hidden on phone for `future` cards. Single-card
+   *  sections (F-rank TU CLASE ACTUAL) leave this off so they
+   *  stretch full-width instead of looking like a stranded tile. */
+  compact?: boolean;
 }): React.JSX.Element => {
   const isFuture = node.status === 'future';
+  // The F-rank "Sin clase" tile starts the user with no class chosen
+  // yet. We strip the inner glyph from its icon box so the card
+  // doesn't pretend there's something to depict; an empty box reads
+  // as "blank slate", which is what the user is at this stage.
+  const isNovice = node.id === 'ESCUDERO';
   // statConfigFor handles the server `endurance` ↔ client `resistance`
   // bridge so we don't re-implement it here.
   const config = node.stat ? statConfigFor(node.stat) : undefined;
   const Icon = config?.icon ?? null;
-  const accent = config?.accentColor ?? '#22c55e';
+  // Apex classes (A / S) don't have a stat pillar, so we tint them
+  // with their rank palette instead of the green fallback — gold for
+  // LEYENDA, cyan/diamond for MAESTRO_SUPREMO. This makes the two
+  // pixel-art tiles read as visually elevated from the stat-tinted
+  // legendary cards above them.
+  const apexAccent =
+    node.id === 'LEYENDA'
+      ? styleForRank('S').text
+      : node.id === 'MAESTRO_SUPREMO'
+        ? styleForRank('A').text
+        : null;
+  const accent = config?.accentColor ?? apexAccent ?? '#22c55e';
 
   return (
     <motion.div
@@ -355,22 +375,30 @@ const ClassCard = ({
         delay: Math.min(index, 12) * 0.04,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className={`relative flex w-full flex-col items-center text-center border-2 p-4 sm:w-[260px] ${STATUS_RING[node.status]} ${STATUS_BG[node.status]}`}
+      className={`relative flex flex-col items-center text-center border-2 p-3 sm:p-4 ${
+        compact
+          ? 'w-[calc(50%-0.375rem)] sm:w-[260px]'
+          : 'w-full sm:w-[260px]'
+      } ${STATUS_RING[node.status]} ${STATUS_BG[node.status]}`}
     >
-      {/* Status eyebrow — drops the redundant "Tx" prefix because the
-          parent section header already names the rank. Shows the status
-          glyph + label only ("◆ TU CLASE ACTUAL"). */}
+      {/* Status eyebrow — label only. Drops the leading STATUS_GLYPH
+          (◆/●/✕) the previous version prefixed: it shifted the visual
+          centre of the eyebrow to the right and made the card look
+          asymmetric next to its centred name + frase. The status is
+          carried by colour (STATUS_TONE) anyway. */}
       <p
         className={`font-pixel text-[8px] tracking-widest ${STATUS_TONE[node.status]}`}
       >
-        {STATUS_GLYPH[node.status]} {STATUS_LABEL[node.status]}
+        {STATUS_LABEL[node.status]}
       </p>
 
       {/* Stat icon — accented per pillar (sword/shield/bolt/feather/diamond/heart).
           Hidden for the pillar-agnostic singletons (novice/maestro/leyenda)
-          where we render a small diamond glyph instead. */}
+          where we render a small diamond glyph instead. Smaller on
+          mobile compact mode so two cards fit a 360-px viewport
+          without the icon dominating the tile. */}
       <div
-        className="mt-3 flex h-12 w-12 items-center justify-center rounded-sm border-2"
+        className="mt-2 sm:mt-3 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-sm border-2"
         style={{
           borderColor: isFuture
             ? 'rgba(120,120,140,0.25)'
@@ -382,8 +410,28 @@ const ClassCard = ({
       >
         {Icon && !isFuture ? (
           <Icon
-            className="h-7 w-7"
+            className="h-6 w-6 sm:h-7 sm:w-7"
             style={{ color: accent }}
+          />
+        ) : isNovice ? (
+          // Empty box for the F-rank "Sin clase" tile — the user
+          // hasn't picked a path yet, so any glyph here would be
+          // pretending there's something to show.
+          <span aria-hidden="true" />
+        ) : !isFuture && hasPixelArt(node.id) ? (
+          // Custom pixel art for the apex classes (MAESTRO_SUPREMO,
+          // LEYENDA) that don't have a stat pillar — replaces the
+          // placeholder ◆ glyph the user called out as bland for
+          // ranks A and S. The art is tinted with the same accent
+          // colour the rest of the card uses so it sits naturally
+          // in the existing palette.
+          <ClassPixelArt
+            classId={node.id}
+            color={accent}
+            className="h-6 w-6 sm:h-7 sm:w-7"
+            style={{
+              filter: `drop-shadow(0 0 6px color-mix(in srgb, ${accent} 55%, transparent))`,
+            }}
           />
         ) : (
           <span
@@ -409,9 +457,18 @@ const ClassCard = ({
       </h4>
 
       {/* Lore frase — italic VT323. Hidden for future classes (no
-          spoilers); replaced by a one-line "what unlocks this" hint. */}
+          spoilers); replaced by a one-line "what unlocks this" hint.
+          On mobile compact mode the locked hint is hidden because
+          every locked card carries the same "Llega a este punto…"
+          string — repeating it 6× on a phone is pure noise. The
+          eyebrow and the silhouetted name already convey the locked
+          state. */}
       <p
-        className={`mt-2 font-pixel-mono text-base italic leading-snug ${isFuture ? 'text-ink-disabled' : 'text-ink/90'}`}
+        className={`mt-2 font-pixel-mono text-base italic leading-snug ${
+          isFuture
+            ? `text-ink-disabled ${compact ? 'hidden sm:block' : ''}`
+            : 'text-ink/90'
+        }`}
       >
         {isFuture
           ? 'Llega a este punto del camino para revelarla.'
@@ -428,11 +485,7 @@ const ClassCard = ({
 // the rank at a glance, with the long Spanish stage name (INICIADO,
 // VOCACION, …) as a subtitle.
 // ────────────────────────────────────────────────────────────────────────
-const RankBadge = ({
-  letter,
-}: {
-  letter: RankLetter;
-}): React.JSX.Element => {
+const RankBadge = ({ letter }: { letter: RankLetter }): React.JSX.Element => {
   const palette = styleForRank(letter);
   return (
     <span
@@ -451,6 +504,23 @@ const RankBadge = ({
   );
 };
 
+// Plain-language unlock requirements per rank. Painted under the tier
+// header when the user hasn't reached that rank yet so they understand
+// *why* the section is still locked — the previous panteon just listed
+// the classes with no explanation of how to access them. Hidden once
+// the user crosses the threshold so reached-rank sections don't carry
+// stale "alcanza X" hints. Numbers mirror the gates in
+// `classProgression.service.ts` (T1 any≥5, T2 dom≥15+sec≥10, T3
+// hero≥25 + dom≥35 + sec≥22, T4 min≥50, T5 min≥80, T6 all≥99).
+const RANK_REQUIREMENT: Partial<Record<RankLetter, string>> = {
+  E: 'Alcanza nivel 5 en cualquier stat.',
+  D: 'Sube tu stat dominante a 15 y la secundaria a 10.',
+  C: 'Nivel de heroe 25 + dominante 35 + secundaria 22.',
+  B: 'Sube todas tus stats al nivel 50.',
+  A: 'Sube todas tus stats al nivel 80.',
+  S: 'Sube todas tus stats al nivel 99.',
+};
+
 // ────────────────────────────────────────────────────────────────────────
 // Tier section — RankBadge + stage label header, then a flat card grid.
 // Now that the panteon only renders the user's path (no alternates,
@@ -461,11 +531,18 @@ const RankBadge = ({
 const TierSection = ({
   section,
   startIndex,
+  userTier,
 }: {
   section: PanteonSection;
   startIndex: number;
+  /** User's current rank tier (0–6) — used to decide whether the
+   *  "para llegar aquí necesitas …" hint is still relevant. Once the
+   *  user reaches a rank, the requirement copy disappears. */
+  userTier: number;
 }): React.JSX.Element => {
   const letter = rankLetterFromTier(section.tier);
+  const showRequirement = section.tier > userTier;
+  const requirement = RANK_REQUIREMENT[letter];
   return (
     <section className="flex flex-col gap-5">
       <header className="flex items-center gap-4 border-b-2 border-green-500/25 pb-3">
@@ -477,6 +554,11 @@ const TierSection = ({
           <h3 className="mt-1 font-pixel text-sm sm:text-base tracking-widest text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.4)]">
             {section.label}
           </h3>
+          {showRequirement && requirement && (
+            <p className="mt-1 font-pixel-mono text-xs leading-snug text-ink-muted">
+              {requirement}
+            </p>
+          )}
         </div>
         <span className="font-pixel text-[9px] tracking-widest text-ink-faint">
           {section.nodes.length}{' '}
@@ -484,14 +566,23 @@ const TierSection = ({
         </span>
       </header>
 
-      {/* Flex-wrap centred layout — single cards land in the middle of
-          the modal instead of sticking to the left, and any row count
-          (1 / 2 / 3 / 6) reads as a balanced cluster. Cards have a
-          fixed sm:w-[260px] so they don't stretch to fill the row when
-          there are only a few. */}
-      <div className="flex flex-wrap justify-center gap-3">
+      {/* Flex-wrap centred layout, capped at ~3 columns wide so 6-card
+          tiers (the vocations) split as 3 + 3 instead of 4 + 2 — the
+          orphan-2 row read as visually broken on wide screens. Cap is
+          260px × 3 cards + 12px × 2 gaps ≈ 804px; 820 leaves a tiny
+          buffer. Sections with fewer cards still center naturally
+          inside the cap. `compact` flips multi-card sections to a
+          half-width / 2-col layout on phones — single-card sections
+          (the F-rank "TU CLASE ACTUAL") keep full-width so they don't
+          look like a half-rendered tile. */}
+      <div className="mx-auto flex max-w-[820px] flex-wrap justify-center gap-3">
         {section.nodes.map((node, i) => (
-          <ClassCard key={node.id} node={node} index={startIndex + i} />
+          <ClassCard
+            key={node.id}
+            node={node}
+            index={startIndex + i}
+            compact={section.nodes.length >= 2}
+          />
         ))}
       </div>
     </section>
@@ -521,19 +612,18 @@ const ClassPanteonModal = ({
     [catalog, realState]
   );
 
-  // ESC closes; lock body scroll while open so the page underneath
-  // doesn't scroll when the user wheels through the panteon.
+  // ESC closes. Body scroll lock goes through the shared hook so a
+  // TierUpModal that opens on top doesn't leak `overflow:hidden` when
+  // the close-order mismatched the open-order (see useBodyScrollLock).
+  useBodyScrollLock(open);
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent): void => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', onKey);
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
     return () => {
       window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = previousOverflow;
     };
   }, [open, onClose]);
 
@@ -587,7 +677,6 @@ const ClassPanteonModal = ({
             <span>VOLVER</span>
           </button>
         </div>
-
       </header>
 
       {/* Scrollable body — vertical scroll through the tier sections.
@@ -597,9 +686,7 @@ const ClassPanteonModal = ({
           classes restyle the scrollbar to a thin green-tinted thumb
           on a dark track — the default OS scrollbar (light gray slab)
           looked out of place over the dark pixel-art aesthetic. */}
-      <div
-        className="flex-1 overflow-y-auto px-4 py-8 sm:px-8 [scrollbar-width:thin] [scrollbar-color:rgba(34,197,94,0.45)_rgba(15,15,20,0.4)] [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar-track]:bg-black/40 [&::-webkit-scrollbar-thumb]:bg-green-500/45 [&::-webkit-scrollbar-thumb]:border [&::-webkit-scrollbar-thumb]:border-green-500/70 hover:[&::-webkit-scrollbar-thumb]:bg-green-500/65"
-      >
+      <div className="flex-1 overflow-y-auto px-4 py-8 sm:px-8 [scrollbar-width:thin] [scrollbar-color:rgba(34,197,94,0.45)_rgba(15,15,20,0.4)] [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar-track]:bg-black/40 [&::-webkit-scrollbar-thumb]:bg-green-500/45 [&::-webkit-scrollbar-thumb]:border [&::-webkit-scrollbar-thumb]:border-green-500/70 hover:[&::-webkit-scrollbar-thumb]:bg-green-500/65">
         <div className="mx-auto flex max-w-7xl flex-col gap-12">
           {sections.map((section, idx) => {
             // Stagger card delays cumulatively across sections so the
@@ -612,6 +699,7 @@ const ClassPanteonModal = ({
                 key={section.tier}
                 section={section}
                 startIndex={startIndex}
+                userTier={tierIndexFromState(realState)}
               />
             );
           })}
@@ -669,14 +757,14 @@ export const ClassTreeView = (): React.JSX.Element => {
         <div className="mx-auto max-w-4xl">
           <header className="mb-6">
             <p className="font-pixel text-[9px] tracking-widest text-green-500">
-              ◆ DESTINO
+              DESTINO
             </p>
             <h1 className="mt-2 font-pixel text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
               EL CAMINO
             </h1>
             <p className="mt-3 font-pixel-mono text-base leading-snug text-ink-muted">
-              Cada clase de la app, ordenada por rango. Lo que brilla es tuyo,
-              lo que esta en silueta llegara cuando subas de nivel.
+              Toda leyenda empieza sin nombre. Forja el tuyo: cada rango que
+              conquistes despertara una nueva clase en tu sangre.
             </p>
           </header>
 
@@ -729,8 +817,8 @@ export const ClassTreeView = (): React.JSX.Element => {
             </div>
 
             <p className="mt-6 text-center font-pixel-mono text-base leading-snug text-ink-muted">
-              Abre el panteon para ver las clases del juego agrupadas por
-              rango y linaje.
+              Abre el panteon y contempla los caminos que aun no son tuyos.
+              Cada heroe deja huella en alguno de ellos.
             </p>
 
             <div className="mt-6 flex justify-center">

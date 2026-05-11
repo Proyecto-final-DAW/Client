@@ -22,7 +22,12 @@ export const DashboardCards = (props: Props): React.JSX.Element => {
       initial="hidden"
       animate="visible"
     >
-      <StreakCard streak={props.streak} trainingDays={props.trainingDays} />
+      <StreakCard
+        streak={props.streak}
+        trainingDays={props.trainingDays}
+        sessionsThisWeek={props.sessionsThisWeek}
+        weeklyTarget={props.weeklyTarget}
+      />
     </motion.section>
   );
 };

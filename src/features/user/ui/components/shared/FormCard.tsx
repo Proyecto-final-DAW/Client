@@ -1,6 +1,5 @@
-import type { PropsWithChildren } from 'react';
-
 import { PixelCorners } from '@shared/components/PixelCorners';
+import type { PropsWithChildren } from 'react';
 
 interface FormCardProps extends PropsWithChildren {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;

@@ -13,6 +13,37 @@ body {
      showed the browser default white before the chunk hydrated and
      painted its own dark background. */
   background-color: #0a0a0f;
+  /* Firefox: thin green thumb on near-black track so the page-level
+     scrollbar matches the RPG palette instead of the browser default
+     (light grey thumb on white) that read as a foreign UI element
+     against the dark page. Webkit rules below cover Chrome/Edge/Safari. */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 197, 94, 0.55) #0a0a0f;
+}
+
+/* Webkit scrollbar styling for the page itself + any in-app
+   `overflow-y-auto` container that doesn't already define its own
+   scrollbar (e.g. .pixel-select-scroll below, TierUpModal inline).
+   Kept narrow (10px) so it doesn't dominate the layout, and matched
+   to the green accent the rest of the app uses for active states.
+   The track sits on #0a0a0f (same as body bg) so it disappears into
+   the page when not scrolling, with just the thumb visible. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0f;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(34, 197, 94, 0.45);
+  border: 1px solid rgba(34, 197, 94, 0.7);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(34, 197, 94, 0.7);
+}
+::-webkit-scrollbar-corner {
+  background: #0a0a0f;
 }
 
 /* Stat color palette consumed by StatBar via `var(--stat-…)`. Without these

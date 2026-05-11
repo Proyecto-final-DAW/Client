@@ -14,11 +14,13 @@ interface StartWorkoutButtonProps {
   trainedToday?: boolean;
 }
 
-const SIZE_CLASSES: Record<NonNullable<StartWorkoutButtonProps['size']>, string> =
-  {
-    md: 'text-xs sm:text-sm px-8 py-3.5',
-    lg: 'text-sm sm:text-base px-10 sm:px-12 py-4 sm:py-5',
-  };
+const SIZE_CLASSES: Record<
+  NonNullable<StartWorkoutButtonProps['size']>,
+  string
+> = {
+  md: 'text-xs sm:text-sm px-8 py-3.5',
+  lg: 'text-sm sm:text-base px-10 sm:px-12 py-4 sm:py-5',
+};
 
 export const StartWorkoutButton = ({
   size = 'md',

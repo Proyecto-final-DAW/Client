@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import type React from 'react';
 
 import { useAuth } from '../../../context/hooks/useAuth';
+import { DietIntroModal } from './components/DietIntroModal';
 import { DietStreakCard } from './components/DietStreakCard';
 import { DietSummaryCard } from './components/DietSummaryCard';
 import { useDiet } from './hooks/useDiet';
@@ -25,6 +27,39 @@ const useDietContext = (): { goalText: string; activityText: string } => {
 export const DietView = (): React.JSX.Element => {
   const { diet, loading, error, refetch } = useDiet();
   const { goalText, activityText } = useDietContext();
+  const { user } = useAuth();
+
+  // One-time diet explainer — same per-user localStorage pattern the
+  // dashboard uses for OriginStoryIntro / StreakIntroModal so a
+  // shared browser doesn't suppress the popup for a second account.
+  // Defaults to dismissed when there's no user id yet (modal only
+  // makes sense once we know who to scope the flag to).
+  const dietIntroStorageKey =
+    user?.id != null ? `diet_intro_seen_${user.id}` : null;
+
+  const [dietIntroDismissed, setDietIntroDismissed] = useState(
+    () =>
+      dietIntroStorageKey !== null &&
+      localStorage.getItem(dietIntroStorageKey) === '1'
+  );
+
+  useEffect(() => {
+    if (dietIntroStorageKey === null) {
+      setDietIntroDismissed(true);
+      return;
+    }
+    setDietIntroDismissed(localStorage.getItem(dietIntroStorageKey) === '1');
+  }, [dietIntroStorageKey]);
+
+  const showDietIntro =
+    dietIntroStorageKey !== null && !dietIntroDismissed;
+
+  const handleDismissDietIntro = (): void => {
+    if (dietIntroStorageKey !== null) {
+      localStorage.setItem(dietIntroStorageKey, '1');
+    }
+    setDietIntroDismissed(true);
+  };
 
   // Joined with a middle dot — same separator used on the rank label of
   // the ProfileHeroBanner ("◆ ESPECIALISTA"), keeps the visual rhythm
@@ -61,6 +96,11 @@ export const DietView = (): React.JSX.Element => {
         error={error}
         onRefresh={refetch}
         footer={<DietStreakCard />}
+      />
+
+      <DietIntroModal
+        open={showDietIntro}
+        onClose={handleDismissDietIntro}
       />
     </section>
   );

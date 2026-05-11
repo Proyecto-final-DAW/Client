@@ -1,8 +1,8 @@
+import { API_ENDPOINTS } from '@config/api';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
 import type { AxiosError } from 'axios';
 import axios from 'axios';
 
-import { API_ENDPOINTS } from '@config/api';
-import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
 import type { StatsInitRepository } from '../../../application/ports/StatsInitRepository';
 
 export class ApiStatsInitRepository implements StatsInitRepository {
@@ -11,12 +11,15 @@ export class ApiStatsInitRepository implements StatsInitRepository {
       const response = await axios.post(API_ENDPOINTS.initStats, {});
       return response.data;
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
+      const err = error as AxiosError;
       // 409 means stats already initialized — idempotent, not an error.
       if (err.response?.status === 409) return;
-      const serverMessage =
-        err.response?.data?.message || 'Error al cargar los logros';
-      throw new Error(serverMessage);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido inicializar tus estadisticas. Vuelve a intentarlo en un momento.'
+        )
+      );
     }
   }
 }

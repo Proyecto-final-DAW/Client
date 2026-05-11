@@ -1,6 +1,6 @@
+import { useAuth } from '@context/hooks/useAuth';
 import { useEffect, useState } from 'react';
 
-import { useAuth } from '@context/hooks/useAuth';
 import type { Diet } from '../../core/domain/models/Diet';
 import { dietRepository } from '../adapter';
 

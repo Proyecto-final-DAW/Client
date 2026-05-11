@@ -1,6 +1,6 @@
+import { PixelCorners } from '@shared/components/PixelCorners';
 import { Link } from 'react-router-dom';
 
-import { PixelCorners } from '@shared/components/PixelCorners';
 import type { StatPilar } from '../../../stats/core/domain/models/StatPilar';
 import { StatBar } from '../../../stats/ui/components/StatBar';
 

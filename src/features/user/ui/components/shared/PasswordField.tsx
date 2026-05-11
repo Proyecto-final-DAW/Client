@@ -13,7 +13,7 @@ export const PasswordField = (props: PasswordFieldProps): React.JSX.Element => {
   return (
     <label className="block mb-5">
       <span className="block font-pixel text-[9px] sm:text-[10px] text-ink-muted mb-2 tracking-wider">
-        PASSWORD
+        CONTRASENA
       </span>
       <div className="relative">
         <input
@@ -28,7 +28,7 @@ export const PasswordField = (props: PasswordFieldProps): React.JSX.Element => {
           type="button"
           onClick={() => setShowPassword((v) => !v)}
           aria-label={
-            showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
+            showPassword ? 'Ocultar contrasena' : 'Mostrar contrasena'
           }
           className="absolute inset-y-0 right-0 flex items-center justify-center w-12 text-ink-faint hover:text-green-400 transition-colors"
         >

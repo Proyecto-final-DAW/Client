@@ -1,6 +1,6 @@
 import { PencilIcon } from '@heroicons/react/24/outline';
-
 import { PixelCorners } from '@shared/components/PixelCorners';
+
 import {
   ACTIVITY_LEVEL_LABELS,
   DAYS_PER_WEEK_LABELS,
@@ -34,7 +34,10 @@ const formatNumber = (value: number | null | undefined, suffix: string) =>
   value != null && value > 0 ? `${value} ${suffix}` : dash;
 
 /** Plain text + value field — kept for items that don't map to a chip
- *  (numbers, names, free-text). */
+ *  (numbers, names, free-text). Content is centred so labels +
+ *  values share a single visual axis with the badge fields next to
+ *  them; left-aligning here while badges floated centred made the
+ *  card read as ragged. */
 const TextField = ({
   label,
   value,
@@ -42,7 +45,7 @@ const TextField = ({
   label: string;
   value: string;
 }): React.JSX.Element => (
-  <div className="border-2 border-border bg-page p-3">
+  <div className="border-2 border-border bg-page p-3 text-center">
     <dt className="font-pixel text-[9px] sm:text-[10px] tracking-widest text-ink-faint">
       {label}
     </dt>
@@ -69,11 +72,11 @@ const BadgeField = ({
     return <TextField label={label} value={dash} />;
   }
   return (
-    <div className="border-2 border-border bg-page p-3">
+    <div className="border-2 border-border bg-page p-3 text-center">
       <dt className="font-pixel text-[9px] sm:text-[10px] tracking-widest text-ink-faint">
         {label}
       </dt>
-      <dd className="mt-2 flex flex-wrap gap-2">
+      <dd className="mt-2 flex flex-wrap justify-center gap-2">
         {values.map((value) => (
           <ProfileBadge
             key={value}
@@ -90,6 +93,10 @@ const BadgeField = ({
  *  data sections (personal · entrenamiento) each get their own,
  *  replacing the previous single mega-card with two h3 sub-sections.
  *
+ *  `onEdit` is optional: only the first card renders the EDITAR
+ *  button because both cards open the same global edit form, so a
+ *  second button was a duplicate affordance.
+ *
  *  Optional `footer` slot fills the bottom of the card with a hint
  *  line. Used by the ENTRENAMIENTO card to absorb the extra vertical
  *  space when the parent stretches it to match the sidebar height —
@@ -103,7 +110,7 @@ const DataCard = ({
   className,
 }: {
   title: string;
-  onEdit: () => void;
+  onEdit?: () => void;
   children: React.ReactNode;
   footer?: React.ReactNode;
   className?: string;
@@ -116,18 +123,22 @@ const DataCard = ({
       <p className="font-pixel text-[11px] sm:text-[12px] tracking-widest text-green-500 [text-shadow:0_0_8px_rgba(34,197,94,0.4)]">
         ◆ {title}
       </p>
-      <button
-        type="button"
-        onClick={onEdit}
-        className="inline-flex items-center gap-2 font-pixel text-[10px] tracking-widest border-2 border-green-500/50 bg-green-500/10 text-green-400 hover:border-green-500 hover:bg-green-500/20 px-3 py-2 transition-colors"
-      >
-        <PencilIcon className="h-3.5 w-3.5" />
-        EDITAR
-      </button>
+      {onEdit && (
+        <button
+          type="button"
+          onClick={onEdit}
+          className="inline-flex items-center gap-2 font-pixel text-[10px] tracking-widest border-2 border-green-500/50 bg-green-500/10 text-green-400 hover:border-green-500 hover:bg-green-500/20 px-3 py-2 transition-colors"
+        >
+          <PencilIcon className="h-3.5 w-3.5" />
+          EDITAR
+        </button>
+      )}
     </header>
     <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">{children}</dl>
     {footer && (
-      <div className="mt-auto pt-5 border-t-2 border-border-muted">
+      // mt-8 + pt-6 so the footer hint visibly detaches from the
+      // last data row instead of feeling welded to the grid above.
+      <div className="mt-8 pt-6 border-t-2 border-border-muted">
         {footer}
       </div>
     )}
@@ -163,11 +174,12 @@ export const ProfileDataView = ({
     !(profile.injuries.length === 1 && profile.injuries[0] === 'NONE');
 
   return (
-    // gap-12 — wider than the aside's gap-5 — so the two data cards
-    // extend the right column vertically to roughly match the left
-    // aside (banner + summary + stats panel). Otherwise the right
-    // ended ~250px above the aside and the page read as left-biased.
-    <div className="flex flex-col gap-12">
+    // gap-5 matches the aside's gap-5 for visual rhythm. The earlier
+    // gap-12 was a workaround to push the right column to the same
+    // height as the (taller) left aside — the `lg:flex-1` on the
+    // ENTRENAMIENTO card now does that on its own, so the wider gap
+    // just made the two cards feel disconnected.
+    <div className="flex flex-col gap-5">
       <DataCard title="DATOS PERSONALES" onEdit={onEdit}>
         <TextField label="NOMBRE" value={profile.name || dash} />
         <TextField label="EMAIL" value={profile.email} />
@@ -180,21 +192,34 @@ export const ProfileDataView = ({
         />
         <TextField label="PESO" value={formatNumber(profile.weight, 'kg')} />
         <TextField label="ALTURA" value={formatNumber(profile.height, 'cm')} />
-        <BadgeField
-          label="NIVEL ACTIVIDAD"
-          values={activityValues}
-          badges={ACTIVITY_BADGES}
-          labels={ACTIVITY_LEVEL_LABELS}
-        />
+        {/* Orphan 7th item — wraps in col-span-2 so it owns the
+            whole row, then max-w + mx-auto sizes it to a single
+            cell's width and centres it. The result reads as "one
+            card, neatly centred" rather than "card pinned to the
+            left with empty space alongside" or "card stretched to
+            fill the whole row". 0.375rem = half of gap-3 so the
+            visible width matches the cells above. */}
+        <div className="sm:col-span-2 sm:max-w-[65%] sm:mx-auto sm:w-full">
+          <BadgeField
+            label="NIVEL ACTIVIDAD"
+            values={activityValues}
+            badges={ACTIVITY_BADGES}
+            labels={ACTIVITY_LEVEL_LABELS}
+          />
+        </div>
       </DataCard>
 
       <DataCard
         title="ENTRENAMIENTO"
-        onEdit={onEdit}
-        // lg:flex-1 stretches the card to consume the extra height left
-        // over by the taller sidebar (banner + stats panel) — without
-        // it the column would end after the dl and leave a gap below
-        // the card. The footer absorbs the extra space gracefully.
+        // No EDITAR here — the button on DATOS PERSONALES already
+        // opens the form that covers BOTH sections. Two buttons
+        // pointing at the same action just multiplied tap targets
+        // for the same outcome.
+        // lg:flex-1 stretches the card to consume the extra height
+        // left over by the taller sidebar (banner + stats panel) —
+        // without it the column would end after the dl and leave a
+        // gap below the card. The footer absorbs the extra space
+        // gracefully.
         className="lg:flex-1"
         footer={
           <p className="font-pixel-mono text-base leading-snug text-ink-muted">
@@ -228,12 +253,36 @@ export const ProfileDataView = ({
           labels={DAYS_PER_WEEK_LABELS}
         />
         {hasMeaningfulInjuries && (
-          <BadgeField
-            label="LESIONES"
-            values={profile.injuries}
-            badges={INJURY_BADGES}
-            labels={INJURY_LABELS}
-          />
+          // Same orphan-centring trick as NIVEL ACTIVIDAD: claim
+          // both columns of the row, but cap the visible width to a
+          // single cell so a row of three chips doesn't stretch
+          // edge-to-edge. The earlier full-width treatment read as
+          // "the LESIONES section is the whole footer" instead of
+          // "another data field, just centred".
+          <div className="sm:col-span-2 sm:max-w-[65%] sm:mx-auto sm:w-full flex flex-col gap-2">
+            <BadgeField
+              label="LESIONES"
+              values={profile.injuries}
+              badges={INJURY_BADGES}
+              labels={INJURY_LABELS}
+            />
+            {/* Surface the free-text "OTRA" description so the user
+                sees what they typed after saving. Only renders when
+                OTRA is in the chip set and the note is non-empty —
+                otherwise we'd show a stray block with no label. */}
+            {profile.injuries.includes('OTHER') &&
+              profile.injury_notes &&
+              profile.injury_notes.trim() !== '' && (
+                <div className="border-2 border-border bg-page p-3 text-center">
+                  <dt className="font-pixel text-[9px] sm:text-[10px] tracking-widest text-ink-faint">
+                    DETALLE
+                  </dt>
+                  <dd className="mt-2 font-pixel-mono text-base sm:text-lg text-ink leading-snug">
+                    {profile.injury_notes}
+                  </dd>
+                </div>
+              )}
+          </div>
         )}
       </DataCard>
     </div>

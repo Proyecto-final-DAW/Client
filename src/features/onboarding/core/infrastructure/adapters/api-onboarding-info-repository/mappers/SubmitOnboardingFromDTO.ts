@@ -1,4 +1,5 @@
 import type { OnboardingFormData } from '@features/onboarding/core/domain/models/OnboardingFormData';
+
 import type { SubmitOnboardingDTO } from '../dtos/SubmitOnboardingDTO';
 
 export class SubmitOnboardingFromDTO {

@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
-
 import { PixelCorners } from '@shared/components/PixelCorners';
+import { motion, type Variants } from 'framer-motion';
+
 import type { StatPilar } from '../../core/domain/models/StatPilar';
 import { StatBar } from './StatBar';
 import { StatsPanelSkeleton } from './StatsPanelSkeleton';
@@ -18,17 +18,24 @@ interface StatsPanelProps {
 // the level percentage), which now triggers mid-fade-in for a layered
 // effect. Framer Motion's initial+animate only fires once on mount,
 // so the cascade isn't replayed on every prop change.
-const panelContainerVariants = {
+const panelContainerVariants: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 };
 
-const panelItemVariants = {
+// `Variants` typing tightened the `ease` field to a string union or an
+// `EasingFunction`; the cubic-bezier coefficient array we used reads
+// as a `number[]` and trips the new type guard. Cast the inner array
+// to the bezier tuple shape framer-motion accepts at runtime.
+const panelItemVariants: Variants = {
   hidden: { opacity: 0, y: 10 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+    transition: {
+      duration: 0.45,
+      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+    },
   },
 };
 

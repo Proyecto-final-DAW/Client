@@ -1,5 +1,3 @@
-import type { ComponentType, SVGProps } from 'react';
-
 import {
   STAT_METADATA,
   STAT_ORDER as STAT_ORDER_DOMAIN,
@@ -7,6 +5,7 @@ import {
   statMetadataKeyFor,
   type StatMetadataEntry,
 } from '@features/stats/core/domain/models/StatMetadata';
+import type { ComponentType, SVGProps } from 'react';
 
 type IconCmp = ComponentType<SVGProps<SVGSVGElement>>;
 

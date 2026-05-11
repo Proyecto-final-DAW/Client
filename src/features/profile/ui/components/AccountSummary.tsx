@@ -3,9 +3,8 @@ import {
   CalendarDaysIcon,
   TrophyIcon,
 } from '@heroicons/react/24/outline';
-import type { ComponentType, SVGProps } from 'react';
-
 import { PixelCorners } from '@shared/components/PixelCorners';
+import type { ComponentType, SVGProps } from 'react';
 
 interface AccountSummaryProps {
   createdAt: string;

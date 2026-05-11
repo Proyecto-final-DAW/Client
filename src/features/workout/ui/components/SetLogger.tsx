@@ -65,8 +65,7 @@ export const SetLogger = (props: Props): React.JSX.Element => {
       clamp(current + delta, 0, MAX_DURATION_SECONDS)
     );
 
-  const canComplete =
-    mode === 'duration' ? durationSeconds > 0 : reps > 0;
+  const canComplete = mode === 'duration' ? durationSeconds > 0 : reps > 0;
 
   const handleSubmit = () => {
     if (!canComplete) return;

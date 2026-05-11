@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-
 import { useAuth } from '@context/hooks/useAuth';
+import { useEffect, useRef, useState } from 'react';
+
 import { STATS_CHANGED_EVENT } from '../../../stats/ui/hooks/useStats';
 import type { DietLogGains } from '../../core/domain/models/DietLogGains';
 import type { DietStreakState } from '../../core/domain/models/DietStreakState';
@@ -32,6 +32,19 @@ export const useDietStreak = (): {
   const [logging, setLogging] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [lastGains, setLastGains] = useState<DietLogGains | null>(null);
+
+  // Mount guard for `logToday`: if the user navigates away mid-flight
+  // (e.g. taps COMPLETAR DIETA then immediately changes view), the
+  // response shouldn't update unmounted state. The fetch effect has
+  // its own per-run `cancelled` flag below — this ref is for the
+  // imperative action only.
+  const mountedRef = useRef(true);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!token) {
@@ -65,6 +78,7 @@ export const useDietStreak = (): {
     setError(null);
     try {
       const result = await dietRepository.logToday();
+      if (!mountedRef.current) return;
       setState(result.state);
       if (result.gains) setLastGains(result.gains);
       // Vigor (and the diet streak) just changed server-side; broadcast
@@ -72,11 +86,14 @@ export const useDietStreak = (): {
       // bar reflects the +10 immediately on next paint.
       window.dispatchEvent(new Event(STATS_CHANGED_EVENT));
     } catch (err) {
+      if (!mountedRef.current) return;
       const message =
-        err instanceof Error ? err.message : 'No se pudo registrar la dieta';
+        err instanceof Error
+          ? err.message
+          : 'No hemos podido registrar la dieta de hoy. Vuelve a intentarlo en un momento.';
       setError(message);
     } finally {
-      setLogging(false);
+      if (mountedRef.current) setLogging(false);
     }
   };
 

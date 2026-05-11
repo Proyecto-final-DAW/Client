@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AsyncState } from '../../../shared/components/AsyncState';
+import { useRoutines } from '../../routines/ui/hooks/useRoutines';
+import { ApplyTemplateChoiceDialog } from './components/ApplyTemplateChoiceDialog';
 import { TemplateActions } from './components/TemplateActions';
 import { TemplateDetailHeader } from './components/TemplateDetailHeader';
 import { TemplateRoutineList } from './components/TemplateRoutineList';
@@ -11,13 +14,47 @@ export const TemplateDetailView = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { template, loading, error } = useTemplateDetail();
   const { apply, applying, error: applyError } = useApplyTemplate();
+  // Pull the current routines so we can detect the "stacking" case
+  // (user already has routines + applies another template). Without
+  // this gate, every template tap added more days on top of whatever
+  // was already saved — the panteon-de-rutinas the user reported.
+  const { routines, deleteRoutine } = useRoutines();
 
-  const handleApply = async () => {
+  const [choiceOpen, setChoiceOpen] = useState(false);
+  // Locks the apply button while the replace-then-apply pipeline is
+  // mid-flight, since the loop straddles two hooks (deleteRoutine
+  // and apply) and `applying` only covers the second half.
+  const [replacing, setReplacing] = useState(false);
+
+  const runApply = async (replaceFirst: boolean): Promise<void> => {
     if (!template) return;
+    setChoiceOpen(false);
+    if (replaceFirst) {
+      setReplacing(true);
+      try {
+        // Sequential delete — `useRoutines.deleteRoutine` handles its
+        // own error state. Best-effort: if a delete fails we still
+        // try to apply the template so the user isn't stuck halfway.
+        for (const r of routines) {
+          await deleteRoutine(r.id);
+        }
+      } finally {
+        setReplacing(false);
+      }
+    }
     const created = await apply(template);
     if (created) {
       navigate('/routines');
     }
+  };
+
+  const handleApplyClick = (): void => {
+    if (!template) return;
+    if (routines.length > 0) {
+      setChoiceOpen(true);
+      return;
+    }
+    void runApply(false);
   };
 
   return (
@@ -55,11 +92,20 @@ export const TemplateDetailView = (): React.JSX.Element => {
             )}
 
             <TemplateActions
-              applying={applying}
+              applying={applying || replacing}
               onSkip={() => navigate('/dashboard')}
-              onApply={handleApply}
+              onApply={handleApplyClick}
             />
           </div>
+
+          <ApplyTemplateChoiceDialog
+            open={choiceOpen}
+            existingCount={routines.length}
+            incomingCount={template.routines.length}
+            onReplace={() => void runApply(true)}
+            onAdd={() => void runApply(false)}
+            onCancel={() => setChoiceOpen(false)}
+          />
         </section>
       )}
     </AsyncState>

@@ -88,20 +88,42 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
-// Endpoints whose 401 means "wrong credentials", not "session expired".
-// The page-level redirect must NOT fire on those — the user's looking
-// at a login form, getting an error, and expecting to fix it inline,
-// not be bounced to the marketing landing mid-attempt.
+// Endpoints whose 401 means "wrong credentials" or "wrong current
+// password", not "session expired". The page-level redirect must NOT
+// fire on those — the user is looking at a form, getting an error,
+// and expecting to fix it inline, not be bounced to the marketing
+// landing mid-attempt.
 const AUTH_ENDPOINTS_RE = /\/users\/auth\/(login|register|logout)$/;
+const PROFILE_PASSWORD_RE = /\/profile\/me\/password$/;
+
+// Server error codes that mean "your input was rejected by THIS
+// operation" rather than "your session is invalid". The change-password
+// endpoint shares the 401 status with session expiry, so the status
+// code alone isn't enough to disambiguate — the stable error code is.
+const INPUT_REJECT_CODES = new Set(['INVALID_PASSWORD', 'PASSWORD_TOO_SHORT']);
 
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error?.response?.status;
     const url = (error?.config?.url as string | undefined) ?? '';
+    const code = (error?.response?.data?.code as string | undefined) ?? '';
     const isAuthEndpoint = AUTH_ENDPOINTS_RE.test(url);
+    const isPasswordChange = PROFILE_PASSWORD_RE.test(url);
+    // Belt-and-braces: even on an endpoint we'd normally treat as
+    // "session expired", a known input-rejection code keeps the user
+    // on the form. Useful if a future endpoint shares the same 401
+    // pattern (e.g. a re-auth gate before deleting an account).
+    const isInputRejection = INPUT_REJECT_CODES.has(code);
 
-    if (status === 401 && typeof window !== 'undefined' && !isAuthEndpoint) {
+    const shouldBounce =
+      status === 401 &&
+      typeof window !== 'undefined' &&
+      !isAuthEndpoint &&
+      !isPasswordChange &&
+      !isInputRejection;
+
+    if (shouldBounce) {
       // Real session expiry on a protected request — clear stored
       // creds and bounce to the marketing landing. ProtectedRoute
       // also redirects unauthenticated users there, so both flows

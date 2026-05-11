@@ -1,6 +1,6 @@
+import { PixelCorners } from '@shared/components/PixelCorners';
 import { motion, useReducedMotion } from 'framer-motion';
 
-import { PixelCorners } from '@shared/components/PixelCorners';
 import type { CharacterState } from '../../core/domain/models/CharacterState';
 
 type Props = {

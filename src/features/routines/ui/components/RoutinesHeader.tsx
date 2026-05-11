@@ -8,7 +8,7 @@ export const RoutinesHeader = () => {
         TUS SESIONES
       </h1>
       <p className="mt-2 font-pixel text-base sm:text-lg text-ink-muted">
-        Cada sesión es un día de entrenamiento. Crea las tuyas o aplica una
+        Cada sesion es un dia de entrenamiento. Crea las tuyas o aplica una
         rutina entera desde plantillas.
       </p>
     </header>

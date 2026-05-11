@@ -7,15 +7,23 @@ interface StatBarProps {
   pilar: StatPilar;
 }
 
+const MAX_STAT_LEVEL = 99;
+
 export const StatBar = (props: StatBarProps): React.JSX.Element => {
   // Bar fills with within-level XP (`value / max`). The level number
   // on the right of the row carries the 1-99 progress story; the
   // numeric "X / Y XP" caption that used to live below the bar was
   // redundant given the bar already encodes the same fraction visually.
-  const percentage = Math.min(
-    100,
-    Math.max(0, (props.pilar.value / props.pilar.max) * 100)
-  );
+  // Special case: once a pillar reaches the cap (level 99), force the
+  // bar to render full — the server freezes XP just below the next
+  // threshold (so the bar reads ~99% normally), but after the in-app
+  // reset that left raw xp at 0 the bar looked empty next to the "99"
+  // label, which the user flagged as visually inconsistent. A maxed
+  // pillar should always look complete, not "almost there".
+  const isMaxed = props.pilar.level >= MAX_STAT_LEVEL;
+  const percentage = isMaxed
+    ? 100
+    : Math.min(100, Math.max(0, (props.pilar.value / props.pilar.max) * 100));
   const accent = props.pilar.accentColor;
   // Icon binding lives in `stats/ui/StatConfig.tsx`; the domain
   // pillar carries only the stable key. statIconFor returns

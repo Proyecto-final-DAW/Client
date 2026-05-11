@@ -1,7 +1,7 @@
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type React from 'react';
 import { Link } from 'react-router-dom';
 
-import { PixelCorners } from '@shared/components/PixelCorners';
 import type { Diet } from '../../core/domain/models/Diet';
 import { buildMacroExamples } from '../macroExamples';
 import { MacrosDonut } from './MacrosDonut';

@@ -4,6 +4,7 @@ import {
 } from '@features/stats/core/domain/models/StatMetadata';
 import type { StatPilar } from '@features/stats/core/domain/models/StatPilar';
 import type { UserStats } from '@features/stats/core/domain/models/UserStats';
+
 import type { GetStatsDTO } from '../dtos/GetStatsDTO';
 
 /**

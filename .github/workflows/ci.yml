@@ -16,14 +16,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # Match Server CI and the README's stated minimum so a
+          # contributor switching nvm versions between the two repos
+          # doesn't hit subtle build-target mismatches.
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
       - name: ESLint
-        run: npm run lint
+        # Match Server CI: zero warnings tolerated. Without this flag
+        # warnings creep in indefinitely and the contributing guide's
+        # "no warnings allowed" rule stays aspirational.
+        run: npm run lint -- --max-warnings=0
 
       - name: TypeScript
         run: npx tsc --noEmit

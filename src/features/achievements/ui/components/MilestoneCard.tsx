@@ -7,8 +7,8 @@ import {
   StarIcon,
   TrophyIcon,
 } from '@heroicons/react/24/outline';
-
 import { PixelCorners } from '@shared/components/PixelCorners';
+
 import type { Milestone } from '../../core/domain/models/Milestone';
 
 type Props = {

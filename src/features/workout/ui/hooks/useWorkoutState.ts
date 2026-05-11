@@ -9,7 +9,18 @@ import {
 import type { WorkoutSet } from '../../core/domain/models/WorkoutSet';
 import type { WorkoutStatus } from '../../core/domain/models/WorkoutStatus';
 
-export const REST_PRESETS_SECONDS = [60, 90, 120, 180] as const;
+// Preset rest durations exposed in the timer's quick-select row.
+// The previous [60, 90, 120, 180] left two gaps that hurt the UX:
+//   1. Templates frequently specify 30s (fat-loss circuits) and 45s
+//      (isolation / core work), and neither was selectable manually
+//      — the user landed on the timer with no preset highlighted.
+//   2. The lower bound of 60s pushed every circuit-style template out
+//      of the timer's vocabulary, even though that's literally the
+//      rest the routine prescribes.
+//
+// 30s and 45s added as the new low end. 6 buttons still fit a 360-px
+// viewport in a single row at the timer's existing button width.
+export const REST_PRESETS_SECONDS = [30, 45, 60, 90, 120, 180] as const;
 export const DEFAULT_REST_SECONDS = 90;
 
 /** Catalog exercises ride as 'strength' (the server overrides per-id);
@@ -350,7 +361,12 @@ export const useWorkoutState = (routine: Routine | null) => {
     // extra session_exercise. Synthetic id `cardio:<ID>` so the server
     // skips the catalog lookup and trusts the client-provided type
     // (see resolveExerciseTypes on the server).
-    if (cardio && cardio.durationMinutes > 0) {
+    // The form's duration is optional, but a cardio entry only counts
+    // toward XP / session totals when the user actually filled it. The
+    // narrowing here covers both `undefined` and `0` so the payload
+    // never carries a meaningless `duration_minutes: 0` row.
+    const cardioDuration = cardio?.durationMinutes ?? 0;
+    if (cardio && cardioDuration > 0) {
       const meta = findCardioActivity(cardio.activityId);
       if (meta) {
         strengthEntries.push({
@@ -358,7 +374,7 @@ export const useWorkoutState = (routine: Routine | null) => {
           name: meta.label,
           type: meta.statType,
           sets: [],
-          duration_minutes: cardio.durationMinutes,
+          duration_minutes: cardioDuration,
           intensity: cardio.intensity,
           ...(cardio.distanceKm !== undefined && cardio.distanceKm > 0
             ? { distance_km: cardio.distanceKm }

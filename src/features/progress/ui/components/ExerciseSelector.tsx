@@ -1,4 +1,5 @@
 import { PixelSelect } from '@shared/components/PixelSelect';
+
 import type { PerformedExercise } from '../../core/domain/models/PerformedExercise';
 
 type Props = {

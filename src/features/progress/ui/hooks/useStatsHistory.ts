@@ -1,8 +1,8 @@
-import axios, { AxiosError } from 'axios';
-import { useEffect, useState } from 'react';
-
 import { API_ENDPOINTS } from '@config/api';
 import { useAuth } from '@context/hooks/useAuth';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 /**
  * Per-session level snapshot in chronological order. Used by the
@@ -30,7 +30,12 @@ export const useStatsHistory = (): {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Reset state on token change so a previous user's history isn't
+    // visible while the new user's request is in flight (or after
+    // logout when token drops to undefined).
     if (!token) {
+      setHistory([]);
+      setError(null);
       setLoading(false);
       return;
     }
@@ -45,15 +50,12 @@ export const useStatsHistory = (): {
       })
       .catch((err: unknown) => {
         if (cancelled) return;
-        let message = 'Error al cargar el historial de stats';
-        if (err instanceof AxiosError) {
-          const data = err.response?.data as { message?: string } | undefined;
-          if (data?.message) message = data.message;
-          else if (err.message) message = err.message;
-        } else if (err instanceof Error) {
-          message = err.message;
-        }
-        setError(message);
+        setError(
+          mapAxiosError(
+            err,
+            'No hemos podido cargar tu historial de estadisticas. Recarga la pagina o intentalo mas tarde.'
+          )
+        );
       })
       .finally(() => {
         if (!cancelled) setLoading(false);

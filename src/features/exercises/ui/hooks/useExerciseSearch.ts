@@ -1,10 +1,13 @@
+import { useAuth } from '@context/hooks/useAuth';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useAuth } from '@context/hooks/useAuth';
 import type { Exercise } from '../../core/domain/models/Exercise';
 import { exerciseRepository } from '../adapter';
 
-const PAGE_SIZE = 9;
+// 12 divides cleanly across every breakpoint: 2 cols × 6 rows on
+// mobile, 3 cols × 4 rows on sm, 4 cols × 3 rows on lg. Keeps the
+// last row full instead of leaving an orphan 10th card alone.
+const PAGE_SIZE = 12;
 
 export const MUSCLE_OPTIONS = [
   { label: 'Todos', value: '' },

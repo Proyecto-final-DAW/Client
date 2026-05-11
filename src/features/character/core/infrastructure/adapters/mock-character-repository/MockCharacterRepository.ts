@@ -25,7 +25,11 @@ import type { ClassCatalog } from '../../../domain/models/ClassCatalog';
 const NOVICE: NoviceClass = {
   id: 'ESCUDERO',
   tier: 0,
-  name: 'Escudero',
+  // Mirrors the server's NOVICE.name override — tier 0 hasn't picked a
+  // path yet, so the visible label is "Sin clase". Internal id stays
+  // 'ESCUDERO' to match the server schema and existing user_class_state
+  // rows.
+  name: 'Sin clase',
   frase: 'Todo heroe empezo siendo nadie.',
 };
 

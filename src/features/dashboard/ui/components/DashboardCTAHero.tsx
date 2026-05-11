@@ -1,16 +1,17 @@
+import { PixelCorners } from '@shared/components/PixelCorners';
 import { motion, useReducedMotion } from 'framer-motion';
 
-import { PixelCorners } from '@shared/components/PixelCorners';
 import { StartWorkoutButton } from './StartWorkoutButton';
 
 interface DashboardCTAHeroProps {
   hasTrainedBefore: boolean;
   /**
-   * True iff the user already saved a session today. Used only to adapt
-   * the eyebrow / body copy ("otra sesion" vs "primer combate" vs
-   * "proximo combate") — the primary action is never gated. Players who
-   * want a second session in one day get the XP and the post-session
-   * stats popup like any other save.
+   * True iff the user already saved a session today. Both the eyebrow
+   * and the body copy adapt, AND the StartWorkoutButton flips to a
+   * disabled "ENTRENO COMPLETADO" state — the server enforces one
+   * session per day via UNIQUE(user_id, date), so the right UX is to
+   * tell the user "vuelve mañana" instead of letting them tap into a
+   * doomed save.
    */
   trainedToday: boolean;
 }
@@ -46,7 +47,7 @@ export const DashboardCTAHero = ({
       <p className="font-pixel text-[8px] sm:text-[9px] tracking-[0.2em] text-green-500">
         ◆{' '}
         {trainedToday
-          ? 'OTRA SESION DE HOY'
+          ? 'ENTRENO DE HOY'
           : hasTrainedBefore
             ? 'TU PROXIMO COMBATE'
             : 'TU AVENTURA EMPIEZA AQUI'}
@@ -69,7 +70,7 @@ export const DashboardCTAHero = ({
           previous wrapped-paragraph version was losing. */}
       <p className="font-pixel-mono text-base sm:text-lg leading-snug text-ink-muted">
         {trainedToday
-          ? 'Ya entrenaste hoy. Si quieres mas XP, otra sesion te lo da.'
+          ? 'Ya entrenaste hoy. Solo cuenta una sesion al dia, vuelve mañana.'
           : hasTrainedBefore
             ? 'Cada sesion te empuja hacia el siguiente rango. Tu personaje sube contigo.'
             : 'Tu personaje despertara al completar tu primera sesion. Demuestra de que estas hecho.'}

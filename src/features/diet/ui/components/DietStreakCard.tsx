@@ -12,8 +12,15 @@ import { DietLogStatsModal } from './DietLogStatsModal';
  * was visually competing with the action without adding info.
  */
 export const DietStreakCard = (): React.JSX.Element => {
-  const { state, loading, logging, error, logToday, lastGains, clearLastGains } =
-    useDietStreak();
+  const {
+    state,
+    loading,
+    logging,
+    error,
+    logToday,
+    lastGains,
+    clearLastGains,
+  } = useDietStreak();
   // Snapshot for the post-log modal: the 5 non-vigor pillars are
   // rendered flat from this read, so it's fine if it predates the
   // server-side vigor bump (the modal pulls vigor from `lastGains`).

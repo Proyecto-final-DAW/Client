@@ -3,13 +3,16 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../../context/hooks/useAuth';
 import { useCharacterState } from '../../../context/hooks/useCharacterState';
 import { OriginStoryIntro } from '../../character/ui/components/OriginStoryIntro';
+import { RankUpModal } from '../../character/ui/components/RankUpModal';
 import { TierUpModal } from '../../character/ui/components/TierUpModal';
+import { useRankUpDetector } from '../../character/ui/hooks/useRankUpDetector';
 import { useStats } from '../../stats/ui/hooks/useStats';
 import { useStreakStatus } from '../../streak/ui/hooks/useStreakStatus';
 import { DashboardCTAHero } from './components/DashboardCTAHero';
 import { DashboardHero } from './components/DashboardHero';
 import { DashboardStatsCard } from './components/DashboardStatsCard';
 import { StreakCard } from './components/StreakCard';
+import { StreakIntroModal } from './components/StreakIntroModal';
 import { StreakWarningCard } from './components/StreakWarningCard';
 import { useCards } from './hooks/useCards';
 
@@ -43,6 +46,14 @@ export const Dashboard = (): React.JSX.Element => {
 
   const [dismissedTier, setDismissedTier] = useState<number | null>(null);
   const pendingTier = characterState?.pendingChoice?.tier ?? null;
+
+  // Auto-promotion celebration for B / A / S. E/D/C have their own
+  // choice modal; this one fires once the server reports we crossed
+  // the next auto gate and the user hasn't acknowledged it yet (state
+  // is per-user in localStorage). Suppress it whenever a TierUpModal
+  // is already on screen so two dialogs never stack.
+  const { pendingCelebration, acknowledge: acknowledgeRankUp } =
+    useRankUpDetector(characterState, user?.id ?? null);
 
   useEffect(() => {
     if (pendingTier === null) {
@@ -83,6 +94,53 @@ export const Dashboard = (): React.JSX.Element => {
     setOriginStoryDismissed(true);
   };
 
+  // Streak rules explainer — same one-time-per-user pattern as the
+  // origin story above. Fires AFTER the origin story has been
+  // dismissed so we don't pile two modals on the brand-new user; the
+  // streak modal also waits until streakStatus has loaded so the
+  // weekly target it advertises is the user's real number.
+  const streakIntroStorageKey =
+    user?.id != null ? `streak_intro_seen_${user.id}` : null;
+
+  const [streakIntroDismissed, setStreakIntroDismissed] = useState(
+    () =>
+      streakIntroStorageKey !== null &&
+      localStorage.getItem(streakIntroStorageKey) === '1'
+  );
+
+  useEffect(() => {
+    if (streakIntroStorageKey === null) {
+      setStreakIntroDismissed(true);
+      return;
+    }
+    setStreakIntroDismissed(
+      localStorage.getItem(streakIntroStorageKey) === '1'
+    );
+  }, [streakIntroStorageKey]);
+
+  const showStreakIntro =
+    streakIntroStorageKey !== null &&
+    !streakIntroDismissed &&
+    !showOriginStory &&
+    streakStatus !== null;
+
+  const handleDismissStreakIntro = (): void => {
+    if (streakIntroStorageKey !== null) {
+      localStorage.setItem(streakIntroStorageKey, '1');
+    }
+    setStreakIntroDismissed(true);
+    // Manual-open path also closes through here, so make sure both
+    // signals reset together — otherwise tapping the fire icon a
+    // second time would no-op (open ref still true).
+    setStreakHelpOpen(false);
+  };
+
+  // Manual help trigger from the StreakCard fire icon. Independent
+  // of the once-per-user auto-trigger so re-opening the modal stays
+  // available indefinitely; the same `handleDismiss…` resets both
+  // pathways on close.
+  const [streakHelpOpen, setStreakHelpOpen] = useState(false);
+
   const showTierUpModal =
     characterState?.pendingChoice !== null &&
     characterState?.pendingChoice !== undefined &&
@@ -112,8 +170,7 @@ export const Dashboard = (): React.JSX.Element => {
   // means "trained today". The hasTrainedBefore guard remains as a
   // belt-and-braces check while the wider migration through the rest
   // of the app catches up.
-  const trainedToday =
-    hasTrainedBefore && cards?.lastWorkoutDaysAgo === 0;
+  const trainedToday = hasTrainedBefore && cards?.lastWorkoutDaysAgo === 0;
 
   return (
     <div className="mx-auto max-w-4xl space-y-5 sm:space-y-6">
@@ -159,6 +216,7 @@ export const Dashboard = (): React.JSX.Element => {
               trainingDays={cards.trainingDays}
               sessionsThisWeek={cards.sessionsThisWeek}
               weeklyTarget={cards.weeklyTarget}
+              onShowHelp={() => setStreakHelpOpen(true)}
             />
           )}
         </div>
@@ -174,10 +232,25 @@ export const Dashboard = (): React.JSX.Element => {
         />
       )}
 
+      {pendingCelebration && characterState && !showTierUpModal && (
+        <RankUpModal
+          open
+          rank={pendingCelebration}
+          state={characterState}
+          onClose={acknowledgeRankUp}
+        />
+      )}
+
       <OriginStoryIntro
         name={user?.name ?? 'Heroe'}
         open={showOriginStory}
         onClose={handleDismissOriginStory}
+      />
+
+      <StreakIntroModal
+        open={showStreakIntro || streakHelpOpen}
+        weeklyTarget={streakStatus?.target ?? 3}
+        onClose={handleDismissStreakIntro}
       />
     </div>
   );

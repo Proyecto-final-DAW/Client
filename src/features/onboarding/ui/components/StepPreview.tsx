@@ -1,6 +1,6 @@
+import { PixelCorners } from '@shared/components/PixelCorners';
 import { motion } from 'framer-motion';
 
-import { PixelCorners } from '@shared/components/PixelCorners';
 import type { OnboardingFormData } from '../../core/domain/models/OnboardingFormData';
 
 interface StepPreviewProps {
@@ -127,9 +127,7 @@ export const StepPreview = ({ data }: StepPreviewProps): React.JSX.Element => {
               FRECUENCIA
             </dt>
             <dd className="mt-2 font-pixel-mono text-xl leading-tight text-ink">
-              {data.daysPerWeek
-                ? `${data.daysPerWeek} dias/semana`
-                : '—'}
+              {data.daysPerWeek ? `${data.daysPerWeek} dias/semana` : '—'}
             </dd>
           </div>
           <div>

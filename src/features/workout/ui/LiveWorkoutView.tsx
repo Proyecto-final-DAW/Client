@@ -4,6 +4,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { ConfirmDialog } from '../../../shared/components/ConfirmDialog';
@@ -12,20 +13,22 @@ import { PixelCorners } from '../../../shared/components/PixelCorners';
 import { useBodyScrollLock } from '../../../shared/hooks/useBodyScrollLock';
 import { useEscapeClose } from '../../../shared/hooks/useEscapeClose';
 import { hasTrainedToday } from '../../../shared/utils/date';
+import type { Exercise } from '../../exercises/core/domain/models/Exercise';
+import type { WorkoutSet } from '../core/domain/models/WorkoutSet';
 import { formatRoutineName } from '../../routines/ui/formatRoutineName';
+import { useSessionHistory } from '../../sessionHistory/ui/hooks/useSessionHistory';
 import { CompletedSetsList } from './components/CompletedSetsList';
 import { ExerciseHeader } from './components/ExerciseHeader';
+import { PostSessionMilestonesModal } from './components/PostSessionMilestonesModal';
 import { PostSessionStatsModal } from './components/PostSessionStatsModal';
 import { RestTimer } from './components/RestTimer';
 import { SetLogger } from './components/SetLogger';
+import type { SetLoggerMode } from './components/SetLogger';
 import { WorkoutBackground } from './components/WorkoutBackground';
 import { WorkoutSummary } from './components/WorkoutSummary';
 import { useFinishWorkout } from './hooks/useFinishWorkout';
 import { useWorkoutRoutine } from './hooks/useWorkoutRoutine';
 import { REST_PRESETS_SECONDS, useWorkoutState } from './hooks/useWorkoutState';
-import type { SetLoggerMode } from './components/SetLogger';
-import type { Exercise } from '../../exercises/core/domain/models/Exercise';
-import { useSessionHistory } from '../../sessionHistory/ui/hooks/useSessionHistory';
 
 // Both categories pre-emptively swap reps for a duration input — a
 // 30s plank counts as work, not "30 reps", and a moderate-pace walk is
@@ -126,6 +129,13 @@ const WorkoutHeader = ({
 
 type ExitIntent = 'cancel' | 'home' | null;
 
+// SIGUIENTE / TERMINAR press confirm — fires only when the user is
+// short of the prescribed sets. Over-set warnings now live on the
+// SET COMPLETADO path instead (see `pendingExtraSet`), so the user
+// catches the extra at the moment they're about to log it rather
+// than three sets later when they move on.
+type AdvanceWarning = { remaining: number; final: boolean } | null;
+
 const HomeExitDialog = ({
   open,
   onKeep,
@@ -142,7 +152,7 @@ const HomeExitDialog = ({
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -150,7 +160,7 @@ const HomeExitDialog = ({
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onCancel();
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4"
     >
       <div className="relative w-full max-w-md border-2 border-green-500/60 bg-card p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(34,197,94,0.35)]">
         <PixelCorners size="md" className="border-green-500/60" />
@@ -190,7 +200,8 @@ const HomeExitDialog = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
@@ -219,10 +230,30 @@ export const LiveWorkoutView = (): React.JSX.Element => {
   } = useFinishWorkout();
 
   const [exitIntent, setExitIntent] = useState<ExitIntent>(null);
+  const [advanceWarning, setAdvanceWarning] = useState<AdvanceWarning>(null);
+  // Pending set whose submission was paused to ask the user about
+  // exceeding the prescribed set count. Holds the raw WorkoutSet so
+  // confirming just replays it through workout.completeSet.
+  const [pendingExtraSet, setPendingExtraSet] = useState<WorkoutSet | null>(
+    null
+  );
+  // Exercise ids the user has already opted-in to extra sets for. The
+  // warning fires only the first time per exercise; once they say yes,
+  // further extras log silently. Per-exercise so changing exercise
+  // resets the prompt.
+  const [extraSetsAcknowledged, setExtraSetsAcknowledged] = useState<
+    Set<string>
+  >(new Set());
   // Stats popup is the post-save celebration. Auto-opens on successful
   // save, dismissed via CONTINUAR — once closed we don't reopen so the
   // user can scroll the underlying summary and milestones in peace.
   const [showStatsModal, setShowStatsModal] = useState<boolean>(false);
+  // Second-stage modal for any logros unlocked by this save. Stages
+  // sequentially after the stats modal so the user can't tap past
+  // either one — the previous design only surfaced new milestones in
+  // a quiet block under the stats grid that users frequently missed.
+  const [showMilestonesModal, setShowMilestonesModal] =
+    useState<boolean>(false);
   // Local pre-save validation error — used to flag a cardio entry the
   // user enabled but never filled out (no minutes). Without this the
   // payload silently dropped the cardio entry (`durationMinutes > 0`
@@ -247,7 +278,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
         <WorkoutBackground />
         <div className="relative z-10 p-6">
           <ErrorScreen
-            message={routineError ?? 'No se pudo cargar la sesion'}
+            message={routineError ?? 'No hemos podido cargar la sesion.'}
             onBack={() => navigate('/routines')}
           />
         </div>
@@ -331,9 +362,25 @@ export const LiveWorkoutView = (): React.JSX.Element => {
           <PostSessionStatsModal
             open={showStatsModal}
             gains={gains}
-            onClose={() => setShowStatsModal(false)}
+            onClose={() => {
+              setShowStatsModal(false);
+              // Hand off to the milestones modal in the same gesture
+              // so the celebration feels continuous instead of two
+              // disjoint popups. Only opens when there's something
+              // to show — empty milestones means the user wasn't
+              // entitled to a logros unlock this session.
+              if (unlockedMilestones.length > 0) {
+                setShowMilestonesModal(true);
+              }
+            }}
           />
         )}
+
+        <PostSessionMilestonesModal
+          open={showMilestonesModal}
+          milestones={unlockedMilestones}
+          onClose={() => setShowMilestonesModal(false)}
+        />
       </div>
     );
   }
@@ -377,6 +424,74 @@ export const LiveWorkoutView = (): React.JSX.Element => {
 
   const canFinish = workout.totalSets > 0;
   const isLast = workout.isLastExercise;
+
+  const mode = resolveSetLoggerMode(workout.currentExercise);
+  const isCardio = workout.currentExercise.category.toLowerCase() === 'cardio';
+  // Cardio sessions log as ONE duration entry — overriding the routine's
+  // prescribed sets (often inherited as 3 from the template builder)
+  // matches the user's mental model "treadmill no tiene sets".
+  const targetSets = isCardio
+    ? 1
+    : (workout.currentExercise.targetSets ?? null);
+  const completedSets = workout.currentExerciseSets.length;
+
+  // SIGUIENTE / TERMINAR gate — only flags short-of-prescribed now.
+  // Over-prescribed is handled at SET COMPLETADO time via
+  // handleSetComplete so the user catches it before the extra set is
+  // recorded, not three sets later when they move on.
+  const requestAdvance = (final: boolean) => {
+    if (targetSets !== null && completedSets < targetSets) {
+      setAdvanceWarning({
+        remaining: targetSets - completedSets,
+        final,
+      });
+      return;
+    }
+    if (final) {
+      workout.beginFinishing();
+    } else {
+      workout.nextExercise();
+    }
+  };
+
+  const confirmAdvance = () => {
+    const final = advanceWarning?.final ?? false;
+    setAdvanceWarning(null);
+    if (final) {
+      workout.beginFinishing();
+    } else {
+      workout.nextExercise();
+    }
+  };
+
+  // Intercepts SET COMPLETADO to ask the user before logging an extra
+  // set. Fires once per exercise: after they confirm, subsequent
+  // extras log silently (they've explicitly chosen to keep going).
+  const exerciseId = workout.currentExercise.id;
+  const handleSetComplete = (set: WorkoutSet) => {
+    const overPrescribed =
+      targetSets !== null &&
+      targetSets > 0 &&
+      completedSets >= targetSets &&
+      !extraSetsAcknowledged.has(exerciseId);
+    if (overPrescribed) {
+      setPendingExtraSet(set);
+      return;
+    }
+    workout.completeSet(set);
+  };
+
+  const confirmExtraSet = () => {
+    if (pendingExtraSet) {
+      workout.completeSet(pendingExtraSet);
+      setExtraSetsAcknowledged((prev) => {
+        const next = new Set(prev);
+        next.add(exerciseId);
+        return next;
+      });
+      setPendingExtraSet(null);
+    }
+  };
 
   const totalExercises = routine.exercises.length;
   const progressPercent =
@@ -434,6 +549,8 @@ export const LiveWorkoutView = (): React.JSX.Element => {
           <ExerciseHeader
             exercise={workout.currentExercise}
             setNumber={workout.currentExerciseSets.length + 1}
+            totalSets={targetSets ?? undefined}
+            isCardio={isCardio}
           />
 
           {workout.isResting ? (
@@ -449,8 +566,14 @@ export const LiveWorkoutView = (): React.JSX.Element => {
             <SetLogger
               exerciseId={workout.currentExercise.id}
               previousSet={previousSet}
-              mode={resolveSetLoggerMode(workout.currentExercise)}
-              onComplete={workout.completeSet}
+              mode={mode}
+              // Route through `handleSetComplete` so the "set extra"
+              // warning fires before the over-prescribed set is logged.
+              // Wiring this straight to `workout.completeSet` (the bug
+              // we just fixed) made the user see `SET 6 / 4` with no
+              // prompt — the gate existed in handleSetComplete but
+              // nobody called it.
+              onComplete={handleSetComplete}
             />
           )}
 
@@ -476,7 +599,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
             {isLast ? (
               <button
                 type="button"
-                onClick={workout.beginFinishing}
+                onClick={() => requestAdvance(true)}
                 disabled={!canFinish}
                 className="font-pixel text-[10px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-5 py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
               >
@@ -485,7 +608,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
             ) : (
               <button
                 type="button"
-                onClick={workout.nextExercise}
+                onClick={() => requestAdvance(false)}
                 className="font-pixel text-[9px] tracking-widest border-2 border-green-500/40 bg-card text-green-400 px-4 py-3 hover:border-green-500 hover:bg-green-500/10 transition-colors"
               >
                 SIGUIENTE ▶
@@ -504,6 +627,44 @@ export const LiveWorkoutView = (): React.JSX.Element => {
         variant="danger"
         onConfirm={confirmCancel}
         onCancel={() => setExitIntent(null)}
+      />
+
+      <ConfirmDialog
+        open={advanceWarning !== null}
+        title={
+          advanceWarning
+            ? advanceWarning.remaining === 1
+              ? 'Te falta un set'
+              : `Te faltan ${advanceWarning.remaining} sets`
+            : ''
+        }
+        description={
+          advanceWarning
+            ? advanceWarning.final
+              ? 'Aun no has completado todos los sets de este ejercicio. Terminar la sesion igualmente?'
+              : 'Aun no has completado todos los sets de este ejercicio. Pasar al siguiente?'
+            : undefined
+        }
+        confirmLabel={advanceWarning?.final ? 'TERMINAR' : 'CONTINUAR'}
+        cancelLabel="VOLVER"
+        variant="neutral"
+        onConfirm={confirmAdvance}
+        onCancel={() => setAdvanceWarning(null)}
+      />
+
+      {/* Set-extra confirmation. Fires once per exercise the first
+          time the user tries to log past the prescribed count, so they
+          can intentionally opt in to extras instead of silently
+          drifting past the routine target (the "SET 6 / 4" bug). */}
+      <ConfirmDialog
+        open={pendingExtraSet !== null}
+        title="Ya has hecho todos los sets"
+        description="Has completado los sets configurados para este ejercicio. Quieres registrar uno extra?"
+        confirmLabel="REGISTRAR SET"
+        cancelLabel="VOLVER"
+        variant="neutral"
+        onConfirm={confirmExtraSet}
+        onCancel={() => setPendingExtraSet(null)}
       />
 
       <HomeExitDialog

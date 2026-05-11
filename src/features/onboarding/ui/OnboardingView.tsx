@@ -5,7 +5,7 @@ import { onboardingService, statsInitService } from './adapter';
 import { OnboardingWizard } from './components/OnboardingWizard';
 
 export const OnboardingView = (): React.JSX.Element => {
-  const { token, user, updateUser, setSession } = useAuth();
+  const { token, user, updateUser, setSession, logout } = useAuth();
   const navigate = useNavigate();
 
   // Calling `navigate(...)` during render is a side-effect React (and
@@ -37,6 +37,15 @@ export const OnboardingView = (): React.JSX.Element => {
           updateUser(nextUser);
         }
         navigate('/templates', { replace: true });
+      }}
+      // ProtectedRoute traps the user inside the wizard until
+      // onboarding_completed flips. Without an explicit exit, a user
+      // who wants to walk away (or who reached the wizard
+      // accidentally) has no way out — the global LOGOUT button only
+      // exists in DashboardLayout, which the wizard doesn't render.
+      onExit={() => {
+        logout();
+        navigate('/');
       }}
     />
   );

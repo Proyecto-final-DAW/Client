@@ -14,4 +14,12 @@ export interface Exercise {
    * fall back to weight + reps).
    */
   category: string;
+  /**
+   * Routine-context-only. Prescribed sets coming from the
+   * `routine_exercises.sets` row, surfaced in the live workout header
+   * as "SET 1 / N" and used by the next-exercise confirmation to flag
+   * an early skip or an over-prescribed run. Undefined for catalog
+   * browse hits (which carry no per-routine prescription).
+   */
+  targetSets?: number;
 }

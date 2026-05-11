@@ -1,5 +1,6 @@
 import { API_BASE_URL } from '@config/api';
 import { PixelCorners } from '@shared/components/PixelCorners';
+
 import {
   TARGET_LABEL,
   formatLabel,
@@ -9,6 +10,19 @@ import type { Exercise } from '../../../exercises/core/domain/models/Exercise';
 type Props = {
   exercise: Exercise;
   setNumber: number;
+  /**
+   * Prescribed sets from the routine. When provided, the header reads
+   * "SET 2 / 4" instead of just "SET 2" — gives the user a visible
+   * target and powers the early-skip / over-prescribed warnings in
+   * LiveWorkoutView.
+   */
+  totalSets?: number;
+  /**
+   * Cardio activities log as a single duration, not a sequence of
+   * sets — switching the label to ACTIVIDAD keeps the UI from
+   * suggesting the user should run "set 2" of a 30-minute treadmill.
+   */
+  isCardio?: boolean;
 };
 
 export const ExerciseHeader = (props: Props): React.JSX.Element => {
@@ -20,6 +34,12 @@ export const ExerciseHeader = (props: Props): React.JSX.Element => {
       ? props.exercise.imageUrl
       : `${API_BASE_URL}${props.exercise.imageUrl}`
     : null;
+
+  const setLabel = props.isCardio
+    ? 'ACTIVIDAD'
+    : props.totalSets && props.totalSets > 0
+      ? `SET ${props.setNumber} / ${props.totalSets}`
+      : `SET ${props.setNumber}`;
 
   return (
     <header className="relative border-2 border-green-500/40 bg-card p-5 sm:p-6 flex flex-col items-center gap-4 sm:flex-row sm:items-center">
@@ -42,7 +62,7 @@ export const ExerciseHeader = (props: Props): React.JSX.Element => {
 
       <div className="min-w-0 flex-1 text-center sm:text-left">
         <p className="font-pixel text-[9px] tracking-widest text-green-500">
-          SET {props.setNumber}
+          {setLabel}
         </p>
         {/* Hierarchy: exercise name is the heading (largest), target
             muscle is its subordinate eyebrow (smaller, font-pixel-mono

@@ -1,6 +1,6 @@
+import { useAuth } from '@context/hooks/useAuth';
 import { useCallback, useEffect, useState } from 'react';
 
-import { useAuth } from '@context/hooks/useAuth';
 import type { Cards } from '../../core/domain/models/Cards';
 import { cardsRepository } from '../adapter';
 

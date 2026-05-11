@@ -21,13 +21,19 @@
 
 export type MacroKey = 'PROTEINA' | 'GRASA' | 'CARBOS';
 
-const pluralize = (count: number, singular: string, pluralForm: string): string =>
-  count === 1 ? singular : pluralForm;
+const pluralize = (
+  count: number,
+  singular: string,
+  pluralForm: string
+): string => (count === 1 ? singular : pluralForm);
 
 /** Round to the nearest multiple, with a floor so we never render
  *  "0g salmon" on tiny targets. */
-const roundToMultiple = (value: number, multiple: number, min: number): number =>
-  Math.max(min, Math.round(value / multiple) * multiple);
+const roundToMultiple = (
+  value: number,
+  multiple: number,
+  min: number
+): number => Math.max(min, Math.round(value / multiple) * multiple);
 
 /** Round to nearest whole, with a min of 1 so combos never render
  *  "0 huevos". */

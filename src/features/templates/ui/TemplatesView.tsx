@@ -1,7 +1,8 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { AsyncState } from '../../../shared/components/AsyncState';
+import { useRoutines } from '../../routines/ui/hooks/useRoutines';
 import { HeroRoutineCard } from './components/HeroRoutineCard';
 import { TemplateCard } from './components/TemplateCard';
 import { TemplateFilters } from './components/TemplateFilters';
@@ -18,6 +19,20 @@ export const TemplatesView = (): React.JSX.Element => {
     recommendedTemplateIds,
     filteredTemplates,
   } = useTemplateCatalog();
+
+  // Detect which templates the user already has applied. The apply
+  // hook stamps each created routine with `description = template.name`
+  // (see useApplyTemplate), so a routine whose description matches a
+  // template's name marks that template as in-use. Falls back to an
+  // empty Set when routines haven't loaded yet — the worst case is a
+  // moment of "MEJOR PARA TI" before flipping to "EN USO".
+  const { routines } = useRoutines();
+  const appliedTemplateNames = useMemo(() => {
+    const names = (routines ?? [])
+      .map((r) => r.description)
+      .filter((d): d is string => Boolean(d && d.trim().length > 0));
+    return new Set(names);
+  }, [routines]);
 
   const [browseOpen, setBrowseOpen] = useState(false);
 
@@ -48,7 +63,10 @@ export const TemplatesView = (): React.JSX.Element => {
 
               {topPick && (
                 <div className="mb-8">
-                  <HeroRoutineCard template={topPick} />
+                  <HeroRoutineCard
+                    template={topPick}
+                    inUse={appliedTemplateNames.has(topPick.name)}
+                  />
                 </div>
               )}
 
@@ -63,6 +81,7 @@ export const TemplatesView = (): React.JSX.Element => {
                         key={`rec-${template.id}`}
                         template={template}
                         recommended
+                        inUse={appliedTemplateNames.has(template.name)}
                       />
                     ))}
                   </div>
@@ -97,6 +116,7 @@ export const TemplatesView = (): React.JSX.Element => {
                     <TemplatePaginatedBrowser
                       templates={filteredTemplates}
                       recommendedTemplateIds={recommendedTemplateIds}
+                      appliedTemplateNames={appliedTemplateNames}
                       emptyTitle="Sin resultados"
                       emptyDescription="Prueba a quitar algun filtro."
                     />

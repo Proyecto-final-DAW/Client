@@ -12,6 +12,7 @@ import type {
   CharacterState,
   PendingChoice,
 } from '@features/character/core/domain/models/CharacterState';
+
 import type {
   CharacterStateDTO,
   PendingChoiceDTO,

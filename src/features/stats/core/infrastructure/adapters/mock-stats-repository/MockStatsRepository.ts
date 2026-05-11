@@ -1,8 +1,5 @@
 import type { StatsRepository } from '../../../application/ports/StatsRepository';
-import {
-  STAT_METADATA,
-  STAT_ORDER,
-} from '../../../domain/models/StatMetadata';
+import { STAT_METADATA, STAT_ORDER } from '../../../domain/models/StatMetadata';
 import type { UserStats } from '../../../domain/models/UserStats';
 
 export class MockStatsRepository implements StatsRepository {

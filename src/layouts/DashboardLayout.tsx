@@ -26,6 +26,7 @@ import {
   rankLetterFromTier,
   tierIndexFromState,
 } from '../features/character/core/domain/models/RankLabels';
+import { ConfirmDialog } from '../shared/components/ConfirmDialog';
 import { DashboardBackground } from '../shared/components/DashboardBackground';
 import { PixelCorners } from '../shared/components/PixelCorners';
 
@@ -82,7 +83,30 @@ const SidebarContent = ({
   rankLetter,
   onNavigate,
 }: SidebarContentProps): React.JSX.Element => {
-  const userName = user?.name ?? 'Usuario';
+  // Render the name in title-case ("Blue" / "Carlo Magno") instead
+  // of forcing toUpperCase. The earlier `.toUpperCase()` painted
+  // every name as "BLUE" / "CARLO MAGNO" — read as a code label,
+  // not the user's actual name. Title-case also normalises stored
+  // values like "BLUE" or "blue" into a consistent display.
+  const rawName = user?.name ?? 'Usuario';
+  const userName = rawName
+    .toLowerCase()
+    .replace(/\b\p{L}/gu, (c) => c.toUpperCase());
+
+  // Length-based font size so names always fit without wrapping
+  // ugly. Tried letting long names grow the card vertically — read
+  // worse than shrinking the type, so we step the font down with
+  // length: short names stay at the design size, long handles
+  // shrink to fit on one or two lines instead of stretching the
+  // sidebar's identity card to a huge stack.
+  const userNameSizeClass =
+    userName.length <= 9
+      ? 'text-[10px]'
+      : userName.length <= 13
+        ? 'text-[9px]'
+        : userName.length <= 18
+          ? 'text-[8px]'
+          : 'text-[7px]';
 
   return (
     <div className="flex flex-col gap-6">
@@ -107,8 +131,17 @@ const SidebarContent = ({
                 Replaced the previous "HEROE" placeholder eyebrow with
                 "RANGO F" so the line carries actual progression info
                 instead of a generic gendered noun. */}
-            <p className="font-pixel text-[10px] text-green-400 truncate [text-shadow:0_0_12px_rgba(34,197,94,0.6)]">
-              {userName.toUpperCase()}
+            {/* `userNameSizeClass` steps the font down for longer
+                names so the sidebar never has to truncate or grow
+                into an ugly multi-line stack. break-words is the
+                last-resort guard for a single 30+ letter no-space
+                handle that even text-[7px] doesn't fit — it'll
+                wrap, but at the smallest step instead of
+                overflowing the card. */}
+            <p
+              className={`font-pixel ${userNameSizeClass} text-green-400 break-words leading-snug [text-shadow:0_0_12px_rgba(34,197,94,0.6)]`}
+            >
+              {userName}
             </p>
             <p className="font-pixel text-[9px] text-ink-muted tracking-widest mt-1">
               RANGO {rankLetter}
@@ -168,6 +201,7 @@ export const DashboardLayout = (): React.JSX.Element => {
     : 'F';
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   // Close the drawer on navigation so the user always lands on the new page,
   // not on the still-open menu.
@@ -198,12 +232,21 @@ export const DashboardLayout = (): React.JSX.Element => {
 
   const clickAuth = () => {
     if (isLoggedIn) {
-      logout();
-      navigate('/');
+      // Logout is destructive (closes the session, drops in-flight
+      // workouts saved to local storage). A single mis-clicked button
+      // at the top of every page used to be enough to nuke a session
+      // in progress. Confirm first.
+      setLogoutDialogOpen(true);
       return;
     }
 
     navigate('/login');
+  };
+
+  const confirmLogout = () => {
+    setLogoutDialogOpen(false);
+    logout();
+    navigate('/');
   };
 
   return (
@@ -235,7 +278,7 @@ export const DashboardLayout = (): React.JSX.Element => {
           onClick={clickAuth}
           className="font-pixel text-[8px] sm:text-[9px] lg:text-[10px] bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] whitespace-nowrap"
         >
-          {isLoggedIn ? '▶ LOGOUT' : '▶ LOGIN'}
+          {isLoggedIn ? '▶ SALIR' : '▶ ENTRAR'}
         </button>
       </header>
 
@@ -300,10 +343,20 @@ export const DashboardLayout = (): React.JSX.Element => {
           )}
         </AnimatePresence>
 
-        <main className="relative flex-1 min-w-0 p-4 sm:p-6 lg:p-8">
+        <main id="main" className="relative flex-1 min-w-0 p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>
+
+      <ConfirmDialog
+        open={logoutDialogOpen}
+        title="¿SALIR?"
+        confirmLabel="SALIR"
+        cancelLabel="VOLVER"
+        variant="danger"
+        onConfirm={confirmLogout}
+        onCancel={() => setLogoutDialogOpen(false)}
+      />
     </div>
   );
 };

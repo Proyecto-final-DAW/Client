@@ -1,6 +1,6 @@
+import { PixelCorners } from '@shared/components/PixelCorners';
 import { motion } from 'framer-motion';
 
-import { PixelCorners } from '@shared/components/PixelCorners';
 import type { StatPilar } from '../../core/domain/models/StatPilar';
 import { statIconFor } from '../StatConfig';
 

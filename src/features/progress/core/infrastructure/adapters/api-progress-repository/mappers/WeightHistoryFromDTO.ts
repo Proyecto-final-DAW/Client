@@ -1,5 +1,6 @@
-import { parseLocalDate } from '@shared/utils/date';
 import type { Progress } from '@features/progress/core/domain/models/Progress';
+import { parseLocalDate } from '@shared/utils/date';
+
 import type { GetProgressDTO } from '../dtos/GetProgressDTO';
 
 export class WeightHistoryFromDTO {

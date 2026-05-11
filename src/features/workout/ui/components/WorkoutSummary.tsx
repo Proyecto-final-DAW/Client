@@ -1,6 +1,6 @@
+import { PixelCorners } from '@shared/components/PixelCorners';
 import { motion, useReducedMotion } from 'framer-motion';
 
-import { PixelCorners } from '@shared/components/PixelCorners';
 import type { CardioActivity } from '../../core/domain/models/CardioActivity';
 import type { UnlockedMilestonePreview } from '../../core/domain/models/WorkoutSummaryData';
 import { CardioActivityForm } from './CardioActivityForm';
@@ -87,9 +87,15 @@ export const WorkoutSummary = (props: Props): React.JSX.Element => {
 
   const prefersReducedMotion = useReducedMotion();
 
+  // Vertical centering — when the summary is the entire post-session
+  // surface (no logros, no cardio form once saved), the previous
+  // top-aligned layout left a wide empty block below the CTA that read
+  // as "the page hasn't finished loading". Centering inside a min-h
+  // viewport box pulls the content to the optical centre regardless
+  // of how many sections render.
   return (
-    <section className="text-ink">
-      <div className="mx-auto max-w-3xl flex flex-col gap-6">
+    <section className="text-ink min-h-[calc(100vh-3rem)] flex items-center">
+      <div className="mx-auto w-full max-w-3xl flex flex-col gap-6">
         <motion.header
           initial={prefersReducedMotion ? false : { opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}

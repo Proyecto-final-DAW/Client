@@ -1,4 +1,5 @@
 import type { WeeklySummary } from '@features/dashboard/core/domain/models/WeeklySummary';
+
 import type { GetWeeklySummaryDTO } from '../dtos/GetWeeklySummaryDTO';
 
 export class WeeklySummaryFromDTO {

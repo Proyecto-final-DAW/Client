@@ -1,7 +1,7 @@
-import axios, { AxiosError } from 'axios';
-
 import { API_ENDPOINTS } from '@config/api';
-import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import axios from 'axios';
+
 import type {
   CharacterRepository,
   CharacterStateOrOnboarding,
@@ -14,10 +14,8 @@ import {
 } from './dtos/GetCharacterStateDTO';
 import { CharacterStateFromDTO } from './mappers/CharacterStateFromDTO';
 
-const surface = (error: unknown, fallback: string): Error => {
-  const err = error as AxiosError<APIErrorResponse>;
-  return new Error(err.response?.data?.message || fallback);
-};
+const surface = (error: unknown, fallback: string): Error =>
+  new Error(mapAxiosError(error, fallback));
 
 const toResult = (dto: GetCharacterStateDTO): CharacterStateOrOnboarding => {
   if (isOnboardingRequired(dto)) {
@@ -34,7 +32,10 @@ export class APICharacterRepository implements CharacterRepository {
       );
       return toResult(response.data);
     } catch (error) {
-      throw surface(error, 'Error al cargar el estado del personaje');
+      throw surface(
+        error,
+        'No hemos podido cargar tu personaje. Recarga la pagina o intentalo mas tarde.'
+      );
     }
   }
 
@@ -49,7 +50,10 @@ export class APICharacterRepository implements CharacterRepository {
       );
       return toResult(response.data);
     } catch (error) {
-      throw surface(error, 'Error al elegir clase');
+      throw surface(
+        error,
+        'No hemos podido confirmar tu clase. Vuelve a intentarlo.'
+      );
     }
   }
 
@@ -62,7 +66,10 @@ export class APICharacterRepository implements CharacterRepository {
       );
       return response.data;
     } catch (error) {
-      throw surface(error, 'Error al cargar el catalogo de clases');
+      throw surface(
+        error,
+        'No hemos podido cargar el catalogo de clases. Recarga la pagina.'
+      );
     }
   }
 }

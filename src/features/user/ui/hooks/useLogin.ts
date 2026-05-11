@@ -1,8 +1,8 @@
+import { STORAGE_KEY_LAST_EMAIL } from '@context/AuthProvider';
+import { useAuth } from '@context/hooks/useAuth';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { STORAGE_KEY_LAST_EMAIL } from '@context/AuthProvider';
-import { useAuth } from '@context/hooks/useAuth';
 import { userInfoRepository } from '../adapter';
 
 export const useLogin = () => {
@@ -26,6 +26,10 @@ export const useLogin = () => {
     }
     const remembered = localStorage.getItem(STORAGE_KEY_LAST_EMAIL);
     if (remembered) setEmail(remembered);
+    // Mount-only prefill — `location.state` change after mount means
+    // the user navigated within the app (back/forward) and we want to
+    // keep whatever they were typing rather than overwrite it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -41,7 +45,7 @@ export const useLogin = () => {
       setError(
         err instanceof Error
           ? err.message
-          : 'Ha ocurrido un error. Intentalo de nuevo.'
+          : 'No hemos podido iniciar sesion. Vuelve a intentarlo.'
       );
     } finally {
       setLoading(false);
@@ -61,15 +65,15 @@ export const useLogin = () => {
     // floor lives at REGISTER time (auth.ts validator) where it's a
     // real requirement.
     if (!email.trim()) {
-      setClientError('INGRESA TU EMAIL');
+      setClientError('INTRODUCE TU EMAIL');
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setClientError('EMAIL INVALIDO');
+      setClientError('EMAIL NO VALIDO');
       return;
     }
     if (!password) {
-      setClientError('INGRESA TU PASSWORD');
+      setClientError('INTRODUCE TU CONTRASENA');
       return;
     }
     void handleSubmit(e);

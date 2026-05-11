@@ -1,13 +1,21 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
+import { EmptyState } from '@shared/components/EmptyState';
 import { useEffect, useState } from 'react';
 
-import { EmptyState } from '@shared/components/EmptyState';
 import type { RoutineTemplate } from '../../core/domain/models/RoutineTemplate';
 import { TemplateCard } from './TemplateCard';
 
 type Props = {
   templates: RoutineTemplate[];
   recommendedTemplateIds?: Set<string>;
+  /**
+   * Set of template `name` strings the user already applied. The
+   * apply hook stamps `description = template.name` on each created
+   * routine; the parent collects those into a Set and passes it
+   * here so each card can flip to its "EN USO" state. Without this
+   * the browse grid stayed green even for the user's current plan.
+   */
+  appliedTemplateNames?: ReadonlySet<string>;
   emptyTitle?: string;
   emptyDescription?: string;
 };
@@ -25,8 +33,13 @@ const PAGE_SIZE = 4;
  * confusing.
  */
 export const TemplatePaginatedBrowser = (props: Props): React.JSX.Element => {
-  const { templates, recommendedTemplateIds, emptyTitle, emptyDescription } =
-    props;
+  const {
+    templates,
+    recommendedTemplateIds,
+    appliedTemplateNames,
+    emptyTitle,
+    emptyDescription,
+  } = props;
   const [page, setPage] = useState(0);
 
   useEffect(() => {
@@ -58,6 +71,7 @@ export const TemplatePaginatedBrowser = (props: Props): React.JSX.Element => {
             key={template.id}
             template={template}
             recommended={recommendedTemplateIds?.has(template.id)}
+            inUse={appliedTemplateNames?.has(template.name)}
           />
         ))}
       </div>

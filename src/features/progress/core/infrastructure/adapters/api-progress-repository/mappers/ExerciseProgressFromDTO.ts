@@ -1,4 +1,5 @@
 import type { ExerciseProgressPoint } from '@features/progress/core/domain/models/ExerciseProgressPoint';
+
 import type { GetExerciseProgressDTO } from '../dtos/GetExerciseProgressDTO';
 
 export class ExerciseProgressFromDTO {

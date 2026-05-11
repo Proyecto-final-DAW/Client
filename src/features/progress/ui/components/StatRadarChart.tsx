@@ -1,3 +1,6 @@
+import { STAT_CONFIG, STAT_ORDER } from '@features/stats/ui/StatConfig';
+import { PixelCorners } from '@shared/components/PixelCorners';
+import { PixelSelect } from '@shared/components/PixelSelect';
 import { useMemo, useState } from 'react';
 import {
   PolarAngleAxis,
@@ -8,9 +11,6 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-import { PixelCorners } from '@shared/components/PixelCorners';
-import { PixelSelect } from '@shared/components/PixelSelect';
-import { STAT_CONFIG, STAT_ORDER } from '@features/stats/ui/StatConfig';
 import type { UserStats } from '../../../stats/core/domain/models/UserStats';
 import type { StatsHistoryPoint } from '../hooks/useStatsHistory';
 
@@ -173,9 +173,7 @@ export const StatRadarChart = ({
     let snapshotScale = 0;
     if (snapshot) {
       const liveLevels = STAT_ORDER.slice(0, 4).map((k) => {
-        const p = stats.pillar.find(
-          (pp) => pp.name === STAT_CONFIG[k].name
-        );
+        const p = stats.pillar.find((pp) => pp.name === STAT_CONFIG[k].name);
         return p?.level ?? 0;
       });
       const liveAvg = liveLevels.reduce((a, b) => a + b, 0) / 4;
@@ -238,13 +236,23 @@ export const StatRadarChart = ({
   // here is to show silhouette/evolution, not raw numbers. Hovering
   // the label (or its matching polygon vertex) lights it up with a
   // drop-shadow glow in the same accent.
+  // Recharts widens `x` and `y` to `string | number` (rare SVG units),
+  // but in practice they are always numbers here. The cast at the
+  // boundary lets the rest of the function stay strict.
   const renderAngleTick = (tickProps: {
-    x?: number;
-    y?: number;
+    x?: number | string;
+    y?: number | string;
     textAnchor?: string;
     payload?: { value: string };
   }): React.JSX.Element => {
-    const { x = 0, y = 0, textAnchor = 'middle', payload } = tickProps;
+    const {
+      x: rawX = 0,
+      y: rawY = 0,
+      textAnchor = 'middle',
+      payload,
+    } = tickProps;
+    const x = typeof rawX === 'number' ? rawX : Number(rawX);
+    const y = typeof rawY === 'number' ? rawY : Number(rawY);
     const label = payload?.value ?? '';
     const color = colorByStat.get(label) ?? '#22c55e';
     const isActive = label === activeStat;
@@ -328,10 +336,7 @@ export const StatRadarChart = ({
               has the extra horizontal room for "RESIST" at 10px to
               still fit at this larger radius. */}
           <RadarChart data={data} outerRadius="72%">
-            <PolarGrid
-              stroke="rgba(34,197,94,0.18)"
-              strokeDasharray="2 4"
-            />
+            <PolarGrid stroke="rgba(34,197,94,0.18)" strokeDasharray="2 4" />
             <PolarAngleAxis dataKey="stat" tick={renderAngleTick} />
             <PolarRadiusAxis
               angle={90}
@@ -390,7 +395,6 @@ export const StatRadarChart = ({
           </RadarChart>
         </ResponsiveContainer>
       </div>
-
     </div>
   );
 };

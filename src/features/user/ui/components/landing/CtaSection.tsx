@@ -1,7 +1,6 @@
 import { PlayIcon } from '@heroicons/react/24/solid';
-import { Link } from 'react-router-dom';
-
 import { PixelCorners } from '@shared/components/PixelCorners';
+import { Link } from 'react-router-dom';
 
 export const CtaSection = (): React.JSX.Element => {
   return (

@@ -1,10 +1,19 @@
+import { Pagination } from '@shared/components/Pagination';
 import { PixelSelect } from '@shared/components/PixelSelect';
+
 import type { Exercise } from '../../core/domain/models/Exercise';
 import { MUSCLE_OPTIONS, useExerciseSearch } from '../hooks/useExerciseSearch';
 import { ExerciseCard } from './ExerciseCard';
 
 type ExerciseSearchProps = {
   onSelectExercise?: (exercise: Exercise) => void;
+  /**
+   * Catalog ids of exercises already in the target routine. Cards
+   * matching one of these render the "AÑADIDO" inert state instead
+   * of inviting another tap. Undefined or empty = picker mode (every
+   * card is selectable).
+   */
+  addedIds?: ReadonlySet<string>;
 };
 
 const inputClass =
@@ -12,6 +21,7 @@ const inputClass =
 
 export const ExerciseSearch = ({
   onSelectExercise,
+  addedIds,
 }: ExerciseSearchProps): React.JSX.Element => {
   const {
     search,
@@ -81,63 +91,26 @@ export const ExerciseSearch = ({
 
       {!loading && !error && exercises.length > 0 && (
         <>
-          <div className="grid grid-cols-1 gap-6 px-2 sm:grid-cols-2 sm:gap-8 sm:px-4 lg:grid-cols-3 lg:gap-10 lg:px-6">
+          {/* 2 cols on mobile (was 1 — a 9-card single column scrolled
+              ~2000px). Cards self-cap at max-w-[260px] so the densest
+              breakpoint still leaves white-space around each tile. */}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-6 sm:px-4 lg:grid-cols-4 lg:gap-8 lg:px-6">
             {exercises.map((exercise) => (
               <ExerciseCard
                 key={exercise.id}
                 exercise={exercise}
                 onSelect={onSelectExercise}
+                added={addedIds?.has(exercise.id)}
               />
             ))}
           </div>
 
-          {totalPages > 1 && (
-            <nav
-              aria-label="Paginacion de ejercicios"
-              className="flex flex-wrap justify-center items-center gap-2"
-            >
-              {/* Pagination tap targets bumped to 40×40 (h-10 w-10) to
-                  clear the WCAG 2.5.5 24×24 floor and match the
-                  AchievementsView / TemplatePaginatedBrowser buttons —
-                  consistent across the app. */}
-              <button
-                onClick={() => goToPage(page - 1)}
-                disabled={page === 1}
-                aria-label="Pagina anterior"
-                className="inline-flex h-10 w-10 items-center justify-center font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-              >
-                ◀
-              </button>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-                const active = p === page;
-                return (
-                  <button
-                    key={p}
-                    onClick={() => goToPage(p)}
-                    aria-label={`Pagina ${p}`}
-                    aria-current={active ? 'page' : undefined}
-                    className={`inline-flex h-10 w-10 items-center justify-center font-pixel text-[9px] tracking-widest border-2 transition-colors ${
-                      active
-                        ? 'border-green-500 bg-green-500/10 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.3)]'
-                        : 'border-border-muted bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400'
-                    }`}
-                  >
-                    {p}
-                  </button>
-                );
-              })}
-
-              <button
-                onClick={() => goToPage(page + 1)}
-                disabled={page === totalPages}
-                aria-label="Pagina siguiente"
-                className="inline-flex h-10 w-10 items-center justify-center font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-              >
-                ▶
-              </button>
-            </nav>
-          )}
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={goToPage}
+            ariaLabel="Paginacion de ejercicios"
+          />
         </>
       )}
     </div>

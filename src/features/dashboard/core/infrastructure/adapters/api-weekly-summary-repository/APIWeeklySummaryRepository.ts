@@ -1,7 +1,7 @@
-import axios, { AxiosError } from 'axios';
-
 import { API_ENDPOINTS } from '@config/api';
-import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import axios from 'axios';
+
 import type { WeeklySummaryRepository } from '../../../application/ports/WeeklySummaryRepository';
 import type { WeeklySummary } from '../../../domain/models/WeeklySummary';
 import type { GetWeeklySummaryDTO } from './dtos/GetWeeklySummaryDTO';
@@ -16,10 +16,12 @@ export class APIWeeklySummaryRepository implements WeeklySummaryRepository {
 
       return WeeklySummaryFromDTO.fromDTO(response.data);
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al cargar el resumen semanal';
-      throw new Error(serverMessage);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido cargar tu resumen semanal. Recarga la pagina o intentalo mas tarde.'
+        )
+      );
     }
   }
 }

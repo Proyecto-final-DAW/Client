@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-
 import { useAuth } from '@context/hooks/useAuth';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import type { WeeklySummary } from '../../core/domain/models/WeeklySummary';
 import { weeklySummaryRepository } from '../adapter';
 
@@ -11,7 +11,14 @@ export const useWeeklySummary = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchSummary = async () => {
+  // Mirrors the cancellation pattern used in useCards/useStats: if the
+  // user logs out (token flips) while a request is mid-flight, the
+  // response from the previous user must NOT land in this hook's state
+  // — otherwise the new user briefly sees the previous account's
+  // weekly summary.
+  const cancelledRef = useRef(false);
+
+  const fetchSummary = useCallback(async () => {
     if (!token) return;
 
     setLoading(true);
@@ -19,21 +26,27 @@ export const useWeeklySummary = () => {
 
     try {
       const result = await weeklySummaryRepository.getWeeklySummary();
+      if (cancelledRef.current) return;
       setSummary(result);
     } catch (err) {
+      if (cancelledRef.current) return;
       const message =
         err instanceof Error
           ? err.message
-          : 'Error al cargar el resumen semanal';
+          : 'No hemos podido cargar tu resumen semanal. Recarga la pagina o intentalo mas tarde.';
       setError(message);
     } finally {
-      setLoading(false);
+      if (!cancelledRef.current) setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
-    fetchSummary();
-  }, [token]);
+    cancelledRef.current = false;
+    void fetchSummary();
+    return () => {
+      cancelledRef.current = true;
+    };
+  }, [fetchSummary]);
 
   return { summary, loading, error, refetch: fetchSummary };
 };

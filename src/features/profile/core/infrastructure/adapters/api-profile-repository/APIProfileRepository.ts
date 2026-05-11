@@ -1,8 +1,7 @@
-import axios from 'axios';
-import type { AxiosError } from 'axios';
-
 import { API_ENDPOINTS } from '@config/api';
-import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import axios from 'axios';
+
 import type { ProfileRepository } from '../../../application/ports/ProfileRepository';
 import type {
   ChangePasswordData,
@@ -16,9 +15,11 @@ export class APIProfileRepository implements ProfileRepository {
       const response = await axios.get(API_ENDPOINTS.profile);
       return response.data as ProfileData;
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
       throw new Error(
-        err.response?.data?.message || 'Error al obtener el perfil'
+        mapAxiosError(
+          error,
+          'No hemos podido cargar tu perfil. Recarga la pagina o intentalo de nuevo.'
+        )
       );
     }
   }
@@ -27,9 +28,11 @@ export class APIProfileRepository implements ProfileRepository {
       const response = await axios.put(API_ENDPOINTS.profile, data);
       return response.data as ProfileData;
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
       throw new Error(
-        err.response?.data?.message || 'Error al actualizar el perfil'
+        mapAxiosError(
+          error,
+          'No hemos podido guardar tus cambios. Comprueba los datos y vuelve a intentarlo.'
+        )
       );
     }
   }
@@ -38,9 +41,11 @@ export class APIProfileRepository implements ProfileRepository {
       const response = await axios.put(API_ENDPOINTS.changePassword, data);
       return response.data as { message: string };
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
       throw new Error(
-        err.response?.data?.message || 'Error al cambiar la contrasena'
+        mapAxiosError(
+          error,
+          'No hemos podido cambiar tu contrasena. Vuelve a intentarlo.'
+        )
       );
     }
   }

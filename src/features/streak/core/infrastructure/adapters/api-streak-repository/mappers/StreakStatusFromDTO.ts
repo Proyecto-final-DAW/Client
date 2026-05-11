@@ -1,4 +1,5 @@
 import type { StreakStatus } from '@features/streak/core/domain/models/StreakStatus';
+
 import type { GetStreakStatusDTO } from '../dtos/GetStreakStatusDTO';
 
 export class StreakStatusFromDTO {

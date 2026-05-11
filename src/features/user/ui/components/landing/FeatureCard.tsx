@@ -1,6 +1,5 @@
-import type { ComponentType, SVGProps } from 'react';
-
 import { PixelCorners } from '@shared/components/PixelCorners';
+import type { ComponentType, SVGProps } from 'react';
 
 type HeroIconCmp = ComponentType<SVGProps<SVGSVGElement>>;
 

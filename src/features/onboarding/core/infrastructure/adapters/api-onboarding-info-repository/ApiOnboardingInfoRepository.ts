@@ -1,8 +1,7 @@
-import type { AxiosError } from 'axios';
+import { API_ENDPOINTS } from '@config/api';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
 import axios from 'axios';
 
-import { API_ENDPOINTS } from '@config/api';
-import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
 import type { OnboardingRepository } from '../../../application/ports/OnboardingRepository';
 import type { OnboardingFormData } from '../../../domain/models/OnboardingFormData';
 import type {
@@ -33,10 +32,12 @@ export class ApiOnboardingInfoRepository implements OnboardingRepository {
         user: OnboardingResponseUserFromDTO.fromDTO(response.data),
       };
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al completar el onboarding';
-      throw new Error(serverMessage);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido completar la configuracion inicial. Vuelve a intentarlo en un momento.'
+        )
+      );
     }
   }
 }

@@ -1,8 +1,9 @@
+import { API_BASE_URL } from '@config/api';
+import { useAuth } from '@context/hooks/useAuth';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
 import axios, { AxiosError } from 'axios';
 import { useCallback, useState } from 'react';
 
-import { API_BASE_URL } from '@config/api';
-import { useAuth } from '@context/hooks/useAuth';
 import { SESSION_CHANGED_EVENT } from '../../../sessionHistory/ui/hooks/useSessionHistory';
 import { STATS_CHANGED_EVENT } from '../../../stats/ui/hooks/useStats';
 import type { SessionGains } from '../../core/domain/models/SessionGains';
@@ -47,84 +48,83 @@ export const useFinishWorkout = () => {
   // memoized child) don't think `finish` is a new function on every
   // render. Token is the only meaningful dep — exercises/routineId
   // come in via arguments.
-  const finish = useCallback(async (
-    routineId: string,
-    exercises: WorkoutPayloadExercise[]
-  ): Promise<boolean> => {
-    if (!token) {
-      setError('Sesion no valida.');
-      return false;
-    }
-
-    if (exercises.length === 0) {
-      setError('Registra al menos un set para guardar la sesion.');
-      return false;
-    }
-
-    setSaving(true);
-    setError(null);
-
-    try {
-      const response = await axios.post<RawSessionResponse>(
-        SESSIONS_URL,
-        {
-          date: todayISO(),
-          routine_id: parseRoutineId(routineId),
-          exercises,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      const milestones = response.data.newMilestones ?? [];
-      setUnlockedMilestones(
-        milestones.map((milestone) => ({
-          id: milestone.id,
-          name: milestone.name,
-          description: milestone.description,
-          icon: milestone.icon,
-        }))
-      );
-      setGains(response.data.gains ?? null);
-
-      // Notify any mounted hook that depends on session-derived data
-      // so they refresh without a manual reload. Without these the
-      // dashboard's "trained today" banner kept saying "no has
-      // entrenado hoy" right after a save, and the stats panel kept
-      // showing the pre-session XP/levels until the user navigated
-      // away and back. Two events because the consumers are split:
-      // session listings vs stats values.
-      window.dispatchEvent(new Event(SESSION_CHANGED_EVENT));
-      window.dispatchEvent(new Event(STATS_CHANGED_EVENT));
-      return true;
-    } catch (err) {
-      // Surface the server's first validation issue (path + message) so a
-      // 400 from validateBody is actually debuggable from the UI instead
-      // of the generic axios "Request failed with status code 400".
-      let message = 'Error al guardar la sesion.';
-      if (err instanceof AxiosError) {
-        const data = err.response?.data as
-          | {
-              message?: string;
-              issues?: Array<{ path?: string; message?: string }>;
-            }
-          | undefined;
-        const issue = data?.issues?.[0];
-        if (issue) {
-          message = `${data?.message ?? 'Datos invalidos'}: ${issue.path ?? ''} ${issue.message ?? ''}`.trim();
-        } else if (data?.message) {
-          message = data.message;
-        } else if (err.message) {
-          message = err.message;
-        }
-      } else if (err instanceof Error) {
-        message = err.message;
+  const finish = useCallback(
+    async (
+      routineId: string,
+      exercises: WorkoutPayloadExercise[]
+    ): Promise<boolean> => {
+      if (!token) {
+        setError('Tu sesion ha caducado. Vuelve a iniciar sesion.');
+        return false;
       }
-      setError(message);
-      return false;
-    } finally {
-      setSaving(false);
-    }
-  }, [token]);
+
+      if (exercises.length === 0) {
+        setError('Registra al menos un set para guardar la sesion.');
+        return false;
+      }
+
+      const numericRoutineId = parseRoutineId(routineId);
+      if (numericRoutineId === null) {
+        setError(
+          'No hemos podido identificar tu rutina. Vuelve a la lista de rutinas y entra de nuevo.'
+        );
+        return false;
+      }
+
+      setSaving(true);
+      setError(null);
+
+      try {
+        const response = await axios.post<RawSessionResponse>(
+          SESSIONS_URL,
+          {
+            date: todayISO(),
+            routine_id: numericRoutineId,
+            exercises,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        const milestones = response.data.newMilestones ?? [];
+        setUnlockedMilestones(
+          milestones.map((milestone) => ({
+            id: milestone.id,
+            name: milestone.name,
+            description: milestone.description,
+            icon: milestone.icon,
+          }))
+        );
+        setGains(response.data.gains ?? null);
+
+        // Notify any mounted hook that depends on session-derived data
+        // so they refresh without a manual reload. Without these the
+        // dashboard's "trained today" banner kept saying "no has
+        // entrenado hoy" right after a save, and the stats panel kept
+        // showing the pre-session XP/levels until the user navigated
+        // away and back. Two events because the consumers are split:
+        // session listings vs stats values.
+        window.dispatchEvent(new Event(SESSION_CHANGED_EVENT));
+        window.dispatchEvent(new Event(STATS_CHANGED_EVENT));
+        return true;
+      } catch (err) {
+        // Map known server codes (SESSION_ALREADY_LOGGED_TODAY → "ya
+        // entrenaste hoy", 429, 5xx, network) through the shared helper.
+        // Zod path/message leaks ("body.exercises.0.sets.2.reps") used to
+        // bubble up here verbatim — that's a developer signal, not user
+        // copy. The catch-all is now a friendly Spanish sentence with a
+        // recovery hint, matching the rest of the adapters.
+        const fallback =
+          err instanceof AxiosError && err.response?.status === 400
+            ? 'No hemos podido guardar la sesion. Comprueba que el peso y las repeticiones son numeros validos.'
+            : 'No hemos podido guardar la sesion. Comprueba tu conexion y vuelve a intentarlo.';
+        setError(mapAxiosError(err, fallback));
+        return false;
+      } finally {
+        setSaving(false);
+      }
+    },
+    [token]
+  );
 
   return { finish, saving, error, unlockedMilestones, gains };
 };

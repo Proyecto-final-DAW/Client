@@ -3,10 +3,9 @@ import {
   ClipboardDocumentListIcon,
   UserPlusIcon,
 } from '@heroicons/react/24/solid';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type { ComponentType, SVGProps } from 'react';
 import { Fragment } from 'react';
-
-import { PixelCorners } from '@shared/components/PixelCorners';
 
 type HeroIconCmp = ComponentType<SVGProps<SVGSVGElement>>;
 

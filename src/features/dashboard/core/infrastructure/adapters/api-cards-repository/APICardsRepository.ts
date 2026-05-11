@@ -1,7 +1,7 @@
-import axios, { AxiosError } from 'axios';
-
 import { API_ENDPOINTS } from '@config/api';
-import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import axios from 'axios';
+
 import type { CardsRepository } from '../../../application/ports/CardsRepository';
 import type { Cards } from '../../../domain/models/Cards';
 import type { GetCardsDTO } from './dtos/GetCardsDTO';
@@ -16,10 +16,12 @@ export class APICardsRepository implements CardsRepository {
 
       return CardsFromDTO.fromDTO(response.data);
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al cargar las cards';
-      throw new Error(serverMessage);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido cargar el panel. Recarga la pagina o intentalo mas tarde.'
+        )
+      );
     }
   }
 }

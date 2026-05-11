@@ -1,10 +1,11 @@
-import { motion, useReducedMotion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
-
+import { STAT_CONFIG, STAT_ORDER } from '@features/stats/ui/StatConfig';
 import { PixelCorners } from '@shared/components/PixelCorners';
 import { useBodyScrollLock } from '@shared/hooks/useBodyScrollLock';
 import { useEscapeClose } from '@shared/hooks/useEscapeClose';
-import { STAT_CONFIG, STAT_ORDER } from '@features/stats/ui/StatConfig';
+import { motion, useReducedMotion } from 'framer-motion';
+import { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
+
 import type { UserStats } from '../../../stats/core/domain/models/UserStats';
 import type { DietLogGains } from '../../core/domain/models/DietLogGains';
 
@@ -51,7 +52,8 @@ const StatRow = (props: StatRowProps): React.JSX.Element => {
   const leveledUp = entry.afterLevel > entry.beforeLevel;
   const beforePct =
     (entry.beforeXp / xpThresholdForLevel(entry.beforeLevel)) * 100;
-  const afterPct = (entry.afterXp / xpThresholdForLevel(entry.afterLevel)) * 100;
+  const afterPct =
+    (entry.afterXp / xpThresholdForLevel(entry.afterLevel)) * 100;
 
   const [flashLevelUp, setFlashLevelUp] = useState(false);
   useEffect(() => {
@@ -166,8 +168,12 @@ export const DietLogStatsModal = (
   useBodyScrollLock(props.open);
   useEscapeClose(props.open, props.onClose);
 
-  if (!props.open) return null;
-
+  // Hook order rule: every hook must run on every render of this
+  // component. The previous version returned null *before* `useMemo`,
+  // which violated the rule the moment `props.open` flipped. The
+  // refactor below hoists the memo above the early return; we still
+  // bail out of the JSX render below, but React's hook accounting now
+  // matches across renders.
   const { gains, currentStats, onClose } = props;
 
   // Build a per-pillar map. The 5 non-vigor entries sit at current
@@ -197,16 +203,18 @@ export const DietLogStatsModal = (
       {} as Record<(typeof STAT_ORDER)[number], StatRowEntry>
     );
     acc.vigor = {
-      delta: gains.delta,
-      beforeXp: gains.beforeXp,
-      beforeLevel: gains.beforeLevel,
-      afterXp: gains.afterXp,
-      afterLevel: gains.afterLevel,
+      delta: gains?.delta ?? 0,
+      beforeXp: gains?.beforeXp ?? 0,
+      beforeLevel: gains?.beforeLevel ?? 1,
+      afterXp: gains?.afterXp ?? 0,
+      afterLevel: gains?.afterLevel ?? 1,
     };
     return acc;
   }, [currentStats, gains]);
 
-  return (
+  if (!props.open) return null;
+
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -214,7 +222,7 @@ export const DietLogStatsModal = (
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 overflow-y-auto"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 p-4 overflow-y-auto"
     >
       <motion.div
         initial={reducedMotion ? false : { opacity: 0, scale: 0.94, y: 16 }}
@@ -231,10 +239,16 @@ export const DietLogStatsModal = (
           <motion.h2
             id="diet-log-stats-title"
             initial={
-              reducedMotion ? false : { scale: 0.6, opacity: 0, filter: 'blur(8px)' }
+              reducedMotion
+                ? false
+                : { scale: 0.6, opacity: 0, filter: 'blur(8px)' }
             }
             animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
-            transition={{ duration: 0.55, delay: 0.05, ease: [0.22, 1.4, 0.36, 1] }}
+            transition={{
+              duration: 0.55,
+              delay: 0.05,
+              ease: [0.22, 1.4, 0.36, 1],
+            }}
             className="mt-3 font-pixel text-3xl sm:text-4xl text-green-400 [text-shadow:0_0_18px_rgba(34,197,94,0.7),2px_2px_0_#000]"
           >
             +{gains.delta} XP
@@ -270,6 +284,7 @@ export const DietLogStatsModal = (
           </button>
         </div>
       </motion.div>
-    </div>
+    </div>,
+    document.body
   );
 };

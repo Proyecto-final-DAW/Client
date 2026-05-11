@@ -1,8 +1,7 @@
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import { motion, useReducedMotion } from 'framer-motion';
 import type { ComponentType, SVGProps } from 'react';
-
-import { PixelCorners } from '@shared/components/PixelCorners';
 
 type Props = {
   name: string;
@@ -46,6 +45,12 @@ export const ClassChoiceCard = (props: Props): React.JSX.Element => {
     ? {}
     : { whileHover: { scale: 1.03, y: -2 }, whileTap: { scale: 0.98 } };
 
+  // Layout note: contents are center-aligned around the icon. The
+  // earlier left-aligned card with a small h-9 icon in a h-14 box read
+  // as "list item with a thumbnail" — too quiet for a class-pick
+  // screen the user only sees once per tier. Centering the big icon
+  // and the class name puts the identity beat (the icon + the colour)
+  // right at the top of the card where the eye lands first.
   return (
     <motion.button
       type="button"
@@ -53,7 +58,7 @@ export const ClassChoiceCard = (props: Props): React.JSX.Element => {
       aria-pressed={props.selected}
       {...hoverProps}
       style={borderStyle}
-      className={`relative w-full border-2 bg-card p-5 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 ${
+      className={`relative flex h-full w-full flex-col items-center border-2 bg-card p-2.5 sm:p-6 text-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 ${
         props.selected
           ? ''
           : props.recommended
@@ -70,16 +75,21 @@ export const ClassChoiceCard = (props: Props): React.JSX.Element => {
         }
       />
 
+      {/* RECOMENDADA now lives inside the frame as an eyebrow rather
+          than sticking out of the top-left like a sticky note. The
+          previous floating tag broke the card's border line and the
+          orange contrasted ungracefully with the rest of the modal —
+          this reads as part of the card itself. */}
       {props.recommended && (
-        <span
-          className="absolute -top-2.5 left-3 px-2 py-1 font-pixel text-[8px] tracking-widest text-[#0a0a0f]"
+        <p
+          className="mb-1 sm:mb-2 font-pixel text-[7px] sm:text-[8px] tracking-widest"
           style={{
-            background: accent,
-            boxShadow: `0 0 10px color-mix(in srgb, ${accent} 60%, transparent)`,
+            color: accent,
+            textShadow: `0 0 10px color-mix(in srgb, ${accent} 60%, transparent)`,
           }}
         >
           ★ RECOMENDADA
-        </span>
+        </p>
       )}
 
       {props.selected && (
@@ -87,46 +97,55 @@ export const ClassChoiceCard = (props: Props): React.JSX.Element => {
           initial={prefersReducedMotion ? false : { scale: 0.6, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.25, ease: [0.22, 1.4, 0.36, 1] }}
-          className="absolute -top-3 -right-3 inline-flex h-8 w-8 items-center justify-center"
+          className="absolute top-2 right-2 inline-flex h-5 w-5 items-center justify-center"
         >
           <CheckCircleIcon
-            className="h-8 w-8 drop-shadow-[0_0_12px_rgba(34,197,94,0.7)]"
-            style={{ color: accent }}
+            className="h-5 w-5"
+            style={{
+              color: accent,
+              filter: `drop-shadow(0 0 6px color-mix(in srgb, ${accent} 60%, transparent))`,
+            }}
           />
         </motion.span>
       )}
 
       {Icon && (
         <div
-          className="mb-4 inline-flex h-14 w-14 items-center justify-center border-2 rounded-sm"
+          className="mb-2 sm:mb-3 inline-flex h-10 w-10 sm:h-16 sm:w-16 items-center justify-center border-2"
           style={{
             borderColor: `color-mix(in srgb, ${accent} 55%, transparent)`,
             backgroundColor: `color-mix(in srgb, ${accent} 14%, transparent)`,
-            boxShadow: `inset 0 0 18px color-mix(in srgb, ${accent} 18%, transparent), 0 0 14px color-mix(in srgb, ${accent} 30%, transparent)`,
+            boxShadow: `inset 0 0 18px color-mix(in srgb, ${accent} 22%, transparent), 0 0 16px color-mix(in srgb, ${accent} 38%, transparent)`,
           }}
         >
           <Icon
-            className="h-9 w-9"
-            style={{ color: accent }}
+            className="h-6 w-6 sm:h-10 sm:w-10"
+            style={{
+              color: accent,
+              filter: `drop-shadow(0 0 6px color-mix(in srgb, ${accent} 55%, transparent))`,
+            }}
             aria-hidden="true"
           />
         </div>
       )}
 
       <h3
-        className="font-pixel text-sm leading-relaxed [text-shadow:0_0_14px_rgba(34,197,94,0.4)]"
-        style={{ color: accent }}
+        className="font-pixel text-[10px] sm:text-sm leading-relaxed"
+        style={{
+          color: accent,
+          textShadow: `0 0 14px color-mix(in srgb, ${accent} 50%, transparent)`,
+        }}
       >
         {props.name.toUpperCase()}
       </h3>
 
       {props.statLine && (
-        <p className="mt-2 font-pixel text-[8px] tracking-widest text-ink-muted">
+        <p className="mt-1 sm:mt-2 font-pixel text-[7px] sm:text-[9px] tracking-widest text-ink-muted">
           {props.statLine}
         </p>
       )}
 
-      <p className="mt-3 font-pixel-mono text-base italic leading-tight text-[#d4d4d8]">
+      <p className="mt-2 sm:mt-4 font-pixel-mono text-[11px] sm:text-base italic leading-snug text-[#d4d4d8]">
         “{props.frase}”
       </p>
     </motion.button>

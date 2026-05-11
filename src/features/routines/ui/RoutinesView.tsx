@@ -64,6 +64,27 @@ export const RoutinesView = (): React.JSX.Element => {
 
   const [routineToDelete, setRoutineToDelete] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  // Bulk-delete affordance — surfaced when the user has multiple
+  // routines piled up (typical after applying a couple of templates).
+  // Confirms first because it can't be undone.
+  const [deleteAllOpen, setDeleteAllOpen] = useState(false);
+  const [deletingAll, setDeletingAll] = useState(false);
+
+  const handleDeleteAll = async (): Promise<void> => {
+    setDeleteAllOpen(false);
+    setDeletingAll(true);
+    try {
+      // Sequential deletes so a server failure on one doesn't fan out
+      // hundreds of orphaned requests. The shared `deleteRoutine`
+      // already refetches after each, but the cost is negligible
+      // compared with the safety of stopping on the first error.
+      for (const r of routines ?? []) {
+        await deleteRoutine(r.id);
+      }
+    } finally {
+      setDeletingAll(false);
+    }
+  };
 
   return (
     <AsyncState
@@ -83,14 +104,18 @@ export const RoutinesView = (): React.JSX.Element => {
                 <EmptyState
                   icon="⚔"
                   title="Sin sesiones"
-                  description="Crea tu primera sesión o aplica una rutina entera."
+                  description="Empieza con una rutina ya hecha o crea la tuya desde cero."
                   cta={{
-                    label: 'Crear sesión',
-                    onClick: () => setCreating(true),
-                  }}
-                  secondaryCta={{
+                    // Templates is the recommended path for a brand-new
+                    // user — it produces multiple ready-to-train days
+                    // in one tap, instead of a single empty routine
+                    // they then have to populate exercise by exercise.
                     label: 'Ver rutinas',
                     to: '/templates',
+                  }}
+                  secondaryCta={{
+                    label: 'Crear sesion',
+                    onClick: () => setCreating(true),
                   }}
                 />
                 <CreateRoutineForm
@@ -124,20 +149,34 @@ export const RoutinesView = (): React.JSX.Element => {
                   onDeleteRoutine={() =>
                     selectedRoutine && setRoutineToDelete(selectedRoutine.id)
                   }
+                  onDeleteAllRoutines={() => setDeleteAllOpen(true)}
+                  deletingAll={deletingAll}
+                  totalRoutines={routines.length}
                 />
               </div>
             )}
 
             <ConfirmDialog
               open={routineToDelete !== null}
-              title="Eliminar sesión"
-              description="¿Seguro que quieres borrar esta sesión? Esta acción no se puede deshacer."
+              title="Eliminar sesion"
+              description="¿Seguro que quieres borrar esta sesion? Esta accion no se puede deshacer."
               onCancel={() => setRoutineToDelete(null)}
               onConfirm={() => {
                 if (routineToDelete === null) return;
                 void deleteRoutine(routineToDelete);
                 setRoutineToDelete(null);
               }}
+            />
+
+            <ConfirmDialog
+              open={deleteAllOpen}
+              title="Borrar todas las sesiones"
+              description={`Vas a borrar tus ${routines.length} sesiones. Esta accion no se puede deshacer.`}
+              confirmLabel="BORRAR TODAS"
+              cancelLabel="VOLVER"
+              variant="danger"
+              onCancel={() => setDeleteAllOpen(false)}
+              onConfirm={() => void handleDeleteAll()}
             />
           </div>
         </section>

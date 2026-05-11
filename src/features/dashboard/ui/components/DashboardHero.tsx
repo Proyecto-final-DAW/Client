@@ -3,12 +3,13 @@ import {
   StarIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/solid';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import { motion, useReducedMotion } from 'framer-motion';
 
-import { PixelCorners } from '@shared/components/PixelCorners';
 import type { CharacterState } from '../../../character/core/domain/models/CharacterState';
 import {
   rankLetterFromTier,
+  styleForRank,
   tierIndexFromState,
 } from '../../../character/core/domain/models/RankLabels';
 
@@ -62,8 +63,15 @@ const TIER_HINTS: Record<number, string> = {
   3: 'Acercandote a la trascendencia.',
   4: 'Un paso del maestro supremo.',
   5: 'Eres maestro. Solo queda la leyenda.',
-  6: '◆ Eres leyenda.',
+  6: 'Has conquistado todo. No queda nada por encima.',
 };
+
+/** Tier 6 (LEYENDA) has no next step — "PROXIMO" reads as a stale
+ *  promise of more progress when the user is already at the absolute
+ *  apex. The eyebrow + body swap to a closing-statement that frames
+ *  the moment as the end of the climb rather than a pause along it. */
+const APEX_EYEBROW = '✦ LEYENDA ✦';
+const DEFAULT_EYEBROW = '▶ PROXIMO';
 
 /**
  * Dashboard hero card — identity-only.
@@ -77,9 +85,7 @@ const TIER_HINTS: Record<number, string> = {
  * card itself read as empty. Filling it with the frase + breathing
  * room around the avatar is what makes it feel like a hero panel.
  */
-export const DashboardHero = (
-  props: DashboardHeroProps
-): React.JSX.Element => {
+export const DashboardHero = (props: DashboardHeroProps): React.JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
   const motionProps = prefersReducedMotion
     ? { initial: false }
@@ -90,6 +96,21 @@ export const DashboardHero = (
       };
 
   const titleName = toTitleCase(props.name);
+  // Step the name's font down for longer strings so a freakishly
+  // long handle doesn't wrap to three lines next to the avatar.
+  // Same pattern ProfileHeroBanner uses (`valueFontClass`); the
+  // thresholds here are slightly different because the dashboard
+  // hero's value column is wider than the profile sidebar's.
+  const titleNameSizeClass =
+    titleName.length <= 10
+      ? 'text-xs sm:text-sm'
+      : titleName.length <= 14
+        ? 'text-[11px] sm:text-xs'
+        : titleName.length <= 20
+          ? 'text-[10px] sm:text-[11px]'
+          : titleName.length <= 28
+            ? 'text-[9px] sm:text-[10px]'
+            : 'text-[8px] sm:text-[9px]';
   const heroLevel = props.characterState?.heroLevel ?? null;
   const charClass = props.characterState
     ? classNameOf(props.characterState)
@@ -160,34 +181,43 @@ export const DashboardHero = (
               left-biased — the avatar's halo + LVL badge weighed
               the left side enough that a smaller cartilla looked
               shoved to the side. */}
-          <dl className="mx-auto w-full max-w-md space-y-3">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <dt className="flex items-center gap-2 w-20 sm:w-28 shrink-0 font-pixel text-[10px] sm:text-[11px] tracking-widest text-green-500/70">
-                <UserCircleIcon className="h-3.5 w-3.5 text-green-500/80" />
-                NOMBRE
-              </dt>
-              <dd className="min-w-0 flex-1 font-pixel text-xs sm:text-sm text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.4)] break-words">
-                {titleName.toUpperCase()}
-              </dd>
-            </div>
-            <div className="flex items-center gap-3 sm:gap-4">
-              <dt className="flex items-center gap-2 w-20 sm:w-28 shrink-0 font-pixel text-[10px] sm:text-[11px] tracking-widest text-green-500/70">
-                <ShieldCheckIcon className="h-3.5 w-3.5 text-green-500/80" />
-                CLASE
-              </dt>
-              <dd className="font-pixel text-xs sm:text-sm text-ink">
-                {(charClass ?? '—').toUpperCase()}
-              </dd>
-            </div>
-            <div className="flex items-center gap-3 sm:gap-4">
-              <dt className="flex items-center gap-2 w-20 sm:w-28 shrink-0 font-pixel text-[10px] sm:text-[11px] tracking-widest text-green-500/70">
-                <StarIcon className="h-3.5 w-3.5 text-green-500/80" />
-                RANGO
-              </dt>
-              <dd className="font-pixel text-xs sm:text-sm text-yellow-400">
-                {rankLetter}
-              </dd>
-            </div>
+          {/* CSS grid with `auto 1fr` columns — same flexible
+              cartilla as ProfileHeroBanner. Drops the fixed-width
+              dt (`w-20 sm:w-28`) that occasionally clipped the icon
+              + label combo at narrow viewports, and avoids the
+              icon-vs-label vertical wobble caused by mixing
+              flex-baseline rows with different glyph metrics.
+              `items-center` aligns icon + label + value on a
+              single optical line. */}
+          <dl className="mx-auto w-full max-w-md grid grid-cols-[auto_1fr] gap-x-4 gap-y-3 items-center">
+            <dt className="flex items-center gap-2 font-pixel text-xs sm:text-sm tracking-widest text-green-500/70">
+              <UserCircleIcon className="h-3.5 w-3.5 text-green-500/80" />
+              NOMBRE
+            </dt>
+            <dd
+              className={`min-w-0 font-pixel ${titleNameSizeClass} text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.4)] break-words`}
+            >
+              {titleName}
+            </dd>
+
+            <dt className="flex items-center gap-2 font-pixel text-xs sm:text-sm tracking-widest text-green-500/70">
+              <ShieldCheckIcon className="h-3.5 w-3.5 text-green-500/80" />
+              CLASE
+            </dt>
+            <dd className="font-pixel text-xs sm:text-sm text-ink break-words">
+              {(charClass ?? '—').toUpperCase()}
+            </dd>
+
+            <dt className="flex items-center gap-2 font-pixel text-xs sm:text-sm tracking-widest text-green-500/70">
+              <StarIcon className="h-3.5 w-3.5 text-green-500/80" />
+              RANGO
+            </dt>
+            <dd
+              className="font-pixel text-xs sm:text-sm"
+              style={{ color: styleForRank(rankLetter).text }}
+            >
+              {rankLetter}
+            </dd>
           </dl>
 
           {/* Frase — the lore line, the thing that makes the user
@@ -208,11 +238,25 @@ export const DashboardHero = (
             no longer reads as "left-aligned text floating in empty
             space". `lg:w-60` is slightly narrower than the previous
             w-64 to feel less blocky next to the rich left column. */}
-        <aside className="hidden lg:flex lg:w-60 shrink-0 self-stretch flex-col justify-center gap-2 border-2 border-green-500/30 bg-page/40 p-4">
-          <p className="font-pixel text-[9px] tracking-[0.18em] text-green-500/80">
-            ▶ PROXIMO
+        <aside
+          className={`hidden lg:flex lg:w-60 shrink-0 self-stretch flex-col items-center justify-center text-center gap-2 border-2 bg-page/40 p-4 ${
+            tierIndex >= 6
+              ? 'border-amber-400/60 shadow-[0_0_24px_rgba(251,191,36,0.25)]'
+              : 'border-green-500/30'
+          }`}
+        >
+          <p
+            className={`font-pixel text-[9px] tracking-[0.18em] ${
+              tierIndex >= 6 ? 'text-amber-300' : 'text-green-500/80'
+            }`}
+          >
+            {tierIndex >= 6 ? APEX_EYEBROW : DEFAULT_EYEBROW}
           </p>
-          <p className="font-pixel-mono text-base lg:text-lg leading-snug text-ink-muted">
+          <p
+            className={`font-pixel-mono text-base lg:text-lg leading-snug ${
+              tierIndex >= 6 ? 'text-amber-100/90' : 'text-ink-muted'
+            }`}
+          >
             {TIER_HINTS[tierIndex]}
           </p>
         </aside>
@@ -222,11 +266,23 @@ export const DashboardHero = (
           when the right-side aside is hidden. Keeps the "you have a
           next step" signal on every viewport. */}
       <div className="relative px-5 pb-5 sm:px-10 sm:pb-6 lg:hidden">
-        <div className="border-t border-green-500/20 pt-3 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-3">
-          <span className="font-pixel text-[8px] sm:text-[9px] tracking-[0.18em] text-green-500/80">
-            ▶ PROXIMO
+        <div
+          className={`pt-3 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-3 border-t ${
+            tierIndex >= 6 ? 'border-amber-400/30' : 'border-green-500/20'
+          }`}
+        >
+          <span
+            className={`font-pixel text-[8px] sm:text-[9px] tracking-[0.18em] ${
+              tierIndex >= 6 ? 'text-amber-300' : 'text-green-500/80'
+            }`}
+          >
+            {tierIndex >= 6 ? APEX_EYEBROW : DEFAULT_EYEBROW}
           </span>
-          <span className="font-pixel-mono text-base sm:text-lg leading-snug text-ink-muted">
+          <span
+            className={`font-pixel-mono text-base sm:text-lg leading-snug ${
+              tierIndex >= 6 ? 'text-amber-100/90' : 'text-ink-muted'
+            }`}
+          >
             {TIER_HINTS[tierIndex]}
           </span>
         </div>

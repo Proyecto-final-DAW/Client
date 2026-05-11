@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -41,15 +40,19 @@ const renderCta = (cta: Cta, className: string) => {
   );
 };
 
+/**
+ * Critical-path empty state. Rendered by `AsyncState` on every list
+ * page, so it lives on the first interactive frame for any route the
+ * user visits. The earlier implementation pulled in framer-motion
+ * (~127kB minified+gz) just to fade-and-scale the card on mount —
+ * undoing the code splitting we did everywhere else. CSS keyframes do
+ * the same animation in zero JS, with `prefers-reduced-motion`
+ * automatically suppressed.
+ */
 export const EmptyState = (props: Props): React.JSX.Element => {
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.2 }}
-        className="relative max-w-md border-2 border-zinc-700 bg-card px-8 py-6 text-center"
-      >
+      <div className="empty-state-card relative max-w-md border-2 border-zinc-700 bg-card px-8 py-6 text-center">
         <PixelCorners className="border-zinc-700" />
         {props.icon && (
           <div
@@ -68,12 +71,30 @@ export const EmptyState = (props: Props): React.JSX.Element => {
           </p>
         )}
         {(props.cta || props.secondaryCta) && (
+          // Layout order: secondary on the LEFT, primary (green) on
+          // the RIGHT. This is the macOS/iOS convention — the eye
+          // settles on the rightmost button as the recommended next
+          // step, while leaving the alternative within reach. The
+          // earlier left-primary order put the destructive-or-
+          // alternative action where the user instinctively tapped.
           <div className="mt-4 flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
-            {props.cta && renderCta(props.cta, PRIMARY_CTA)}
             {props.secondaryCta && renderCta(props.secondaryCta, SECONDARY_CTA)}
+            {props.cta && renderCta(props.cta, PRIMARY_CTA)}
           </div>
         )}
-      </motion.div>
+      </div>
+      <style>{`
+        @keyframes emptyStateEnter {
+          from { opacity: 0; transform: scale(0.95); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+        .empty-state-card {
+          animation: emptyStateEnter 200ms ease-out;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .empty-state-card { animation: none; }
+        }
+      `}</style>
     </div>
   );
 };

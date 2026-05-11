@@ -1,7 +1,7 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
-
 import { PixelCorners } from '@shared/components/PixelCorners';
 import { PixelSelect } from '@shared/components/PixelSelect';
+
 import type {
   ProfileData,
   ProfileUpdateData,
@@ -71,6 +71,16 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
   return (
     <form
       onSubmit={handleSubmit}
+      onKeyDown={(e) => {
+        // Block accidental Enter-key submits from any single-line input.
+        // The form is long enough that a user tabbing through fields can
+        // hit Enter mid-edit and trigger GUARDAR before they're done.
+        // Textareas keep native Enter (newline) and the explicit
+        // GUARDAR button stays the only commit path.
+        if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
+          e.preventDefault();
+        }
+      }}
       className="relative border-2 border-green-500/40 bg-card p-5 sm:p-6"
     >
       <PixelCorners size="md" className="border-green-500/40" />
@@ -268,6 +278,31 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
               />
             ))}
           </div>
+
+          {/* Free-text follow-up — only revealed when OTRA is in the
+              chosen set so the form doesn't pester users who don't
+              need it. Mirrors the onboarding wizard's behaviour
+              (StepLimitations) so the same shape (`injury_notes`)
+              flows through both create and update paths. */}
+          {form.injuries.includes('OTHER') && (
+            <div className="mt-3">
+              <label
+                htmlFor="profile-injury-notes"
+                className={labelClass}
+              >
+                CUAL ES LA LESION
+              </label>
+              <textarea
+                id="profile-injury-notes"
+                value={form.injury_notes ?? ''}
+                onChange={(e) => handleChange('injury_notes', e.target.value)}
+                maxLength={500}
+                rows={3}
+                placeholder="Describela en pocas palabras..."
+                className={`${inputClass} resize-none`}
+              />
+            </div>
+          )}
         </div>
       </section>
 

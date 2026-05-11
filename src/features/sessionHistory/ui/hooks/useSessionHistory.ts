@@ -1,6 +1,6 @@
+import { useAuth } from '@context/hooks/useAuth';
 import { useCallback, useEffect, useState } from 'react';
 
-import { useAuth } from '@context/hooks/useAuth';
 import type { Session } from '../../core/domain/models/Session';
 import { sessionRepository } from '../adapter';
 

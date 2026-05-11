@@ -1,10 +1,11 @@
-import { motion, useReducedMotion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
-
+import { statConfigFor } from '@features/stats/ui/StatConfig';
 import { PixelCorners } from '@shared/components/PixelCorners';
 import { useBodyScrollLock } from '@shared/hooks/useBodyScrollLock';
 import { useEscapeClose } from '@shared/hooks/useEscapeClose';
-import { statConfigFor } from '@features/stats/ui/StatConfig';
+import { motion, useReducedMotion } from 'framer-motion';
+import { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
+
 import type {
   SessionGainEntry,
   SessionGains,
@@ -55,11 +56,13 @@ const StatRow = (props: StatRowProps): React.JSX.Element | null => {
   const { statKey, entry, delay, reducedMotion } = props;
   const config = statConfigFor(statKey);
 
-  // Hooks MUST be called unconditionally — moved above the early-return
-  // gate. The previous version returned `<></>` before the
-  // `useState`/`useEffect` calls, so a stat key the server emits but
-  // the client doesn't recognise (any future drift) crashed React with
-  // "Rendered fewer hooks than during the previous render".
+  // Hooks MUST be called unconditionally — every hook below runs on
+  // every render of this component. The previous version returned
+  // `<></>` before some hooks and returned the JSX after the rest,
+  // so a stat key the server emits but the client doesn't recognise
+  // (any future drift) crashed React with "Rendered fewer hooks
+  // than during the previous render". The early-return gate is at
+  // the bottom, after every hook has run.
   const leveledUp = entry.afterLevel > entry.beforeLevel;
   const [flashLevelUp, setFlashLevelUp] = useState(false);
   useEffect(() => {
@@ -69,13 +72,10 @@ const StatRow = (props: StatRowProps): React.JSX.Element | null => {
     return () => clearTimeout(timer);
   }, [leveledUp, reducedMotion, delay]);
 
-  if (!config) return null;
-  const Icon = config.icon;
-  const accent = config.accentColor;
-
   const beforePct =
     (entry.beforeXp / xpThresholdForLevel(entry.beforeLevel)) * 100;
-  const afterPct = (entry.afterXp / xpThresholdForLevel(entry.afterLevel)) * 100;
+  const afterPct =
+    (entry.afterXp / xpThresholdForLevel(entry.afterLevel)) * 100;
 
   // Reduced-motion path: skip the cascade entirely, just snap to the
   // final fill. The +XP and LVL UP badges still render because they're
@@ -92,6 +92,10 @@ const StatRow = (props: StatRowProps): React.JSX.Element | null => {
           : { width: [`${beforePct}%`, `${afterPct}%`] },
     [reducedMotion, leveledUp, beforePct, afterPct]
   );
+
+  if (!config) return null;
+  const Icon = config.icon;
+  const accent = config.accentColor;
 
   const animationTimes = reducedMotion
     ? undefined
@@ -197,7 +201,7 @@ export const PostSessionStatsModal = (
 
   const { gains, onClose } = props;
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -205,7 +209,7 @@ export const PostSessionStatsModal = (
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 overflow-y-auto"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 p-4 overflow-y-auto"
     >
       <motion.div
         initial={reducedMotion ? false : { opacity: 0, scale: 0.94, y: 16 }}
@@ -227,21 +231,26 @@ export const PostSessionStatsModal = (
           <motion.h2
             id="post-session-stats-title"
             initial={
-              reducedMotion ? false : { scale: 0.6, opacity: 0, filter: 'blur(8px)' }
+              reducedMotion
+                ? false
+                : { scale: 0.6, opacity: 0, filter: 'blur(8px)' }
             }
             animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
-            transition={{ duration: 0.55, delay: 0.05, ease: [0.22, 1.4, 0.36, 1] }}
+            transition={{
+              duration: 0.55,
+              delay: 0.05,
+              ease: [0.22, 1.4, 0.36, 1],
+            }}
             className="mt-3 font-pixel text-3xl sm:text-4xl text-green-400 [text-shadow:0_0_18px_rgba(34,197,94,0.7),2px_2px_0_#000]"
           >
             +{gains.totalXp} XP
           </motion.h2>
           {gains.isToday && gains.streak > 0 && (
             <p className="mt-2 font-pixel-mono text-base text-ink-muted">
-              Racha actual: {gains.streak} {gains.streak === 1 ? 'semana' : 'semanas'}
+              Racha actual: {gains.streak}{' '}
+              {gains.streak === 1 ? 'semana' : 'semanas'}
               {gains.streak >= 1 && (
-                <span className="ml-2 text-yellow-300">
-                  ✦ bonus tenacidad
-                </span>
+                <span className="ml-2 text-yellow-300">✦ bonus tenacidad</span>
               )}
             </p>
           )}
@@ -270,6 +279,7 @@ export const PostSessionStatsModal = (
           </button>
         </div>
       </motion.div>
-    </div>
+    </div>,
+    document.body
   );
 };

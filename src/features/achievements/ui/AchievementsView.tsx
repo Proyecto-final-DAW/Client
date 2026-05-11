@@ -6,10 +6,20 @@ import type { Milestone } from '../core/domain/models/Milestone';
 import { MilestoneCard } from './components/MilestoneCard';
 import { useMilestones } from './hooks/useMilestones';
 
-// 9 = 3 rows × 3 cols at lg, so the grid never leaves orphan empty
-// cells in the last row. Page size of 8 left a gap on a 3-col layout
-// (3 + 3 + 2) that the user flagged as visually broken.
-const PAGE_SIZE = 9;
+// Page size adapts to the column count of the current breakpoint so
+// the last row is always full — no orphan card hanging alone:
+//
+//   mobile  (1 col)  → 4 per page  (4 rows × 1)
+//   tablet  (2 cols) → 6 per page  (3 rows × 2)
+//   desktop (3 cols) → 9 per page  (3 rows × 3)
+//
+// 4 on mobile draws the "stop the infinite scroll" line: 9 stacked
+// cards stretched the page to ~1800 px. On wide monitors the cards
+// themselves grow (via the parent's max-w-7xl) so the screen still
+// fills out without breaking the layout's mental model.
+const PAGE_SIZE_DESKTOP = 9;
+const PAGE_SIZE_TABLET = 6;
+const PAGE_SIZE_MOBILE = 4;
 
 const sortMilestones = (milestones: Milestone[]): Milestone[] =>
   [...milestones].sort((a, b) => {
@@ -25,12 +35,45 @@ const sortMilestones = (milestones: Milestone[]): Milestone[] =>
 export const AchievementsView = (): React.JSX.Element => {
   const { milestones, loading, error, refetch } = useMilestones();
   const [page, setPage] = useState(0);
+  // Default to desktop on the first render so SSR/hydration matches
+  // the markup the test render emits. The matchMedia effect below
+  // immediately corrects to whatever the actual viewport is.
+  const [pageSize, setPageSize] = useState(PAGE_SIZE_DESKTOP);
+
+  // Tracks the viewport via matchMedia. Doing this in JS (not just
+  // CSS responsive grid) is necessary because the page slice itself
+  // depends on the column count — purely-CSS responsiveness would
+  // still hand 9 cards to a 1-column phone.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const lg = window.matchMedia('(min-width: 1024px)');
+    const sm = window.matchMedia('(min-width: 640px)');
+    const sync = () => {
+      if (lg.matches) setPageSize(PAGE_SIZE_DESKTOP);
+      else if (sm.matches) setPageSize(PAGE_SIZE_TABLET);
+      else setPageSize(PAGE_SIZE_MOBILE);
+    };
+    sync();
+    lg.addEventListener('change', sync);
+    sm.addEventListener('change', sync);
+    return () => {
+      lg.removeEventListener('change', sync);
+      sm.removeEventListener('change', sync);
+    };
+  }, []);
 
   // Reset to page 0 if the milestones list changes (refetch, etc.) so
   // we never strand the user on page 5 of a list that just shrank.
   useEffect(() => {
     setPage(0);
   }, [milestones]);
+
+  // Same defensive reset when the breakpoint flips: a user on page 3
+  // of 4 in mobile (4 per page) who rotates to landscape (6 per
+  // page) would otherwise stay on a now-out-of-range page.
+  useEffect(() => {
+    setPage(0);
+  }, [pageSize]);
 
   return (
     <AsyncState
@@ -49,17 +92,17 @@ export const AchievementsView = (): React.JSX.Element => {
         const unlockedCount = milestones.filter((m) => m.unlocked).length;
         const sorted = sortMilestones(milestones);
 
-        const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
+        const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
         const safePage = Math.min(page, totalPages - 1);
-        const start = safePage * PAGE_SIZE;
-        const visible = sorted.slice(start, start + PAGE_SIZE);
+        const start = safePage * pageSize;
+        const visible = sorted.slice(start, start + pageSize);
 
         const goPrev = (): void => setPage((p) => Math.max(0, p - 1));
         const goNext = (): void =>
           setPage((p) => Math.min(totalPages - 1, p + 1));
 
         return (
-          <div className="mx-auto max-w-4xl text-ink">
+          <div className="mx-auto max-w-7xl text-ink">
             <header className="mb-6">
               <p className="font-pixel text-[9px] tracking-widest text-green-500">
                 ▶ LOGROS
@@ -84,7 +127,7 @@ export const AchievementsView = (): React.JSX.Element => {
                 achievement descriptions ("100 kg acumulados", "5 dias
                 seguidos"). 2 cols on a 1280px screen left the right rail
                 noticeably empty. */}
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
               {visible.map((milestone) => (
                 <MilestoneCard key={milestone.id} milestone={milestone} />
               ))}

@@ -1,8 +1,10 @@
+import { statConfigFor } from '@features/stats/ui/StatConfig';
+import { PixelCorners } from '@shared/components/PixelCorners';
+import { useBodyScrollLock } from '@shared/hooks/useBodyScrollLock';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
-import { PixelCorners } from '@shared/components/PixelCorners';
-import { statConfigFor } from '@features/stats/ui/StatConfig';
 import type {
   PendingChoice,
   PendingChoiceTier,
@@ -29,10 +31,18 @@ const TIER_FLAVOR: Record<PendingChoiceTier, string> = {
   3: 'Has alcanzado lo que pocos alcanzan. Elige como seras recordado.',
 };
 
-const TIER_INSTRUCTION: Record<PendingChoiceTier, string> = {
-  1: 'Elige tu vocacion. Define como entrenaras de aqui en adelante.',
-  2: 'Elige tu especializacion dentro de tu vocacion.',
-  3: 'Elige tu rama legendaria. Es permanente.',
+/**
+ * Rank letter the user crosses INTO after confirming the choice at this
+ * tier. The previous eyebrow on tier 3 said "EL CAMINO A RANGO S",
+ * which was misleading: the choice itself only takes you to rank C
+ * (the legendary's NORMAL stage); S is reached later, automatically,
+ * once every stat hits 99. Showing the literal rank the user is about
+ * to claim ("RANGO E / D / C") removes the confusion the user flagged.
+ */
+const TIER_RANK_LETTER: Record<PendingChoiceTier, 'E' | 'D' | 'C'> = {
+  1: 'E',
+  2: 'D',
+  3: 'C',
 };
 
 const FOCUSABLE_SELECTOR =
@@ -70,7 +80,9 @@ const optionMeta = (pendingChoice: PendingChoice): CardMeta[] => {
         frase: option.frase,
         icon: config?.icon,
         accent: config?.accentColor,
-        statLine: config ? `STAT DOMINANTE: ${config.name.toUpperCase()}` : undefined,
+        statLine: config
+          ? `STAT DOMINANTE: ${config.name.toUpperCase()}`
+          : undefined,
       };
     });
   }
@@ -118,6 +130,12 @@ export const TierUpModal = ({
   const recommendedId = pendingChoice.recommendedId;
   const cards = optionMeta(pendingChoice);
   const selectedCard = cards.find((c) => c.id === selectedId);
+
+  // Lock the page behind the modal so the dashboard's own scrollbar
+  // doesn't stack next to the dialog's internal scroll. Without this
+  // the user saw two parallel scrollbars (one for the page, one for
+  // the modal's overflow-y-auto) when the dialog content overflowed.
+  useBodyScrollLock(open);
 
   // Reset selection whenever the tier-up offer changes (so dismissing
   // one tier and receiving the next doesn't carry over a stale pick).
@@ -196,13 +214,25 @@ export const TierUpModal = ({
     await onConfirm(selectedId);
   };
 
+  // Tier 3 (LEGENDARIA) is the climax of the class arc — the user
+  // unlocks it once and the next auto-tiers (TRANSCENDENT → SUPREMO →
+  // LEYENDA / S-rank) cascade silently. So the modal at this tier
+  // gets the gold-leaf treatment: warm amber palette, larger glow,
+  // longer entrance, and a slow rotating aura ring behind the card.
+  // Tiers 1 and 2 stay on the green palette so the visual hierarchy
+  // matches the lore weight.
+  const isLegendary = tier === 3;
+  const accentRgb = isLegendary ? '251,191,36' : '34,197,94'; // amber-400 / green-500
+  const accentHex = isLegendary ? '#fbbf24' : '#22c55e';
+  const accentDeep = isLegendary ? '#b45309' : '#15803d'; // amber-700 / green-700
+
   const overlayMotion = prefersReducedMotion
     ? { initial: false, animate: { opacity: 1 }, exit: { opacity: 0 } }
     : {
         initial: { opacity: 0 },
         animate: { opacity: 1 },
         exit: { opacity: 0 },
-        transition: { duration: 0.25 },
+        transition: { duration: isLegendary ? 0.45 : 0.25 },
       };
 
   const dialogMotion = prefersReducedMotion
@@ -212,10 +242,23 @@ export const TierUpModal = ({
         exit: { opacity: 0 },
       }
     : {
-        initial: { opacity: 0, scale: 0.88, y: 24 },
-        animate: { opacity: 1, scale: 1, y: 0 },
+        initial: {
+          opacity: 0,
+          scale: isLegendary ? 0.78 : 0.88,
+          y: isLegendary ? 36 : 24,
+          filter: isLegendary ? 'blur(8px)' : undefined,
+        },
+        animate: {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          filter: isLegendary ? 'blur(0px)' : undefined,
+        },
         exit: { opacity: 0, scale: 0.95, y: 12 },
-        transition: { duration: 0.5, ease: [0.22, 1.2, 0.36, 1] as const },
+        transition: {
+          duration: isLegendary ? 0.85 : 0.5,
+          ease: [0.22, 1.2, 0.36, 1] as const,
+        },
       };
 
   // Card container stagger — children fade up sequentially so the
@@ -241,69 +284,114 @@ export const TierUpModal = ({
 
   const confirmAccent = selectedCard?.accent;
 
-  return (
+  // Portal directly to <body> so the modal escapes any parent
+  // stacking context (DashboardLayout wraps everything in a
+  // `relative` div with sticky header / sidebar). Without the portal,
+  // z-[60] is relative to the layout's context — the modal looks like
+  // it's "inside" the body strip rather than overlaying everything.
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
           {...overlayMotion}
           onMouseDown={handleBackdropClick}
-          // Heavier dim + radial green glow behind the dialog so the
+          // Heavier dim + radial accent glow behind the dialog so the
           // modal reads as the only thing on screen — the previous
-          // flat 80% black felt like a generic confirm box.
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 overflow-y-auto"
+          // flat 80% black felt like a generic confirm box. The tier-3
+          // overlay swaps in an amber gradient (warm + ceremonial)
+          // because the legendary unlock is the lore-weighted moment
+          // of the arc; tiers 1/2 stay on the green palette to keep
+          // the everyday "level up" colour for everyday milestones.
+          // Overlay just centres + dims; the dialog itself owns scroll
+          // when the content doesn't fit (mobile portrait, 6 stacked
+          // vocations). That keeps desktop clean — when the dialog
+          // fits in the viewport, no scrollbar at all — while still
+          // letting phones scroll through the full card list. The
+          // previous "overflow-y-auto on the overlay" version always
+          // showed a thin scrollbar in desktop because the radial
+          // backdrop + padding nudged the layout 1-2px past viewport
+          // height even when the dialog visually fit.
+          // Small lateral margin on phone so the dialog's pixel
+          // corners and neon halo are fully visible — `p-0` clipped
+          // them against the screen edges. From `sm:` we keep the
+          // wider frame.
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 p-2 sm:p-4 overscroll-contain"
           style={{
-            backgroundImage:
-              'radial-gradient(circle at center, rgba(34,197,94,0.10) 0%, rgba(0,0,0,0.95) 60%)',
+            // Tight tint that fades to opaque well before the screen
+            // edges — only frames the dialog. The earlier wider
+            // gradient was the "feo de fondo" the user flagged.
+            backgroundImage: isLegendary
+              ? 'radial-gradient(circle at center, rgba(251,191,36,0.14) 0%, rgba(0,0,0,0.97) 42%, rgba(0,0,0,1) 70%)'
+              : 'radial-gradient(circle at center, rgba(34,197,94,0.08) 0%, rgba(0,0,0,0.96) 40%, rgba(0,0,0,1) 70%)',
           }}
         >
-          <motion.div
-            ref={dialogRef}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="tier-up-title"
-            aria-describedby="tier-up-description"
-            {...dialogMotion}
-            className="relative my-4 sm:my-8 w-full max-w-5xl max-h-[calc(100vh-2rem)] overflow-y-auto border-2 border-green-500/70 bg-card p-5 sm:p-10 shadow-[0_0_0_4px_rgba(10,10,15,0.85),0_0_120px_rgba(34,197,94,0.55),0_30px_80px_rgba(0,0,0,0.85)] [scrollbar-width:thin] [scrollbar-color:rgba(34,197,94,0.45)_rgba(15,15,20,0.4)] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-black/40 [&::-webkit-scrollbar-thumb]:bg-green-500/45"
-          >
-            <PixelCorners size="lg" className="border-green-500/70" />
+          {/* Stage wrapper — caps width so the dialog's halo stays
+              tight to the box. `block` (no flex) so the inner dialog's
+              `w-full` always stretches edge-to-edge of the wrapper at
+              every viewport — `flex justify-center` was deferring to
+              the dialog's intrinsic width on phones where some inner
+              text wrapped narrow, which made the modal sit as a thin
+              column with black bars to either side. */}
+          <div className="relative w-full max-w-4xl">
+            <motion.div
+              ref={dialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="tier-up-title"
+              aria-describedby="tier-up-description"
+              {...dialogMotion}
+              style={{
+                borderColor: `rgba(${accentRgb},0.7)`,
+                // Tight neon halo + a slim inset highlight. Tier 3
+                // (legendary) still gets a brighter outer glow than
+                // tiers 1/2 so the lore weight reads, but nowhere near
+                // the 160px of the earlier pass.
+                boxShadow: isLegendary
+                  ? `0 0 0 3px rgba(10,10,15,0.85), 0 0 44px rgba(${accentRgb},0.7), 0 0 14px rgba(${accentRgb},0.4) inset, 0 16px 36px rgba(0,0,0,0.8)`
+                  : `0 0 0 3px rgba(10,10,15,0.85), 0 0 30px rgba(${accentRgb},0.5), 0 14px 30px rgba(0,0,0,0.8)`,
+                scrollbarColor: `rgba(${accentRgb},0.45) rgba(15,15,20,0.4)`,
+              }}
+              // Mobile / tablet: clamp height to the viewport (dvh
+              // tracks the dynamic viewport so the bottom isn't
+              // clipped by the browser chrome) and enable internal
+              // scroll. Desktop (lg+): drop the cap entirely so the
+              // modal sits at its natural height with no scrollbar —
+              // the user explicitly wanted the green scrollbar gone
+              // on full-size screens because the dialog already fits.
+              className="relative w-full max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-2rem)] overflow-y-auto lg:max-h-none lg:overflow-visible border-2 bg-card p-3 sm:p-6 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-black/40"
+            >
+            <PixelCorners
+              size="lg"
+              className={isLegendary ? 'border-amber-400/70' : 'border-green-500/70'}
+            />
 
-            {/* Decorative top frame: pulsing tier badge centered on a
-                horizontal "achievement" line. The previous header was
-                a paragraph stack; this carries the cinematic moment. */}
-            <header className="mb-7 flex flex-col items-center text-center">
-              <div className="mb-4 flex w-full items-center gap-3">
-                <span className="h-px flex-1 bg-gradient-to-r from-transparent via-green-500/50 to-green-500/80" />
-                <motion.span
-                  initial={prefersReducedMotion ? false : { scale: 0.6, opacity: 0 }}
-                  animate={
-                    prefersReducedMotion
-                      ? { scale: 1, opacity: 1 }
-                      : {
-                          scale: [0.6, 1.15, 1],
-                          opacity: 1,
-                          boxShadow: [
-                            '0 0 14px rgba(34,197,94,0.4)',
-                            '0 0 32px rgba(34,197,94,0.7)',
-                            '0 0 14px rgba(34,197,94,0.4)',
-                          ],
-                        }
-                  }
-                  transition={
-                    prefersReducedMotion
-                      ? undefined
-                      : {
-                          duration: 1.6,
-                          repeat: Infinity,
-                          repeatType: 'reverse',
-                          ease: 'easeInOut',
-                        }
-                  }
-                  className="inline-flex items-center gap-2 border-2 border-green-500/70 bg-green-500/10 px-4 py-2 font-pixel text-[10px] tracking-widest text-green-300"
-                >
-                  ◆ TIER {tier} ALCANZADO ◆
-                </motion.span>
-                <span className="h-px flex-1 bg-gradient-to-l from-transparent via-green-500/50 to-green-500/80" />
-              </div>
+            {/* Compact header — title + a single-line flavour. The
+                previous "◆ TIER 1 ALCANZADO ◆" decorative ribbon plus
+                horizontal lines added ~80px of vertical chrome that
+                pushed the cards off the available body height. The
+                tier number is already implicit in the title copy
+                ("ELIGE TU VOCACION" = T1), so the ribbon was pure
+                decoration. */}
+            <header className="mb-4 sm:mb-5 flex flex-col items-center text-center">
+              {/* Rank eyebrow — names the rank letter the user is
+                  about to claim with this choice. T1 -> E, T2 -> D,
+                  T3 -> C. Painted in the modal's accent (amber for the
+                  legendary tier, green for the rest) so it carries the
+                  same colour weight as the title without competing. */}
+              <motion.p
+                initial={
+                  prefersReducedMotion ? false : { opacity: 0, scale: 0.85 }
+                }
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.55, delay: 0.05 }}
+                className={`mb-3 font-pixel text-[10px] sm:text-xs tracking-[0.4em] ${
+                  isLegendary
+                    ? 'text-amber-300 [text-shadow:0_0_18px_rgba(251,191,36,0.65)]'
+                    : 'text-green-400 [text-shadow:0_0_14px_rgba(34,197,94,0.55)]'
+                }`}
+              >
+                RANGO {TIER_RANK_LETTER[tier]}
+              </motion.p>
 
               <motion.h2
                 ref={headingRef}
@@ -312,11 +400,28 @@ export const TierUpModal = ({
                 initial={
                   prefersReducedMotion
                     ? false
-                    : { opacity: 0, y: 14, filter: 'blur(8px)' }
+                    : {
+                        opacity: 0,
+                        y: 10,
+                        filter: isLegendary ? 'blur(10px)' : 'blur(6px)',
+                      }
                 }
                 animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                transition={{ duration: 0.55, delay: 0.15, ease: [0.22, 1.4, 0.36, 1] }}
-                className="font-pixel text-lg sm:text-2xl leading-snug text-green-400 [text-shadow:0_0_22px_rgba(34,197,94,0.65),2px_2px_0_#000]"
+                transition={{
+                  duration: isLegendary ? 0.75 : 0.5,
+                  ease: [0.22, 1.4, 0.36, 1],
+                }}
+                style={{
+                  color: isLegendary ? '#fcd34d' : undefined,
+                  textShadow: isLegendary
+                    ? '0 0 28px rgba(251,191,36,0.85), 0 0 8px rgba(252,211,77,0.6), 2px 2px 0 #000'
+                    : undefined,
+                }}
+                className={`font-pixel leading-snug outline-none [text-shadow:0_0_22px_rgba(34,197,94,0.65),2px_2px_0_#000] ${
+                  isLegendary
+                    ? 'text-xl sm:text-3xl text-amber-300'
+                    : 'text-base sm:text-xl text-green-400'
+                }`}
               >
                 {TIER_TITLE[tier]}
               </motion.h2>
@@ -325,19 +430,12 @@ export const TierUpModal = ({
                 id="tier-up-description"
                 initial={prefersReducedMotion ? false : { opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.32 }}
-                className="mt-4 max-w-2xl font-pixel-mono text-base sm:text-lg italic leading-snug text-ink/90"
+                transition={{ duration: 0.4, delay: 0.18 }}
+                className={`mt-2 max-w-2xl font-pixel-mono text-sm sm:text-base italic leading-snug ${
+                  isLegendary ? 'text-amber-100/90' : 'text-ink/90'
+                }`}
               >
                 “{TIER_FLAVOR[tier]}”
-              </motion.p>
-
-              <motion.p
-                initial={prefersReducedMotion ? false : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.45 }}
-                className="mt-3 font-pixel text-[10px] tracking-widest text-green-500"
-              >
-                {TIER_INSTRUCTION[tier]}
               </motion.p>
             </header>
 
@@ -345,13 +443,17 @@ export const TierUpModal = ({
               variants={gridVariants}
               initial="hidden"
               animate="visible"
-              // Mobile-first: 2 columns from the smallest breakpoint
-              // when there are 3+ options (T1 vocations are 6 cards →
-              // 2×3 grid on phone, ~330px scroll instead of the
-              // previous 1100px tower). 2-card pendingChoices stack
-              // 1-col at narrow widths since each can use the full
-              // width comfortably.
-              className={`grid gap-3 sm:gap-4 ${
+              // 3+ cards (vocations / specs / 3-option tiers) → 2
+              // columns on phone so the modal fits within one screen
+              // (~932px on iPhone 14 Pro Max) instead of running 6
+              // cards vertically and cutting off the bottom button.
+              // 2-card tiers (legendaries: each spec offers a pair)
+              // stack vertically on phone because two side-by-side at
+              // 170px wide each crammed the frase into 5 lines. The
+              // card itself ships a compact mobile layout (smaller
+              // icon + shorter typography) so the 2-column grid still
+              // reads cleanly.
+              className={`grid gap-2 sm:gap-3 ${
                 cards.length >= 3
                   ? 'grid-cols-2 lg:grid-cols-3'
                   : 'grid-cols-1 sm:grid-cols-2'
@@ -373,7 +475,7 @@ export const TierUpModal = ({
               ))}
             </motion.div>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mt-4 sm:mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <button
                 type="button"
                 onClick={onClose}
@@ -386,43 +488,48 @@ export const TierUpModal = ({
                 type="button"
                 onClick={handleConfirm}
                 disabled={!selectedId || choosing}
-                animate={
-                  selectedId && !choosing && !prefersReducedMotion
-                    ? {
-                        boxShadow: [
-                          `0 0 18px ${confirmAccent ?? '#22c55e'}66`,
-                          `0 0 36px ${confirmAccent ?? '#22c55e'}99`,
-                          `0 0 18px ${confirmAccent ?? '#22c55e'}66`,
-                        ],
-                      }
-                    : undefined
-                }
-                transition={
-                  selectedId && !choosing
-                    ? { duration: 1.6, repeat: Infinity, ease: 'easeInOut' }
-                    : undefined
-                }
+                // Soft accent shift on selection: 55% class colour
+                // mixed with the modal accent base (green / amber)
+                // so the button still tints toward the picked class
+                // without becoming the bright raw yellow / pink of
+                // the original implementation. For tier 3 the base is
+                // amber, so legendary picks read as a single warm
+                // gradient instead of jumping back to green.
                 style={
                   selectedId && confirmAccent
                     ? {
-                        backgroundColor: confirmAccent,
-                        borderColor: confirmAccent,
+                        backgroundColor: `color-mix(in srgb, ${confirmAccent} 55%, ${accentHex})`,
+                        borderColor: `color-mix(in srgb, ${confirmAccent} 55%, ${accentDeep})`,
                         color: '#0a0a0f',
+                        boxShadow: `0 0 18px color-mix(in srgb, ${confirmAccent} 50%, transparent)`,
                       }
-                    : undefined
+                    : isLegendary
+                      ? {
+                          backgroundColor: accentHex,
+                          borderColor: accentDeep,
+                          color: '#0a0a0f',
+                          boxShadow: `0 0 22px rgba(${accentRgb},0.55)`,
+                        }
+                      : undefined
                 }
-                className="font-pixel text-[11px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-8 py-4 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:mt-0 sm:min-w-[16rem]"
+                className={`font-pixel text-[11px] tracking-widest text-[#0a0a0f] px-8 py-4 border-b-4 active:border-b-0 active:mt-1 transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:mt-0 sm:min-w-[16rem] ${
+                  isLegendary
+                    ? 'hover:brightness-110 focus-visible:outline-amber-300'
+                    : 'bg-green-500 hover:bg-green-400 border-green-700 hover:border-green-600 focus-visible:outline-green-400'
+                }`}
               >
                 {choosing
                   ? 'ELIGIENDO…'
                   : selectedCard
-                    ? `▶ FORJAR · ${selectedCard.name.toUpperCase()}`
-                    : '▶ ELIGE UNA CLASE'}
+                    ? `FORJAR ${selectedCard.name.toUpperCase()}`
+                    : 'ELIGE UNA CLASE'}
               </motion.button>
             </div>
           </motion.div>
+          </div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };

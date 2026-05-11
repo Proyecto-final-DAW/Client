@@ -3,8 +3,8 @@ import {
   ChevronUpIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
-
 import { PixelCorners } from '@shared/components/PixelCorners';
+
 import type { Exercise } from '../../../exercises/core/domain/models/Exercise';
 
 type ExerciseRowProps = {

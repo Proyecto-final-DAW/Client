@@ -1,4 +1,5 @@
 import type { Exercise } from '@features/exercises/core/domain/models/Exercise';
+
 import type { GetExercisesDTO } from '../dtos/GetExercisesDTO';
 
 export class ExercisesFromDTO {

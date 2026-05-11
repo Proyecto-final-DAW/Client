@@ -1,8 +1,8 @@
 import { FireIcon } from '@heroicons/react/24/solid';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-import { PixelCorners } from '@shared/components/PixelCorners';
 import type { StreakStatus } from '../../../streak/core/domain/models/StreakStatus';
 
 type Props = {
@@ -42,8 +42,8 @@ export const StreakWarningCard = (props: Props): React.JSX.Element | null => {
           </p>
           <p className="mt-2 font-pixel text-lg leading-tight text-ink">
             Aun no has entrenado esta semana. Te quedan {daysRemaining}{' '}
-            {daysRemaining === 1 ? 'dia' : 'dias'} para hacer una
-            sesion y mantener tu racha de {currentStreak}{' '}
+            {daysRemaining === 1 ? 'dia' : 'dias'} para hacer una sesion y
+            mantener tu racha de {currentStreak}{' '}
             {currentStreak === 1 ? 'semana' : 'semanas'}.
           </p>
         </div>

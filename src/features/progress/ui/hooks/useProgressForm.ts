@@ -1,6 +1,6 @@
+import { parseLocalDate, toISODate } from '@shared/utils/date';
 import { useState } from 'react';
 
-import { parseLocalDate, toISODate } from '@shared/utils/date';
 import type { RegisterWeightInput } from '../../core/domain/models/Progress';
 
 const WEIGHT_MIN = 1;

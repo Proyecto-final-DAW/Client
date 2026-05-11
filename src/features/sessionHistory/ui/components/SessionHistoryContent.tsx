@@ -1,7 +1,7 @@
-import type React from 'react';
-
 import { EmptyState } from '@shared/components/EmptyState';
 import { PixelCorners } from '@shared/components/PixelCorners';
+import type React from 'react';
+
 import { useSessionHistory } from '../hooks/useSessionHistory';
 import { SessionHistoryCard } from './SessionHistoryCard';
 

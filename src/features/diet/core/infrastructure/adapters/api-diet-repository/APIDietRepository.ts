@@ -1,7 +1,7 @@
-import axios, { AxiosError } from 'axios';
-
 import { API_ENDPOINTS } from '@config/api';
-import type { APIErrorResponse } from '@shared/api/error-response/APIErrorResponse';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import axios from 'axios';
+
 import type { DietRepository } from '../../../application/ports/DietRepository';
 import type { Diet } from '../../../domain/models/Diet';
 import type {
@@ -71,23 +71,28 @@ export class APIDietRepository implements DietRepository {
 
       return DietFromDTO.fromDTO(response.data);
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al cargar los datos de dieta';
-
-      throw new Error(serverMessage);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido cargar tu dieta. Recarga la pagina o intentalo mas tarde.'
+        )
+      );
     }
   }
 
   async getStreakState(): Promise<DietStreakState> {
     try {
-      const response = await axios.get<DietStateDTO>(API_ENDPOINTS.getDietState);
+      const response = await axios.get<DietStateDTO>(
+        API_ENDPOINTS.getDietState
+      );
       return stateFromDTO(response.data);
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const message =
-        err.response?.data?.message || 'Error al cargar la racha de dieta';
-      throw new Error(message);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido cargar tu racha de dieta. Recarga la pagina o intentalo mas tarde.'
+        )
+      );
     }
   }
 
@@ -99,10 +104,12 @@ export class APIDietRepository implements DietRepository {
         gains: gainsFromLogDTO(response.data),
       };
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const message =
-        err.response?.data?.message || 'Error al registrar la dieta';
-      throw new Error(message);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido registrar la dieta de hoy. Vuelve a intentarlo en un momento.'
+        )
+      );
     }
   }
 }
