@@ -201,16 +201,19 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
         </div>
       </section>
 
-      {/* SECTION 2 — Entrenamiento (onboarding) */}
+      {/* SECTION 2 — Entrenamiento (onboarding).
+          Etiquetas reducidas a una sola palabra y el párrafo
+          explicativo eliminado: en la pantalla de perfil ya se
+          entiende que estamos editando preferencias, y la frase
+          "puedes elegir varios" repetida en cada bloque era ruido
+          (el comportamiento multiselect se aprende al primer clic).
+          La separación visual la lleva el `▸ ENTRENAMIENTO` y los
+          espacios entre subsecciones. */}
       <section className="mb-6">
         <p className={sectionTitleClass}>▸ ENTRENAMIENTO</p>
-        <p className="mt-2 mb-5 font-pixel-mono text-base text-ink-muted">
-          Cambia aqui las preferencias del onboarding. Las recomendaciones de
-          rutinas se actualizan al guardar.
-        </p>
 
-        <div className="mb-5">
-          <span className={labelClass}>OBJETIVOS (puedes elegir varios)</span>
+        <div className="mt-4 mb-5">
+          <span className={labelClass}>OBJETIVOS</span>
           <div className="flex flex-wrap gap-2">
             {GOAL_OPTIONS.map((opt) => (
               <Chip
@@ -235,7 +238,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
             />
           </div>
           <div>
-            <span className={labelClass}>DIAS POR SEMANA</span>
+            <span className={labelClass}>FRECUENCIA</span>
             <PixelSelect
               value={form.days_per_week}
               options={DAYS_PER_WEEK_OPTIONS}
@@ -247,9 +250,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
         </div>
 
         <div className="mb-5">
-          <span className={labelClass}>
-            EQUIPAMIENTO (puedes elegir varios)
-          </span>
+          <span className={labelClass}>EQUIPAMIENTO</span>
           <div className="flex flex-wrap gap-2">
             {EQUIPMENT_OPTIONS.map((opt) => (
               <Chip
@@ -263,9 +264,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
         </div>
 
         <div>
-          <span className={labelClass}>
-            LESIONES (NINGUNA o varias en concreto)
-          </span>
+          <span className={labelClass}>LESIONES</span>
           <div className="flex flex-wrap gap-2">
             {INJURY_OPTIONS.map((opt) => (
               <Chip

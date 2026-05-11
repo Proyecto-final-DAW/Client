@@ -659,7 +659,7 @@ export const LiveWorkoutView = (): React.JSX.Element => {
       <ConfirmDialog
         open={pendingExtraSet !== null}
         title="Ya has hecho todos los sets"
-        description="Has completado los sets configurados para este ejercicio. Quieres registrar uno extra?"
+        description="Has completado los sets configurados para este ejercicio. ¿Quieres registrar uno extra?"
         confirmLabel="REGISTRAR SET"
         cancelLabel="VOLVER"
         variant="neutral"
