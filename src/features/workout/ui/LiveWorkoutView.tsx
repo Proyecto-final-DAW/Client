@@ -40,6 +40,25 @@ const DURATION_CATEGORIES = new Set(['stretching', 'cardio']);
 const normalizeEquipment = (raw: string): string =>
   raw.toLowerCase().replace(/\s+/g, '');
 
+// Name-based override for the bodyweight-but-loaded family. Even
+// though the bundled catalog already ships `Weighted Pull Ups` /
+// `Weighted Bench Dip` as their own rows with equipment `other`, a
+// few routines can resolve to a body-only entry whose visible name
+// still reads "weighted X" (legacy templates, manual edits). Without
+// the override those sets logged with no kg field. Belt-and-braces.
+const WEIGHTED_NAME_HINTS = [
+  'weighted',
+  'with chains',
+  'loaded',
+  'lastrado',
+  'lastrada',
+];
+
+const isWeightedByName = (name: string): boolean => {
+  const lower = name.toLowerCase();
+  return WEIGHTED_NAME_HINTS.some((hint) => lower.includes(hint));
+};
+
 /**
  * Picks the logger layout from the catalog metadata that the routine
  * endpoint hydrated for us. Stretch / mobility / cardio moves don't
@@ -54,6 +73,11 @@ const normalizeEquipment = (raw: string): string =>
 const resolveSetLoggerMode = (exercise: Exercise): SetLoggerMode => {
   if (DURATION_CATEGORIES.has(exercise.category.toLowerCase())) {
     return 'duration';
+  }
+  // "Weighted X" overrides the body-only catalog tag so the user
+  // always gets a kg field on those entries.
+  if (isWeightedByName(exercise.name)) {
+    return 'weighted';
   }
   const equipment = normalizeEquipment(exercise.equipment);
   if (equipment === 'bodyweight' || equipment === 'bodyonly') {

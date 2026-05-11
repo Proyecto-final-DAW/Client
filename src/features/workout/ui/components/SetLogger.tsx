@@ -37,6 +37,14 @@ export const SetLogger = (props: Props): React.JSX.Element => {
   const [durationSeconds, setDurationSeconds] = useState<number>(
     previousSet?.durationSeconds ?? DEFAULT_DURATION_SECONDS
   );
+  // Bodyweight exercises can be loaded (weighted pull-ups, dipped
+  // belt, etc.). The user opts in via the `+ AÑADIR LASTRE` toggle
+  // below the main steppers; switches to true automatically when the
+  // previous set already carried weight so the user doesn't have to
+  // re-enable it on every set of the same exercise.
+  const [loaded, setLoaded] = useState<boolean>(
+    mode === 'bodyweight' && (previousSet?.weight ?? 0) > 0
+  );
 
   // Reset inputs whenever the active exercise (or its prior set) changes.
   // Tracking each field individually so a custom previousSet is honored
@@ -47,8 +55,10 @@ export const SetLogger = (props: Props): React.JSX.Element => {
     setDurationSeconds(
       previousSet?.durationSeconds ?? DEFAULT_DURATION_SECONDS
     );
+    setLoaded(mode === 'bodyweight' && (previousSet?.weight ?? 0) > 0);
   }, [
     exerciseId,
+    mode,
     previousSet?.weight,
     previousSet?.reps,
     previousSet?.durationSeconds,
@@ -76,9 +86,14 @@ export const SetLogger = (props: Props): React.JSX.Element => {
       onComplete({ reps: 0, weight: 0, durationSeconds });
       return;
     }
+    // Weighted: always the stepper value. Bodyweight: 0 unless the
+    // user opted into lastre via the toggle, in which case we ship
+    // the kg they entered.
+    const submittedWeight =
+      mode === 'weighted' ? weight : loaded ? weight : 0;
     onComplete({
       reps,
-      weight: mode === 'bodyweight' ? 0 : weight,
+      weight: submittedWeight,
       durationSeconds: null,
     });
   };
@@ -159,18 +174,33 @@ export const SetLogger = (props: Props): React.JSX.Element => {
   // overlap or compress. From sm (640px+) there's room for the
   // side-by-side layout that lets the user see PESO + REPS at
   // once.
-  const layoutClass =
-    mode === 'weighted'
-      ? 'grid grid-cols-1 sm:grid-cols-2 gap-4'
-      : 'flex justify-center';
+  // Bodyweight + loaded shares the weighted layout so the lastre
+  // stepper sits beside REPS instead of orphaned below.
+  const showsTwoSteppers = mode === 'weighted' || (mode === 'bodyweight' && loaded);
+  const layoutClass = showsTwoSteppers
+    ? 'grid grid-cols-1 sm:grid-cols-2 gap-4'
+    : 'flex justify-center';
 
   return (
-    <div className="flex flex-col gap-6 border-2 border-border bg-card p-4 sm:p-6">
+    <div className="flex flex-col gap-5 border-2 border-border bg-card p-4 sm:p-6">
       <div className={layoutClass}>
         {mode === 'weighted' &&
           renderStepper(
             'PESO (KG)',
             'set-weight',
+            weight,
+            setWeight,
+            adjustWeight,
+            WEIGHT_STEP,
+            MAX_WEIGHT,
+            'decimal'
+          )}
+
+        {mode === 'bodyweight' &&
+          loaded &&
+          renderStepper(
+            'LASTRE (KG)',
+            'set-lastre',
             weight,
             setWeight,
             adjustWeight,
@@ -201,6 +231,30 @@ export const SetLogger = (props: Props): React.JSX.Element => {
               'numeric'
             )}
       </div>
+
+      {/* Lastre toggle — only for bodyweight exercises. Adding load
+          to a pull-up / dip is the most common reason users have to
+          stop a routine and reach for a different catalog entry, so
+          offering an inline opt-in keeps them in the same flow. */}
+      {mode === 'bodyweight' && (
+        <button
+          type="button"
+          onClick={() => {
+            setLoaded((v) => !v);
+            // Drop the kg back to 0 when the user disables lastre so
+            // re-enabling it doesn't replay an old value.
+            if (loaded) setWeight(0);
+          }}
+          aria-pressed={loaded}
+          className={`mx-auto font-pixel text-[9px] tracking-widest border-2 px-4 py-2.5 transition-colors ${
+            loaded
+              ? 'border-green-500/60 bg-green-500/10 text-green-400'
+              : 'border-border-muted bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400'
+          }`}
+        >
+          {loaded ? '− QUITAR LASTRE' : '+ AÑADIR LASTRE'}
+        </button>
+      )}
 
       <button
         type="button"
