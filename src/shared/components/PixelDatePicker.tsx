@@ -99,8 +99,20 @@ export const PixelDatePicker = (
   // is then capped to whatever space we actually have, with internal
   // scroll on the day grid as the last-resort fallback.
   type PopoverPos =
-    | { placement: 'below'; top: number; left: number; width: number; maxHeight: number }
-    | { placement: 'above'; bottom: number; left: number; width: number; maxHeight: number };
+    | {
+        placement: 'below';
+        top: number;
+        left: number;
+        width: number;
+        maxHeight: number;
+      }
+    | {
+        placement: 'above';
+        bottom: number;
+        left: number;
+        width: number;
+        maxHeight: number;
+      };
   const [pos, setPos] = useState<PopoverPos>({
     placement: 'below',
     top: 0,

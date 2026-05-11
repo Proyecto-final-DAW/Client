@@ -286,10 +286,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
               flows through both create and update paths. */}
           {form.injuries.includes('OTHER') && (
             <div className="mt-3">
-              <label
-                htmlFor="profile-injury-notes"
-                className={labelClass}
-              >
+              <label htmlFor="profile-injury-notes" className={labelClass}>
                 CUAL ES LA LESION
               </label>
               <textarea

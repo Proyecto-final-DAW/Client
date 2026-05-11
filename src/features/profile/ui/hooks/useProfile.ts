@@ -44,15 +44,12 @@ export const useProfile = () => {
       // actually changed — quiet no-op when there's nothing to fix.
       if (user) {
         const visibleChanged =
-          user.name !== data.name ||
-          user.email !== data.email ||
-          user.profileImage !== data.profileImage;
+          user.name !== data.name || user.email !== data.email;
         if (visibleChanged) {
           updateUser({
             ...user,
             name: data.name,
             email: data.email,
-            profileImage: data.profileImage,
           });
         }
       }

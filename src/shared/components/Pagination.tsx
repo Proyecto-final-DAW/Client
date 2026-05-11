@@ -75,7 +75,9 @@ const buildPageItems = (
   return [1, DOTS, ...middle, DOTS, total];
 };
 
-export const Pagination = (props: PaginationProps): React.JSX.Element | null => {
+export const Pagination = (
+  props: PaginationProps
+): React.JSX.Element | null => {
   const { page, totalPages, onPageChange } = props;
 
   // Drop a sibling on mobile to keep the row to a single line at

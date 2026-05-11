@@ -138,9 +138,7 @@ const DataCard = ({
     {footer && (
       // mt-8 + pt-6 so the footer hint visibly detaches from the
       // last data row instead of feeling welded to the grid above.
-      <div className="mt-8 pt-6 border-t-2 border-border-muted">
-        {footer}
-      </div>
+      <div className="mt-8 pt-6 border-t-2 border-border-muted">{footer}</div>
     )}
   </section>
 );

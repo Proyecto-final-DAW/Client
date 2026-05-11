@@ -360,172 +360,174 @@ export const TierUpModal = ({
               // on full-size screens because the dialog already fits.
               className="relative w-full max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-2rem)] overflow-y-auto lg:max-h-none lg:overflow-visible border-2 bg-card p-3 sm:p-6 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-black/40"
             >
-            <PixelCorners
-              size="lg"
-              className={isLegendary ? 'border-amber-400/70' : 'border-green-500/70'}
-            />
+              <PixelCorners
+                size="lg"
+                className={
+                  isLegendary ? 'border-amber-400/70' : 'border-green-500/70'
+                }
+              />
 
-            {/* Compact header — title + a single-line flavour. The
+              {/* Compact header — title + a single-line flavour. The
                 previous "◆ TIER 1 ALCANZADO ◆" decorative ribbon plus
                 horizontal lines added ~80px of vertical chrome that
                 pushed the cards off the available body height. The
                 tier number is already implicit in the title copy
                 ("ELIGE TU VOCACION" = T1), so the ribbon was pure
                 decoration. */}
-            <header className="mb-4 sm:mb-5 flex flex-col items-center text-center">
-              {/* Rank eyebrow — names the rank letter the user is
+              <header className="mb-4 sm:mb-5 flex flex-col items-center text-center">
+                {/* Rank eyebrow — names the rank letter the user is
                   about to claim with this choice. T1 -> E, T2 -> D,
                   T3 -> C. Painted in the modal's accent (amber for the
                   legendary tier, green for the rest) so it carries the
                   same colour weight as the title without competing. */}
-              <motion.p
-                initial={
-                  prefersReducedMotion ? false : { opacity: 0, scale: 0.85 }
-                }
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.55, delay: 0.05 }}
-                className={`mb-3 font-pixel text-[10px] sm:text-xs tracking-[0.4em] ${
-                  isLegendary
-                    ? 'text-amber-300 [text-shadow:0_0_18px_rgba(251,191,36,0.65)]'
-                    : 'text-green-400 [text-shadow:0_0_14px_rgba(34,197,94,0.55)]'
-                }`}
-              >
-                RANGO {TIER_RANK_LETTER[tier]}
-              </motion.p>
+                <motion.p
+                  initial={
+                    prefersReducedMotion ? false : { opacity: 0, scale: 0.85 }
+                  }
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.55, delay: 0.05 }}
+                  className={`mb-3 font-pixel text-[10px] sm:text-xs tracking-[0.4em] ${
+                    isLegendary
+                      ? 'text-amber-300 [text-shadow:0_0_18px_rgba(251,191,36,0.65)]'
+                      : 'text-green-400 [text-shadow:0_0_14px_rgba(34,197,94,0.55)]'
+                  }`}
+                >
+                  RANGO {TIER_RANK_LETTER[tier]}
+                </motion.p>
 
-              <motion.h2
-                ref={headingRef}
-                tabIndex={-1}
-                id="tier-up-title"
-                initial={
-                  prefersReducedMotion
-                    ? false
-                    : {
-                        opacity: 0,
-                        y: 10,
-                        filter: isLegendary ? 'blur(10px)' : 'blur(6px)',
-                      }
-                }
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                transition={{
-                  duration: isLegendary ? 0.75 : 0.5,
-                  ease: [0.22, 1.4, 0.36, 1],
-                }}
-                style={{
-                  color: isLegendary ? '#fcd34d' : undefined,
-                  textShadow: isLegendary
-                    ? '0 0 28px rgba(251,191,36,0.85), 0 0 8px rgba(252,211,77,0.6), 2px 2px 0 #000'
-                    : undefined,
-                }}
-                className={`font-pixel leading-snug outline-none [text-shadow:0_0_22px_rgba(34,197,94,0.65),2px_2px_0_#000] ${
-                  isLegendary
-                    ? 'text-xl sm:text-3xl text-amber-300'
-                    : 'text-base sm:text-xl text-green-400'
-                }`}
-              >
-                {TIER_TITLE[tier]}
-              </motion.h2>
-
-              <motion.p
-                id="tier-up-description"
-                initial={prefersReducedMotion ? false : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.18 }}
-                className={`mt-2 max-w-2xl font-pixel-mono text-sm sm:text-base italic leading-snug ${
-                  isLegendary ? 'text-amber-100/90' : 'text-ink/90'
-                }`}
-              >
-                “{TIER_FLAVOR[tier]}”
-              </motion.p>
-            </header>
-
-            <motion.div
-              variants={gridVariants}
-              initial="hidden"
-              animate="visible"
-              // 3+ cards (vocations / specs / 3-option tiers) → 2
-              // columns on phone so the modal fits within one screen
-              // (~932px on iPhone 14 Pro Max) instead of running 6
-              // cards vertically and cutting off the bottom button.
-              // 2-card tiers (legendaries: each spec offers a pair)
-              // stack vertically on phone because two side-by-side at
-              // 170px wide each crammed the frase into 5 lines. The
-              // card itself ships a compact mobile layout (smaller
-              // icon + shorter typography) so the 2-column grid still
-              // reads cleanly.
-              className={`grid gap-2 sm:gap-3 ${
-                cards.length >= 3
-                  ? 'grid-cols-2 lg:grid-cols-3'
-                  : 'grid-cols-1 sm:grid-cols-2'
-              }`}
-            >
-              {cards.map((card) => (
-                <motion.div key={card.id} variants={cardVariants}>
-                  <ClassChoiceCard
-                    name={card.name}
-                    frase={card.frase}
-                    icon={card.icon}
-                    accent={card.accent}
-                    statLine={card.statLine}
-                    recommended={card.id === recommendedId}
-                    selected={selectedId === card.id}
-                    onSelect={() => setSelectedId(card.id)}
-                  />
-                </motion.div>
-              ))}
-            </motion.div>
-
-            <div className="mt-4 sm:mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <button
-                type="button"
-                onClick={onClose}
-                disabled={choosing}
-                className="font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card px-5 py-3 text-ink-muted transition-colors hover:border-[#52525b] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                MAS TARDE
-              </button>
-              <motion.button
-                type="button"
-                onClick={handleConfirm}
-                disabled={!selectedId || choosing}
-                // Soft accent shift on selection: 55% class colour
-                // mixed with the modal accent base (green / amber)
-                // so the button still tints toward the picked class
-                // without becoming the bright raw yellow / pink of
-                // the original implementation. For tier 3 the base is
-                // amber, so legendary picks read as a single warm
-                // gradient instead of jumping back to green.
-                style={
-                  selectedId && confirmAccent
-                    ? {
-                        backgroundColor: `color-mix(in srgb, ${confirmAccent} 55%, ${accentHex})`,
-                        borderColor: `color-mix(in srgb, ${confirmAccent} 55%, ${accentDeep})`,
-                        color: '#0a0a0f',
-                        boxShadow: `0 0 18px color-mix(in srgb, ${confirmAccent} 50%, transparent)`,
-                      }
-                    : isLegendary
-                      ? {
-                          backgroundColor: accentHex,
-                          borderColor: accentDeep,
-                          color: '#0a0a0f',
-                          boxShadow: `0 0 22px rgba(${accentRgb},0.55)`,
+                <motion.h2
+                  ref={headingRef}
+                  tabIndex={-1}
+                  id="tier-up-title"
+                  initial={
+                    prefersReducedMotion
+                      ? false
+                      : {
+                          opacity: 0,
+                          y: 10,
+                          filter: isLegendary ? 'blur(10px)' : 'blur(6px)',
                         }
-                      : undefined
-                }
-                className={`font-pixel text-[11px] tracking-widest text-[#0a0a0f] px-8 py-4 border-b-4 active:border-b-0 active:mt-1 transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:mt-0 sm:min-w-[16rem] ${
-                  isLegendary
-                    ? 'hover:brightness-110 focus-visible:outline-amber-300'
-                    : 'bg-green-500 hover:bg-green-400 border-green-700 hover:border-green-600 focus-visible:outline-green-400'
+                  }
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  transition={{
+                    duration: isLegendary ? 0.75 : 0.5,
+                    ease: [0.22, 1.4, 0.36, 1],
+                  }}
+                  style={{
+                    color: isLegendary ? '#fcd34d' : undefined,
+                    textShadow: isLegendary
+                      ? '0 0 28px rgba(251,191,36,0.85), 0 0 8px rgba(252,211,77,0.6), 2px 2px 0 #000'
+                      : undefined,
+                  }}
+                  className={`font-pixel leading-snug outline-none [text-shadow:0_0_22px_rgba(34,197,94,0.65),2px_2px_0_#000] ${
+                    isLegendary
+                      ? 'text-xl sm:text-3xl text-amber-300'
+                      : 'text-base sm:text-xl text-green-400'
+                  }`}
+                >
+                  {TIER_TITLE[tier]}
+                </motion.h2>
+
+                <motion.p
+                  id="tier-up-description"
+                  initial={prefersReducedMotion ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4, delay: 0.18 }}
+                  className={`mt-2 max-w-2xl font-pixel-mono text-sm sm:text-base italic leading-snug ${
+                    isLegendary ? 'text-amber-100/90' : 'text-ink/90'
+                  }`}
+                >
+                  “{TIER_FLAVOR[tier]}”
+                </motion.p>
+              </header>
+
+              <motion.div
+                variants={gridVariants}
+                initial="hidden"
+                animate="visible"
+                // 3+ cards (vocations / specs / 3-option tiers) → 2
+                // columns on phone so the modal fits within one screen
+                // (~932px on iPhone 14 Pro Max) instead of running 6
+                // cards vertically and cutting off the bottom button.
+                // 2-card tiers (legendaries: each spec offers a pair)
+                // stack vertically on phone because two side-by-side at
+                // 170px wide each crammed the frase into 5 lines. The
+                // card itself ships a compact mobile layout (smaller
+                // icon + shorter typography) so the 2-column grid still
+                // reads cleanly.
+                className={`grid gap-2 sm:gap-3 ${
+                  cards.length >= 3
+                    ? 'grid-cols-2 lg:grid-cols-3'
+                    : 'grid-cols-1 sm:grid-cols-2'
                 }`}
               >
-                {choosing
-                  ? 'ELIGIENDO…'
-                  : selectedCard
-                    ? `FORJAR ${selectedCard.name.toUpperCase()}`
-                    : 'ELIGE UNA CLASE'}
-              </motion.button>
-            </div>
-          </motion.div>
+                {cards.map((card) => (
+                  <motion.div key={card.id} variants={cardVariants}>
+                    <ClassChoiceCard
+                      name={card.name}
+                      frase={card.frase}
+                      icon={card.icon}
+                      accent={card.accent}
+                      statLine={card.statLine}
+                      recommended={card.id === recommendedId}
+                      selected={selectedId === card.id}
+                      onSelect={() => setSelectedId(card.id)}
+                    />
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              <div className="mt-4 sm:mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  disabled={choosing}
+                  className="font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card px-5 py-3 text-ink-muted transition-colors hover:border-[#52525b] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  MAS TARDE
+                </button>
+                <motion.button
+                  type="button"
+                  onClick={handleConfirm}
+                  disabled={!selectedId || choosing}
+                  // Soft accent shift on selection: 55% class colour
+                  // mixed with the modal accent base (green / amber)
+                  // so the button still tints toward the picked class
+                  // without becoming the bright raw yellow / pink of
+                  // the original implementation. For tier 3 the base is
+                  // amber, so legendary picks read as a single warm
+                  // gradient instead of jumping back to green.
+                  style={
+                    selectedId && confirmAccent
+                      ? {
+                          backgroundColor: `color-mix(in srgb, ${confirmAccent} 55%, ${accentHex})`,
+                          borderColor: `color-mix(in srgb, ${confirmAccent} 55%, ${accentDeep})`,
+                          color: '#0a0a0f',
+                          boxShadow: `0 0 18px color-mix(in srgb, ${confirmAccent} 50%, transparent)`,
+                        }
+                      : isLegendary
+                        ? {
+                            backgroundColor: accentHex,
+                            borderColor: accentDeep,
+                            color: '#0a0a0f',
+                            boxShadow: `0 0 22px rgba(${accentRgb},0.55)`,
+                          }
+                        : undefined
+                  }
+                  className={`font-pixel text-[11px] tracking-widest text-[#0a0a0f] px-8 py-4 border-b-4 active:border-b-0 active:mt-1 transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:mt-0 sm:min-w-[16rem] ${
+                    isLegendary
+                      ? 'hover:brightness-110 focus-visible:outline-amber-300'
+                      : 'bg-green-500 hover:bg-green-400 border-green-700 hover:border-green-600 focus-visible:outline-green-400'
+                  }`}
+                >
+                  {choosing
+                    ? 'ELIGIENDO…'
+                    : selectedCard
+                      ? `FORJAR ${selectedCard.name.toUpperCase()}`
+                      : 'ELIGE UNA CLASE'}
+                </motion.button>
+              </div>
+            </motion.div>
           </div>
         </motion.div>
       )}

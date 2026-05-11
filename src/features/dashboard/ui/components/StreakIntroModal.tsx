@@ -105,8 +105,8 @@ export const StreakIntroModal = ({
               ✗
             </span>
             <span>
-              A partir de la segunda, si no cumples el objetivo, la racha
-              vuelve a <strong>0</strong>.
+              A partir de la segunda, si no cumples el objetivo, la racha vuelve
+              a <strong>0</strong>.
             </span>
           </li>
           <li className="flex items-start gap-2">

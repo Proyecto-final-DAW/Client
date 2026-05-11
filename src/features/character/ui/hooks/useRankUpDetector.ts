@@ -33,8 +33,7 @@ import {
 const STORAGE_PREFIX = 'rank_up_seen_';
 const AUTO_RANKS: readonly RankLetter[] = ['B', 'A', 'S'] as const;
 
-const indexOfRank = (letter: RankLetter): number =>
-  AUTO_RANKS.indexOf(letter);
+const indexOfRank = (letter: RankLetter): number => AUTO_RANKS.indexOf(letter);
 
 interface RankUpDetector {
   /** Next rank in the celebration queue, or null when nothing pending. */
@@ -66,7 +65,7 @@ const writeLastSeen = (storageKey: string, letter: RankLetter): void => {
 
 export const useRankUpDetector = (
   state: CharacterState | null,
-  userId: number | null,
+  userId: number | null
 ): RankUpDetector => {
   const [pendingCelebration, setPendingCelebration] =
     useState<RankLetter | null>(null);
@@ -85,7 +84,9 @@ export const useRankUpDetector = (
       return;
     }
     const storageKey = `${STORAGE_PREFIX}${userId}`;
-    const lastSeenIdx = indexOfRank(readLastSeen(storageKey) ?? ('' as RankLetter));
+    const lastSeenIdx = indexOfRank(
+      readLastSeen(storageKey) ?? ('' as RankLetter)
+    );
     if (currentIdx > lastSeenIdx) {
       // The next rank to celebrate is whichever sits immediately
       // *above* what the user has already seen. Walking the queue

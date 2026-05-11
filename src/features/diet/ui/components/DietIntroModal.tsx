@@ -70,9 +70,8 @@ export const DietIntroModal = ({
               ✓
             </span>
             <span>
-              Calculamos tus <strong>calorias</strong> y{' '}
-              <strong>macros</strong> a partir de tu peso, altura, edad y
-              objetivo.
+              Calculamos tus <strong>calorias</strong> y <strong>macros</strong>{' '}
+              a partir de tu peso, altura, edad y objetivo.
             </span>
           </li>
           <li className="flex items-start gap-2">
@@ -89,8 +88,8 @@ export const DietIntroModal = ({
               ✓
             </span>
             <span>
-              Tu <strong>racha de dieta</strong> sube cada dia que la
-              completas y se reinicia si te saltas uno.
+              Tu <strong>racha de dieta</strong> sube cada dia que la completas
+              y se reinicia si te saltas uno.
             </span>
           </li>
           <li className="flex items-start gap-2">

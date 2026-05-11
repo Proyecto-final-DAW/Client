@@ -51,8 +51,7 @@ export const DietView = (): React.JSX.Element => {
     setDietIntroDismissed(localStorage.getItem(dietIntroStorageKey) === '1');
   }, [dietIntroStorageKey]);
 
-  const showDietIntro =
-    dietIntroStorageKey !== null && !dietIntroDismissed;
+  const showDietIntro = dietIntroStorageKey !== null && !dietIntroDismissed;
 
   const handleDismissDietIntro = (): void => {
     if (dietIntroStorageKey !== null) {
@@ -98,10 +97,7 @@ export const DietView = (): React.JSX.Element => {
         footer={<DietStreakCard />}
       />
 
-      <DietIntroModal
-        open={showDietIntro}
-        onClose={handleDismissDietIntro}
-      />
+      <DietIntroModal open={showDietIntro} onClose={handleDismissDietIntro} />
     </section>
   );
 };

@@ -46,19 +46,6 @@ const VARIANT_TITLE_HERO: Record<Variant, string> = {
     'font-pixel text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_18px_rgba(34,197,94,0.7)]',
 };
 
-// Eyebrow above the title in the compact variant — gives the dialog
-// a two-tier RPG-menu feel ("◆ ACCION / ¿SALIR?") without dragging
-// in a per-call description string.
-const VARIANT_EYEBROW: Record<Variant, string> = {
-  danger: 'font-pixel text-[8px] tracking-widest text-red-500/70',
-  neutral: 'font-pixel text-[8px] tracking-widest text-green-500/70',
-};
-
-const VARIANT_EYEBROW_LABEL: Record<Variant, string> = {
-  danger: '✕ CONFIRMAR ACCION',
-  neutral: '◆ CONFIRMAR ACCION',
-};
-
 const VARIANT_PREFIX: Record<Variant, string> = {
   danger: '✕',
   neutral: '◆',

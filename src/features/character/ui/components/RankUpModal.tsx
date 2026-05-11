@@ -30,12 +30,18 @@ interface RankMeta {
   flavour: string;
 }
 
-const resolveMeta = (rank: RankLetter, state: CharacterState): RankMeta | null => {
+const resolveMeta = (
+  rank: RankLetter,
+  state: CharacterState
+): RankMeta | null => {
   switch (rank) {
     case 'B':
       return {
         eyebrow: '◆ RANGO B ◆',
-        name: state.legendary?.transcendentName ?? state.legendary?.name ?? 'Trascendente',
+        name:
+          state.legendary?.transcendentName ??
+          state.legendary?.name ??
+          'Trascendente',
         kind: 'Tu legendaria evoluciona',
         flavour:
           state.legendary?.transcendentFrase ??
@@ -53,8 +59,7 @@ const resolveMeta = (rank: RankLetter, state: CharacterState): RankMeta | null =
         eyebrow: '✦ RANGO S ✦',
         name: 'Leyenda',
         kind: 'Has alcanzado el techo absoluto',
-        flavour:
-          'Cantaran tu nombre cuando ya no quede nadie para escucharlo.',
+        flavour: 'Cantaran tu nombre cuando ya no quede nadie para escucharlo.',
       };
     default:
       return null;
@@ -101,7 +106,8 @@ export const RankUpModal = ({
       if (event.key !== 'Tab') return;
       const dialog = dialogRef.current;
       if (!dialog) return;
-      const focusables = dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+      const focusables =
+        dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
       if (focusables.length === 0) return;
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
@@ -287,14 +293,25 @@ export const RankUpModal = ({
               {/* Decorative separator — 3-dot pixel row in the rank colour. */}
               <motion.div
                 aria-hidden="true"
-                initial={prefersReducedMotion ? false : { opacity: 0, scaleX: 0.4 }}
+                initial={
+                  prefersReducedMotion ? false : { opacity: 0, scaleX: 0.4 }
+                }
                 animate={{ opacity: 1, scaleX: 1 }}
                 transition={{ duration: 0.45, delay: 0.5 }}
                 className="mx-auto mt-4 flex items-center justify-center gap-1.5"
               >
-                <span className="h-1 w-1" style={{ backgroundColor: palette.border }} />
-                <span className="h-1 w-7" style={{ backgroundColor: palette.text }} />
-                <span className="h-1 w-1" style={{ backgroundColor: palette.border }} />
+                <span
+                  className="h-1 w-1"
+                  style={{ backgroundColor: palette.border }}
+                />
+                <span
+                  className="h-1 w-7"
+                  style={{ backgroundColor: palette.text }}
+                />
+                <span
+                  className="h-1 w-1"
+                  style={{ backgroundColor: palette.border }}
+                />
               </motion.div>
 
               {/* Flavour line. */}
@@ -329,6 +346,6 @@ export const RankUpModal = ({
         </motion.div>
       )}
     </AnimatePresence>,
-    document.body,
+    document.body
   );
 };

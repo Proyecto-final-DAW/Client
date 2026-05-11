@@ -74,9 +74,7 @@ export const PostSessionMilestonesModal = ({
           {milestones.map((milestone, idx) => (
             <motion.li
               key={milestone.id}
-              initial={
-                prefersReducedMotion ? false : { opacity: 0, x: -16 }
-              }
+              initial={prefersReducedMotion ? false : { opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{
                 duration: 0.35,

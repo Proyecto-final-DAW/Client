@@ -7,7 +7,6 @@ import { useCharacterState } from '../../../context/hooks/useCharacterState';
 import { AsyncState } from '../../../shared/components/AsyncState';
 import { PixelCorners } from '../../../shared/components/PixelCorners';
 import { useBodyScrollLock } from '../../../shared/hooks/useBodyScrollLock';
-import { ClassPixelArt, hasPixelArt } from './components/ClassPixelArt';
 import type {
   LegendaryClass,
   SpecializationClass,
@@ -21,6 +20,7 @@ import {
   tierIndexFromState,
   type RankLetter,
 } from '../core/domain/models/RankLabels';
+import { ClassPixelArt, hasPixelArt } from './components/ClassPixelArt';
 import { useClassCatalog } from './hooks/useClassCatalog';
 
 // ────────────────────────────────────────────────────────────────────────
@@ -43,13 +43,6 @@ const STATUS_BG: Record<NodeStatus, string> = {
   owned: 'bg-green-500/[0.06]',
   alternate: 'bg-card',
   future: 'bg-card/60',
-};
-
-const STATUS_GLYPH: Record<NodeStatus, string> = {
-  current: '◆',
-  owned: '◇',
-  alternate: '·',
-  future: '·',
 };
 
 const STATUS_LABEL: Record<NodeStatus, string> = {
@@ -376,9 +369,7 @@ const ClassCard = ({
         ease: [0.22, 1, 0.36, 1],
       }}
       className={`relative flex flex-col items-center text-center border-2 p-3 sm:p-4 ${
-        compact
-          ? 'w-[calc(50%-0.375rem)] sm:w-[260px]'
-          : 'w-full sm:w-[260px]'
+        compact ? 'w-[calc(50%-0.375rem)] sm:w-[260px]' : 'w-full sm:w-[260px]'
       } ${STATUS_RING[node.status]} ${STATUS_BG[node.status]}`}
     >
       {/* Status eyebrow — label only. Drops the leading STATUS_GLYPH
@@ -409,10 +400,7 @@ const ClassCard = ({
         }}
       >
         {Icon && !isFuture ? (
-          <Icon
-            className="h-6 w-6 sm:h-7 sm:w-7"
-            style={{ color: accent }}
-          />
+          <Icon className="h-6 w-6 sm:h-7 sm:w-7" style={{ color: accent }} />
         ) : isNovice ? (
           // Empty box for the F-rank "Sin clase" tile — the user
           // hasn't picked a path yet, so any glyph here would be
@@ -817,8 +805,8 @@ export const ClassTreeView = (): React.JSX.Element => {
             </div>
 
             <p className="mt-6 text-center font-pixel-mono text-base leading-snug text-ink-muted">
-              Abre el panteon y contempla los caminos que aun no son tuyos.
-              Cada heroe deja huella en alguno de ellos.
+              Abre el panteon y contempla los caminos que aun no son tuyos. Cada
+              heroe deja huella en alguno de ellos.
             </p>
 
             <div className="mt-6 flex justify-center">

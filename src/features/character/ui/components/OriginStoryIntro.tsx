@@ -3,7 +3,6 @@ import { PixelCorners } from '@shared/components/PixelCorners';
 import { useBodyScrollLock } from '@shared/hooks/useBodyScrollLock';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
 
 import {
   RANK_LETTERS,

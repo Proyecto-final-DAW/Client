@@ -56,8 +56,20 @@ export const PixelSelect = (props: PixelSelectProps): React.JSX.Element => {
   // tall it ends up rendering — anchoring by top reserved the full
   // PREFERRED slab and left a gap when the option list was short.
   type PopoverPos =
-    | { placement: 'below'; top: number; left: number; width: number; maxHeight: number }
-    | { placement: 'above'; bottom: number; left: number; width: number; maxHeight: number };
+    | {
+        placement: 'below';
+        top: number;
+        left: number;
+        width: number;
+        maxHeight: number;
+      }
+    | {
+        placement: 'above';
+        bottom: number;
+        left: number;
+        width: number;
+        maxHeight: number;
+      };
   const [pos, setPos] = useState<PopoverPos>({
     placement: 'below',
     top: 0,

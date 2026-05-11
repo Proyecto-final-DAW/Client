@@ -153,9 +153,7 @@ const toExercise = (dto: GetRoutineExerciseDTO): Exercise => {
     name: dto.exercise_name ?? '',
     target: '',
     equipment:
-      dto.equipment && dto.equipment !== ''
-        ? dto.equipment
-        : fallbackEquipment,
+      dto.equipment && dto.equipment !== '' ? dto.equipment : fallbackEquipment,
     difficulty: '',
     imageUrl: '',
     category:
