@@ -15,6 +15,7 @@ interface AccountSummaryProps {
 interface SummaryItem {
   label: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
+  /** Big arcade-style number/value rendered in the headline slot. */
   value: string;
   unit?: string;
   /** Per-item accent color so the three cards don't blend together. */

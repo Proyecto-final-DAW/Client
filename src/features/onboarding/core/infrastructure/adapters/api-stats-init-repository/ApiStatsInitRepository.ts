@@ -11,7 +11,7 @@ export class ApiStatsInitRepository implements StatsInitRepository {
       const response = await axios.post(API_ENDPOINTS.initStats, {});
       return response.data;
     } catch (error) {
-      const err = error as AxiosError;
+      const err = error as AxiosError<{ code?: string; message?: string }>;
       // 409 means stats already initialized — idempotent, not an error.
       if (err.response?.status === 409) return;
       throw new Error(
