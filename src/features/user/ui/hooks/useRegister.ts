@@ -67,11 +67,11 @@ export const useRegister = () => {
       return;
     }
     if (!password) {
-      setClientError('INTRODUCE UNA CONTRASENA');
+      setClientError('INTRODUCE UNA CONTRASEÑA');
       return;
     }
     if (password.length < 8) {
-      setClientError('LA CONTRASENA DEBE TENER AL MENOS 8 CARACTERES');
+      setClientError('LA CONTRASEÑA DEBE TENER AL MENOS 8 CARACTERES');
       return;
     }
 

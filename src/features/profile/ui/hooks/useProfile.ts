@@ -162,7 +162,7 @@ export const useProfile = () => {
       }, 1500);
     } catch (err) {
       setPasswordError(
-        err instanceof Error ? err.message : 'Error al cambiar contrasena'
+        err instanceof Error ? err.message : 'Error al cambiar contraseña'
       );
     } finally {
       setChangingPassword(false);

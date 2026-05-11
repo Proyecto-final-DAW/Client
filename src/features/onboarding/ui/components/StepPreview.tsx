@@ -35,6 +35,30 @@ const EQUIPMENT_LABEL: Record<string, string> = {
 };
 
 /**
+ * Calculates current age from an ISO birth-date string (YYYY-MM-DD).
+ * Subtracts one year if the user hasn't reached their birthday yet
+ * this calendar year. Returns null on missing/invalid input so the
+ * caller can render an em-dash.
+ *
+ * Why a helper: the wizard preview previously rendered the literal
+ * birth *year* via `new Date(birthDate).getFullYear()`, which made
+ * "born in 2000" show up as "EDAD 2000" — the bug surfaced by users
+ * reading the review step.
+ */
+const calculateAge = (birthDate: string | null | undefined): number | null => {
+  if (!birthDate) return null;
+  const bd = new Date(birthDate);
+  if (Number.isNaN(bd.getTime())) return null;
+  const now = new Date();
+  let age = now.getFullYear() - bd.getFullYear();
+  const monthDiff = now.getMonth() - bd.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < bd.getDate())) {
+    age -= 1;
+  }
+  return age >= 0 ? age : null;
+};
+
+/**
  * Final wizard step — closes the emotional loop before the user submits.
  * Shows the chosen profile + the starting class (always Escudero/T0,
  * since every player begins there) so the user *sees* what they're
@@ -54,6 +78,7 @@ export const StepPreview = ({ data }: StepPreviewProps): React.JSX.Element => {
       : '—';
   const otherInjurySelected = data.injuries.includes('OTHER');
   const injuryNotes = (data.injuryNotes ?? '').trim();
+  const age = calculateAge(data.birthDate);
 
   return (
     <motion.div
@@ -87,7 +112,7 @@ export const StepPreview = ({ data }: StepPreviewProps): React.JSX.Element => {
               EDAD / SEXO
             </dt>
             <dd className="mt-2 font-pixel-mono text-xl leading-tight text-ink">
-              {data.birthDate ? new Date(data.birthDate).getFullYear() : '—'}
+              {age !== null ? `${age} años` : '—'}
               {' · '}
               {data.sex === 'MALE'
                 ? 'Hombre'

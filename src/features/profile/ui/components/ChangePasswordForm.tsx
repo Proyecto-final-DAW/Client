@@ -26,7 +26,7 @@ export const ChangePasswordForm = (
     setLocalError(null);
 
     if (!currentPassword) {
-      setLocalError('Introduce tu contrasena actual.');
+      setLocalError('Introduce tu contraseña actual.');
       return;
     }
 
@@ -34,17 +34,17 @@ export const ChangePasswordForm = (
     // Mirror the floor here to give an instant signal — both copies stay
     // identical so the user never sees them clash.
     if (newPassword.length < 8) {
-      setLocalError('La nueva contrasena debe tener al menos 8 caracteres.');
+      setLocalError('La nueva contraseña debe tener al menos 8 caracteres.');
       return;
     }
 
     if (newPassword === currentPassword) {
-      setLocalError('La nueva contrasena debe ser distinta a la actual.');
+      setLocalError('La nueva contraseña debe ser distinta a la actual.');
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setLocalError('Las contrasenas no coinciden.');
+      setLocalError('Las contraseñas no coinciden.');
       return;
     }
 
@@ -60,7 +60,7 @@ export const ChangePasswordForm = (
       >
         <PixelCorners size="sm" className="border-border-muted" />
         <p className="font-pixel text-[10px] tracking-widest text-ink-muted group-hover:text-green-400">
-          ◆ CAMBIAR CONTRASENA
+          ◆ CAMBIAR CONTRASEÑA
         </p>
         <p className="mt-2 font-pixel-mono text-lg text-ink-faint leading-snug">
           Tendras que volver a iniciar sesion despues.
@@ -78,7 +78,7 @@ export const ChangePasswordForm = (
 
       <header className="mb-4 flex items-center justify-between">
         <p className="font-pixel text-[10px] tracking-widest text-green-500">
-          ◆ CAMBIAR CONTRASENA
+          ◆ CAMBIAR CONTRASEÑA
         </p>
         <button
           type="button"
@@ -91,21 +91,21 @@ export const ChangePasswordForm = (
 
       <PasswordField
         id="current-password"
-        label="CONTRASENA ACTUAL"
+        label="CONTRASEÑA ACTUAL"
         value={currentPassword}
         onChange={setCurrentPassword}
         autoComplete="current-password"
       />
       <PasswordField
         id="new-password"
-        label="NUEVA CONTRASENA"
+        label="NUEVA CONTRASEÑA"
         value={newPassword}
         onChange={setNewPassword}
         autoComplete="new-password"
       />
       <PasswordField
         id="confirm-password"
-        label="CONFIRMAR CONTRASENA"
+        label="CONFIRMAR CONTRASEÑA"
         value={confirmPassword}
         onChange={setConfirmPassword}
         autoComplete="new-password"
@@ -116,7 +116,7 @@ export const ChangePasswordForm = (
         error={localError || props.error}
         success={
           props.success
-            ? 'Contrasena actualizada. Redirigiendo al login…'
+            ? 'Contraseña actualizada. Redirigiendo al login…'
             : null
         }
       />
@@ -126,7 +126,7 @@ export const ChangePasswordForm = (
         disabled={props.loading}
         className="w-full font-pixel text-[10px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-6 py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
       >
-        {props.loading ? 'CAMBIANDO…' : '▶ CAMBIAR CONTRASENA'}
+        {props.loading ? 'CAMBIANDO…' : '▶ CAMBIAR CONTRASEÑA'}
       </button>
     </form>
   );

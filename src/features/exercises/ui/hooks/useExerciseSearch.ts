@@ -4,10 +4,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Exercise } from '../../core/domain/models/Exercise';
 import { exerciseRepository } from '../adapter';
 
-// 12 divides cleanly across every breakpoint: 2 cols × 6 rows on
-// mobile, 3 cols × 4 rows on sm, 4 cols × 3 rows on lg. Keeps the
-// last row full instead of leaving an orphan 10th card alone.
-const PAGE_SIZE = 12;
+// 6 cards per page so the picker never feels like a wall of text.
+// On mobile (2 cols) the page renders 3 rows that fit the viewport
+// without scrolling past the search bar. On sm (3 cols) it's 2 rows;
+// on lg (4 cols) one full row + a half-row sits comfortably above
+// the pagination strip. The user explicitly asked to "no saturar
+// tanto ni hacer tanto scroll" when filtering by muscle group.
+const PAGE_SIZE = 6;
 
 export const MUSCLE_OPTIONS = [
   { label: 'Todos', value: '' },

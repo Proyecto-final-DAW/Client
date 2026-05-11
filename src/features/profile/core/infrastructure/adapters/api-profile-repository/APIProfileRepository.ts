@@ -44,7 +44,7 @@ export class APIProfileRepository implements ProfileRepository {
       throw new Error(
         mapAxiosError(
           error,
-          'No hemos podido cambiar tu contrasena. Vuelve a intentarlo.'
+          'No hemos podido cambiar tu contraseña. Vuelve a intentarlo.'
         )
       );
     }

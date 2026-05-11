@@ -23,9 +23,10 @@ import type { APIErrorResponse } from '../error-response/APIErrorResponse';
  *      "No hemos podido cargar tu progreso. Vuelve a intentarlo."
  *      Always includes a recovery hint.
  *
- * Project copy convention: NO ACCENT MARKS in user-facing strings.
- * "sesion" not "sesion", "dia" not "dia", "contrasena" not
- * "contrasena". The user established this as a hard rule.
+ * Project copy convention: Ñ stays, acute accents drop. So `contraseña`
+ * keeps its Ñ but `sesion`, `dia`, `corazon` etc. ship without tildes.
+ * The user reiterated this rule when reviewing onboarding copy: "no
+ * quiero que no haya acentos PERO SI QUE ESTE LA Ñ".
  */
 
 export interface MapApiErrorInput {
@@ -42,7 +43,7 @@ export interface MapApiErrorInput {
 const CODE_MESSAGES: Record<string, string> = {
   // Auth
   INVALID_CREDENTIALS:
-    'Email o contrasena incorrectos. Comprueba los datos y vuelve a intentarlo.',
+    'Email o contraseña incorrectos. Comprueba los datos y vuelve a intentarlo.',
   EMAIL_ALREADY_REGISTERED:
     'Ese email ya esta en uso. Inicia sesion en su lugar.',
   TOO_MANY_LOGIN_ATTEMPTS:
@@ -50,10 +51,10 @@ const CODE_MESSAGES: Record<string, string> = {
   TOO_MANY_REGISTER_ATTEMPTS:
     'Demasiados intentos de registro. Espera unos minutos antes de volver a intentarlo.',
   // Profile / change-password
-  INVALID_PASSWORD: 'La contrasena actual no es correcta. Vuelve a intentarlo.',
-  PASSWORD_TOO_SHORT: 'La nueva contrasena debe tener al menos 8 caracteres.',
+  INVALID_PASSWORD: 'La contraseña actual no es correcta. Vuelve a intentarlo.',
+  PASSWORD_TOO_SHORT: 'La nueva contraseña debe tener al menos 8 caracteres.',
   PASSWORD_REQUIRED:
-    'Falta la contrasena actual o la nueva. Rellena ambos campos.',
+    'Falta la contraseña actual o la nueva. Rellena ambos campos.',
   // Onboarding / state
   ONBOARDING_INCOMPLETE:
     'Tienes que terminar la configuracion inicial antes de continuar.',

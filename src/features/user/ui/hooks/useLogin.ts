@@ -73,7 +73,7 @@ export const useLogin = () => {
       return;
     }
     if (!password) {
-      setClientError('INTRODUCE TU CONTRASENA');
+      setClientError('INTRODUCE TU CONTRASEÑA');
       return;
     }
     void handleSubmit(e);

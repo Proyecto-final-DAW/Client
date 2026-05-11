@@ -39,7 +39,7 @@ export const PasswordField = (props: PasswordFieldProps): React.JSX.Element => {
         <button
           type="button"
           onClick={() => setShow((v) => !v)}
-          aria-label={show ? 'Ocultar contrasena' : 'Mostrar contrasena'}
+          aria-label={show ? 'Ocultar contraseña' : 'Mostrar contraseña'}
           className="absolute inset-y-0 right-0 flex items-center justify-center w-12 text-ink-faint hover:text-green-400 transition-colors"
         >
           {show ? (
