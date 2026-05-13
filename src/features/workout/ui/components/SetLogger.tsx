@@ -89,8 +89,7 @@ export const SetLogger = (props: Props): React.JSX.Element => {
     // Weighted: always the stepper value. Bodyweight: 0 unless the
     // user opted into lastre via the toggle, in which case we ship
     // the kg they entered.
-    const submittedWeight =
-      mode === 'weighted' ? weight : loaded ? weight : 0;
+    const submittedWeight = mode === 'weighted' ? weight : loaded ? weight : 0;
     onComplete({
       reps,
       weight: submittedWeight,
@@ -176,7 +175,8 @@ export const SetLogger = (props: Props): React.JSX.Element => {
   // once.
   // Bodyweight + loaded shares the weighted layout so the lastre
   // stepper sits beside REPS instead of orphaned below.
-  const showsTwoSteppers = mode === 'weighted' || (mode === 'bodyweight' && loaded);
+  const showsTwoSteppers =
+    mode === 'weighted' || (mode === 'bodyweight' && loaded);
   const layoutClass = showsTwoSteppers
     ? 'grid grid-cols-1 sm:grid-cols-2 gap-4'
     : 'flex justify-center';

@@ -95,8 +95,8 @@ export const ProfileIntroModal = ({
         </ul>
 
         <p className="mt-4 border-2 border-teal-500/40 bg-teal-500/10 p-3 font-pixel-mono text-base sm:text-lg text-teal-200/95 leading-snug">
-          ★ Tus <strong>stats</strong> de aqui son el reflejo de todo lo que
-          has entrenado.
+          ★ Tus <strong>stats</strong> de aqui son el reflejo de todo lo que has
+          entrenado.
         </p>
 
         <button

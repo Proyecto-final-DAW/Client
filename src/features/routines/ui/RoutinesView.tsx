@@ -132,93 +132,93 @@ export const RoutinesView = (): React.JSX.Element => {
         onRetry={refetch}
         loadingLabel="CARGANDO SESIONES"
       >
-      {(routines) => (
-        <section className="text-ink">
-          <div className="mx-auto max-w-5xl">
-            <RoutinesHeader />
+        {(routines) => (
+          <section className="text-ink">
+            <div className="mx-auto max-w-5xl">
+              <RoutinesHeader />
 
-            {routines.length === 0 ? (
-              <div className="space-y-4">
-                <EmptyState
-                  icon="⚔"
-                  title="Sin sesiones"
-                  description="Empieza con una rutina ya hecha o crea la tuya desde cero."
-                  cta={{
-                    // Templates is the recommended path for a brand-new
-                    // user — it produces multiple ready-to-train days
-                    // in one tap, instead of a single empty routine
-                    // they then have to populate exercise by exercise.
-                    label: 'Ver rutinas',
-                    to: '/templates',
-                  }}
-                  secondaryCta={{
-                    label: 'Crear sesion',
-                    onClick: () => setCreating(true),
-                  }}
-                />
-                <CreateRoutineForm
-                  open={creating}
-                  onCreateRoutine={createRoutine}
-                  onClose={() => setCreating(false)}
-                />
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <RoutineSwitcher
-                  routines={routines}
-                  selectedRoutineId={selectedRoutineId}
-                  doneThisWeekIds={doneThisWeekIds}
-                  onSelect={selectRoutine}
-                  onCreateNew={() => setCreating(true)}
-                />
+              {routines.length === 0 ? (
+                <div className="space-y-4">
+                  <EmptyState
+                    icon="⚔"
+                    title="Sin sesiones"
+                    description="Empieza con una rutina ya hecha o crea la tuya desde cero."
+                    cta={{
+                      // Templates is the recommended path for a brand-new
+                      // user — it produces multiple ready-to-train days
+                      // in one tap, instead of a single empty routine
+                      // they then have to populate exercise by exercise.
+                      label: 'Ver rutinas',
+                      to: '/templates',
+                    }}
+                    secondaryCta={{
+                      label: 'Crear sesion',
+                      onClick: () => setCreating(true),
+                    }}
+                  />
+                  <CreateRoutineForm
+                    open={creating}
+                    onCreateRoutine={createRoutine}
+                    onClose={() => setCreating(false)}
+                  />
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <RoutineSwitcher
+                    routines={routines}
+                    selectedRoutineId={selectedRoutineId}
+                    doneThisWeekIds={doneThisWeekIds}
+                    onSelect={selectRoutine}
+                    onCreateNew={() => setCreating(true)}
+                  />
 
-                <CreateRoutineForm
-                  open={creating}
-                  onCreateRoutine={createRoutine}
-                  onClose={() => setCreating(false)}
-                />
+                  <CreateRoutineForm
+                    open={creating}
+                    onCreateRoutine={createRoutine}
+                    onClose={() => setCreating(false)}
+                  />
 
-                <RoutineDetail
-                  routine={selectedRoutine}
-                  trainedToday={trainedToday}
-                  onAddExercise={addExercise}
-                  onRemoveExercise={removeExercise}
-                  onMoveExercise={moveExercise}
-                  onDeleteRoutine={() =>
-                    selectedRoutine && setRoutineToDelete(selectedRoutine.id)
-                  }
-                  onDeleteAllRoutines={() => setDeleteAllOpen(true)}
-                  deletingAll={deletingAll}
-                  totalRoutines={routines.length}
-                />
-              </div>
-            )}
+                  <RoutineDetail
+                    routine={selectedRoutine}
+                    trainedToday={trainedToday}
+                    onAddExercise={addExercise}
+                    onRemoveExercise={removeExercise}
+                    onMoveExercise={moveExercise}
+                    onDeleteRoutine={() =>
+                      selectedRoutine && setRoutineToDelete(selectedRoutine.id)
+                    }
+                    onDeleteAllRoutines={() => setDeleteAllOpen(true)}
+                    deletingAll={deletingAll}
+                    totalRoutines={routines.length}
+                  />
+                </div>
+              )}
 
-            <ConfirmDialog
-              open={routineToDelete !== null}
-              title="Eliminar sesion"
-              description="¿Seguro que quieres borrar esta sesion? Esta accion no se puede deshacer."
-              onCancel={() => setRoutineToDelete(null)}
-              onConfirm={() => {
-                if (routineToDelete === null) return;
-                void deleteRoutine(routineToDelete);
-                setRoutineToDelete(null);
-              }}
-            />
+              <ConfirmDialog
+                open={routineToDelete !== null}
+                title="Eliminar sesion"
+                description="¿Seguro que quieres borrar esta sesion? Esta accion no se puede deshacer."
+                onCancel={() => setRoutineToDelete(null)}
+                onConfirm={() => {
+                  if (routineToDelete === null) return;
+                  void deleteRoutine(routineToDelete);
+                  setRoutineToDelete(null);
+                }}
+              />
 
-            <ConfirmDialog
-              open={deleteAllOpen}
-              title="Borrar todas las sesiones"
-              description={`Vas a borrar tus ${routines.length} sesiones. Esta accion no se puede deshacer.`}
-              confirmLabel="BORRAR TODAS"
-              cancelLabel="VOLVER"
-              variant="danger"
-              onCancel={() => setDeleteAllOpen(false)}
-              onConfirm={() => void handleDeleteAll()}
-            />
-          </div>
-        </section>
-      )}
+              <ConfirmDialog
+                open={deleteAllOpen}
+                title="Borrar todas las sesiones"
+                description={`Vas a borrar tus ${routines.length} sesiones. Esta accion no se puede deshacer.`}
+                confirmLabel="BORRAR TODAS"
+                cancelLabel="VOLVER"
+                variant="danger"
+                onCancel={() => setDeleteAllOpen(false)}
+                onConfirm={() => void handleDeleteAll()}
+              />
+            </div>
+          </section>
+        )}
       </AsyncState>
     </>
   );

@@ -60,8 +60,8 @@ export const RoutinesIntroModal = ({
               ✓
             </span>
             <span>
-              Cada <strong>sesion</strong> es un dia del plan con sus
-              ejercicios concretos.
+              Cada <strong>sesion</strong> es un dia del plan con sus ejercicios
+              concretos.
             </span>
           </li>
           <li className="flex items-start gap-2">
@@ -69,8 +69,8 @@ export const RoutinesIntroModal = ({
               ✓
             </span>
             <span>
-              Pulsa <strong>EMPEZAR</strong> para entrar en combate. Solo
-              cuenta <strong>una sesion al dia</strong>.
+              Pulsa <strong>EMPEZAR</strong> para entrar en combate. Solo cuenta{' '}
+              <strong>una sesion al dia</strong>.
             </span>
           </li>
           <li className="flex items-start gap-2">
@@ -87,8 +87,8 @@ export const RoutinesIntroModal = ({
               ✓
             </span>
             <span>
-              Si no tienes plan, aplica una <strong>rutina</strong> y se
-              generan tus sesiones automaticamente.
+              Si no tienes plan, aplica una <strong>rutina</strong> y se generan
+              tus sesiones automaticamente.
             </span>
           </li>
         </ul>

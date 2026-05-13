@@ -77,8 +77,8 @@ export const TemplatesIntroModal = ({
               ✓
             </span>
             <span>
-              La <strong>MEJOR PARA TI</strong> se elige segun tu objetivo,
-              dias y experiencia.
+              La <strong>MEJOR PARA TI</strong> se elige segun tu objetivo, dias
+              y experiencia.
             </span>
           </li>
           <li className="flex items-start gap-2">

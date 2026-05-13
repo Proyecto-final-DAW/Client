@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { useAuth } from '../../../context/hooks/useAuth';
 import { useCharacterState } from '../../../context/hooks/useCharacterState';
 import { AsyncState } from '../../../shared/components/AsyncState';
 import { PixelCorners } from '../../../shared/components/PixelCorners';
@@ -20,7 +21,6 @@ import {
   tierIndexFromState,
   type RankLetter,
 } from '../core/domain/models/RankLabels';
-import { useAuth } from '../../../context/hooks/useAuth';
 import { ClassesIntroModal } from './components/ClassesIntroModal';
 import { ClassPixelArt, hasPixelArt } from './components/ClassPixelArt';
 import { useClassCatalog } from './hooks/useClassCatalog';
@@ -779,93 +779,93 @@ export const ClassTreeView = (): React.JSX.Element => {
         data={catalog}
         loadingLabel="CARGANDO PANTEON"
       >
-      {(c) => (
-        <div className="mx-auto max-w-4xl">
-          <header className="mb-6">
-            <p className="font-pixel text-[9px] tracking-widest text-green-500">
-              DESTINO
-            </p>
-            <h1 className="mt-2 font-pixel text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
-              EL CAMINO
-            </h1>
-            <p className="mt-3 font-pixel-mono text-base leading-snug text-ink-muted">
-              Toda leyenda empieza sin nombre. Forja el tuyo: cada rango que
-              conquistes despertara una nueva clase en tu sangre.
-            </p>
-          </header>
+        {(c) => (
+          <div className="mx-auto max-w-4xl">
+            <header className="mb-6">
+              <p className="font-pixel text-[9px] tracking-widest text-green-500">
+                DESTINO
+              </p>
+              <h1 className="mt-2 font-pixel text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
+                EL CAMINO
+              </h1>
+              <p className="mt-3 font-pixel-mono text-base leading-snug text-ink-muted">
+                Toda leyenda empieza sin nombre. Forja el tuyo: cada rango que
+                conquistes despertara una nueva clase en tu sangre.
+              </p>
+            </header>
 
-          <section className="relative border-2 border-green-500/60 bg-card p-6 sm:p-8 shadow-[0_0_0_4px_rgba(10,10,15,0.6),0_0_60px_rgba(34,197,94,0.2)]">
-            <PixelCorners size="md" className="border-green-500/60" />
+            <section className="relative border-2 border-green-500/60 bg-card p-6 sm:p-8 shadow-[0_0_0_4px_rgba(10,10,15,0.6),0_0_60px_rgba(34,197,94,0.2)]">
+              <PixelCorners size="md" className="border-green-500/60" />
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {/* DESBLOQUEADAS — personal progress (1 + userTier),
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {/* DESBLOQUEADAS — personal progress (1 + userTier),
                   not the catalog total. The user wanted to see what
                   they've actually unlocked, not the abstract count of
                   what exists in the game. */}
-              <div className="border-2 border-border bg-page p-3 text-center">
-                <p className="font-pixel text-[8px] tracking-widest text-ink-faint">
-                  DESBLOQUEADAS
-                </p>
-                <p className="mt-2 font-pixel text-lg text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.4)]">
-                  {stats?.unlockedClasses ?? 1}
-                </p>
-              </div>
-              {/* RANGO — current rank letter (F/E/D/C/B/A/S) painted
+                <div className="border-2 border-border bg-page p-3 text-center">
+                  <p className="font-pixel text-[8px] tracking-widest text-ink-faint">
+                    DESBLOQUEADAS
+                  </p>
+                  <p className="mt-2 font-pixel text-lg text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.4)]">
+                    {stats?.unlockedClasses ?? 1}
+                  </p>
+                </div>
+                {/* RANGO — current rank letter (F/E/D/C/B/A/S) painted
                   in the rank's own palette so it visually echoes the
                   RankBadge inside the panteon modal. The previous "7"
                   was the static total of ranks, which the user already
                   knows from the ladder elsewhere. */}
-              <div className="border-2 border-border bg-page p-3 text-center">
-                <p className="font-pixel text-[8px] tracking-widest text-ink-faint">
-                  RANGO
-                </p>
-                <p
-                  className="mt-2 font-pixel text-lg"
-                  style={{
-                    color: styleForRank(stats?.currentRank ?? 'F').text,
-                    textShadow: `0 0 10px ${styleForRank(stats?.currentRank ?? 'F').glow}`,
-                  }}
-                >
-                  {stats?.currentRank ?? 'F'}
-                </p>
-              </div>
-              {/* TU CLASE — class name only, no decorative diamond
+                <div className="border-2 border-border bg-page p-3 text-center">
+                  <p className="font-pixel text-[8px] tracking-widest text-ink-faint">
+                    RANGO
+                  </p>
+                  <p
+                    className="mt-2 font-pixel text-lg"
+                    style={{
+                      color: styleForRank(stats?.currentRank ?? 'F').text,
+                      textShadow: `0 0 10px ${styleForRank(stats?.currentRank ?? 'F').glow}`,
+                    }}
+                  >
+                    {stats?.currentRank ?? 'F'}
+                  </p>
+                </div>
+                {/* TU CLASE — class name only, no decorative diamond
                   glyph in front (it duplicated the eyebrow's ◆ and
                   read as part of the class name). */}
-              <div className="col-span-2 border-2 border-border bg-page p-3 text-center sm:col-span-1">
-                <p className="font-pixel text-[8px] tracking-widest text-ink-faint">
-                  TU CLASE
-                </p>
-                <p className="mt-2 font-pixel text-base text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.4)] uppercase">
-                  {stats?.currentName ?? 'Iniciado'}
-                </p>
+                <div className="col-span-2 border-2 border-border bg-page p-3 text-center sm:col-span-1">
+                  <p className="font-pixel text-[8px] tracking-widest text-ink-faint">
+                    TU CLASE
+                  </p>
+                  <p className="mt-2 font-pixel text-base text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.4)] uppercase">
+                    {stats?.currentName ?? 'Iniciado'}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <p className="mt-6 text-center font-pixel-mono text-base leading-snug text-ink-muted">
-              Abre el panteon y contempla los caminos que aun no son tuyos. Cada
-              heroe deja huella en alguno de ellos.
-            </p>
+              <p className="mt-6 text-center font-pixel-mono text-base leading-snug text-ink-muted">
+                Abre el panteon y contempla los caminos que aun no son tuyos.
+                Cada heroe deja huella en alguno de ellos.
+              </p>
 
-            <div className="mt-6 flex justify-center">
-              <button
-                type="button"
-                onClick={() => setModalOpen(true)}
-                className="font-pixel text-xs sm:text-sm tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-8 py-3.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_20px_rgba(34,197,94,0.45)]"
-              >
-                ▶ ABRIR PANTEON
-              </button>
-            </div>
-          </section>
+              <div className="mt-6 flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => setModalOpen(true)}
+                  className="font-pixel text-xs sm:text-sm tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-8 py-3.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_20px_rgba(34,197,94,0.45)]"
+                >
+                  ▶ ABRIR PANTEON
+                </button>
+              </div>
+            </section>
 
-          <ClassPanteonModal
-            open={modalOpen}
-            onClose={() => setModalOpen(false)}
-            catalog={c}
-            realState={state}
-          />
-        </div>
-      )}
+            <ClassPanteonModal
+              open={modalOpen}
+              onClose={() => setModalOpen(false)}
+              catalog={c}
+              realState={state}
+            />
+          </div>
+        )}
       </AsyncState>
     </>
   );

@@ -71,8 +71,8 @@ export const AchievementsIntroModal = ({
               ✓
             </span>
             <span>
-              Los <strong>desbloqueados</strong> aparecen primero, ordenados
-              por fecha. Los demas siguen visibles como guia.
+              Los <strong>desbloqueados</strong> aparecen primero, ordenados por
+              fecha. Los demas siguen visibles como guia.
             </span>
           </li>
           <li className="flex items-start gap-2">

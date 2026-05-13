@@ -63,8 +63,8 @@ export const ClassesIntroModal = ({
               ✓
             </span>
             <span>
-              Empiezas como <strong>Iniciado</strong>. Cada <strong>rango</strong>{' '}
-              que subes despierta una clase nueva.
+              Empiezas como <strong>Iniciado</strong>. Cada{' '}
+              <strong>rango</strong> que subes despierta una clase nueva.
             </span>
           </li>
           <li className="flex items-start gap-2">
@@ -72,8 +72,8 @@ export const ClassesIntroModal = ({
               ✓
             </span>
             <span>
-              En <strong>Rango E</strong> eliges <strong>vocacion</strong>{' '}
-              entre 6 caminos. En <strong>D</strong> una{' '}
+              En <strong>Rango E</strong> eliges <strong>vocacion</strong> entre
+              6 caminos. En <strong>D</strong> una{' '}
               <strong>especializacion</strong>, en <strong>C</strong> una{' '}
               <strong>legendaria</strong>.
             </span>
