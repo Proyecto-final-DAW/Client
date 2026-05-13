@@ -55,8 +55,13 @@ export const StatBar = (props: StatBarProps): React.JSX.Element => {
             length without adding info, and it caused the label to wrap
             at narrow widths. */}
         <div className="mb-2 flex items-baseline justify-between gap-2">
-          <span className="truncate font-pixel text-[11px] tracking-widest uppercase text-ink">
-            {props.pilar.name}
+          {/* 3-letter abbreviation (FUE / RES / EST / AGI / TEN / VIG)
+              avoids the previous mid-name ellipsis (RESIS… / ESTAM…)
+              caused by the 2-col layout pinching the label width. Full
+              name remains on the row's title/aria-label so hover and
+              screen readers still get the canonical form. */}
+          <span className="font-pixel text-[11px] tracking-widest uppercase text-ink">
+            {props.pilar.name.slice(0, 3)}
           </span>
           <span
             className="shrink-0 font-pixel text-[11px] font-bold"

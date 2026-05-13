@@ -55,7 +55,7 @@ const MENU_GROUPS: MenuGroup[] = [
     items: [
       { to: '/dashboard', label: 'INICIO', icon: HomeIcon },
       { to: '/templates', label: 'RUTINAS', icon: BookOpenIcon },
-      { to: '/routines', label: 'SESIONES', icon: ClipboardDocumentListIcon },
+      { to: '/routines', label: 'COMBATE', icon: ClipboardDocumentListIcon },
       { to: '/progress', label: 'PROGRESO', icon: ChartBarIcon },
     ],
   },
@@ -65,7 +65,7 @@ const MENU_GROUPS: MenuGroup[] = [
       { to: '/clases', label: 'CLASES', icon: Squares2X2Icon },
       { to: '/diet', label: 'DIETA', icon: HeartIcon },
       { to: '/achievements', label: 'LOGROS', icon: TrophyIcon },
-      { to: '/profile', label: 'PERFIL', icon: UserCircleIcon },
+      { to: '/profile', label: 'PERSONAJE', icon: UserCircleIcon },
     ],
   },
 ];

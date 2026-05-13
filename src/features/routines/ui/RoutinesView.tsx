@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
+import { useAuth } from '../../../context/hooks/useAuth';
 import { AsyncState } from '../../../shared/components/AsyncState';
 import { ConfirmDialog } from '../../../shared/components/ConfirmDialog';
 import { EmptyState } from '../../../shared/components/EmptyState';
@@ -8,6 +9,7 @@ import { useSessionHistory } from '../../sessionHistory/ui/hooks/useSessionHisto
 import { CreateRoutineForm } from './components/CreateRoutineForm';
 import { RoutineDetail } from './components/RoutineDetail';
 import { RoutinesHeader } from './components/RoutinesHeader';
+import { RoutinesIntroModal } from './components/RoutinesIntroModal';
 import { RoutineSwitcher } from './components/RoutineSwitcher';
 import { useRoutineExercises } from './hooks/useRoutineExercises';
 import { useRoutines } from './hooks/useRoutines';
@@ -23,6 +25,7 @@ const startOfThisWeek = (): Date => {
 };
 
 export const RoutinesView = (): React.JSX.Element => {
+  const { user } = useAuth();
   const {
     routines,
     selectedRoutine,
@@ -35,6 +38,36 @@ export const RoutinesView = (): React.JSX.Element => {
     deleteRoutine,
     selectRoutine,
   } = useRoutines();
+
+  // One-time combate explainer — per-user localStorage flag.
+  const routinesIntroStorageKey =
+    user?.id != null ? `routines_intro_seen_${user.id}` : null;
+
+  const [routinesIntroDismissed, setRoutinesIntroDismissed] = useState(
+    () =>
+      routinesIntroStorageKey !== null &&
+      localStorage.getItem(routinesIntroStorageKey) === '1'
+  );
+
+  useEffect(() => {
+    if (routinesIntroStorageKey === null) {
+      setRoutinesIntroDismissed(true);
+      return;
+    }
+    setRoutinesIntroDismissed(
+      localStorage.getItem(routinesIntroStorageKey) === '1'
+    );
+  }, [routinesIntroStorageKey]);
+
+  const showRoutinesIntro =
+    routinesIntroStorageKey !== null && !routinesIntroDismissed;
+
+  const handleDismissRoutinesIntro = (): void => {
+    if (routinesIntroStorageKey !== null) {
+      localStorage.setItem(routinesIntroStorageKey, '1');
+    }
+    setRoutinesIntroDismissed(true);
+  };
 
   const { sessions } = useSessionHistory();
 
@@ -87,13 +120,18 @@ export const RoutinesView = (): React.JSX.Element => {
   };
 
   return (
-    <AsyncState
-      loading={loading}
-      error={error}
-      data={routines}
-      onRetry={refetch}
-      loadingLabel="CARGANDO SESIONES"
-    >
+    <>
+      <RoutinesIntroModal
+        open={showRoutinesIntro}
+        onClose={handleDismissRoutinesIntro}
+      />
+      <AsyncState
+        loading={loading}
+        error={error}
+        data={routines}
+        onRetry={refetch}
+        loadingLabel="CARGANDO SESIONES"
+      >
       {(routines) => (
         <section className="text-ink">
           <div className="mx-auto max-w-5xl">
@@ -181,6 +219,7 @@ export const RoutinesView = (): React.JSX.Element => {
           </div>
         </section>
       )}
-    </AsyncState>
+      </AsyncState>
+    </>
   );
 };

@@ -9,6 +9,7 @@ import { LoadingPixel } from '../../../shared/components/LoadingPixel';
 import { useStats } from '../../stats/ui/hooks/useStats';
 import { ExerciseProgressChart } from './components/ExerciseProgressChart';
 import { ExerciseSelector } from './components/ExerciseSelector';
+import { ProgressIntroModal } from './components/ProgressIntroModal';
 import { StatRadarChart } from './components/StatRadarChart';
 import { WeightProgressContent } from './components/WeightProgressContent';
 import { useExerciseProgress } from './hooks/useExerciseProgress';
@@ -60,6 +61,36 @@ export const ProgressView = (): React.JSX.Element => {
       setSelectedId(exercises[0].id);
     }
   }, [exercises, selectedId]);
+
+  // One-time progress explainer — per-user localStorage flag.
+  const progressIntroStorageKey =
+    user?.id != null ? `progress_intro_seen_${user.id}` : null;
+
+  const [progressIntroDismissed, setProgressIntroDismissed] = useState(
+    () =>
+      progressIntroStorageKey !== null &&
+      localStorage.getItem(progressIntroStorageKey) === '1'
+  );
+
+  useEffect(() => {
+    if (progressIntroStorageKey === null) {
+      setProgressIntroDismissed(true);
+      return;
+    }
+    setProgressIntroDismissed(
+      localStorage.getItem(progressIntroStorageKey) === '1'
+    );
+  }, [progressIntroStorageKey]);
+
+  const showProgressIntro =
+    progressIntroStorageKey !== null && !progressIntroDismissed;
+
+  const handleDismissProgressIntro = (): void => {
+    if (progressIntroStorageKey !== null) {
+      localStorage.setItem(progressIntroStorageKey, '1');
+    }
+    setProgressIntroDismissed(true);
+  };
 
   return (
     <section className="mx-auto max-w-5xl text-ink">
@@ -158,6 +189,11 @@ export const ProgressView = (): React.JSX.Element => {
           </div>
         )}
       </section>
+
+      <ProgressIntroModal
+        open={showProgressIntro}
+        onClose={handleDismissProgressIntro}
+      />
     </section>
   );
 };

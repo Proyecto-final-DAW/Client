@@ -1,15 +1,18 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
+import { useAuth } from '../../../context/hooks/useAuth';
 import { AsyncState } from '../../../shared/components/AsyncState';
 import { useRoutines } from '../../routines/ui/hooks/useRoutines';
 import { HeroRoutineCard } from './components/HeroRoutineCard';
 import { TemplateCard } from './components/TemplateCard';
 import { TemplateFilters } from './components/TemplateFilters';
 import { TemplatePaginatedBrowser } from './components/TemplatePaginatedBrowser';
+import { TemplatesIntroModal } from './components/TemplatesIntroModal';
 import { useTemplateCatalog } from './hooks/useTemplateCatalog';
 
 export const TemplatesView = (): React.JSX.Element => {
+  const { user } = useAuth();
   const {
     loading,
     error,
@@ -19,6 +22,36 @@ export const TemplatesView = (): React.JSX.Element => {
     recommendedTemplateIds,
     filteredTemplates,
   } = useTemplateCatalog();
+
+  // One-time routines explainer — per-user localStorage flag.
+  const templatesIntroStorageKey =
+    user?.id != null ? `templates_intro_seen_${user.id}` : null;
+
+  const [templatesIntroDismissed, setTemplatesIntroDismissed] = useState(
+    () =>
+      templatesIntroStorageKey !== null &&
+      localStorage.getItem(templatesIntroStorageKey) === '1'
+  );
+
+  useEffect(() => {
+    if (templatesIntroStorageKey === null) {
+      setTemplatesIntroDismissed(true);
+      return;
+    }
+    setTemplatesIntroDismissed(
+      localStorage.getItem(templatesIntroStorageKey) === '1'
+    );
+  }, [templatesIntroStorageKey]);
+
+  const showTemplatesIntro =
+    templatesIntroStorageKey !== null && !templatesIntroDismissed;
+
+  const handleDismissTemplatesIntro = (): void => {
+    if (templatesIntroStorageKey !== null) {
+      localStorage.setItem(templatesIntroStorageKey, '1');
+    }
+    setTemplatesIntroDismissed(true);
+  };
 
   // Detect which templates the user already has applied. The apply
   // hook stamps each created routine with `description = template.name`
@@ -37,12 +70,17 @@ export const TemplatesView = (): React.JSX.Element => {
   const [browseOpen, setBrowseOpen] = useState(false);
 
   return (
-    <AsyncState
-      loading={loading}
-      error={error}
-      data={filteredTemplates}
-      loadingLabel="CARGANDO RUTINAS"
-    >
+    <>
+      <TemplatesIntroModal
+        open={showTemplatesIntro}
+        onClose={handleDismissTemplatesIntro}
+      />
+      <AsyncState
+        loading={loading}
+        error={error}
+        data={filteredTemplates}
+        loadingLabel="CARGANDO RUTINAS"
+      >
       {() => {
         const [topPick, ...alsoForYou] = recommendedTemplates;
 
@@ -127,6 +165,7 @@ export const TemplatesView = (): React.JSX.Element => {
           </section>
         );
       }}
-    </AsyncState>
+      </AsyncState>
+    </>
   );
 };

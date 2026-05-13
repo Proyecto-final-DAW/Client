@@ -20,6 +20,8 @@ import {
   tierIndexFromState,
   type RankLetter,
 } from '../core/domain/models/RankLabels';
+import { useAuth } from '../../../context/hooks/useAuth';
+import { ClassesIntroModal } from './components/ClassesIntroModal';
 import { ClassPixelArt, hasPixelArt } from './components/ClassPixelArt';
 import { useClassCatalog } from './hooks/useClassCatalog';
 
@@ -543,7 +545,7 @@ const TierSection = ({
             {section.label}
           </h3>
           {showRequirement && requirement && (
-            <p className="mt-1 font-pixel-mono text-xs leading-snug text-ink-muted">
+            <p className="mt-1 font-pixel-mono text-base sm:text-lg leading-snug text-ink-muted">
               {requirement}
             </p>
           )}
@@ -703,9 +705,40 @@ const ClassPanteonModal = ({
 // Same pattern as before; only the modal contents changed.
 // ────────────────────────────────────────────────────────────────────────
 export const ClassTreeView = (): React.JSX.Element => {
+  const { user } = useAuth();
   const { catalog, loading, error } = useClassCatalog();
   const { state } = useCharacterState();
   const [modalOpen, setModalOpen] = useState(false);
+
+  // One-time panteon explainer — per-user localStorage flag.
+  const classesIntroStorageKey =
+    user?.id != null ? `classes_intro_seen_${user.id}` : null;
+
+  const [classesIntroDismissed, setClassesIntroDismissed] = useState(
+    () =>
+      classesIntroStorageKey !== null &&
+      localStorage.getItem(classesIntroStorageKey) === '1'
+  );
+
+  useEffect(() => {
+    if (classesIntroStorageKey === null) {
+      setClassesIntroDismissed(true);
+      return;
+    }
+    setClassesIntroDismissed(
+      localStorage.getItem(classesIntroStorageKey) === '1'
+    );
+  }, [classesIntroStorageKey]);
+
+  const showClassesIntro =
+    classesIntroStorageKey !== null && !classesIntroDismissed;
+
+  const handleDismissClassesIntro = (): void => {
+    if (classesIntroStorageKey !== null) {
+      localStorage.setItem(classesIntroStorageKey, '1');
+    }
+    setClassesIntroDismissed(true);
+  };
 
   const stats = useMemo(() => {
     if (!catalog) return null;
@@ -735,12 +768,17 @@ export const ClassTreeView = (): React.JSX.Element => {
   }, [catalog, state]);
 
   return (
-    <AsyncState
-      loading={loading}
-      error={error}
-      data={catalog}
-      loadingLabel="CARGANDO PANTEON"
-    >
+    <>
+      <ClassesIntroModal
+        open={showClassesIntro}
+        onClose={handleDismissClassesIntro}
+      />
+      <AsyncState
+        loading={loading}
+        error={error}
+        data={catalog}
+        loadingLabel="CARGANDO PANTEON"
+      >
       {(c) => (
         <div className="mx-auto max-w-4xl">
           <header className="mb-6">
@@ -828,6 +866,7 @@ export const ClassTreeView = (): React.JSX.Element => {
           />
         </div>
       )}
-    </AsyncState>
+      </AsyncState>
+    </>
   );
 };

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useAuth } from '../../../context/hooks/useAuth';
 import { useCharacterState } from '../../../context/hooks/useCharacterState';
@@ -10,6 +10,7 @@ import { ChangePasswordForm } from './components/ChangePasswordForm';
 import { ProfileDataView } from './components/ProfileDataView';
 import { ProfileForm } from './components/ProfileForm';
 import { ProfileHeroBanner } from './components/ProfileHeroBanner';
+import { ProfileIntroModal } from './components/ProfileIntroModal';
 import { useProfile } from './hooks/useProfile';
 
 export const ProfileView = (): React.JSX.Element => {
@@ -32,13 +33,48 @@ export const ProfileView = (): React.JSX.Element => {
 
   const [editing, setEditing] = useState(false);
 
+  // One-time character explainer — per-user localStorage flag.
+  const profileIntroStorageKey =
+    user?.id != null ? `profile_intro_seen_${user.id}` : null;
+
+  const [profileIntroDismissed, setProfileIntroDismissed] = useState(
+    () =>
+      profileIntroStorageKey !== null &&
+      localStorage.getItem(profileIntroStorageKey) === '1'
+  );
+
+  useEffect(() => {
+    if (profileIntroStorageKey === null) {
+      setProfileIntroDismissed(true);
+      return;
+    }
+    setProfileIntroDismissed(
+      localStorage.getItem(profileIntroStorageKey) === '1'
+    );
+  }, [profileIntroStorageKey]);
+
+  const showProfileIntro =
+    profileIntroStorageKey !== null && !profileIntroDismissed;
+
+  const handleDismissProfileIntro = (): void => {
+    if (profileIntroStorageKey !== null) {
+      localStorage.setItem(profileIntroStorageKey, '1');
+    }
+    setProfileIntroDismissed(true);
+  };
+
   return (
-    <AsyncState
-      loading={loading}
-      error={error}
-      data={profile}
-      loadingLabel="CARGANDO PERFIL"
-    >
+    <>
+      <ProfileIntroModal
+        open={showProfileIntro}
+        onClose={handleDismissProfileIntro}
+      />
+      <AsyncState
+        loading={loading}
+        error={error}
+        data={profile}
+        loadingLabel="CARGANDO PERFIL"
+      >
       {(profile) => (
         <div className="mx-auto max-w-6xl">
           {/* Slim eyebrow only — the ProfileHeroBanner directly below
@@ -47,7 +83,7 @@ export const ProfileView = (): React.JSX.Element => {
               role and pushed the banner further down the fold. */}
           <header className="mb-4 text-center sm:text-left">
             <p className="font-pixel text-[9px] tracking-widest text-green-500">
-              ▶ PERFIL
+              ▶ PERSONAJE
             </p>
           </header>
 
@@ -118,6 +154,7 @@ export const ProfileView = (): React.JSX.Element => {
           </div>
         </div>
       )}
-    </AsyncState>
+      </AsyncState>
+    </>
   );
 };

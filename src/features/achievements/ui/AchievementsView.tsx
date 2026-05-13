@@ -1,8 +1,10 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from 'react';
 
+import { useAuth } from '../../../context/hooks/useAuth';
 import { AsyncState } from '../../../shared/components/AsyncState';
 import type { Milestone } from '../core/domain/models/Milestone';
+import { AchievementsIntroModal } from './components/AchievementsIntroModal';
 import { MilestoneCard } from './components/MilestoneCard';
 import { useMilestones } from './hooks/useMilestones';
 
@@ -33,8 +35,41 @@ const sortMilestones = (milestones: Milestone[]): Milestone[] =>
   });
 
 export const AchievementsView = (): React.JSX.Element => {
+  const { user } = useAuth();
   const { milestones, loading, error, refetch } = useMilestones();
   const [page, setPage] = useState(0);
+
+  // One-time hall-of-fame explainer — per-user localStorage flag so a
+  // shared browser doesn't suppress the popup for a second account.
+  const achievementsIntroStorageKey =
+    user?.id != null ? `achievements_intro_seen_${user.id}` : null;
+
+  const [achievementsIntroDismissed, setAchievementsIntroDismissed] = useState(
+    () =>
+      achievementsIntroStorageKey !== null &&
+      localStorage.getItem(achievementsIntroStorageKey) === '1'
+  );
+
+  useEffect(() => {
+    if (achievementsIntroStorageKey === null) {
+      setAchievementsIntroDismissed(true);
+      return;
+    }
+    setAchievementsIntroDismissed(
+      localStorage.getItem(achievementsIntroStorageKey) === '1'
+    );
+  }, [achievementsIntroStorageKey]);
+
+  const showAchievementsIntro =
+    achievementsIntroStorageKey !== null && !achievementsIntroDismissed;
+
+  const handleDismissAchievementsIntro = (): void => {
+    if (achievementsIntroStorageKey !== null) {
+      localStorage.setItem(achievementsIntroStorageKey, '1');
+    }
+    setAchievementsIntroDismissed(true);
+  };
+
   // Default to desktop on the first render so SSR/hydration matches
   // the markup the test render emits. The matchMedia effect below
   // immediately corrects to whatever the actual viewport is.
@@ -76,18 +111,23 @@ export const AchievementsView = (): React.JSX.Element => {
   }, [pageSize]);
 
   return (
-    <AsyncState
-      loading={loading}
-      error={error}
-      data={milestones}
-      onRetry={refetch}
-      empty={(m) => m.every((milestone) => !milestone.unlocked)}
-      loadingLabel="CARGANDO LOGROS"
-      emptyIcon="🏆"
-      emptyTitle="Sin logros"
-      emptyDescription="Completa tu primer entreno para desbloquear logros."
-      emptyCta={{ label: 'Ir a entrenar', to: '/routines' }}
-    >
+    <>
+      <AchievementsIntroModal
+        open={showAchievementsIntro}
+        onClose={handleDismissAchievementsIntro}
+      />
+      <AsyncState
+        loading={loading}
+        error={error}
+        data={milestones}
+        onRetry={refetch}
+        empty={(m) => m.every((milestone) => !milestone.unlocked)}
+        loadingLabel="CARGANDO LOGROS"
+        emptyIcon="🏆"
+        emptyTitle="Sin logros"
+        emptyDescription="Completa tu primer entreno para desbloquear logros."
+        emptyCta={{ label: 'Ir a entrenar', to: '/routines' }}
+      >
       {(milestones) => {
         const unlockedCount = milestones.filter((m) => m.unlocked).length;
         const sorted = sortMilestones(milestones);
@@ -166,6 +206,7 @@ export const AchievementsView = (): React.JSX.Element => {
           </div>
         );
       }}
-    </AsyncState>
+      </AsyncState>
+    </>
   );
 };
