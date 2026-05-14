@@ -10,4 +10,4 @@ tsconfig.app.json
 tsconfig.node.json
 eslint.config.js
 .env
-package-lock.json
+pnpm-lock.yaml

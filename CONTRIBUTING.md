@@ -30,7 +30,7 @@ Every push and every PR run:
 - **ESLint** (no warnings allowed)
 - **TypeScript** (`tsc --noEmit`)
 - **Prettier** (format check)
-- **Build** (`npm run build`)
+- **Build** (`pnpm run build`)
 
 **PRs cannot be merged if CI fails.** Even without the extensions, your code must pass these checks; the extensions help you meet them before pushing.
 
@@ -67,13 +67,12 @@ Whoever merges is responsible for ensuring all conditions are met.
 ## Before pushing
 
 ```bash
-npm run lint
-npm run build
+pnpm run lint
+pnpm run build
 ```
 
-Or format everything:
+Or format and auto-fix (Prettier + ESLint):
 
 ```bash
-npm run format
-npm run lint -- --fix
+pnpm run fix
 ```

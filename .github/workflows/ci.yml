@@ -13,6 +13,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -20,22 +25,23 @@ jobs:
           # contributor switching nvm versions between the two repos
           # doesn't hit subtle build-target mismatches.
           node-version: '22'
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: ESLint
         # Match Server CI: zero warnings tolerated. Without this flag
         # warnings creep in indefinitely and the contributing guide's
-        # "no warnings allowed" rule stays aspirational.
-        run: npm run lint -- --max-warnings=0
+        # "no warnings allowed" rule stays aspirational. Calling eslint
+        # directly avoids pnpm forwarding the `--` separator as a file arg.
+        run: pnpm exec eslint . --max-warnings=0
 
       - name: TypeScript
-        run: npx tsc --noEmit
+        run: pnpm exec tsc --noEmit
 
       - name: Check format
-        run: npx prettier --check "src/**/*.{js,jsx,ts,tsx,json,css}"
+        run: pnpm exec prettier --check "src/**/*.{js,jsx,ts,tsx,json,css}"
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
