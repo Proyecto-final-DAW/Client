@@ -2,21 +2,21 @@ import type { AxiosError } from 'axios';
 import axios from 'axios';
 
 import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { StatsInitPort } from '../../../application/ports/StatsInitPort';
+import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
+import type { StatsInitRepository } from '../../../application/ports/StatsInitRepository';
 
-export class ApiStatsInitRepository implements StatsInitPort {
-  async initStats(token: string): Promise<void> {
+export class ApiStatsInitRepository implements StatsInitRepository {
+  async initStats(): Promise<void> {
     try {
-      await axios.post(
-        API_ENDPOINTS.statsInit,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await axios.post(API_ENDPOINTS.initStats, {});
+      return response.data;
     } catch (error) {
-      const err = error as AxiosError;
+      const err = error as AxiosError<APIErrorResponse>;
       // 409 means stats already initialized — idempotent, not an error.
       if (err.response?.status === 409) return;
-      throw err;
+      const serverMessage =
+        err.response?.data?.message || 'Error al cargar los logros';
+      throw new Error(serverMessage);
     }
   }
 }

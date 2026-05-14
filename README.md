@@ -9,7 +9,7 @@ Before developing, read [CONTRIBUTING.md](CONTRIBUTING.md): **required extension
 ## Prerequisites
 
 - **Node.js v22.19+** → https://nodejs.org
-- **npm v10.9+** (included with Node.js)
+- **pnpm** (e.g. `corepack enable && corepack prepare pnpm@latest --activate`, or https://pnpm.io/installation)
 - **Git v2.51+** → https://git-scm.com
 
 ## Installation
@@ -18,7 +18,7 @@ Before developing, read [CONTRIBUTING.md](CONTRIBUTING.md): **required extension
 git clone https://github.com/tmllabres/Proyecto-Final-DAW-client.git
 cd Proyecto-Final-DAW-client
 cp .env.example .env
-npm install
+pnpm install
 ```
 
 On PowerShell if `cp` doesn't work:
@@ -30,7 +30,7 @@ copy .env.example .env
 ## Run
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Open in browser: http://localhost:5173

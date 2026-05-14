@@ -4,19 +4,19 @@ import { useAuth } from '../../../../context/hooks/useAuth';
 import type { Exercise } from '../../core/domain/models/Exercise';
 import { exerciseRepository } from '../adapter';
 
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 9;
 
 export const MUSCLE_OPTIONS = [
   { label: 'Todos', value: '' },
   { label: 'Pecho', value: 'pectorals' },
   { label: 'Espalda', value: 'lats' },
   { label: 'Hombros', value: 'delts' },
-  { label: 'Bíceps', value: 'biceps' },
-  { label: 'Tríceps', value: 'triceps' },
+  { label: 'Biceps', value: 'biceps' },
+  { label: 'Triceps', value: 'triceps' },
   { label: 'Abdominales', value: 'abs' },
-  { label: 'Cuádriceps', value: 'quads' },
+  { label: 'Cuadriceps', value: 'quads' },
   { label: 'Isquiotibiales', value: 'hamstrings' },
-  { label: 'Glúteos', value: 'glutes' },
+  { label: 'Gluteos', value: 'glutes' },
   { label: 'Gemelos', value: 'calves' },
   { label: 'Trapecios', value: 'traps' },
 ];

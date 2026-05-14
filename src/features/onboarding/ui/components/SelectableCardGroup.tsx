@@ -24,7 +24,7 @@ export const SelectableCardGroup = (
         ))}
       </div>
       {props.error && (
-        <p className="font-['VT323'] text-base text-red-400 mt-3 tracking-wide leading-none">
+        <p className="font-['Press_Start_2P'] text-base text-red-400 mt-3 tracking-wide leading-none">
           ✕ {props.error}
         </p>
       )}

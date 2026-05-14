@@ -6,7 +6,6 @@ import { dietRepository } from '../adapter';
 
 export const useDiet = () => {
   const { token, user } = useAuth();
-  const authToken = token ?? undefined;
 
   const [diet, setDiet] = useState<Diet | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -23,7 +22,7 @@ export const useDiet = () => {
     setError(null);
 
     try {
-      const result = await dietRepository.getDiet(user.id, authToken);
+      const result = await dietRepository.getDiet(user.id);
       setDiet(result);
     } catch (err) {
       const message =

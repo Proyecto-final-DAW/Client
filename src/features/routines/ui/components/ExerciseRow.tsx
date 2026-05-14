@@ -1,41 +1,78 @@
-import { TrashIcon } from '@heroicons/react/24/outline';
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
 
+import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type { Exercise } from '../../../exercises/core/domain/models/Exercise';
 
 type ExerciseRowProps = {
   exercise: Exercise;
   index: number;
+  total: number;
+  editing: boolean;
   onRemove: (exerciseId: string) => void;
+  onMove?: (exerciseId: string, direction: 'up' | 'down') => void;
 };
 
 export const ExerciseRow = ({
   exercise,
   index,
+  total,
+  editing,
   onRemove,
+  onMove,
 }: ExerciseRowProps) => {
+  const isFirst = index === 0;
+  const isLast = index === total - 1;
+
   return (
-    <article className="flex flex-col gap-4 rounded-2xl border border-gray-800 bg-gray-950/70 p-4 md:flex-row md:items-center md:justify-between">
-      <div className="flex items-center gap-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-900 text-sm font-semibold text-blue-400">
-          {index + 1}
-        </div>
+    <article className="relative flex items-center gap-3 border-2 border-[#1e1e2e] bg-[#0d0d14] p-3">
+      <PixelCorners size="sm" className="border-green-500/30" />
 
-        <div>
-          <h3 className="text-sm font-semibold text-gray-100">
-            {exercise.name}
-          </h3>
-        </div>
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-[#27272a] bg-[#12121a] font-['Press_Start_2P'] text-[10px] text-green-400">
+        {String(index + 1).padStart(2, '0')}
       </div>
 
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => onRemove(exercise.id)}
-          className="rounded-lg border border-red-500/20 bg-red-500/10 p-2 text-red-400 transition hover:bg-red-500/20"
-        >
-          <TrashIcon className="h-5 w-5" />
-        </button>
-      </div>
+      <h3 className="flex-1 font-['Press_Start_2P'] text-[10px] sm:text-[11px] leading-relaxed text-[#e4e4e7]">
+        {exercise.name}
+      </h3>
+
+      {editing && (
+        <div className="flex items-center gap-1">
+          {onMove && (
+            <div className="flex flex-col">
+              <button
+                type="button"
+                onClick={() => onMove(exercise.id, 'up')}
+                disabled={isFirst}
+                aria-label={`Subir ${exercise.name}`}
+                className="border border-[#27272a] bg-[#12121a] p-1 text-[#a1a1aa] transition-colors hover:border-green-500/50 hover:text-green-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-[#27272a] disabled:hover:text-[#a1a1aa]"
+              >
+                <ChevronUpIcon className="h-3 w-3" />
+              </button>
+              <button
+                type="button"
+                onClick={() => onMove(exercise.id, 'down')}
+                disabled={isLast}
+                aria-label={`Bajar ${exercise.name}`}
+                className="border border-t-0 border-[#27272a] bg-[#12121a] p-1 text-[#a1a1aa] transition-colors hover:border-green-500/50 hover:text-green-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-[#27272a] disabled:hover:text-[#a1a1aa]"
+              >
+                <ChevronDownIcon className="h-3 w-3" />
+              </button>
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={() => onRemove(exercise.id)}
+            aria-label={`Eliminar ${exercise.name}`}
+            className="border-2 border-red-500/40 bg-red-500/10 p-2 text-red-400 transition-colors hover:bg-red-500/20"
+          >
+            <TrashIcon className="h-4 w-4" />
+          </button>
+        </div>
+      )}
     </article>
   );
 };

@@ -23,7 +23,7 @@ export const useProgress = () => {
     setError(null);
 
     try {
-      const result = await progressRepository.getWeightHistory(user.id, token);
+      const result = await progressRepository.getWeightHistory(user.id);
       setWeightHistory(result);
     } catch (err) {
       const message =
@@ -44,11 +44,7 @@ export const useProgress = () => {
     setSubmitError(null);
 
     try {
-      const created = await progressRepository.registerWeight(
-        user.id,
-        input,
-        token
-      );
+      const created = await progressRepository.registerWeight(user.id, input);
 
       setWeightHistory((current) => [...(current ?? []), created]);
       return true;

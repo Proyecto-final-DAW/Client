@@ -19,8 +19,8 @@ export const SexSelector = (props: SexSelectorProps): React.JSX.Element => {
       <label className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider">
         SEXO BIOLOGICO
       </label>
-      <p className="font-['VT323'] text-sm text-[#71717a] mb-3 tracking-wide leading-tight">
-        Necesario para el cálculo metabólico, no define tu identidad.
+      <p className="font-['Press_Start_2P'] text-sm text-[#71717a] mb-3 tracking-wide leading-tight">
+        Necesario para el calculo metabolico, no define tu identidad.
       </p>
       <div className="grid grid-cols-2 gap-3">
         {sexOptions.map((option) => {
@@ -46,7 +46,7 @@ export const SexSelector = (props: SexSelectorProps): React.JSX.Element => {
         })}
       </div>
       {props.error && (
-        <p className="font-['VT323'] text-base text-red-400 mt-2 tracking-wide leading-none">
+        <p className="font-['Press_Start_2P'] text-base text-red-400 mt-2 tracking-wide leading-none">
           ✕ {props.error}
         </p>
       )}

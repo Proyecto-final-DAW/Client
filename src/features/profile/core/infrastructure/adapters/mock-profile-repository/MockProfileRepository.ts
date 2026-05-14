@@ -1,6 +1,5 @@
 import type { ProfileRepository } from '../../../application/ports/ProfileRepository';
 import type {
-  ChangePasswordData,
   ProfileData,
   ProfileUpdateData,
 } from '../../../domain/models/ProfileData';
@@ -15,7 +14,11 @@ const MOCK_PROFILE: ProfileData = {
   weight: 78,
   height: 178,
   activity_level: 'ACTIVE',
-  goal: 'GAIN_MUSCLE',
+  goals: ['GAIN_MUSCLE'],
+  experience_level: 'INTERMEDIATE',
+  equipment: ['FULL_GYM'],
+  days_per_week: '4-5',
+  injuries: ['NONE'],
   sleep_hours: 8,
   daily_calories: 2800,
   protein_grams: 156,
@@ -30,21 +33,18 @@ const MOCK_PROFILE: ProfileData = {
 };
 
 export class MockProfileRepository implements ProfileRepository {
-  async getProfile(_token: string): Promise<ProfileData> {
-    return { ...MOCK_PROFILE };
+  async getProfile(): Promise<ProfileData> {
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    return MOCK_PROFILE;
   }
 
-  async updateProfile(
-    _token: string,
-    data: ProfileUpdateData
-  ): Promise<ProfileData> {
-    return { ...MOCK_PROFILE, ...data } as ProfileData;
+  async updateProfile(data: ProfileUpdateData): Promise<ProfileData> {
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    return { ...MOCK_PROFILE, ...data };
   }
 
-  async changePassword(
-    _token: string,
-    _data: ChangePasswordData
-  ): Promise<{ message: string }> {
-    return { message: 'Password updated successfully' };
+  async changePassword(): Promise<{ message: string }> {
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    return { message: 'Contraseña actualizada correctamente' };
   }
 }

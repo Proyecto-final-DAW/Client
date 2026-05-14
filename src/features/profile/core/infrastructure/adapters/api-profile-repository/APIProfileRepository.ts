@@ -10,19 +10,10 @@ import type {
   ProfileUpdateData,
 } from '../../../domain/models/ProfileData';
 
-function authHeaders(token: string) {
-  return {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`,
-  };
-}
-
 export class APIProfileRepository implements ProfileRepository {
-  async getProfile(token: string): Promise<ProfileData> {
+  async getProfile(): Promise<ProfileData> {
     try {
-      const response = await axios.get(API_ENDPOINTS.profile, {
-        headers: authHeaders(token),
-      });
+      const response = await axios.get(API_ENDPOINTS.profile);
       return response.data as ProfileData;
     } catch (error) {
       const err = error as AxiosError<APIErrorResponse>;
@@ -31,15 +22,9 @@ export class APIProfileRepository implements ProfileRepository {
       );
     }
   }
-
-  async updateProfile(
-    token: string,
-    data: ProfileUpdateData
-  ): Promise<ProfileData> {
+  async updateProfile(data: ProfileUpdateData): Promise<ProfileData> {
     try {
-      const response = await axios.put(API_ENDPOINTS.profile, data, {
-        headers: authHeaders(token),
-      });
+      const response = await axios.put(API_ENDPOINTS.profile, data);
       return response.data as ProfileData;
     } catch (error) {
       const err = error as AxiosError<APIErrorResponse>;
@@ -48,15 +33,9 @@ export class APIProfileRepository implements ProfileRepository {
       );
     }
   }
-
-  async changePassword(
-    token: string,
-    data: ChangePasswordData
-  ): Promise<{ message: string }> {
+  async changePassword(data: ChangePasswordData): Promise<{ message: string }> {
     try {
-      const response = await axios.put(API_ENDPOINTS.changePassword, data, {
-        headers: authHeaders(token),
-      });
+      const response = await axios.put(API_ENDPOINTS.changePassword, data);
       return response.data as { message: string };
     } catch (error) {
       const err = error as AxiosError<APIErrorResponse>;

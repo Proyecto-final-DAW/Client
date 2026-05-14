@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-import type { MacrosPort } from '../../core/application/ports/MacrosPort';
-import type { OnboardingPort } from '../../core/application/ports/OnboardingPort';
-import type { StatsInitPort } from '../../core/application/ports/StatsInitPort';
+import type { MacrosRepository } from '../../core/application/ports/MacrosRepository';
+import type { OnboardingRepository } from '../../core/application/ports/OnboardingRepository';
+import type { StatsInitRepository } from '../../core/application/ports/StatsInitRepository';
 import type {
   OnboardingFormData,
   FormErrors,
@@ -16,23 +16,29 @@ const TOTAL_STEPS = 6;
 interface UseOnboardingWizardProps {
   userId: number;
   token: string;
-  onboardingService: OnboardingPort;
-  statsInitService: StatsInitPort;
-  macrosService: MacrosPort;
+  initialName: string;
+  onboardingService: OnboardingRepository;
+  statsInitService: StatsInitRepository;
+  macrosService: MacrosRepository;
   onComplete: (response: OnboardingResponse) => void;
 }
 
 export function useOnboardingWizard({
   userId,
   token,
+  initialName,
   onboardingService,
   statsInitService,
   macrosService,
   onComplete,
 }: UseOnboardingWizardProps) {
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] =
-    useState<OnboardingFormData>(INITIAL_FORM_DATA);
+  // Seed `name` from the auth user — the wizard no longer asks for it but
+  // the server validator still requires it in the submit payload.
+  const [formData, setFormData] = useState<OnboardingFormData>(() => ({
+    ...INITIAL_FORM_DATA,
+    name: initialName,
+  }));
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -77,15 +83,14 @@ export function useOnboardingWizard({
     try {
       const response = await onboardingService.submitOnboarding(
         formData,
-        userId,
-        token
+        userId
       );
       // Post-onboarding side effects: non-fatal, do not block navigation.
       const nextToken = response.token ?? token;
       if (nextToken) {
         await Promise.allSettled([
-          statsInitService.initStats(nextToken),
-          macrosService.calculateMacros(formData, userId, nextToken),
+          statsInitService.initStats(),
+          macrosService.calculateMacros(formData, userId),
         ]);
       }
       onComplete(response);
@@ -93,7 +98,7 @@ export function useOnboardingWizard({
       setSubmitError(
         error instanceof Error
           ? error.message
-          : 'Ha ocurrido un error. Inténtalo de nuevo.'
+          : 'Ha ocurrido un error. Intentalo de nuevo.'
       );
     } finally {
       setIsSubmitting(false);

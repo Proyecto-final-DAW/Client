@@ -24,7 +24,7 @@ export const ExerciseProgressChart = (props: Props): React.JSX.Element => {
     return (
       <div className="flex h-64 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900">
         <p className="text-sm text-zinc-500">
-          No hay datos de progresión todavía.
+          No hay datos de progresion todavia.
         </p>
       </div>
     );
@@ -65,7 +65,7 @@ export const ExerciseProgressChart = (props: Props): React.JSX.Element => {
             }}
             labelStyle={{ color: '#a1a1aa' }}
             formatter={(value, name) => {
-              if (name === 'maxWeight') return [`${value} kg`, 'Peso máximo'];
+              if (name === 'maxWeight') return [`${value} kg`, 'Peso maximo'];
               if (name === 'reps') return [String(value), 'Reps'];
               return [String(value), String(name)];
             }}

@@ -1,6 +1,9 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
 
+import { AsyncState } from '../../../shared/components/AsyncState';
+import { ErrorState } from '../../../shared/components/ErrorState';
+import { LoadingPixel } from '../../../shared/components/LoadingPixel';
 import { ExerciseProgressChart } from './components/ExerciseProgressChart';
 import { ExerciseSelector } from './components/ExerciseSelector';
 import { WeightProgressContent } from './components/WeightProgressContent';
@@ -27,59 +30,59 @@ export const ProgressView = (): React.JSX.Element => {
   }, [exercises, selectedId]);
 
   return (
-    <main className="min-h-screen bg-gray-950 px-4 py-8 text-white sm:px-6 lg:px-8">
-      <section className="mx-auto flex max-w-5xl flex-col gap-8">
-        <header>
-          <p className="text-sm text-blue-400">Progreso</p>
-          <h1 className="text-3xl font-bold text-white">Seguimiento de peso</h1>
-          <p className="text-sm text-gray-400">
-            Visualiza cómo evoluciona tu peso a lo largo del tiempo.
-          </p>
-        </header>
+    <section className="mx-auto max-w-5xl text-[#e4e4e7]">
+      <header className="mb-6">
+        <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+          ▶ PROGRESO
+        </p>
+        <h1 className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_16px_rgba(34,197,94,0.55)]">
+          SEGUIMIENTO
+        </h1>
+        <p className="mt-3 font-['VT323'] text-xl leading-snug text-[#a1a1aa]">
+          Visualiza como evolucionan tu peso y tus maximos por ejercicio.
+        </p>
+      </header>
 
+      <div className="flex flex-col gap-6">
         <WeightProgressContent />
 
-        <section>
-          <h2 className="mb-6 text-2xl font-bold text-white">
-            Progresión por ejercicio
-          </h2>
+        <section className="relative border-2 border-green-500/40 bg-[#0d0d14] p-5">
+          <p className="mb-4 font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+            ◆ PROGRESION POR EJERCICIO
+          </p>
 
-          {loadingExercises ? (
-            <p className="text-gray-400">Cargando ejercicios...</p>
-          ) : exercisesError ? (
-            <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-400">
-              {exercisesError}
-            </p>
-          ) : exercises.length === 0 ? (
-            <div className="rounded-xl border border-gray-800 bg-gray-900 p-6">
-              <p className="text-gray-400">
-                Aún no has registrado sesiones. Cuando entrenes podrás ver tu
-                progresión aquí.
-              </p>
-            </div>
-          ) : (
-            <>
-              <div className="mb-6">
-                <ExerciseSelector
-                  exercises={exercises}
-                  selectedId={selectedId}
-                  onChange={setSelectedId}
-                />
-              </div>
+          <AsyncState
+            loading={loadingExercises}
+            error={exercisesError}
+            data={exercises}
+            empty={(e) => e.length === 0}
+            loadingLabel="CARGANDO EJERCICIOS"
+            emptyTitle="Sin sesiones"
+            emptyDescription="Aun no has registrado ninguna sesion. Empieza una para ver aqui tu progresion."
+            emptyCta={{ label: 'Empezar sesion', to: '/routines' }}
+          >
+            {(exercises) => (
+              <>
+                <div className="mb-5">
+                  <ExerciseSelector
+                    exercises={exercises}
+                    selectedId={selectedId}
+                    onChange={setSelectedId}
+                  />
+                </div>
 
-              {progressError ? (
-                <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-400">
-                  {progressError}
-                </p>
-              ) : loadingProgress ? (
-                <p className="text-gray-400">Cargando progresión...</p>
-              ) : (
-                <ExerciseProgressChart points={points} />
-              )}
-            </>
-          )}
+                {loadingProgress ? (
+                  <LoadingPixel label="CARGANDO PROGRESION" />
+                ) : progressError ? (
+                  <ErrorState message={progressError} />
+                ) : (
+                  <ExerciseProgressChart points={points} />
+                )}
+              </>
+            )}
+          </AsyncState>
         </section>
-      </section>
-    </main>
+      </div>
+    </section>
   );
 };

@@ -1,13 +1,13 @@
-import type { OnboardingPort } from '../../../application/ports/OnboardingPort';
+import type { OnboardingRepository } from '../../../application/ports/OnboardingRepository';
 import type { OnboardingFormData } from '../../../domain/models/OnboardingFormData';
 import type { OnboardingResponse } from '../../../domain/models/OnboardingResponse';
 
-export class MockOnboardingAdapter implements OnboardingPort {
+export class MockOnboardingInfoRepository implements OnboardingRepository {
   async submitOnboarding(
     data: OnboardingFormData,
-    userId: number,
-    _token: string
+    userId: number
   ): Promise<OnboardingResponse> {
+    await new Promise((resolve) => setTimeout(resolve, 400));
     return {
       user: {
         id: userId,
@@ -20,7 +20,7 @@ export class MockOnboardingAdapter implements OnboardingPort {
         activity_level: data.activityLevel?.toUpperCase(),
         goals: data.goals.map((g) => g.toUpperCase()),
         experience_level: data.experienceLevel?.toUpperCase(),
-        equipment: data.equipment?.toUpperCase(),
+        equipment: data.equipment.map((e) => e.toUpperCase()),
         days_per_week: data.daysPerWeek,
         injuries: data.injuries.map((i) => i.toUpperCase()),
         daily_calories: 2000,

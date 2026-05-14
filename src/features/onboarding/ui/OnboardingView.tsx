@@ -18,6 +18,10 @@ export const OnboardingView = (): React.JSX.Element => {
     <OnboardingWizard
       userId={user.id}
       token={token}
+      // Name was captured at registration; pre-fill so the wizard does not
+      // re-prompt and the submit payload still carries it (server requires
+      // the field even though it is unchanged).
+      initialName={user.name}
       onboardingService={onboardingService}
       statsInitService={statsInitService}
       macrosService={macrosService}
@@ -29,7 +33,7 @@ export const OnboardingView = (): React.JSX.Element => {
         } else {
           updateUser(nextUser);
         }
-        navigate('/dashboard', { replace: true });
+        navigate('/templates', { replace: true });
       }}
     />
   );

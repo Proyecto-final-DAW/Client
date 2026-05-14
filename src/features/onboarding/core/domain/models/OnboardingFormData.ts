@@ -1,5 +1,10 @@
 export type Sex = 'MALE' | 'FEMALE';
-export type ActivityLevel = 'SEDENTARY' | 'LIGHT' | 'ACTIVE' | 'VERY_ACTIVE';
+export type ActivityLevel =
+  | 'SEDENTARY'
+  | 'LIGHT'
+  | 'MODERATE'
+  | 'ACTIVE'
+  | 'VERY_ACTIVE';
 export type Goal = 'LOSE_FAT' | 'GAIN_MUSCLE' | 'MAINTAIN' | 'HEALTH';
 export type ExperienceLevel = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
 export type Equipment = 'FULL_GYM' | 'HOME_WEIGHTS' | 'BODYWEIGHT';
@@ -15,7 +20,7 @@ export interface OnboardingFormData {
   activityLevel?: ActivityLevel;
   goals: Goal[];
   experienceLevel?: ExperienceLevel;
-  equipment?: Equipment;
+  equipment: Equipment[];
   daysPerWeek?: DaysPerWeek;
   injuries: Injury[];
 }
@@ -31,7 +36,7 @@ export const INITIAL_FORM_DATA: OnboardingFormData = {
   activityLevel: undefined,
   goals: [],
   experienceLevel: undefined,
-  equipment: undefined,
+  equipment: [],
   daysPerWeek: undefined,
   injuries: [],
 };

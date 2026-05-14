@@ -10,7 +10,7 @@ const toISO = (daysAgo: number): string => {
 const MOCK_MILESTONES: Milestone[] = [
   {
     id: 1,
-    name: 'Primera sesión',
+    name: 'Primera sesion',
     description: 'Registra tu primer entrenamiento.',
     conditionType: 'TOTAL_SESSIONS',
     conditionValue: 1,
@@ -20,8 +20,8 @@ const MOCK_MILESTONES: Milestone[] = [
   },
   {
     id: 2,
-    name: 'Racha de 7 días',
-    description: 'Entrena 7 días seguidos.',
+    name: 'Racha de 7 dias',
+    description: 'Entrena 7 dias seguidos.',
     conditionType: 'STREAK',
     conditionValue: 7,
     icon: 'flame',
@@ -60,8 +60,8 @@ const MOCK_MILESTONES: Milestone[] = [
   },
   {
     id: 6,
-    name: 'Racha de 30 días',
-    description: 'Entrena 30 días seguidos.',
+    name: 'Racha de 30 dias',
+    description: 'Entrena 30 dias seguidos.',
     conditionType: 'STREAK',
     conditionValue: 30,
     icon: 'flame',
@@ -111,8 +111,7 @@ const MOCK_MILESTONES: Milestone[] = [
 ];
 
 export class MockMilestonesRepository implements MilestonesRepository {
-  async getAllWithStatus(token: string): Promise<Milestone[]> {
-    void token;
+  async getAllWithStatus(): Promise<Milestone[]> {
     await new Promise((resolve) => setTimeout(resolve, 300));
     return MOCK_MILESTONES;
   }

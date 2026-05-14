@@ -1,7 +1,11 @@
+/**
+ * Wire shape of `GET /users/cards`. Mirrors `cards.service.getCards` on the
+ * server (last_workout_days_ago + training_days are pre-computed there).
+ */
 export interface GetCardsDTO {
-  streak: number;
-  last_session_date: string;
-  training_days_this_month: string[];
+  streak: number | null;
+  lastWorkoutDaysAgo: number | null;
+  trainingDays: string[];
   stats: {
     strength: number;
     resistance: number;

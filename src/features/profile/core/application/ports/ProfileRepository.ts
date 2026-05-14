@@ -5,10 +5,7 @@ import type {
 } from '../../domain/models/ProfileData';
 
 export interface ProfileRepository {
-  getProfile(token: string): Promise<ProfileData>;
-  updateProfile(token: string, data: ProfileUpdateData): Promise<ProfileData>;
-  changePassword(
-    token: string,
-    data: ChangePasswordData
-  ): Promise<{ message: string }>;
+  getProfile(): Promise<ProfileData>;
+  updateProfile(data: ProfileUpdateData): Promise<ProfileData>;
+  changePassword(data: ChangePasswordData): Promise<{ message: string }>;
 }
