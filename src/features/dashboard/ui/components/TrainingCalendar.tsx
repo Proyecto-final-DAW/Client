@@ -23,32 +23,44 @@ export const TrainingCalendar = (
 
   return (
     <div className="mt-5 flex flex-col items-center">
-      <p className="mb-3 font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500 uppercase">
+      <p className="mb-3 font-pixel text-[9px] tracking-widest text-green-500 uppercase">
         {monthName}
       </p>
-      <div className="flex flex-col gap-1.5">
-        <div className="flex gap-1.5">
+      {/* Different gap sizes per axis: horizontal `gap-2` widens the
+          calendar so it spans more of the card, vertical `gap-1.5`
+          gives the week rows breathing room (was `gap-0.5`, which
+          glued the weeks together visually). Cells scale from
+          16→18→20px with the breakpoint so the calendar fills the
+          card on tablets/desktops instead of sitting as a tiny
+          island in the centre of a wide column. */}
+      <div className="flex flex-col gap-1.5 sm:gap-2">
+        <div className="flex gap-2 sm:gap-2.5">
           {weekdayLabels.map((label) => (
             <span
               key={label}
-              className="flex h-5 w-5 items-center justify-center font-['Press_Start_2P'] text-[8px] leading-none text-zinc-500"
+              className="flex h-4 w-4 sm:h-[18px] sm:w-[18px] lg:h-5 lg:w-5 items-center justify-center font-pixel text-[8px] leading-none text-zinc-500"
             >
               {label}
             </span>
           ))}
         </div>
         {grid.map((week, wi) => (
-          <div key={wi} className="flex gap-1.5">
+          <div key={wi} className="flex gap-2 sm:gap-2.5">
             {week.map((cell, di) => {
               if (cell.day === null) {
-                return <div key={di} className="h-5 w-5" />;
+                return (
+                  <div
+                    key={di}
+                    className="h-4 w-4 sm:h-[18px] sm:w-[18px] lg:h-5 lg:w-5"
+                  />
+                );
               }
               const title = `Dia ${cell.day}${cell.trained ? ' — Entrenado' : ''}`;
               return (
                 <div
                   key={di}
                   title={title}
-                  className={`h-5 w-5 rounded-sm ${cellBackground(cell.trained, cell.future)}`}
+                  className={`h-4 w-4 sm:h-[18px] sm:w-[18px] lg:h-5 lg:w-5 rounded-sm ${cellBackground(cell.trained, cell.future)}`}
                 />
               );
             })}

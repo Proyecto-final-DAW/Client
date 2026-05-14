@@ -1,14 +1,27 @@
-import { STAT_CONFIG, STAT_ORDER } from '../../../../domain/models/StatConfig';
-import type { StatPilar } from '../../../../domain/models/StatPilar';
-import type { UserStats } from '../../../../domain/models/UserStats';
+import {
+  STAT_METADATA,
+  STAT_ORDER,
+} from '@features/stats/core/domain/models/StatMetadata';
+import type { StatPilar } from '@features/stats/core/domain/models/StatPilar';
+import type { UserStats } from '@features/stats/core/domain/models/UserStats';
+
 import type { GetStatsDTO } from '../dtos/GetStatsDTO';
 
-const XP_PER_LEVEL = 100;
+/**
+ * Mirrors the server's `xpThresholdForLevel` from
+ * progression.service.ts (`100 + level * 15`). Hardcoding the
+ * formula client-side keeps the bar fill and the "X / Y XP" label
+ * accurate without a network round-trip; if the server formula
+ * changes, both places need updating — the duplication is
+ * intentional and noted at the server too. The previous flat 100 cap
+ * over-filled the bar at low levels and under-filled at high ones.
+ */
+const xpThresholdForLevel = (level: number): number => 100 + level * 15;
 
 /**
- * The stat config keys are the client-facing names (`strength`, `resistance`,
- * `stamina`, …). The server emits `endurance` instead of `resistance` (the
- * column name in DB), so we explicitly translate.
+ * The metadata keys are the client-facing names (`strength`,
+ * `resistance`, `stamina`, …). The server emits `endurance` instead of
+ * `resistance` (the column name in DB), so we explicitly translate.
  */
 const STAT_PICKER: Record<
   (typeof STAT_ORDER)[number],
@@ -33,25 +46,27 @@ const titleFor = (level: number): string => {
 
 export class StatsFromDTO {
   static fromDTO(dto: GetStatsDTO): UserStats {
-    const pilpilar: StatPilar[] = STAT_ORDER.map((key) => {
-      const config = STAT_CONFIG[key];
+    const pillar: StatPilar[] = STAT_ORDER.map((key) => {
+      const meta = STAT_METADATA[key];
       const picker = STAT_PICKER[key];
+      const level = picker.level(dto);
       return {
-        name: config.name,
+        key,
+        name: meta.name,
         value: picker.xp(dto),
-        max: XP_PER_LEVEL,
-        level: picker.level(dto),
-        icon: config.icon,
-        accentColor: config.accentColor,
+        max: xpThresholdForLevel(level),
+        level,
+        accentColor: meta.accentColor,
+        description: meta.description,
       };
     });
 
     const heroLevel = Math.round(
-      pilpilar.reduce((sum, p) => sum + p.level, 0) / STAT_ORDER.length
+      pillar.reduce((sum, p) => sum + p.level, 0) / STAT_ORDER.length
     );
 
     return {
-      pilpilar,
+      pillar,
       level: heroLevel,
       title: titleFor(heroLevel),
     };

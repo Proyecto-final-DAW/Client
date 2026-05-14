@@ -12,16 +12,17 @@ const stepLabels = [
   'OBJETIVO',
   'PLAN',
   'LIMITES',
+  'RESUMEN',
 ];
 
 export const Stepper = (props: StepperProps): React.JSX.Element => {
   return (
     <div className="w-full mb-6">
       <div className="flex justify-between items-center mb-3">
-        <span className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] tracking-wider">
+        <span className="font-pixel text-[9px] sm:text-[10px] text-ink-muted tracking-wider">
           PASO {props.currentStep}/{props.totalSteps}
         </span>
-        <span className="font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-green-400 tracking-wider">
+        <span className="font-pixel text-[9px] sm:text-[10px] text-green-400 tracking-wider">
           {Math.round((props.currentStep / props.totalSteps) * 100)}%
         </span>
       </div>
@@ -40,8 +41,13 @@ export const Stepper = (props: StepperProps): React.JSX.Element => {
               className="flex flex-col items-center flex-1 min-w-0"
             >
               <div className="flex items-center w-full">
+                {/* Connectors are `h-1` on both sides of every circle so
+                    the rail reads as a single continuous line at every
+                    breakpoint — the previous `h-1` / `h-0.5` pairing
+                    looked like a thin stitch on mobile and made adjacent
+                    cells appear mismatched. */}
                 <div
-                  className={`flex-1 h-0.5 transition-colors ${
+                  className={`flex-1 h-1 transition-colors ${
                     i === 0
                       ? 'bg-transparent'
                       : prevCompleted
@@ -50,18 +56,18 @@ export const Stepper = (props: StepperProps): React.JSX.Element => {
                   }`}
                 />
                 <div
-                  className={`shrink-0 flex h-8 w-8 items-center justify-center border-2 font-['Press_Start_2P'] text-[10px] leading-none ${
+                  className={`shrink-0 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center border-2 font-pixel text-[10px] leading-none ${
                     isCompleted
                       ? 'bg-green-500 border-green-700 text-[#0a0a0f] shadow-[0_0_12px_rgba(34,197,94,0.45)]'
                       : isActive
-                        ? 'bg-[#12121a] border-green-500 text-green-400 shadow-[0_0_14px_rgba(34,197,94,0.45)]'
-                        : 'bg-[#12121a] border-[#1e1e2e] text-[#52525b]'
+                        ? 'bg-subtle border-green-500 text-green-400 shadow-[0_0_14px_rgba(34,197,94,0.45)]'
+                        : 'bg-subtle border-border text-ink-disabled'
                   }`}
                 >
                   {isCompleted ? <CheckIcon className="h-4 w-4" /> : step}
                 </div>
                 <div
-                  className={`flex-1 h-0.5 transition-colors ${
+                  className={`flex-1 h-1 transition-colors ${
                     i === props.totalSteps - 1
                       ? 'bg-transparent'
                       : nextCompleted
@@ -71,12 +77,12 @@ export const Stepper = (props: StepperProps): React.JSX.Element => {
                 />
               </div>
               <span
-                className={`font-['Press_Start_2P'] text-[6px] sm:text-[7px] mt-2 tracking-wider text-center leading-tight ${
+                className={`hidden sm:block font-pixel text-[8px] mt-1.5 tracking-wider text-center leading-tight ${
                   isCompleted
                     ? 'text-green-400'
                     : isActive
-                      ? 'text-[#e4e4e7]'
-                      : 'text-[#52525b]'
+                      ? 'text-ink'
+                      : 'text-ink-disabled'
                 }`}
               >
                 {stepLabels[i]}

@@ -3,8 +3,8 @@ import {
   ChevronUpIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
+import { PixelCorners } from '@shared/components/PixelCorners';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type { Exercise } from '../../../exercises/core/domain/models/Exercise';
 
 type ExerciseRowProps = {
@@ -28,19 +28,24 @@ export const ExerciseRow = ({
   const isLast = index === total - 1;
 
   return (
-    <article className="relative flex items-center gap-3 border-2 border-[#1e1e2e] bg-[#0d0d14] p-3">
+    <article className="relative flex items-center gap-3 border-2 border-border bg-card p-3">
       <PixelCorners size="sm" className="border-green-500/30" />
 
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-[#27272a] bg-[#12121a] font-['Press_Start_2P'] text-[10px] text-green-400">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-border-muted bg-subtle font-pixel text-[10px] text-green-400">
         {String(index + 1).padStart(2, '0')}
       </div>
 
-      <h3 className="flex-1 font-['Press_Start_2P'] text-[10px] sm:text-[11px] leading-relaxed text-[#e4e4e7]">
+      <h3 className="flex-1 font-pixel text-[10px] sm:text-[11px] leading-relaxed text-ink">
         {exercise.name}
       </h3>
 
       {editing && (
         <div className="flex items-center gap-1">
+          {/* Tap targets bumped from ~20px (p-1 + 12px icon) to ~36px
+              (p-2 + 16px icon) to clear the WCAG 2.5.5 24×24 floor and
+              get close to Apple HIG's 44px guidance. The previous size
+              was a bullseye-game on phone — moving an exercise within
+              a routine routinely mis-tapped the wrong arrow. */}
           {onMove && (
             <div className="flex flex-col">
               <button
@@ -48,18 +53,18 @@ export const ExerciseRow = ({
                 onClick={() => onMove(exercise.id, 'up')}
                 disabled={isFirst}
                 aria-label={`Subir ${exercise.name}`}
-                className="border border-[#27272a] bg-[#12121a] p-1 text-[#a1a1aa] transition-colors hover:border-green-500/50 hover:text-green-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-[#27272a] disabled:hover:text-[#a1a1aa]"
+                className="border border-border-muted bg-subtle p-2 text-ink-muted transition-colors hover:border-green-500/50 hover:text-green-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-border-muted disabled:hover:text-ink-muted"
               >
-                <ChevronUpIcon className="h-3 w-3" />
+                <ChevronUpIcon className="h-4 w-4" />
               </button>
               <button
                 type="button"
                 onClick={() => onMove(exercise.id, 'down')}
                 disabled={isLast}
                 aria-label={`Bajar ${exercise.name}`}
-                className="border border-t-0 border-[#27272a] bg-[#12121a] p-1 text-[#a1a1aa] transition-colors hover:border-green-500/50 hover:text-green-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-[#27272a] disabled:hover:text-[#a1a1aa]"
+                className="border border-t-0 border-border-muted bg-subtle p-2 text-ink-muted transition-colors hover:border-green-500/50 hover:text-green-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-border-muted disabled:hover:text-ink-muted"
               >
-                <ChevronDownIcon className="h-3 w-3" />
+                <ChevronDownIcon className="h-4 w-4" />
               </button>
             </div>
           )}

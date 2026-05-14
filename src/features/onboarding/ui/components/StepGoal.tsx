@@ -56,14 +56,14 @@ export const StepGoal = (props: StepGoalProps): React.JSX.Element => {
 
   return (
     <div>
-      <h2 className="text-center font-['Press_Start_2P'] text-lg sm:text-xl text-[#e4e4e7] mb-3 leading-relaxed tracking-wider [text-shadow:0_0_18px_rgba(34,197,94,0.35)]">
+      <h2 className="text-center font-pixel text-base sm:text-lg text-ink mb-3 leading-tight tracking-wider [text-shadow:0_0_12px_rgba(34,197,94,0.35)]">
         ¿CUAL ES TU <span className="text-green-400">OBJETIVO?</span>
       </h2>
-      <p className="text-center font-['VT323'] text-lg sm:text-xl text-[#a1a1aa] mb-5 leading-tight">
+      <p className="text-center font-pixel-mono text-base text-ink-muted mb-5 leading-tight">
         Puedes elegir uno o mas.
       </p>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {goalOptions.map((option) => {
           const isSelected = selected.includes(option.value);
           return (
@@ -74,7 +74,7 @@ export const StepGoal = (props: StepGoalProps): React.JSX.Element => {
               className={`relative text-left px-3 py-3 border-2 transition-all duration-150 ${
                 isSelected
                   ? 'bg-green-500/10 border-green-500/70 shadow-[0_0_14px_rgba(34,197,94,0.25)]'
-                  : 'bg-[#12121a] border-[#1e1e2e] hover:border-[#3f3f46]'
+                  : 'bg-subtle border-border hover:border-[#3f3f46]'
               }`}
             >
               {isSelected && (
@@ -89,11 +89,11 @@ export const StepGoal = (props: StepGoalProps): React.JSX.Element => {
                 <span className="text-xl shrink-0">{option.icon}</span>
                 <div className="min-w-0 flex-1">
                   <div
-                    className={`font-['Press_Start_2P'] text-[8px] tracking-wider leading-tight ${isSelected ? 'text-green-400' : 'text-[#e4e4e7]'}`}
+                    className={`font-pixel text-[8px] tracking-wider leading-tight ${isSelected ? 'text-green-400' : 'text-ink'}`}
                   >
                     {option.title}
                   </div>
-                  <div className="font-['VT323'] text-base text-[#a1a1aa] mt-1 leading-tight">
+                  <div className="font-pixel-mono text-base text-ink-muted mt-1 leading-tight">
                     {option.description}
                   </div>
                 </div>
@@ -103,7 +103,7 @@ export const StepGoal = (props: StepGoalProps): React.JSX.Element => {
         })}
       </div>
       {props.errors.goals && (
-        <p className="font-['Press_Start_2P'] text-base text-red-400 mt-3 tracking-wide leading-none">
+        <p className="font-pixel-mono text-base text-red-400 mt-3 tracking-wide leading-none">
           ✕ {props.errors.goals}
         </p>
       )}

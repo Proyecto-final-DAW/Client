@@ -1,8 +1,9 @@
-import { PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useEffect, useState } from 'react';
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon } from '@heroicons/react/24/solid';
+import { PixelCorners } from '@shared/components/PixelCorners';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type { Exercise } from '../../../exercises/core/domain/models/Exercise';
 import { ExerciseSearch } from '../../../exercises/ui/components/ExerciseSearch';
 import type { Routine } from '../../core/domain/models/Routine';
@@ -11,6 +12,13 @@ import { ExerciseRow } from './ExerciseRow';
 
 type RoutineDetailProps = {
   routine: Routine | null;
+  /**
+   * True iff the user already saved a session today. Mirrors the
+   * server's one-session-per-day rule (POST /sessions returns 409) so
+   * the gate is communicated up-front rather than after the user has
+   * logged every set and pressed save — the previous failure mode.
+   */
+  trainedToday?: boolean;
   onAddExercise: (exercise: Exercise) => void | Promise<void>;
   onRemoveExercise: (exerciseId: string) => void | Promise<void>;
   onMoveExercise?: (
@@ -18,18 +26,52 @@ type RoutineDetailProps = {
     direction: 'up' | 'down'
   ) => void | Promise<void>;
   onDeleteRoutine: () => void;
+  /**
+   * Optional sibling action — wipes every routine the user has, not
+   * just this one. Surfaced next to BORRAR so the user can clear a
+   * piled-up template stack from the same place they'd delete a
+   * single routine. Parent owns the confirmation dialog + the actual
+   * loop of deletes; this component just forwards the trigger.
+   */
+  onDeleteAllRoutines?: () => void;
+  /** True while the parent is mid-delete-loop. Disables the button. */
+  deletingAll?: boolean;
+  /** How many routines exist in total — surfaced in the button label. */
+  totalRoutines?: number;
 };
 
 export const RoutineDetail = ({
   routine,
+  trainedToday = false,
   onAddExercise,
   onRemoveExercise,
   onMoveExercise,
   onDeleteRoutine,
+  onDeleteAllRoutines,
+  deletingAll = false,
+  totalRoutines,
 }: RoutineDetailProps) => {
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
   const [searchOpen, setSearchOpen] = useState(true);
+  // Transient confirmation surfaced after each successful add so the
+  // user gets immediate feedback. Without it, tapping a card was a
+  // silent operation — the routine list above the picker is the only
+  // signal, and it's offscreen on mobile.
+  const [lastAdded, setLastAdded] = useState<string | null>(null);
+  const lastAddedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+
+  // Cleanup any pending banner timer on unmount so we don't fire a
+  // setState on a torn-down component.
+  useEffect(() => {
+    return () => {
+      if (lastAddedTimeoutRef.current) {
+        clearTimeout(lastAddedTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Re-open the "AÑADIR EJERCICIO" panel every time the user enters edit
   // mode. Without this, collapsing it once and exiting edit would leave it
@@ -38,14 +80,32 @@ export const RoutineDetail = ({
     if (editing) setSearchOpen(true);
   }, [editing]);
 
+  // Memoised set so the search grid doesn't rebuild every keystroke
+  // — the ExerciseSearch component re-renders on every input change
+  // and a fresh Set on each pass would force every card under it to
+  // re-render too.
+  const addedIds = useMemo(
+    () => new Set((routine?.exercises ?? []).map((e) => e.id)),
+    [routine?.exercises]
+  );
+
+  const handleAdd = async (exercise: Exercise): Promise<void> => {
+    await onAddExercise(exercise);
+    setLastAdded(exercise.name);
+    if (lastAddedTimeoutRef.current) {
+      clearTimeout(lastAddedTimeoutRef.current);
+    }
+    lastAddedTimeoutRef.current = setTimeout(() => setLastAdded(null), 2500);
+  };
+
   if (!routine) {
     return (
-      <section className="relative border-2 border-[#1e1e2e] bg-[#0d0d14] p-6 text-center">
+      <section className="relative border-2 border-border bg-card p-6 text-center">
         <PixelCorners size="md" className="border-green-500/30" />
-        <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-[#a1a1aa]">
+        <p className="font-pixel text-[10px] tracking-widest text-ink-muted">
           ◆ SIN SESION SELECCIONADA
         </p>
-        <p className="mt-3 font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+        <p className="mt-3 font-pixel text-base text-ink-muted">
           Selecciona una sesion arriba o crea una nueva.
         </p>
       </section>
@@ -56,62 +116,88 @@ export const RoutineDetail = ({
   const hasExercises = exerciseCount > 0;
 
   return (
-    <section className="relative border-2 border-green-500/60 bg-[#0d0d14] p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.6),0_0_60px_rgba(34,197,94,0.18)]">
+    <section className="relative border-2 border-green-500/60 bg-card p-5 sm:p-6 shadow-[0_0_0_4px_rgba(10,10,15,0.6),0_0_60px_rgba(34,197,94,0.18)]">
       <PixelCorners size="md" className="border-green-500/60" />
 
-      <header className="border-b-2 border-[#1e1e2e] pb-5">
+      <header className="border-b-2 border-border pb-5">
         <div className="min-w-0">
-          <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500">
+          <p className="font-pixel text-[9px] tracking-widest text-green-500">
             ◆ SESION ACTIVA
           </p>
-          <h2 className="mt-2 font-['Press_Start_2P'] text-base sm:text-lg leading-relaxed text-green-400 [text-shadow:0_0_14px_rgba(34,197,94,0.5)] break-words">
+          <h2 className="mt-2 font-pixel text-base sm:text-lg leading-relaxed text-green-400 [text-shadow:0_0_14px_rgba(34,197,94,0.5)] break-words">
             {formatRoutineName(routine).toUpperCase()}
           </h2>
-          <p className="mt-2 font-['Press_Start_2P'] text-[10px] tracking-wider text-[#a1a1aa]">
+          <p className="mt-2 font-pixel text-[10px] tracking-wider text-ink-muted">
             {exerciseCount} {exerciseCount === 1 ? 'ejercicio' : 'ejercicios'}
           </p>
         </div>
 
-        {hasExercises && (
-          <button
-            type="button"
-            onClick={() => navigate(`/workout/${routine.id}`)}
-            className="mt-4 w-full font-['Press_Start_2P'] text-[11px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-5 py-3.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-[1.0625rem] transition-all duration-150 shadow-[0_0_18px_rgba(34,197,94,0.4)]"
-          >
-            ▶ EMPEZAR SESION
-          </button>
-        )}
+        {hasExercises &&
+          (trainedToday ? (
+            <button
+              type="button"
+              disabled
+              className="mt-4 w-full font-pixel text-[11px] tracking-widest bg-green-500/15 text-green-400/70 border-b-4 border-green-500/30 px-5 py-3.5 cursor-default inline-flex items-center justify-center gap-2"
+            >
+              <CheckCircleIcon className="h-4 w-4" />
+              ENTRENO COMPLETADO HOY
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => navigate(`/workout/${routine.id}`)}
+              className="mt-4 w-full font-pixel text-[11px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-5 py-3.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-[1.0625rem] transition-all duration-150 shadow-[0_0_18px_rgba(34,197,94,0.4)]"
+            >
+              ▶ EMPEZAR SESION
+            </button>
+          ))}
 
+        {/* While editing, the close action moves to a prominent
+            "GUARDAR" button below the exercise list — closer to where
+            the user finishes their work and impossible to miss. The
+            top toggle stays only as the entry point ("EDITAR" when
+            inactive). BORRAR sticks to the header in either mode
+            because deleting the whole routine is unrelated to
+            editing it. */}
         <div className="mt-3 flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => setEditing((value) => !value)}
-            className={`inline-flex items-center gap-2 font-['Press_Start_2P'] text-[8px] tracking-widest border px-2.5 py-2 transition-colors ${
-              editing
-                ? 'border-green-500/60 bg-green-500/10 text-green-400'
-                : 'border-[#27272a] bg-transparent text-[#71717a] hover:border-green-500/40 hover:text-green-400'
-            }`}
-          >
-            {editing ? (
-              <>
-                <XMarkIcon className="h-3 w-3" />
-                CERRAR EDICION
-              </>
-            ) : (
-              <>
-                <PencilIcon className="h-3 w-3" />
-                EDITAR
-              </>
-            )}
-          </button>
+          {!editing && (
+            <button
+              type="button"
+              onClick={() => setEditing(true)}
+              className="inline-flex items-center gap-2 font-pixel text-[9px] tracking-widest border-2 border-border bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400 px-3 py-2.5 transition-colors"
+            >
+              <PencilIcon className="h-3.5 w-3.5" />
+              EDITAR
+            </button>
+          )}
           <button
             type="button"
             onClick={onDeleteRoutine}
-            className="inline-flex items-center gap-2 font-['Press_Start_2P'] text-[8px] tracking-widest border border-[#27272a] bg-transparent text-[#71717a] px-2.5 py-2 hover:border-red-500/50 hover:text-red-400 transition-colors"
+            className="inline-flex items-center gap-2 font-pixel text-[9px] tracking-widest border-2 border-border bg-card text-ink-muted px-3 py-2.5 hover:border-red-500/50 hover:text-red-400 transition-colors"
           >
             <TrashIcon className="h-3 w-3" />
             BORRAR
           </button>
+          {/* Bulk delete — surfaced next to BORRAR so the user can
+              clear an entire pile from the same place they'd delete
+              one. Always rendered when the parent passes the handler
+              (parent only does so when routines.length > 0, which is
+              always true inside this branch of RoutinesView). */}
+          {onDeleteAllRoutines && (
+            <button
+              type="button"
+              onClick={onDeleteAllRoutines}
+              disabled={deletingAll}
+              className="inline-flex items-center gap-2 font-pixel text-[9px] tracking-widest border-2 border-border bg-card text-ink-muted px-3 py-2.5 hover:border-red-500/50 hover:text-red-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <TrashIcon className="h-3 w-3" />
+              {deletingAll
+                ? 'BORRANDO…'
+                : totalRoutines && totalRoutines > 1
+                  ? `BORRAR TODAS (${totalRoutines})`
+                  : 'BORRAR TODAS'}
+            </button>
+          )}
         </div>
       </header>
 
@@ -129,7 +215,7 @@ export const RoutineDetail = ({
             />
           ))
         ) : (
-          <p className="border-2 border-dashed border-[#27272a] bg-[#0a0a0f] p-4 text-center font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+          <p className="border-2 border-dashed border-border-muted bg-page p-4 text-center font-pixel text-base text-ink-muted">
             Esta rutina aun no tiene ejercicios. Pulsa "EDITAR" para añadir el
             primero.
           </p>
@@ -137,24 +223,57 @@ export const RoutineDetail = ({
       </div>
 
       {editing && (
-        <div className="mt-6 border-t-2 border-[#1e1e2e] pt-5">
+        <>
+          {/* Primary CTA sits directly under the last exercise so the
+              user's eye finishes reviewing the routine and lands on
+              "guardar" without having to scroll past the picker.
+              Changes are persisted per-action server-side; this just
+              closes the edit affordance, but reads as "save" in the
+              user's mental model. */}
           <button
             type="button"
-            onClick={() => setSearchOpen((open) => !open)}
-            aria-expanded={searchOpen}
-            className="mb-3 flex w-full items-center justify-between gap-3 font-['Press_Start_2P'] text-[9px] tracking-widest text-green-500 transition-colors hover:text-green-400"
+            onClick={() => setEditing(false)}
+            className="mt-5 w-full font-pixel text-[10px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-5 py-3.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-[1.40625rem] transition-all duration-150 shadow-[0_0_18px_rgba(34,197,94,0.4)]"
           >
-            <span>{searchOpen ? '▾' : '▸'} AÑADIR EJERCICIO</span>
-            <span className="font-['Press_Start_2P'] text-[8px] text-[#a1a1aa]">
-              {searchOpen ? 'OCULTAR' : 'MOSTRAR'}
-            </span>
+            ✓ GUARDAR
           </button>
-          {searchOpen && (
-            <ExerciseSearch
-              onSelectExercise={(exercise) => void onAddExercise(exercise)}
-            />
-          )}
-        </div>
+
+          <div className="mt-6 border-t-2 border-border pt-5">
+            <button
+              type="button"
+              onClick={() => setSearchOpen((open) => !open)}
+              aria-expanded={searchOpen}
+              className="mb-3 flex w-full items-center justify-between gap-3 font-pixel text-[9px] tracking-widest text-green-500 transition-colors hover:text-green-400"
+            >
+              <span>{searchOpen ? '▾' : '▸'} AÑADIR EJERCICIO</span>
+              <span className="font-pixel text-[8px] text-ink-muted">
+                {searchOpen ? 'OCULTAR' : 'MOSTRAR'}
+              </span>
+            </button>
+            {searchOpen && (
+              <>
+                {/* Live region so screen readers announce each add.
+                    The visible banner uses role="status" +
+                    aria-live="polite" to read non-interruptively,
+                    matching the FormFeedback pattern in the rest of
+                    the app. */}
+                {lastAdded && (
+                  <div
+                    role="status"
+                    aria-live="polite"
+                    className="mb-3 border-2 border-green-500/50 bg-green-500/10 px-3 py-2 font-pixel-mono text-base text-green-300"
+                  >
+                    ✓ Añadido: {lastAdded}
+                  </div>
+                )}
+                <ExerciseSearch
+                  onSelectExercise={(exercise) => void handleAdd(exercise)}
+                  addedIds={addedIds}
+                />
+              </>
+            )}
+          </div>
+        </>
       )}
     </section>
   );

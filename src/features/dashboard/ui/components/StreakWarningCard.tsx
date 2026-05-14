@@ -1,8 +1,8 @@
 import { FireIcon } from '@heroicons/react/24/solid';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type { StreakStatus } from '../../../streak/core/domain/models/StreakStatus';
 
 type Props = {
@@ -15,13 +15,19 @@ export const StreakWarningCard = (props: Props): React.JSX.Element | null => {
 
   if (!isAtRisk) return null;
 
+  // hoursRemaining converts to days_remaining (rough). The streak is
+  // saved by ANY single session this week, so we only message the
+  // runway in days, not the target gap — the latter belongs on the
+  // weekly-progress card, not on a streak alarm.
+  const daysRemaining = Math.max(1, Math.ceil(hoursRemaining / 24));
+
   return (
     <motion.article
       role="alert"
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-      className="relative border-2 border-red-500/60 bg-[#0d0d14] p-5 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(239,68,68,0.35)]"
+      className="relative border-2 border-red-500/60 bg-card p-5 shadow-[0_0_0_4px_rgba(10,10,15,0.8),0_0_60px_rgba(239,68,68,0.35)]"
     >
       <PixelCorners size="md" className="border-red-500/60" />
 
@@ -31,12 +37,14 @@ export const StreakWarningCard = (props: Props): React.JSX.Element | null => {
         </div>
 
         <div className="min-w-0 flex-1">
-          <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-red-400">
+          <p className="font-pixel text-[10px] tracking-widest text-red-400">
             ⚠ RACHA EN PELIGRO
           </p>
-          <p className="mt-2 font-['Press_Start_2P'] text-lg leading-tight text-[#e4e4e7]">
-            Entrena en las proximas {hoursRemaining}h o pierdes tu racha de{' '}
-            {currentStreak} dias.
+          <p className="mt-2 font-pixel text-lg leading-tight text-ink">
+            Aun no has entrenado esta semana. Te quedan {daysRemaining}{' '}
+            {daysRemaining === 1 ? 'dia' : 'dias'} para hacer una sesion y
+            mantener tu racha de {currentStreak}{' '}
+            {currentStreak === 1 ? 'semana' : 'semanas'}.
           </p>
         </div>
       </div>
@@ -44,7 +52,7 @@ export const StreakWarningCard = (props: Props): React.JSX.Element | null => {
       <button
         type="button"
         onClick={() => navigate('/routines')}
-        className="mt-4 w-full font-['Press_Start_2P'] text-xs tracking-widest bg-red-500 hover:bg-red-400 text-[#0a0a0f] px-6 py-4 border-b-4 border-red-700 hover:border-red-600 active:border-b-0 active:mt-[1.0625rem] transition-all duration-150 shadow-[0_0_18px_rgba(239,68,68,0.45)]"
+        className="mt-4 w-full font-pixel text-xs tracking-widest bg-red-500 hover:bg-red-400 text-[#0a0a0f] px-6 py-4 border-b-4 border-red-700 hover:border-red-600 active:border-b-0 active:mt-[1.0625rem] transition-all duration-150 shadow-[0_0_18px_rgba(239,68,68,0.45)]"
       >
         ▶ ENTRENAR AHORA
       </button>

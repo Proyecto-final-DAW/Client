@@ -2,9 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
+html,
+body {
   scroll-behavior: smooth;
   scrollbar-gutter: stable;
+  /* Match the in-app `bg-page` token so route transitions
+     (onboarding → dashboard, dashboard → workout, etc.) don't flash
+     a white frame between the previous view's unmount and the new
+     view's first paint. Without this, lazy-loaded routes briefly
+     showed the browser default white before the chunk hydrated and
+     painted its own dark background. */
+  background-color: #0a0a0f;
+  /* Firefox: thin green thumb on near-black track so the page-level
+     scrollbar matches the RPG palette instead of the browser default
+     (light grey thumb on white) that read as a foreign UI element
+     against the dark page. Webkit rules below cover Chrome/Edge/Safari. */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 197, 94, 0.55) #0a0a0f;
+}
+
+/* Webkit scrollbar styling for the page itself + any in-app
+   `overflow-y-auto` container that doesn't already define its own
+   scrollbar (e.g. .pixel-select-scroll below, TierUpModal inline).
+   Kept narrow (10px) so it doesn't dominate the layout, and matched
+   to the green accent the rest of the app uses for active states.
+   The track sits on #0a0a0f (same as body bg) so it disappears into
+   the page when not scrolling, with just the thumb visible. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0f;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(34, 197, 94, 0.45);
+  border: 1px solid rgba(34, 197, 94, 0.7);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(34, 197, 94, 0.7);
+}
+::-webkit-scrollbar-corner {
+  background: #0a0a0f;
+}
+
+/* Stat color palette consumed by StatBar via `var(--stat-…)`. Without these
+   vars the bars renders transparent because `color-mix` falls back to nothing. */
+:root {
+  --stat-strength: #ef4444;
+  --stat-resistance: #3b82f6;
+  --stat-stamina: #f97316;
+  --stat-agility: #22c55e;
+  --stat-tenacity: #eab308;
+  --stat-vigor: #a855f7;
+  --muted: #1e1e2e;
+  --foreground: #e4e4e7;
+  --muted-foreground: #71717a;
+  --border: #1e1e2e;
+  --card: #0d0d14;
+  --destructive: #ef4444;
+  --destructive-foreground: #fee2e2;
+}
+
+/* Stat color palette consumed by StatBar via `var(--stat-…)`. Without these
+   vars the bars renders transparent because `color-mix` falls back to nothing. */
+:root {
+  --stat-strength: #ef4444;
+  --stat-resistance: #3b82f6;
+  --stat-stamina: #f97316;
+  --stat-agility: #22c55e;
+  --stat-tenacity: #eab308;
+  --stat-vigor: #a855f7;
+  --muted: #1e1e2e;
+  --foreground: #e4e4e7;
+  --muted-foreground: #71717a;
+  --border: #1e1e2e;
+  --card: #0d0d14;
+  --destructive: #ef4444;
+  --destructive-foreground: #fee2e2;
 }
 
 /* Stat color palette consumed by StatBar via `var(--stat-…)`. Without these
@@ -160,4 +235,26 @@ img[src*='Logo'] {
 
 .animate-orb-alt {
   animation: orbFloatAlt 11s ease-in-out infinite;
+}
+
+/* Pixel-themed scrollbar for the PixelSelect dropdown. The default
+ * browser bar (light grey thumb on white track) clashes badly with
+ * the dark RPG palette — tinting it green keeps the menu coherent
+ * when the option list overflows. */
+.pixel-select-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 197, 94, 0.55) transparent;
+}
+.pixel-select-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.pixel-select-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.pixel-select-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(34, 197, 94, 0.45);
+  border: 1px solid rgba(34, 197, 94, 0.7);
+}
+.pixel-select-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(34, 197, 94, 0.65);
 }

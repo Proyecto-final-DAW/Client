@@ -17,6 +17,8 @@ type ProfileFormState = {
   equipment: string[];
   days_per_week: string;
   injuries: string[];
+  /** Free-text follow-up shown only when "OTRA" is in `injuries`. */
+  injury_notes: string;
 };
 
 const toFormState = (profile: ProfileData): ProfileFormState => ({
@@ -31,6 +33,7 @@ const toFormState = (profile: ProfileData): ProfileFormState => ({
   equipment: profile.equipment ?? [],
   days_per_week: profile.days_per_week ?? '',
   injuries: profile.injuries ?? [],
+  injury_notes: profile.injury_notes ?? '',
 });
 
 const stringArraysEqual = (a: string[], b: string[]): boolean => {
@@ -89,6 +92,19 @@ const buildUpdatePayload = (
   }
   if (!stringArraysEqual(form.injuries, profile.injuries ?? [])) {
     data.injuries = form.injuries;
+  }
+  // Send injury_notes when:
+  //   - "OTHER" is selected AND the text differs from saved (covers
+  //     both first-time fill-in and edits to an existing note).
+  //   - "OTHER" was deselected — clear the column with empty string
+  //     so the persisted note doesn't outlive the chip selection.
+  const trimmedNotes = form.injury_notes.trim();
+  const savedNotes = (profile.injury_notes ?? '').trim();
+  const hasOther = form.injuries.includes('OTHER');
+  if (hasOther && trimmedNotes !== savedNotes) {
+    data.injury_notes = trimmedNotes;
+  } else if (!hasOther && savedNotes !== '') {
+    data.injury_notes = '';
   }
 
   return data;

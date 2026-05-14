@@ -1,6 +1,7 @@
+import { EmptyState } from '@shared/components/EmptyState';
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type React from 'react';
 
-import { EmptyState } from '../../../../shared/components/EmptyState';
 import { useSessionHistory } from '../hooks/useSessionHistory';
 import { SessionHistoryCard } from './SessionHistoryCard';
 
@@ -9,27 +10,30 @@ export const SessionHistoryContent = (): React.JSX.Element => {
 
   if (loading) {
     return (
-      <div className="mt-6 rounded-2xl border border-dashed border-gray-700 bg-gray-950/40 p-4">
-        <p className="text-sm text-gray-300">
-          Cargando historial de sesiones...
+      <section className="relative border-2 border-border bg-card p-5">
+        <PixelCorners size="sm" className="border-green-500/30" />
+        <p className="font-pixel text-[10px] tracking-widest text-ink-muted">
+          CARGANDO HISTORIAL...
         </p>
-      </div>
+      </section>
     );
   }
 
   if (error) {
     return (
-      <div className="mt-6 rounded-2xl border border-red-900/50 bg-gray-950/40 p-4">
-        <p className="text-sm font-medium text-red-400">{error}</p>
-
+      <section className="relative border-2 border-red-500/40 bg-card p-5">
+        <PixelCorners size="sm" className="border-red-500/40" />
+        <p className="font-pixel-mono text-base leading-snug text-red-300">
+          {error}
+        </p>
         <button
           type="button"
           onClick={refetch}
-          className="mt-4 rounded-xl bg-blue-500 px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-blue-400"
+          className="mt-4 font-pixel text-[9px] tracking-widest bg-red-500 hover:bg-red-400 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-red-700 hover:border-red-600 active:border-b-0 active:mt-[1.0625rem] transition-all"
         >
-          Reintentar
+          ▶ REINTENTAR
         </button>
-      </div>
+      </section>
     );
   }
 
@@ -48,23 +52,19 @@ export const SessionHistoryContent = (): React.JSX.Element => {
   }
 
   return (
-    <div className="mt-6 rounded-2xl border border-gray-800 bg-gray-950/40 p-4">
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-300">
-            Historial de sesiones
-          </p>
-          <p className="mt-1 text-sm text-gray-400">
-            Consulta tus entrenamientos anteriores
-          </p>
-        </div>
-      </div>
-
-      <div className="space-y-3">
+    <section className="relative border-2 border-green-500/40 bg-card p-4 sm:p-5">
+      <PixelCorners size="md" className="border-green-500/40" />
+      <p className="mb-4 font-pixel text-[10px] tracking-widest text-green-500">
+        ◆ {sessions.length}{' '}
+        {sessions.length === 1 ? 'SESION REGISTRADA' : 'SESIONES REGISTRADAS'}
+      </p>
+      <ul className="flex flex-col gap-3">
         {sessions.map((session) => (
-          <SessionHistoryCard key={session.id} session={session} />
+          <li key={session.id}>
+            <SessionHistoryCard session={session} />
+          </li>
         ))}
-      </div>
-    </div>
+      </ul>
+    </section>
   );
 };

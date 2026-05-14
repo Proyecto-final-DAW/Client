@@ -7,7 +7,7 @@ import type {
   Injury,
   OnboardingFormData,
   Sex,
-} from '../../../../domain/models/OnboardingFormData';
+} from '@features/onboarding/core/domain/models/OnboardingFormData';
 
 export type SubmitOnboardingDTO = {
   name: string;
@@ -21,4 +21,5 @@ export type SubmitOnboardingDTO = {
   equipment: Equipment[];
   daysPerWeek: DaysPerWeek | undefined;
   injuries: Injury[];
+  injuryNotes?: string;
 };

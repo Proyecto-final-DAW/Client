@@ -1,6 +1,5 @@
-import { useMemo } from 'react';
-
-import { toISODate } from '../../../../shared/utils/date';
+import { toISODate } from '@shared/utils/date';
+import { useEffect, useMemo, useState } from 'react';
 
 export interface CalendarCell {
   day: number | null;
@@ -60,6 +59,17 @@ const MONTH_NAMES_ES = [
 ] as const;
 
 export const useTrainingCalendar = (trainingDays: string[]) => {
+  // Tick once a minute so `today` becomes the new local-day after a
+  // midnight rollover. Without this, leaving the dashboard open across
+  // 00:00 keeps highlighting yesterday's cell as today (and any
+  // workout logged in the new day wouldn't be visible as today's
+  // cell because the memo's cache key didn't change).
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => setTick((t) => t + 1), 60_000);
+    return () => clearInterval(interval);
+  }, []);
+
   return useMemo(() => {
     const today = new Date();
     const trainingSet = new Set(trainingDays);
@@ -77,5 +87,9 @@ export const useTrainingCalendar = (trainingDays: string[]) => {
       monthName: MONTH_NAMES_ES[today.getMonth()],
       year: today.getFullYear(),
     };
-  }, [trainingDays]);
+    // `tick` is a deliberate dep — bumping it once a minute is exactly
+    // how we invalidate the memo across midnight without polling
+    // `Date.now()` inside the calc.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trainingDays, tick]);
 };

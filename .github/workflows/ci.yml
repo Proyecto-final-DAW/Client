@@ -21,6 +21,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
+          # Match Server CI and the README's stated minimum so a
+          # contributor switching nvm versions between the two repos
+          # doesn't hit subtle build-target mismatches.
           node-version: '22'
           cache: 'pnpm'
 
@@ -28,7 +31,11 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: ESLint
-        run: pnpm run lint
+        # Match Server CI: zero warnings tolerated. Without this flag
+        # warnings creep in indefinitely and the contributing guide's
+        # "no warnings allowed" rule stays aspirational. Calling eslint
+        # directly avoids pnpm forwarding the `--` separator as a file arg.
+        run: pnpm exec eslint . --max-warnings=0
 
       - name: TypeScript
         run: pnpm exec tsc --noEmit

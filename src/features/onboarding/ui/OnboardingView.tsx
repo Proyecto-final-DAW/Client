@@ -1,17 +1,21 @@
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../../context/hooks/useAuth';
-import { macrosService, onboardingService, statsInitService } from './adapter';
+import { onboardingService, statsInitService } from './adapter';
 import { OnboardingWizard } from './components/OnboardingWizard';
 
 export const OnboardingView = (): React.JSX.Element => {
-  const { token, user, updateUser, setSession } = useAuth();
+  const { token, user, updateUser, setSession, logout } = useAuth();
   const navigate = useNavigate();
 
-  // If the user is not authenticated, the onboarding flow can't proceed.
+  // Calling `navigate(...)` during render is a side-effect React (and
+  // StrictMode) flags as an anti-pattern — it re-runs on every render
+  // and double-invokes in dev. The `<Navigate>` element is the
+  // declarative equivalent: emits the redirect during commit, runs once.
+  // ProtectedRoute already gates this branch, so this is just a defensive
+  // belt for the rare case the OnboardingView mounts before auth resolves.
   if (!user || !token) {
-    navigate('/login', { replace: true });
-    return <></>;
+    return <Navigate to="/login" replace />;
   }
 
   return (
@@ -24,7 +28,6 @@ export const OnboardingView = (): React.JSX.Element => {
       initialName={user.name}
       onboardingService={onboardingService}
       statsInitService={statsInitService}
-      macrosService={macrosService}
       onComplete={(response) => {
         const nextUser = response.user;
 
@@ -34,6 +37,15 @@ export const OnboardingView = (): React.JSX.Element => {
           updateUser(nextUser);
         }
         navigate('/templates', { replace: true });
+      }}
+      // ProtectedRoute traps the user inside the wizard until
+      // onboarding_completed flips. Without an explicit exit, a user
+      // who wants to walk away (or who reached the wizard
+      // accidentally) has no way out — the global LOGOUT button only
+      // exists in DashboardLayout, which the wizard doesn't render.
+      onExit={() => {
+        logout();
+        navigate('/');
       }}
     />
   );

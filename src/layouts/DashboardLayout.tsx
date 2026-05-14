@@ -5,6 +5,7 @@ import {
   ClipboardDocumentListIcon,
   HeartIcon,
   HomeIcon,
+  Squares2X2Icon,
   TrophyIcon,
   UserCircleIcon,
   XMarkIcon,
@@ -20,6 +21,12 @@ import {
 } from 'react-router-dom';
 
 import { useAuth } from '../context/hooks/useAuth';
+import { useCharacterState } from '../context/hooks/useCharacterState';
+import {
+  rankLetterFromTier,
+  tierIndexFromState,
+} from '../features/character/core/domain/models/RankLabels';
+import { ConfirmDialog } from '../shared/components/ConfirmDialog';
 import { DashboardBackground } from '../shared/components/DashboardBackground';
 import { PixelCorners } from '../shared/components/PixelCorners';
 
@@ -48,16 +55,17 @@ const MENU_GROUPS: MenuGroup[] = [
     items: [
       { to: '/dashboard', label: 'INICIO', icon: HomeIcon },
       { to: '/templates', label: 'RUTINAS', icon: BookOpenIcon },
-      { to: '/routines', label: 'SESIONES', icon: ClipboardDocumentListIcon },
+      { to: '/routines', label: 'COMBATE', icon: ClipboardDocumentListIcon },
       { to: '/progress', label: 'PROGRESO', icon: ChartBarIcon },
     ],
   },
   {
     label: 'PERSONAJE',
     items: [
+      { to: '/clases', label: 'CLASES', icon: Squares2X2Icon },
       { to: '/diet', label: 'DIETA', icon: HeartIcon },
       { to: '/achievements', label: 'LOGROS', icon: TrophyIcon },
-      { to: '/profile', label: 'PERFIL', icon: UserCircleIcon },
+      { to: '/profile', label: 'PERSONAJE', icon: UserCircleIcon },
     ],
   },
 ];
@@ -65,39 +73,78 @@ const MENU_GROUPS: MenuGroup[] = [
 type SidebarContentProps = {
   isLoggedIn: boolean;
   user: ReturnType<typeof useAuth>['user'];
+  rankLetter: string;
   onNavigate?: () => void;
 };
 
 const SidebarContent = ({
   isLoggedIn,
   user,
+  rankLetter,
   onNavigate,
 }: SidebarContentProps): React.JSX.Element => {
-  const userName = user?.name ?? 'Usuario';
+  // Render the name in title-case ("Blue" / "Carlo Magno") instead
+  // of forcing toUpperCase. The earlier `.toUpperCase()` painted
+  // every name as "BLUE" / "CARLO MAGNO" — read as a code label,
+  // not the user's actual name. Title-case also normalises stored
+  // values like "BLUE" or "blue" into a consistent display.
+  const rawName = user?.name ?? 'Usuario';
+  const userName = rawName
+    .toLowerCase()
+    .replace(/\b\p{L}/gu, (c) => c.toUpperCase());
+
+  // Length-based font size so names always fit without wrapping
+  // ugly. Tried letting long names grow the card vertically — read
+  // worse than shrinking the type, so we step the font down with
+  // length: short names stay at the design size, long handles
+  // shrink to fit on one or two lines instead of stretching the
+  // sidebar's identity card to a huge stack.
+  const userNameSizeClass =
+    userName.length <= 9
+      ? 'text-[10px]'
+      : userName.length <= 13
+        ? 'text-[9px]'
+        : userName.length <= 18
+          ? 'text-[8px]'
+          : 'text-[7px]';
 
   return (
     <div className="flex flex-col gap-6">
       {isLoggedIn && (
-        <div className="relative border-2 border-green-500/50 bg-[#0d0d14] p-3 flex items-center gap-3">
+        <div className="relative border-2 border-green-500/50 bg-card p-3 flex items-center gap-3">
           <PixelCorners size="sm" className="border-green-500/50" />
           {user?.profileImage ? (
             <img
               src={user.profileImage}
               alt={`Foto de perfil de ${userName}`}
-              className="h-12 w-12 rounded-sm border-2 border-[#1e1e2e] object-cover"
+              className="h-12 w-12 rounded-sm border-2 border-border object-cover"
             />
           ) : (
-            <div className="flex h-12 w-12 items-center justify-center rounded-sm border-2 border-[#1e1e2e] bg-green-500/10">
+            <div className="flex h-12 w-12 items-center justify-center rounded-sm border-2 border-border bg-green-500/10">
               <UserCircleIcon className="h-7 w-7 text-green-400" />
             </div>
           )}
 
           <div className="min-w-0">
-            <p className="font-['Press_Start_2P'] text-[8px] text-[#a1a1aa] tracking-widest mb-1">
-              HEROE
+            {/* Name on top (the user is the protagonist — their own
+                name should read first), rank as a smaller label below.
+                Replaced the previous "HEROE" placeholder eyebrow with
+                "RANGO F" so the line carries actual progression info
+                instead of a generic gendered noun. */}
+            {/* `userNameSizeClass` steps the font down for longer
+                names so the sidebar never has to truncate or grow
+                into an ugly multi-line stack. break-words is the
+                last-resort guard for a single 30+ letter no-space
+                handle that even text-[7px] doesn't fit — it'll
+                wrap, but at the smallest step instead of
+                overflowing the card. */}
+            <p
+              className={`font-pixel ${userNameSizeClass} text-green-400 break-words leading-snug [text-shadow:0_0_12px_rgba(34,197,94,0.6)]`}
+            >
+              {userName}
             </p>
-            <p className="font-['Press_Start_2P'] text-[10px] text-green-400 truncate [text-shadow:0_0_12px_rgba(34,197,94,0.6)]">
-              {userName.toUpperCase()}
+            <p className="font-pixel text-[9px] text-ink-muted tracking-widest mt-1">
+              RANGO {rankLetter}
             </p>
           </div>
         </div>
@@ -106,7 +153,7 @@ const SidebarContent = ({
       <nav className="flex flex-col gap-6">
         {MENU_GROUPS.map((group) => (
           <div key={group.label} className="flex flex-col gap-2">
-            <p className="px-1 font-['Press_Start_2P'] text-[8px] tracking-widest text-[#52525b]">
+            <p className="px-1 font-pixel text-[8px] tracking-widest text-ink-disabled">
               ▸ {group.label}
             </p>
             {group.items.map((item) => {
@@ -118,10 +165,10 @@ const SidebarContent = ({
                   end={item.to === '/'}
                   onClick={onNavigate}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 border-2 px-3 py-3 font-['Press_Start_2P'] text-[10px] tracking-widest transition-colors ${
+                    `flex items-center gap-3 border-2 px-3 py-3 font-pixel text-[10px] tracking-widest transition-colors ${
                       isActive
                         ? 'border-green-500 bg-green-500/10 text-green-400 shadow-[0_0_14px_rgba(34,197,94,0.3)]'
-                        : 'border-[#1e1e2e] text-[#a1a1aa] hover:border-green-500/50 hover:text-green-400'
+                        : 'border-border text-ink-muted hover:border-green-500/50 hover:text-green-400'
                     }`
                   }
                 >
@@ -141,10 +188,20 @@ export const DashboardLayout = (): React.JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { state: characterState } = useCharacterState();
   const isLoggedIn = Boolean(user);
   const prefersReducedMotion = useReducedMotion();
 
+  // Default to F when we don't yet have the character state — matches
+  // the starting rank, so a brand-new user (or a momentarily slow
+  // character fetch) still sees a sensible label instead of an empty
+  // "RANGO " or a flash of placeholder text.
+  const rankLetter = characterState
+    ? rankLetterFromTier(tierIndexFromState(characterState))
+    : 'F';
+
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   // Close the drawer on navigation so the user always lands on the new page,
   // not on the still-open menu.
@@ -175,19 +232,28 @@ export const DashboardLayout = (): React.JSX.Element => {
 
   const clickAuth = () => {
     if (isLoggedIn) {
-      logout();
-      navigate('/');
+      // Logout is destructive (closes the session, drops in-flight
+      // workouts saved to local storage). A single mis-clicked button
+      // at the top of every page used to be enough to nuke a session
+      // in progress. Confirm first.
+      setLogoutDialogOpen(true);
       return;
     }
 
     navigate('/login');
   };
 
+  const confirmLogout = () => {
+    setLogoutDialogOpen(false);
+    logout();
+    navigate('/');
+  };
+
   return (
-    <div className="relative min-h-screen flex flex-col text-[#e4e4e7]">
+    <div className="relative min-h-screen flex flex-col text-ink">
       <DashboardBackground />
       <header
-        className={`sticky top-0 z-30 ${HEADER_H} flex items-center justify-between gap-2 border-b-2 border-[#1e1e2e] bg-[#0a0a0f]/95 backdrop-blur-md px-3 sm:px-6 lg:px-14`}
+        className={`sticky top-0 z-30 ${HEADER_H} flex items-center justify-between gap-2 border-b-2 border-border bg-page/95 backdrop-blur-md px-3 sm:px-6 lg:px-14`}
       >
         <div className="flex items-center gap-2">
           {/* Hamburger only on screens narrower than the lg sidebar break. */}
@@ -196,7 +262,7 @@ export const DashboardLayout = (): React.JSX.Element => {
             onClick={() => setDrawerOpen(true)}
             aria-label="Abrir menu"
             aria-expanded={drawerOpen}
-            className="lg:hidden inline-flex h-10 w-10 items-center justify-center border-2 border-[#1e1e2e] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/50 hover:text-green-400 transition-colors"
+            className="lg:hidden inline-flex h-10 w-10 items-center justify-center border-2 border-border bg-card text-ink-muted hover:border-green-500/50 hover:text-green-400 transition-colors"
           >
             <Bars3Icon className="h-5 w-5" />
           </button>
@@ -210,18 +276,22 @@ export const DashboardLayout = (): React.JSX.Element => {
         </div>
         <button
           onClick={clickAuth}
-          className="font-['Press_Start_2P'] text-[8px] sm:text-[9px] lg:text-[10px] bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] whitespace-nowrap"
+          className="font-pixel text-[8px] sm:text-[9px] lg:text-[10px] bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] whitespace-nowrap"
         >
-          {isLoggedIn ? '▶ LOGOUT' : '▶ LOGIN'}
+          {isLoggedIn ? '▶ SALIR' : '▶ ENTRAR'}
         </button>
       </header>
 
       <div className="relative z-10 flex flex-1">
         {/* Desktop: fixed sidebar. */}
         <aside
-          className={`hidden lg:flex sticky ${HEADER_OFFSET} ${HEADER_HEIGHT_PX} w-56 shrink-0 self-start overflow-y-auto border-r-2 border-[#1e1e2e] bg-[#0a0a0f] p-4 flex-col gap-6`}
+          className={`hidden lg:flex sticky ${HEADER_OFFSET} ${HEADER_HEIGHT_PX} w-56 shrink-0 self-start overflow-y-auto border-r-2 border-border bg-page p-4 flex-col gap-6`}
         >
-          <SidebarContent isLoggedIn={isLoggedIn} user={user} />
+          <SidebarContent
+            isLoggedIn={isLoggedIn}
+            user={user}
+            rankLetter={rankLetter}
+          />
         </aside>
 
         {/* Mobile/tablet: slide-in drawer. */}
@@ -244,27 +314,28 @@ export const DashboardLayout = (): React.JSX.Element => {
                 animate={{ x: 0 }}
                 exit={{ x: '-100%' }}
                 transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                className="lg:hidden fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] overflow-y-auto border-r-2 border-[#1e1e2e] bg-[#0a0a0f] p-4 shadow-[0_0_60px_rgba(0,0,0,0.8)]"
+                className="lg:hidden fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] overflow-y-auto border-r-2 border-border bg-page p-4 shadow-[0_0_60px_rgba(0,0,0,0.8)]"
                 role="dialog"
                 aria-modal="true"
                 aria-label="Menu de navegacion"
               >
                 <div className="mb-4 flex items-center justify-between">
-                  <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+                  <p className="font-pixel text-[10px] tracking-widest text-green-500">
                     ◆ MENU
                   </p>
                   <button
                     type="button"
                     onClick={() => setDrawerOpen(false)}
                     aria-label="Cerrar menu"
-                    className="inline-flex h-9 w-9 items-center justify-center border-2 border-[#1e1e2e] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/50 hover:text-green-400 transition-colors"
+                    className="inline-flex h-10 w-10 items-center justify-center border-2 border-border bg-card text-ink-muted hover:border-green-500/50 hover:text-green-400 transition-colors"
                   >
-                    <XMarkIcon className="h-4 w-4" />
+                    <XMarkIcon className="h-5 w-5" />
                   </button>
                 </div>
                 <SidebarContent
                   isLoggedIn={isLoggedIn}
                   user={user}
+                  rankLetter={rankLetter}
                   onNavigate={() => setDrawerOpen(false)}
                 />
               </motion.aside>
@@ -272,10 +343,20 @@ export const DashboardLayout = (): React.JSX.Element => {
           )}
         </AnimatePresence>
 
-        <main className="relative flex-1 min-w-0 p-4 sm:p-6 lg:p-8">
+        <main id="main" className="relative flex-1 min-w-0 p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>
+
+      <ConfirmDialog
+        open={logoutDialogOpen}
+        title="¿SALIR?"
+        confirmLabel="SALIR"
+        cancelLabel="VOLVER"
+        variant="danger"
+        onConfirm={confirmLogout}
+        onCancel={() => setLogoutDialogOpen(false)}
+      />
     </div>
   );
 };

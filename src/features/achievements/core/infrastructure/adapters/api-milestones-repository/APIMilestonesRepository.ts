@@ -1,7 +1,7 @@
-import axios, { AxiosError } from 'axios';
+import { API_ENDPOINTS } from '@config/api';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import axios from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
 import type { MilestonesRepository } from '../../../application/ports/MilestonesRepository';
 import type { Milestone } from '../../../domain/models/Milestone';
 import type {
@@ -25,10 +25,12 @@ export class APIMilestonesRepository implements MilestonesRepository {
         unlocked: unlockedResponse.data,
       });
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al cargar los logros';
-      throw new Error(serverMessage);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido cargar tus logros. Recarga la pagina o intentalo mas tarde.'
+        )
+      );
     }
   }
 }

@@ -28,15 +28,29 @@ export const RestTimer = (props: Props): React.JSX.Element => {
 
   const progress =
     totalSeconds > 0 ? Math.min(1, remainingSeconds / totalSeconds) : 0;
-  const dashOffset = CIRCLE_CIRCUMFERENCE * (1 - progress);
+  // Negative dashoffset traces the gap in the opposite direction
+  // along the path. Combined with the SVG's `-rotate-90`, this lands
+  // on the analog-clock reading: full ring at start, then the empty
+  // arc grows clockwise from 12 → 3 → 6 → 9 as time elapses. With a
+  // positive offset the gap walked CCW (12 → 9 → 6 → 3), which is
+  // what the user flagged as "al reves".
+  const dashOffset = -CIRCLE_CIRCUMFERENCE * (1 - progress);
 
   return (
-    <div className="flex flex-col items-center gap-5 border-2 border-green-500/40 bg-[#0d0d14] p-6">
-      <p className="font-['Press_Start_2P'] text-[9px] tracking-widest text-[#a1a1aa]">
+    <div className="flex flex-col items-center gap-5 border-2 border-green-500/40 bg-card p-6">
+      <p className="font-pixel text-[9px] tracking-widest text-ink-muted">
         DESCANSO
       </p>
 
-      <div className="relative w-40 h-40">
+      <div className="relative h-32 w-32 sm:h-40 sm:w-40">
+        {/* `-rotate-90` puts the SVG circle's natural start (3 o'clock)
+            at the top (12 o'clock). With dashOffset growing as time
+            passes, the empty arc anchors at 12 and sweeps clockwise
+            through 3 → 6 → 9 — the analog-clock reading the user
+            expects ("empezar arriba, ir a la derecha en sentido
+            horario"). The last segment to disappear is the top-left,
+            so the green stays visually anchored to the start until
+            the very end. */}
         <svg
           className="w-full h-full -rotate-90"
           viewBox="0 0 144 144"
@@ -63,10 +77,16 @@ export const RestTimer = (props: Props): React.JSX.Element => {
             style={{ transition: 'stroke-dashoffset 1s linear' }}
           />
         </svg>
+        {/* Removed `aria-live="polite"` from the second-by-second
+            counter — screen readers were announcing every tick
+            ("00:30", "00:29", "00:28"…) which drowned out everything
+            else. The timer is decorative for sighted users; the
+            countdown completion / start signals fire elsewhere via
+            sound + the Set logger button focus. */}
         <div className="absolute inset-0 flex items-center justify-center">
           <span
-            aria-live="polite"
-            className="font-['Press_Start_2P'] text-xl text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.6)]"
+            aria-hidden="true"
+            className="font-pixel text-xl sm:text-2xl text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.6)]"
           >
             {formatSeconds(remainingSeconds)}
           </span>
@@ -82,10 +102,10 @@ export const RestTimer = (props: Props): React.JSX.Element => {
               type="button"
               onClick={() => onSelectPreset(seconds)}
               aria-pressed={isSelected}
-              className={`font-['Press_Start_2P'] text-[9px] tracking-widest px-3 py-2.5 border-2 transition-colors ${
+              className={`font-pixel text-[9px] tracking-widest px-3 py-2.5 border-2 transition-colors ${
                 isSelected
                   ? 'border-green-500 bg-green-500/10 text-green-400'
-                  : 'border-[#1e1e2e] bg-[#18181b] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400'
+                  : 'border-border bg-[#18181b] text-ink-muted hover:border-green-500/40 hover:text-green-400'
               }`}
             >
               {seconds}s
@@ -97,7 +117,7 @@ export const RestTimer = (props: Props): React.JSX.Element => {
       <button
         type="button"
         onClick={onSkip}
-        className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#1e1e2e] bg-[#0d0d14] text-[#a1a1aa] px-5 py-3 hover:border-green-500/40 hover:text-green-400 transition-colors"
+        className="font-pixel text-[9px] tracking-widest border-2 border-border bg-card text-ink-muted px-5 py-3 hover:border-green-500/40 hover:text-green-400 transition-colors"
       >
         ▶ SALTAR DESCANSO
       </button>

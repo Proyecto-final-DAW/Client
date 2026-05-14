@@ -1,5 +1,5 @@
 import type { StatsRepository } from '../../../application/ports/StatsRepository';
-import { STAT_CONFIG, STAT_ORDER } from '../../../domain/models/StatConfig';
+import { STAT_METADATA, STAT_ORDER } from '../../../domain/models/StatMetadata';
 import type { UserStats } from '../../../domain/models/UserStats';
 
 export class MockStatsRepository implements StatsRepository {
@@ -18,21 +18,25 @@ export class MockStatsRepository implements StatsRepository {
       vigor: { xp: 70, level: 12 },
     };
 
-    const pilpilar = STAT_ORDER.map((key) => ({
-      name: STAT_CONFIG[key].name,
+    const pillar = STAT_ORDER.map((key) => ({
+      key,
+      name: STAT_METADATA[key].name,
       value: mockData[key].xp,
-      max: 100,
+      // Mirror server's xpThresholdForLevel(level) = 100 + level * 15.
+      // Keeping the mock in sync with the API mapper so the bars and
+      // "X / Y XP" labels read consistently in dev.
+      max: 100 + mockData[key].level * 15,
       level: mockData[key].level,
-      icon: STAT_CONFIG[key].icon,
-      accentColor: STAT_CONFIG[key].accentColor,
+      accentColor: STAT_METADATA[key].accentColor,
+      description: STAT_METADATA[key].description,
     }));
 
     const heroLevel = Math.round(
-      pilpilar.reduce((sum, p) => sum + p.level, 0) / STAT_ORDER.length
+      pillar.reduce((sum, p) => sum + p.level, 0) / STAT_ORDER.length
     );
 
     return {
-      pilpilar,
+      pillar,
       level: heroLevel,
       title: 'Especialista',
     };

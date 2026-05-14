@@ -1,4 +1,4 @@
-import type { ConditionType } from '../../../../domain/models/Milestone';
+import type { ConditionType } from '@features/achievements/core/domain/models/Milestone';
 
 export interface MilestoneDTO {
   id: number;

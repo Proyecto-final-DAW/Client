@@ -1,6 +1,7 @@
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { PixelCorners } from '@shared/components/PixelCorners';
+import { PixelSelect } from '@shared/components/PixelSelect';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type {
   ProfileData,
   ProfileUpdateData,
@@ -26,12 +27,16 @@ interface ProfileFormProps {
   success: boolean;
 }
 
+// VT323 (font-pixel-mono) at text-base for typed values: Press Start
+// 2P at 10px is hostile to read while typing numbers (age/weight/
+// height) and ANY input below 16px makes iOS Safari auto-zoom on
+// focus. Padding bumped to py-3 to match the wizard inputs.
 const inputClass =
-  "w-full bg-[#12121a] border-2 border-[#1e1e2e] px-3 py-2.5 font-['Press_Start_2P'] text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] focus:border-green-500/70 focus:outline-none transition-colors [color-scheme:dark]";
+  'w-full bg-subtle border-2 border-border px-3 py-3 font-pixel-mono text-base text-ink placeholder:text-ink-disabled focus:border-green-500/70 focus:outline-none transition-colors [color-scheme:dark]';
 const labelClass =
-  "block font-['Press_Start_2P'] text-[8px] tracking-widest text-[#a1a1aa] mb-2";
+  'block font-pixel text-[8px] tracking-widest text-ink-muted mb-2';
 const sectionTitleClass =
-  "font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500 [text-shadow:0_0_8px_rgba(34,197,94,0.4)]";
+  'font-pixel text-[10px] tracking-widest text-green-500 [text-shadow:0_0_8px_rgba(34,197,94,0.4)]';
 
 type ChipProps = {
   label: string;
@@ -44,13 +49,15 @@ const Chip = ({ label, selected, onClick }: ChipProps): React.JSX.Element => (
     type="button"
     onClick={onClick}
     aria-pressed={selected}
-    className={`font-['Press_Start_2P'] text-[9px] tracking-widest border-2 px-3 py-2 transition-colors ${
+    className={`inline-flex items-center gap-1.5 font-pixel text-[9px] tracking-widest border-2 px-3 py-2 transition-colors ${
       selected
         ? 'border-green-500 bg-green-500/15 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.3)]'
-        : 'border-[#1e1e2e] bg-[#12121a] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400'
+        : 'border-border bg-subtle text-ink-muted hover:border-green-500/40 hover:text-green-400'
     }`}
   >
-    {selected ? '▶ ' : ''}
+    {/* Solid CheckIcon (not just color/border) so the selected state survives
+        for color-blind users and at low-contrast displays. */}
+    {selected && <CheckIcon className="h-3 w-3 shrink-0" aria-hidden="true" />}
     {label}
   </button>
 );
@@ -64,18 +71,28 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="relative border-2 border-green-500/40 bg-[#0d0d14] p-5 sm:p-6"
+      onKeyDown={(e) => {
+        // Block accidental Enter-key submits from any single-line input.
+        // The form is long enough that a user tabbing through fields can
+        // hit Enter mid-edit and trigger GUARDAR before they're done.
+        // Textareas keep native Enter (newline) and the explicit
+        // GUARDAR button stays the only commit path.
+        if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
+          e.preventDefault();
+        }
+      }}
+      className="relative border-2 border-green-500/40 bg-card p-5 sm:p-6"
     >
       <PixelCorners size="md" className="border-green-500/40" />
 
       <header className="mb-6 flex items-center justify-between gap-3">
-        <p className="font-['Press_Start_2P'] text-[10px] tracking-widest text-green-500">
+        <p className="font-pixel text-[10px] tracking-widest text-green-500">
           ✎ EDITAR PERFIL
         </p>
         <button
           type="button"
           onClick={props.onCancel}
-          className="inline-flex items-center gap-2 font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14] text-[#a1a1aa] hover:border-[#3f3f46] px-3 py-2 transition-colors"
+          className="inline-flex items-center gap-2 font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted hover:border-[#3f3f46] px-3 py-2 transition-colors"
         >
           <XMarkIcon className="h-3 w-3" />
           CERRAR
@@ -83,7 +100,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
       </header>
 
       {/* SECTION 1 — Datos personales */}
-      <section className="mb-8 border-b-2 border-[#1e1e2e] pb-6">
+      <section className="mb-8 border-b-2 border-border pb-6">
         <p className={sectionTitleClass}>▸ DATOS PERSONALES</p>
 
         <div className="mt-5 mb-4">
@@ -101,7 +118,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
 
         <div className="mb-4">
           <span className={labelClass}>EMAIL</span>
-          <p className="border-2 border-[#1e1e2e] bg-[#0a0a0f] px-3 py-2.5 font-['Press_Start_2P'] text-[10px] text-[#71717a]">
+          <p className="border-2 border-border bg-page px-3 py-2.5 font-pixel text-[10px] text-ink-faint">
             {props.profile.email}
           </p>
         </div>
@@ -114,6 +131,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
             <input
               id="profile-age"
               type="number"
+              inputMode="numeric"
               min="14"
               max="100"
               value={form.age}
@@ -125,10 +143,16 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
             <label htmlFor="profile-weight" className={labelClass}>
               PESO (KG)
             </label>
+            {/* `step="1"` so the spinner buttons increment kilogram by
+                kilogram — the previous `0.1` made each click change by
+                100g, which felt absurdly granular for body weight. The
+                user can still type a decimal (e.g. 75.5) by keyboard
+                if they really want fine resolution. */}
             <input
               id="profile-weight"
               type="number"
-              step="0.1"
+              inputMode="decimal"
+              step="1"
               min="30"
               max="250"
               value={form.weight}
@@ -143,6 +167,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
             <input
               id="profile-height"
               type="number"
+              inputMode="numeric"
               min="120"
               max="230"
               value={form.height}
@@ -154,54 +179,41 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="profile-sex" className={labelClass}>
-              SEXO
-            </label>
-            <select
-              id="profile-sex"
+            <span className={labelClass}>SEXO</span>
+            <PixelSelect
               value={form.sex}
-              onChange={(e) => handleChange('sex', e.target.value)}
-              className={inputClass}
-            >
-              <option value="">— Seleccionar —</option>
-              {SEX_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              options={SEX_OPTIONS}
+              placeholder="— Seleccionar —"
+              onChange={(value) => handleChange('sex', value)}
+              ariaLabel="Sexo"
+            />
           </div>
           <div>
-            <label htmlFor="profile-activity" className={labelClass}>
-              NIVEL DE ACTIVIDAD
-            </label>
-            <select
-              id="profile-activity"
+            <span className={labelClass}>NIVEL DE ACTIVIDAD</span>
+            <PixelSelect
               value={form.activity_level}
-              onChange={(e) => handleChange('activity_level', e.target.value)}
-              className={inputClass}
-            >
-              <option value="">— Seleccionar —</option>
-              {ACTIVITY_LEVEL_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              options={ACTIVITY_LEVEL_OPTIONS}
+              placeholder="— Seleccionar —"
+              onChange={(value) => handleChange('activity_level', value)}
+              ariaLabel="Nivel de actividad"
+            />
           </div>
         </div>
       </section>
 
-      {/* SECTION 2 — Entrenamiento (onboarding) */}
+      {/* SECTION 2 — Entrenamiento (onboarding).
+          Etiquetas reducidas a una sola palabra y el párrafo
+          explicativo eliminado: en la pantalla de perfil ya se
+          entiende que estamos editando preferencias, y la frase
+          "puedes elegir varios" repetida en cada bloque era ruido
+          (el comportamiento multiselect se aprende al primer clic).
+          La separación visual la lleva el `▸ ENTRENAMIENTO` y los
+          espacios entre subsecciones. */}
       <section className="mb-6">
         <p className={sectionTitleClass}>▸ ENTRENAMIENTO</p>
-        <p className="mt-2 mb-5 font-['VT323'] text-base text-[#a1a1aa]">
-          Cambia aqui las preferencias del onboarding. Las recomendaciones de
-          rutinas se actualizan al guardar.
-        </p>
 
-        <div className="mb-5">
-          <span className={labelClass}>OBJETIVOS (puedes elegir varios)</span>
+        <div className="mt-4 mb-5">
+          <span className={labelClass}>OBJETIVOS</span>
           <div className="flex flex-wrap gap-2">
             {GOAL_OPTIONS.map((opt) => (
               <Chip
@@ -216,47 +228,29 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
 
         <div className="mb-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="profile-experience" className={labelClass}>
-              EXPERIENCIA
-            </label>
-            <select
-              id="profile-experience"
+            <span className={labelClass}>EXPERIENCIA</span>
+            <PixelSelect
               value={form.experience_level}
-              onChange={(e) => handleChange('experience_level', e.target.value)}
-              className={inputClass}
-            >
-              <option value="">— Seleccionar —</option>
-              {EXPERIENCE_LEVEL_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              options={EXPERIENCE_LEVEL_OPTIONS}
+              placeholder="— Seleccionar —"
+              onChange={(value) => handleChange('experience_level', value)}
+              ariaLabel="Nivel de experiencia"
+            />
           </div>
           <div>
-            <label htmlFor="profile-days" className={labelClass}>
-              DIAS POR SEMANA
-            </label>
-            <select
-              id="profile-days"
+            <span className={labelClass}>FRECUENCIA</span>
+            <PixelSelect
               value={form.days_per_week}
-              onChange={(e) => handleChange('days_per_week', e.target.value)}
-              className={inputClass}
-            >
-              <option value="">— Seleccionar —</option>
-              {DAYS_PER_WEEK_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              options={DAYS_PER_WEEK_OPTIONS}
+              placeholder="— Seleccionar —"
+              onChange={(value) => handleChange('days_per_week', value)}
+              ariaLabel="Dias por semana"
+            />
           </div>
         </div>
 
         <div className="mb-5">
-          <span className={labelClass}>
-            EQUIPAMIENTO (puedes elegir varios)
-          </span>
+          <span className={labelClass}>EQUIPAMIENTO</span>
           <div className="flex flex-wrap gap-2">
             {EQUIPMENT_OPTIONS.map((opt) => (
               <Chip
@@ -270,9 +264,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
         </div>
 
         <div>
-          <span className={labelClass}>
-            LESIONES (NINGUNA o varias en concreto)
-          </span>
+          <span className={labelClass}>LESIONES</span>
           <div className="flex flex-wrap gap-2">
             {INJURY_OPTIONS.map((opt) => (
               <Chip
@@ -285,6 +277,28 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
               />
             ))}
           </div>
+
+          {/* Free-text follow-up — only revealed when OTRA is in the
+              chosen set so the form doesn't pester users who don't
+              need it. Mirrors the onboarding wizard's behaviour
+              (StepLimitations) so the same shape (`injury_notes`)
+              flows through both create and update paths. */}
+          {form.injuries.includes('OTHER') && (
+            <div className="mt-3">
+              <label htmlFor="profile-injury-notes" className={labelClass}>
+                CUAL ES LA LESION
+              </label>
+              <textarea
+                id="profile-injury-notes"
+                value={form.injury_notes ?? ''}
+                onChange={(e) => handleChange('injury_notes', e.target.value)}
+                maxLength={500}
+                rows={3}
+                placeholder="Describela en pocas palabras..."
+                className={`${inputClass} resize-none`}
+              />
+            </div>
+          )}
         </div>
       </section>
 
@@ -300,7 +314,7 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
       <button
         type="submit"
         disabled={props.updating}
-        className="w-full font-['Press_Start_2P'] text-[10px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-6 py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
+        className="w-full font-pixel text-[10px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-6 py-3 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
       >
         {props.updating ? 'GUARDANDO…' : '▶ GUARDAR CAMBIOS'}
       </button>

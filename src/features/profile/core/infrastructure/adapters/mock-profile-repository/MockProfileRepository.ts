@@ -19,6 +19,7 @@ const MOCK_PROFILE: ProfileData = {
   equipment: ['FULL_GYM'],
   days_per_week: '4-5',
   injuries: ['NONE'],
+  injury_notes: null,
   sleep_hours: 8,
   daily_calories: 2800,
   protein_grams: 156,

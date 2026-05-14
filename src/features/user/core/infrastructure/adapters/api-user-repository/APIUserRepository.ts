@@ -1,7 +1,7 @@
-import axios, { AxiosError } from 'axios';
+import { API_ENDPOINTS } from '@config/api';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import axios from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
 import type { UserRepository } from '../../../application/ports/UserRepository';
 import type { User, RegisterResponse } from '../../../domain/models/User';
 
@@ -16,9 +16,11 @@ export class APIUserRepository implements UserRepository {
         message: data.message as string | undefined,
       };
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
       throw new Error(
-        err.response?.data?.message ?? 'Error al registrar usuario'
+        mapAxiosError(
+          error,
+          'No hemos podido completar el registro. Revisa los datos y vuelve a intentarlo.'
+        )
       );
     }
   }

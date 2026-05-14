@@ -1,8 +1,8 @@
-import axios, { AxiosError } from 'axios';
+import { API_BASE_URL } from '@config/api';
+import type { Exercise } from '@features/exercises/core/domain/models/Exercise';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import axios from 'axios';
 
-import { API_BASE_URL } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
-import type { Exercise } from '../../../../../exercises/core/domain/models/Exercise';
 import type { RoutineRepository } from '../../../application/ports/RoutineRepository';
 import type { Routine } from '../../../domain/models/Routine';
 import type { GetRoutineDTO } from './dtos/GetRoutineDTO';
@@ -35,7 +35,10 @@ export class APIRoutineRepository implements RoutineRepository {
 
       return RoutinesFromDTO.fromDTOList(response.data);
     } catch (error) {
-      throw this.handleError(error, 'Error al cargar las rutinas');
+      throw this.handleError(
+        error,
+        'No hemos podido cargar tus rutinas. Recarga la pagina o intentalo mas tarde.'
+      );
     }
   }
 
@@ -49,7 +52,10 @@ export class APIRoutineRepository implements RoutineRepository {
 
       return RoutinesFromDTO.fromDTO(response.data);
     } catch (error) {
-      throw this.handleError(error, 'Error al crear la rutina');
+      throw this.handleError(
+        error,
+        'No hemos podido crear la rutina. Vuelve a intentarlo en un momento.'
+      );
     }
   }
 
@@ -66,7 +72,7 @@ export class APIRoutineRepository implements RoutineRepository {
     return this.replaceExercises(
       routine.id,
       [...routine.exercises, exercise],
-      'Error al añadir el ejercicio',
+      'No hemos podido añadir el ejercicio. Vuelve a intentarlo.',
       token
     );
   }
@@ -79,7 +85,7 @@ export class APIRoutineRepository implements RoutineRepository {
     return this.replaceExercises(
       routine.id,
       routine.exercises.filter((exercise) => exercise.id !== exerciseId),
-      'Error al eliminar el ejercicio',
+      'No hemos podido quitar el ejercicio. Vuelve a intentarlo.',
       token
     );
   }
@@ -92,7 +98,7 @@ export class APIRoutineRepository implements RoutineRepository {
     return this.replaceExercises(
       routine.id,
       exercises,
-      'Error al reordenar los ejercicios',
+      'No hemos podido guardar el nuevo orden. Vuelve a intentarlo.',
       token
     );
   }
@@ -103,7 +109,10 @@ export class APIRoutineRepository implements RoutineRepository {
         headers: authHeaders(token),
       });
     } catch (error) {
-      throw this.handleError(error, 'Error al eliminar la rutina');
+      throw this.handleError(
+        error,
+        'No hemos podido borrar la rutina. Vuelve a intentarlo.'
+      );
     }
   }
 
@@ -131,9 +140,6 @@ export class APIRoutineRepository implements RoutineRepository {
   }
 
   private handleError(error: unknown, fallbackMessage: string): Error {
-    const err = error as AxiosError<APIErrorResponse>;
-    const serverMessage = err.response?.data?.message || fallbackMessage;
-
-    return new Error(serverMessage);
+    return new Error(mapAxiosError(error, fallbackMessage));
   }
 }

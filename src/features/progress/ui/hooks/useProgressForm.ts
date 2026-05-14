@@ -1,3 +1,4 @@
+import { parseLocalDate, toISODate } from '@shared/utils/date';
 import { useState } from 'react';
 
 import type { RegisterWeightInput } from '../../core/domain/models/Progress';
@@ -6,13 +7,7 @@ const WEIGHT_MIN = 1;
 const WEIGHT_MAX = 300;
 const MIN_DATE = '2000-01-01';
 
-const todayISO = (): string => {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0');
-  const day = String(today.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
+const todayISO = (): string => toISODate(new Date());
 
 interface UseProgressFormParams {
   onSubmit: (input: RegisterWeightInput) => Promise<boolean>;
@@ -52,8 +47,12 @@ export const useProgressForm = ({
       return null;
     }
 
-    const selectedDate = new Date(date);
-    if (Number.isNaN(selectedDate.getTime())) {
+    // `parseLocalDate` builds the Date from the YYYY-MM-DD components
+    // at local midnight. The previous `new Date(date)` resolved
+    // YYYY-MM-DD to UTC-midnight, which TZ-east-of-UTC users would
+    // see persisted as "tomorrow" (and TZ-west sees as "yesterday").
+    const selectedDate = parseLocalDate(date);
+    if (!selectedDate) {
       setError('Introduce una fecha valida');
       return null;
     }

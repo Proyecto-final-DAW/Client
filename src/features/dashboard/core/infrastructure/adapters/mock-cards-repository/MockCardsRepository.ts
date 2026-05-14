@@ -1,4 +1,5 @@
-import { toISODate } from '../../../../../../shared/utils/date';
+import { toISODate } from '@shared/utils/date';
+
 import type { CardsRepository } from '../../../application/ports/CardsRepository';
 import type { Cards } from '../../../domain/models/Cards';
 
@@ -43,16 +44,14 @@ export class MockCardsRepository implements CardsRepository {
 
     return {
       streak: STREAK,
-      lastWorkoutDaysAgo: 0,
+      weeklyTarget: 4,
+      sessionsThisWeek: 2,
+      // 1 day, not 0 — the domain says `null` for "never trained" and
+      // `0` for "trained today". Hardcoding 0 in the mock made every
+      // dev session look like the user had already trained today,
+      // hiding the brand-new-user flow.
+      lastWorkoutDaysAgo: 1,
       trainingDays: buildMockTrainingDays(),
-      stats: {
-        strength: 88,
-        resistance: 78,
-        stamina: 82,
-        agility: 70,
-        tenacity: 60,
-        vigor: 65,
-      },
     };
   }
 }

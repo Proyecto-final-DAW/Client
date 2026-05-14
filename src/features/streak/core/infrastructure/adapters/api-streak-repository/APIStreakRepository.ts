@@ -1,7 +1,7 @@
-import axios, { AxiosError } from 'axios';
+import { API_ENDPOINTS } from '@config/api';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import axios from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
 import type { StreakRepository } from '../../../application/ports/StreakRepository';
 import type { StreakStatus } from '../../../domain/models/StreakStatus';
 import type { GetStreakStatusDTO } from './dtos/GetStreakStatusDTO';
@@ -20,11 +20,12 @@ export class APIStreakRepository implements StreakRepository {
 
       return StreakStatusFromDTO.fromDTO(response.data);
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al cargar la racha';
-
-      throw new Error(serverMessage);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido cargar tu racha. Recarga la pagina o intentalo mas tarde.'
+        )
+      );
     }
   }
 }

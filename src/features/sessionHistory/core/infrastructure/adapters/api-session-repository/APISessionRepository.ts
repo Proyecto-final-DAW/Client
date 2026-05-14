@@ -1,7 +1,7 @@
-import axios, { AxiosError } from 'axios';
+import { API_ENDPOINTS } from '@config/api';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import axios from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
 import type { SessionRepository } from '../../../application/ports/SessionRepository';
 import type { Session } from '../../../domain/models/Session';
 import type { GetSessionHistoryDTO } from './dtos/GetSessionDTO';
@@ -16,11 +16,12 @@ export class APISessionRepository implements SessionRepository {
 
       return SessionsFromDTO.fromDTOList(response.data.sessions);
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message ||
-        'Error al cargar el historial de sesiones';
-      throw new Error(serverMessage);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido cargar tu historial de sesiones. Recarga la pagina o intentalo mas tarde.'
+        )
+      );
     }
   }
 }

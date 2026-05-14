@@ -1,11 +1,14 @@
 interface PixelCornersProps {
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
 
 const SIZE_CLASS: Record<NonNullable<PixelCornersProps['size']>, string> = {
   sm: 'w-2 h-2',
   md: 'w-3 h-3',
+  // `lg` exists for the cinematic modals (tier-up, etc.) where the
+  // 3px corners look thin against a 5xl container.
+  lg: 'w-5 h-5',
 };
 
 export const PixelCorners = (props: PixelCornersProps): React.JSX.Element => {

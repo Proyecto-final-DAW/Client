@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import type { MacrosRepository } from '../../core/application/ports/MacrosRepository';
 import type { OnboardingRepository } from '../../core/application/ports/OnboardingRepository';
 import type { StatsInitRepository } from '../../core/application/ports/StatsInitRepository';
 import type {
@@ -11,7 +10,47 @@ import { INITIAL_FORM_DATA } from '../../core/domain/models/OnboardingFormData';
 import type { OnboardingResponse } from '../../core/domain/models/OnboardingResponse';
 import { validateStep } from '../../core/domain/validators/OnboardingValidator';
 
-const TOTAL_STEPS = 6;
+/**
+ * Total wizard steps. Steps 1..6 are forms (validated). Step 7 is the
+ * preview/confirm screen — no validation, pressing SIGUIENTE there
+ * triggers submit instead of advancing.
+ */
+const TOTAL_STEPS = 7;
+const PREVIEW_STEP = 7;
+
+const STORAGE_KEY = 'onboarding_wizard_progress_v1';
+
+interface PersistedProgress {
+  data: OnboardingFormData;
+  step: number;
+}
+
+/**
+ * Loads wizard state from localStorage if a partial run exists. Returns
+ * null when the stored payload is malformed — failing closed avoids
+ * boot-time crashes from corrupted storage.
+ */
+function loadPersistedProgress(): PersistedProgress | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<PersistedProgress>;
+    if (
+      !parsed ||
+      typeof parsed.step !== 'number' ||
+      !parsed.data ||
+      typeof parsed.data !== 'object'
+    ) {
+      return null;
+    }
+    return {
+      step: Math.max(1, Math.min(TOTAL_STEPS, parsed.step)),
+      data: { ...INITIAL_FORM_DATA, ...parsed.data },
+    };
+  } catch {
+    return null;
+  }
+}
 
 interface UseOnboardingWizardProps {
   userId: number;
@@ -19,7 +58,6 @@ interface UseOnboardingWizardProps {
   initialName: string;
   onboardingService: OnboardingRepository;
   statsInitService: StatsInitRepository;
-  macrosService: MacrosRepository;
   onComplete: (response: OnboardingResponse) => void;
 }
 
@@ -29,19 +67,45 @@ export function useOnboardingWizard({
   initialName,
   onboardingService,
   statsInitService,
-  macrosService,
   onComplete,
 }: UseOnboardingWizardProps) {
-  const [currentStep, setCurrentStep] = useState(1);
-  // Seed `name` from the auth user — the wizard no longer asks for it but
-  // the server validator still requires it in the submit payload.
-  const [formData, setFormData] = useState<OnboardingFormData>(() => ({
-    ...INITIAL_FORM_DATA,
-    name: initialName,
-  }));
+  // Both states use lazy initialisers so `loadPersistedProgress()`
+  // (which parses localStorage) only runs once on mount instead of
+  // every render. Without the lazy form, React still throws away the
+  // computed value after the first render but still calls the function
+  // — wasted JSON.parse on every keystroke in the wizard.
+  // Read persisted progress ONCE during the lazy initialiser pass so
+  // both `currentStep` and `formData` consume the same parsed value.
+  // Earlier shape called `loadPersistedProgress()` twice — two
+  // localStorage reads + two JSON.parse for the same data.
+  const [currentStep, setCurrentStep] = useState(() => {
+    const persisted = loadPersistedProgress();
+    return persisted?.step ?? 1;
+  });
+  const [formData, setFormData] = useState<OnboardingFormData>(() => {
+    const persisted = loadPersistedProgress();
+    return {
+      ...INITIAL_FORM_DATA,
+      ...(persisted?.data ?? {}),
+      // The auth user's name always wins — even if persisted storage held
+      // a stale value from a different account on the same browser.
+      name: initialName,
+    };
+  });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Persist progress on every change so a reload / closed tab doesn't
+  // wipe what the user already filled in.
+  useEffect(() => {
+    try {
+      const payload: PersistedProgress = { data: formData, step: currentStep };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch {
+      // Storage quota / private mode → silent: persistence is a nice-to-have.
+    }
+  }, [formData, currentStep]);
 
   function handleChange(
     field: keyof OnboardingFormData,
@@ -58,6 +122,13 @@ export function useOnboardingWizard({
   }
 
   async function handleNext() {
+    // The preview step (last one) has no fields to validate — pressing
+    // "SIGUIENTE" there is the confirm action, not a step advance.
+    if (currentStep === PREVIEW_STEP) {
+      await handleSubmit();
+      return;
+    }
+
     const stepErrors = validateStep(currentStep, formData);
     if (Object.keys(stepErrors).length > 0) {
       setErrors(stepErrors);
@@ -65,10 +136,6 @@ export function useOnboardingWizard({
     }
     setErrors({});
 
-    if (currentStep === TOTAL_STEPS) {
-      await handleSubmit();
-      return;
-    }
     setCurrentStep((prev) => prev + 1);
   }
 
@@ -85,13 +152,22 @@ export function useOnboardingWizard({
         formData,
         userId
       );
-      // Post-onboarding side effects: non-fatal, do not block navigation.
+      // Stats row needs to exist before the user lands on /dashboard
+      // (cards / streak queries assume it's there). Macros are *already*
+      // persisted server-side by `submitOnboarding` itself — calling
+      // `macrosService.calculateMacros` here was a redundant second
+      // write of the same data, and `Promise.allSettled` swallowed any
+      // failure silently. Now we only init stats and surface its error.
       const nextToken = response.token ?? token;
       if (nextToken) {
-        await Promise.allSettled([
-          statsInitService.initStats(),
-          macrosService.calculateMacros(formData, userId),
-        ]);
+        await statsInitService.initStats();
+      }
+      // Successful onboarding: clear the persisted draft so the user
+      // doesn't see stale answers on a future fresh registration.
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch {
+        // Ignore — storage cleanup is best-effort.
       }
       onComplete(response);
     } catch (error) {

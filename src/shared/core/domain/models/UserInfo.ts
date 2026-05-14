@@ -3,7 +3,10 @@ export interface UserInfo {
   name: string;
   email: string;
   onboarding_completed: boolean;
-  birth_date?: string;
+  // The DB column is nullable, the onboarding wizard fills it but a
+  // legacy account or a deleted-and-resubmitted profile may emit null
+  // here. Match the server contract so callers don't need a cast.
+  birth_date?: string | null;
   sex?: string;
   weight?: number;
   height?: number;
@@ -13,6 +16,7 @@ export interface UserInfo {
   equipment?: string[];
   days_per_week?: string;
   injuries?: string[];
+  injury_notes?: string | null;
   age?: number;
   sleep_hours?: number;
   daily_calories?: number;

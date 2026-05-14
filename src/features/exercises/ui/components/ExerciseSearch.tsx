@@ -1,19 +1,27 @@
+import { Pagination } from '@shared/components/Pagination';
+import { PixelSelect } from '@shared/components/PixelSelect';
+
 import type { Exercise } from '../../core/domain/models/Exercise';
 import { MUSCLE_OPTIONS, useExerciseSearch } from '../hooks/useExerciseSearch';
 import { ExerciseCard } from './ExerciseCard';
 
 type ExerciseSearchProps = {
   onSelectExercise?: (exercise: Exercise) => void;
+  /**
+   * Catalog ids of exercises already in the target routine. Cards
+   * matching one of these render the "AÑADIDO" inert state instead
+   * of inviting another tap. Undefined or empty = picker mode (every
+   * card is selectable).
+   */
+  addedIds?: ReadonlySet<string>;
 };
 
 const inputClass =
-  "flex-1 bg-[#12121a] border-2 border-[#1e1e2e] px-3 py-2.5 font-['Press_Start_2P'] text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] focus:border-green-500/70 focus:outline-none transition-colors";
-
-const selectClass =
-  "bg-[#12121a] border-2 border-[#1e1e2e] px-3 py-2.5 font-['Press_Start_2P'] text-[10px] text-[#e4e4e7] focus:border-green-500/70 focus:outline-none transition-colors [color-scheme:dark]";
+  'flex-1 bg-subtle border-2 border-border px-3 py-2.5 font-pixel text-[10px] text-ink placeholder:text-ink-disabled focus:border-green-500/70 focus:outline-none transition-colors';
 
 export const ExerciseSearch = ({
   onSelectExercise,
+  addedIds,
 }: ExerciseSearchProps): React.JSX.Element => {
   const {
     search,
@@ -42,21 +50,19 @@ export const ExerciseSearch = ({
           onChange={(e) => setSearch(e.target.value)}
           className={inputClass}
         />
-        <label htmlFor="exercise-muscle" className="sr-only">
-          Filtrar por grupo muscular
-        </label>
-        <select
-          id="exercise-muscle"
+        {/* Native `<select>` was rendering with the browser default
+            popup (white text on system blue) that completely broke the
+            pixel-art aesthetic on demo. PixelSelect is the
+            green-bordered drop-down used in the rest of the app
+            (templates filters, etc.) — same component, same look. */}
+        <PixelSelect
           value={muscle}
-          onChange={(e) => setMuscle(e.target.value)}
-          className={selectClass}
-        >
-          {MUSCLE_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+          options={MUSCLE_OPTIONS}
+          placeholder="Todos"
+          onChange={setMuscle}
+          ariaLabel="Filtrar por grupo muscular"
+          className="w-full sm:w-56"
+        />
       </div>
 
       {loading && (
@@ -66,76 +72,45 @@ export const ExerciseSearch = ({
       )}
 
       {error && !loading && (
-        <p className="border-2 border-red-500/40 bg-red-500/10 p-3 text-center font-['Press_Start_2P'] text-base text-red-300">
+        <p className="border-2 border-red-500/40 bg-red-500/10 p-3 text-center font-pixel text-base text-red-300">
           {error}
         </p>
       )}
 
       {!loading && !error && exercises.length === 0 && (search || muscle) && (
-        <p className="border-2 border-dashed border-[#27272a] bg-[#0a0a0f] p-4 text-center font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+        <p className="border-2 border-dashed border-border-muted bg-page p-4 text-center font-pixel text-base text-ink-muted">
           No se encontraron ejercicios.
         </p>
       )}
 
       {!loading && !error && !search && !muscle && (
-        <p className="border-2 border-dashed border-[#27272a] bg-[#0a0a0f] p-4 text-center font-['Press_Start_2P'] text-base text-[#a1a1aa]">
+        <p className="border-2 border-dashed border-border-muted bg-page p-4 text-center font-pixel text-base text-ink-muted">
           Busca un ejercicio o selecciona un grupo muscular.
         </p>
       )}
 
       {!loading && !error && exercises.length > 0 && (
         <>
-          <div className="grid grid-cols-1 gap-6 px-2 sm:grid-cols-2 sm:gap-8 sm:px-4 lg:grid-cols-3 lg:gap-10 lg:px-6">
+          {/* 2 cols on mobile (was 1 — a 9-card single column scrolled
+              ~2000px). Cards self-cap at max-w-[260px] so the densest
+              breakpoint still leaves white-space around each tile. */}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-6 sm:px-4 lg:grid-cols-4 lg:gap-8 lg:px-6">
             {exercises.map((exercise) => (
               <ExerciseCard
                 key={exercise.id}
                 exercise={exercise}
                 onSelect={onSelectExercise}
+                added={addedIds?.has(exercise.id)}
               />
             ))}
           </div>
 
-          {totalPages > 1 && (
-            <nav
-              aria-label="Paginacion de ejercicios"
-              className="flex flex-wrap justify-center items-center gap-2"
-            >
-              <button
-                onClick={() => goToPage(page - 1)}
-                disabled={page === 1}
-                className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400 disabled:opacity-30 disabled:cursor-not-allowed px-3 py-2 transition-colors"
-              >
-                ◀
-              </button>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-                const active = p === page;
-                return (
-                  <button
-                    key={p}
-                    onClick={() => goToPage(p)}
-                    aria-label={`Pagina ${p}`}
-                    aria-current={active ? 'page' : undefined}
-                    className={`min-w-[2rem] font-['Press_Start_2P'] text-[9px] tracking-widest border-2 px-2 py-2 transition-colors ${
-                      active
-                        ? 'border-green-500 bg-green-500/10 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.3)]'
-                        : 'border-[#27272a] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400'
-                    }`}
-                  >
-                    {p}
-                  </button>
-                );
-              })}
-
-              <button
-                onClick={() => goToPage(page + 1)}
-                disabled={page === totalPages}
-                className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400 disabled:opacity-30 disabled:cursor-not-allowed px-3 py-2 transition-colors"
-              >
-                ▶
-              </button>
-            </nav>
-          )}
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={goToPage}
+            ariaLabel="Paginacion de ejercicios"
+          />
         </>
       )}
     </div>

@@ -1,6 +1,6 @@
+import { useAuth } from '@context/hooks/useAuth';
 import { useState } from 'react';
 
-import { useAuth } from '../../../../context/hooks/useAuth';
 import type { Exercise } from '../../../exercises/core/domain/models/Exercise';
 import type { Routine } from '../../core/domain/models/Routine';
 import { routineRepository } from '../adapter';

@@ -1,4 +1,5 @@
-import type { Exercise } from '../../../../domain/models/Exercise';
+import type { Exercise } from '@features/exercises/core/domain/models/Exercise';
+
 import type { GetExercisesDTO } from '../dtos/GetExercisesDTO';
 
 export class ExercisesFromDTO {
@@ -10,6 +11,7 @@ export class ExercisesFromDTO {
       equipment: dto.equipment,
       difficulty: dto.difficulty,
       imageUrl: dto.imageUrl,
+      category: dto.category ?? '',
     };
   }
 

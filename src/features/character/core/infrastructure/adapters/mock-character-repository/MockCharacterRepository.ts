@@ -12,6 +12,7 @@ import type {
   CharacterState,
   PendingChoiceTier,
 } from '../../../domain/models/CharacterState';
+import type { ClassCatalog } from '../../../domain/models/ClassCatalog';
 
 /**
  * Self-contained mock for the character feature. Holds a small fixture of
@@ -24,7 +25,11 @@ import type {
 const NOVICE: NoviceClass = {
   id: 'ESCUDERO',
   tier: 0,
-  name: 'Escudero',
+  // Mirrors the server's NOVICE.name override — tier 0 hasn't picked a
+  // path yet, so the visible label is "Sin clase". Internal id stays
+  // 'ESCUDERO' to match the server schema and existing user_class_state
+  // rows.
+  name: 'Sin clase',
   frase: 'Todo heroe empezo siendo nadie.',
 };
 
@@ -128,6 +133,19 @@ export class MockCharacterRepository implements CharacterRepository {
 
     void classId; // identity is fixed in this mock; kept for future extensions
     return { kind: 'state', state: structuredClone(this.state) };
+  }
+
+  // Catalog mock keeps the small fixture above so the class-tree page
+  // works in mock mode — only one branch populated, the rest renders as
+  // locked silhouettes.
+  async getCatalog(): Promise<ClassCatalog> {
+    await this.delay();
+    return {
+      novice: NOVICE,
+      vocations: [VOCATION_GUERRERO],
+      specializations: [SPEC_BERSERKER],
+      legendaries: [LEG_TITAN],
+    };
   }
 
   private async delay(): Promise<void> {

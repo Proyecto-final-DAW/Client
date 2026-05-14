@@ -1,8 +1,8 @@
+import { STORAGE_KEY_LAST_EMAIL } from '@context/AuthProvider';
+import { useAuth } from '@context/hooks/useAuth';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { STORAGE_KEY_LAST_EMAIL } from '../../../../context/AuthProvider';
-import { useAuth } from '../../../../context/hooks/useAuth';
 import { userInfoRepository } from '../adapter';
 
 export const useLogin = () => {
@@ -26,6 +26,10 @@ export const useLogin = () => {
     }
     const remembered = localStorage.getItem(STORAGE_KEY_LAST_EMAIL);
     if (remembered) setEmail(remembered);
+    // Mount-only prefill — `location.state` change after mount means
+    // the user navigated within the app (back/forward) and we want to
+    // keep whatever they were typing rather than overwrite it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -38,7 +42,11 @@ export const useLogin = () => {
       setSession(token, user);
       navigate('/dashboard', { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No hemos podido iniciar sesion. Vuelve a intentarlo.'
+      );
     } finally {
       setLoading(false);
     }
@@ -47,20 +55,25 @@ export const useLogin = () => {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setClientError(null);
+    // Only gate on missing fields and an obviously-malformed email
+    // here. Any other password the user types is sent to the server,
+    // which is the only thing that can tell "wrong password" from
+    // "right password" — including a 7-char typo of an 8-char real
+    // password. The previous `password.length < 8` check showed
+    // "PASSWORD MINIMO 8 CARACTERES" on a typo, which was wrong
+    // (the password isn't too short, it's incorrect). The 8-char
+    // floor lives at REGISTER time (auth.ts validator) where it's a
+    // real requirement.
     if (!email.trim()) {
-      setClientError('INGRESA TU EMAIL');
+      setClientError('INTRODUCE TU EMAIL');
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setClientError('EMAIL INVALIDO');
+      setClientError('EMAIL NO VALIDO');
       return;
     }
     if (!password) {
-      setClientError('INGRESA TU PASSWORD');
-      return;
-    }
-    if (password.length < 8) {
-      setClientError('PASSWORD MINIMO 8 CARACTERES');
+      setClientError('INTRODUCE TU CONTRASEÑA');
       return;
     }
     void handleSubmit(e);

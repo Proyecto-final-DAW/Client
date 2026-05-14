@@ -2,7 +2,11 @@ export interface OnboardingResponseUser {
   id: number;
   email: string;
   name: string;
-  birth_date: string;
+  // Server can emit `birth_date` as null when the user hasn't set it
+  // yet (the wizard requires it, but the column is nullable on the DB
+  // so a profile-edit-only user round-trips here too). Optional to
+  // mirror reality.
+  birth_date?: string | null;
   profileImage?: string | null;
   sex?: string;
   weight?: number;
@@ -13,6 +17,11 @@ export interface OnboardingResponseUser {
   equipment?: string[];
   days_per_week?: string;
   injuries?: string[];
+  /** Free-text detail surfaced when the user marks 'OTHER' in the
+   *  injuries step. Migration `20260507203852_users_injury_notes.sql`
+   *  added the column server-side; without this field the response
+   *  would silently drop the value the user just typed in onboarding. */
+  injury_notes?: string | null;
   age?: number;
   sleep_hours?: number;
   daily_calories?: number;

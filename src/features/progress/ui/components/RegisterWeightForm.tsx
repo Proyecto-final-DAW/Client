@@ -1,6 +1,6 @@
+import { PixelCorners } from '@shared/components/PixelCorners';
 import type React from 'react';
 
-import { PixelCorners } from '../../../../shared/components/PixelCorners';
 import type { RegisterWeightInput } from '../../core/domain/models/Progress';
 import { useProgressForm } from '../hooks/useProgressForm';
 
@@ -11,8 +11,11 @@ type RegisterWeightFormProps = {
   onSuccess: () => void;
 };
 
+// font-pixel-mono text-base on the typed value: Press Start 2P at
+// 10px is illegible while typing weights, and any input below 16px
+// triggers iOS Safari auto-zoom on focus.
 const inputClass =
-  "w-full bg-[#12121a] border-2 border-[#1e1e2e] px-3 py-2.5 font-['Press_Start_2P'] text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] focus:border-green-500/70 focus:outline-none transition-colors [color-scheme:dark]";
+  'w-full bg-subtle border-2 border-border px-3 py-3 font-pixel-mono text-base text-ink placeholder:text-ink-disabled focus:border-green-500/70 focus:outline-none transition-colors [color-scheme:dark]';
 
 export const RegisterWeightForm = ({
   submitting,
@@ -34,12 +37,13 @@ export const RegisterWeightForm = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="relative grid gap-3 border-2 border-dashed border-green-500/40 bg-[#0a0a0f] p-4 sm:grid-cols-[1fr_1fr_auto]"
+      className="relative grid gap-3 border-2 border-dashed border-green-500/40 bg-page p-4 sm:grid-cols-[1fr_1fr_auto]"
     >
       <PixelCorners size="sm" className="border-green-500/40" />
 
       <input
         type="number"
+        inputMode="decimal"
         step="0.1"
         min="1"
         max="300"
@@ -61,13 +65,13 @@ export const RegisterWeightForm = ({
       <button
         type="submit"
         disabled={submitting}
-        className="font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
+        className="font-pixel text-[9px] tracking-widest bg-green-500 hover:bg-green-400 text-[#0a0a0f] px-4 py-2.5 border-b-4 border-green-700 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:mt-0"
       >
         {submitting ? 'GUARDANDO…' : '▶ GUARDAR'}
       </button>
 
       {(error || submitError) && (
-        <p className="font-['Press_Start_2P'] text-base text-red-300 sm:col-span-3">
+        <p className="font-pixel text-base text-red-300 sm:col-span-3">
           ✕ {error ?? submitError}
         </p>
       )}

@@ -24,7 +24,13 @@ export const RoutineSwitcher = ({
   onCreateNew,
 }: Props): React.JSX.Element => {
   return (
-    <nav className="flex flex-wrap gap-2" aria-label="Cambiar sesion">
+    // Horizontal scroll with snap on mobile (`flex-nowrap`), wraps freely
+    // from sm+ where there's room. Without this a user with 4-5 routines
+    // saw the bar wrap to 3 rows on a phone, eating the page.
+    <nav
+      className="flex flex-nowrap gap-2 overflow-x-auto pb-1 [scroll-snap-type:x_proximity] sm:flex-wrap sm:overflow-visible"
+      aria-label="Cambiar sesion"
+    >
       {routines.map((routine) => {
         const active = routine.id === selectedRoutineId;
         const done = doneThisWeekIds.has(routine.id);
@@ -34,17 +40,27 @@ export const RoutineSwitcher = ({
             type="button"
             onClick={() => onSelect(routine.id)}
             aria-pressed={active}
+            // Surface the "done" status via the button's accessible name
+            // instead of an aria-label on the SVG inside it — that
+            // strategy made screen readers stutter with the icon's label
+            // colliding with the button text. The CheckIcon is now
+            // purely decorative (aria-hidden).
+            aria-label={
+              done
+                ? `${formatRoutineName(routine)} (hecha esta semana)`
+                : undefined
+            }
             title={done ? 'Hecha esta semana' : undefined}
-            className={`inline-flex items-center gap-2 max-w-xs truncate font-['Press_Start_2P'] text-[9px] tracking-widest border-2 px-3 py-2 transition-colors ${
+            className={`inline-flex shrink-0 items-center gap-2 max-w-xs truncate [scroll-snap-align:start] font-pixel text-[9px] tracking-widest border-2 px-3 py-2 transition-colors ${
               active
                 ? 'border-green-500 bg-green-500/10 text-green-400 shadow-[0_0_12px_rgba(34,197,94,0.3)]'
-                : 'border-[#1e1e2e] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/40 hover:text-green-400'
+                : 'border-border bg-card text-ink-muted hover:border-green-500/40 hover:text-green-400'
             }`}
           >
             {done && (
               <CheckIcon
                 className="h-3 w-3 shrink-0 text-green-400"
-                aria-label="Hecha esta semana"
+                aria-hidden="true"
               />
             )}
             {active ? '▶ ' : ''}
@@ -55,7 +71,7 @@ export const RoutineSwitcher = ({
       <button
         type="button"
         onClick={onCreateNew}
-        className="inline-flex items-center gap-2 font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-dashed border-[#3f3f46] bg-[#0d0d14] text-[#a1a1aa] hover:border-green-500/50 hover:text-green-400 px-3 py-2 transition-colors"
+        className="inline-flex shrink-0 items-center gap-2 font-pixel text-[9px] tracking-widest border-2 border-dashed border-[#3f3f46] bg-card text-ink-muted hover:border-green-500/50 hover:text-green-400 px-3 py-2 transition-colors"
       >
         <PlusIcon className="h-3 w-3" />
         NUEVA

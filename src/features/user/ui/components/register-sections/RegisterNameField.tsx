@@ -8,8 +8,8 @@ export const RegisterNameField = ({
   onChange,
 }: RegisterNameFieldProps): React.JSX.Element => {
   return (
-    <label className="block mb-10">
-      <span className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider">
+    <label className="block mb-5">
+      <span className="block font-pixel text-[9px] sm:text-[10px] text-ink-muted mb-2 tracking-wider">
         NOMBRE
       </span>
       <input
@@ -18,7 +18,7 @@ export const RegisterNameField = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         autoComplete="name"
-        className="w-full bg-[#12121a] border-2 border-[#1e1e2e] focus:border-green-500/70 focus:outline-none px-3 py-2.5 font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] transition-colors"
+        className="w-full bg-subtle border-2 border-border focus:border-green-500/70 focus:outline-none px-3 py-3 font-pixel-mono text-base text-ink placeholder:text-ink-disabled transition-colors"
       />
     </label>
   );

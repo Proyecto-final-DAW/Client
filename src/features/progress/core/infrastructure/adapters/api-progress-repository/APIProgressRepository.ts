@@ -1,7 +1,8 @@
-import axios, { AxiosError } from 'axios';
+import { API_ENDPOINTS } from '@config/api';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import { toISODate } from '@shared/utils/date';
+import axios from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
 import type { ProgressRepository } from '../../../application/ports/ProgressRepository';
 import type { ExerciseProgressPoint } from '../../../domain/models/ExerciseProgressPoint';
 import type { PerformedExercise } from '../../../domain/models/PerformedExercise';
@@ -16,7 +17,11 @@ import { ExerciseProgressFromDTO } from './mappers/ExerciseProgressFromDTO';
 import { PerformedExercisesFromDTO } from './mappers/PerformedExercisesFromDTO';
 import { WeightHistoryFromDTO } from './mappers/WeightHistoryFromDTO';
 
-const toIsoDate = (date: Date): string => date.toISOString().split('T')[0];
+// Use the shared `toISODate` helper instead of the previous local
+// `date.toISOString().split('T')[0]` — that variant is the exact UTC-
+// shift bug the helper was created to avoid: a user in a TZ ahead of
+// UTC who picks today's date can persist yesterday's date because the
+// midnight-local parses to yesterday-UTC.
 
 export class APIProgressRepository implements ProgressRepository {
   async getPerformedExercises(userId: number): Promise<PerformedExercise[]> {
@@ -26,10 +31,12 @@ export class APIProgressRepository implements ProgressRepository {
       );
       return PerformedExercisesFromDTO.fromDTO(response.data);
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al cargar los ejercicios';
-      throw new Error(serverMessage);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido cargar tus ejercicios. Recarga la pagina o intentalo mas tarde.'
+        )
+      );
     }
   }
   async getExerciseProgress(
@@ -42,10 +49,12 @@ export class APIProgressRepository implements ProgressRepository {
       );
       return ExerciseProgressFromDTO.fromDTO(response.data);
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al cargar la progresion';
-      throw new Error(serverMessage);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido cargar tu progresion. Recarga la pagina o intentalo mas tarde.'
+        )
+      );
     }
   }
   async getWeightHistory(userId: number): Promise<Progress[]> {
@@ -55,10 +64,12 @@ export class APIProgressRepository implements ProgressRepository {
       );
       return WeightHistoryFromDTO.fromDTOList(response.data);
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al cargar el historial de peso';
-      throw new Error(serverMessage);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido cargar tu historial de peso. Recarga la pagina o intentalo mas tarde.'
+        )
+      );
     }
   }
   async registerWeight(
@@ -68,7 +79,7 @@ export class APIProgressRepository implements ProgressRepository {
     try {
       const body: RegisterWeightDTO = {
         weight: input.weight,
-        date: toIsoDate(input.date),
+        date: toISODate(input.date),
       };
       const response = await axios.post<GetProgressDTO>(
         API_ENDPOINTS.getWeightHistory(userId),
@@ -76,10 +87,12 @@ export class APIProgressRepository implements ProgressRepository {
       );
       return WeightHistoryFromDTO.fromDTO(response.data);
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al registrar el peso';
-      throw new Error(serverMessage);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido guardar tu peso. Vuelve a intentarlo en un momento.'
+        )
+      );
     }
   }
 }

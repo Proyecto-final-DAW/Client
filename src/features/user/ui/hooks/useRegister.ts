@@ -1,7 +1,7 @@
+import { useAuth } from '@context/hooks/useAuth';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../../../../context/hooks/useAuth';
 import { userInfoRepository, userRepository } from '../adapter';
 
 export const useRegister = () => {
@@ -36,7 +36,11 @@ export const useRegister = () => {
         replace: true,
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No hemos podido completar el registro. Vuelve a intentarlo.'
+      );
     } finally {
       setLoading(false);
     }
@@ -51,23 +55,23 @@ export const useRegister = () => {
     const normalizedEmail = email.trim();
 
     if (!normalizedName) {
-      setClientError('INGRESA TU NOMBRE');
+      setClientError('INTRODUCE TU NOMBRE');
       return;
     }
     if (!normalizedEmail) {
-      setClientError('INGRESA TU EMAIL');
+      setClientError('INTRODUCE TU EMAIL');
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
-      setClientError('EMAIL INVALIDO');
+      setClientError('EMAIL NO VALIDO');
       return;
     }
     if (!password) {
-      setClientError('INGRESA TU PASSWORD');
+      setClientError('INTRODUCE UNA CONTRASEÑA');
       return;
     }
     if (password.length < 8) {
-      setClientError('PASSWORD MINIMO 8 CARACTERES');
+      setClientError('LA CONTRASEÑA DEBE TENER AL MENOS 8 CARACTERES');
       return;
     }
 

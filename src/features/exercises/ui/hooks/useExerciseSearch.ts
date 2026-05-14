@@ -1,10 +1,16 @@
+import { useAuth } from '@context/hooks/useAuth';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useAuth } from '../../../../context/hooks/useAuth';
 import type { Exercise } from '../../core/domain/models/Exercise';
 import { exerciseRepository } from '../adapter';
 
-const PAGE_SIZE = 9;
+// 6 cards per page so the picker never feels like a wall of text.
+// On mobile (2 cols) the page renders 3 rows that fit the viewport
+// without scrolling past the search bar. On sm (3 cols) it's 2 rows;
+// on lg (4 cols) one full row + a half-row sits comfortably above
+// the pagination strip. The user explicitly asked to "no saturar
+// tanto ni hacer tanto scroll" when filtering by muscle group.
+const PAGE_SIZE = 6;
 
 export const MUSCLE_OPTIONS = [
   { label: 'Todos', value: '' },

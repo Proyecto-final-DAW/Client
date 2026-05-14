@@ -1,7 +1,7 @@
-import axios, { AxiosError } from 'axios';
+import { API_ENDPOINTS } from '@config/api';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import axios from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
 import type { StatsRepository } from '../../../application/ports/StatsRepository';
 import type { UserStats } from '../../../domain/models/UserStats';
 import type { GetStatsDTO } from './dtos/GetStatsDTO';
@@ -14,10 +14,12 @@ export class APIStatsRepository implements StatsRepository {
 
       return StatsFromDTO.fromDTO(response.data);
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al cargar los stats';
-      throw new Error(serverMessage);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido cargar tus estadisticas. Recarga la pagina o intentalo mas tarde.'
+        )
+      );
     }
   }
 }

@@ -1,5 +1,9 @@
+// VT323 (font-pixel-mono) at text-base for the input value: typing
+// numbers in Press Start 2P at 9px was hostile, and the 16px floor
+// also keeps iOS Safari from auto-zooming on focus. Label stays on
+// Press Start 2P since it's static and the brand cue.
 const inputBase =
-  'w-full bg-[#12121a] border-2 px-3 py-2.5 font-["Press_Start_2P"] text-[9px] sm:text-[10px] text-[#e4e4e7] placeholder:text-[#52525b] focus:outline-none transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
+  'w-full bg-subtle border-2 px-3 py-3 font-pixel-mono text-base text-ink placeholder:text-ink-disabled focus:outline-none transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
 
 interface NumericFieldProps {
   id: string;
@@ -18,23 +22,27 @@ export const NumericField = (props: NumericFieldProps): React.JSX.Element => {
     <div>
       <label
         htmlFor={props.id}
-        className="block font-['Press_Start_2P'] text-[9px] sm:text-[10px] text-[#a1a1aa] mb-2 tracking-wider"
+        className="block font-pixel text-[9px] sm:text-[10px] text-ink-muted mb-2 tracking-wider"
       >
         {props.label}
       </label>
       <input
         id={props.id}
         type="number"
+        // inputMode hints the mobile keyboard layout: integer-only steps get
+        // the simple numeric pad, decimal steps include the decimal point.
+        // Derived from `step` so callers don't have to set it explicitly.
+        inputMode={props.step && props.step !== '1' ? 'decimal' : 'numeric'}
         step={props.step ?? '1'}
         min={props.min}
         max={props.max}
         placeholder={props.placeholder}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
-        className={`${inputBase} ${props.error ? 'border-red-500/70 focus:border-red-400' : 'border-[#1e1e2e] focus:border-green-500/70'}`}
+        className={`${inputBase} ${props.error ? 'border-red-500/70 focus:border-red-400' : 'border-border focus:border-green-500/70'}`}
       />
       {props.error && (
-        <p className="font-['Press_Start_2P'] text-base text-red-400 mt-2 tracking-wide leading-none">
+        <p className="font-pixel-mono text-base text-red-400 mt-2 tracking-wide leading-none">
           ✕ {props.error}
         </p>
       )}

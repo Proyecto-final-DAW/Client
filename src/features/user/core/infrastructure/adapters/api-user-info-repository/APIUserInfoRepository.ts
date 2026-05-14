@@ -1,8 +1,8 @@
-import axios, { AxiosError } from 'axios';
+import { API_ENDPOINTS } from '@config/api';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import type { LoginResponse } from '@shared/core/domain/models/UserInfo';
+import axios from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
-import type { LoginResponse } from '../../../../../../shared/core/domain/models/UserInfo';
 import type { UserInfoRepository } from '../../../application/ports/UserInfoRepository';
 
 export class APIUserInfoRepository implements UserInfoRepository {
@@ -29,7 +29,7 @@ export class APIUserInfoRepository implements UserInfoRepository {
 
       if (!token) {
         throw new Error(
-          'No pudimos iniciar sesion. Verifica tus datos e intenta nuevamente.'
+          'No hemos podido iniciar sesion. Revisa los datos y vuelve a intentarlo.'
         );
       }
 
@@ -39,8 +39,12 @@ export class APIUserInfoRepository implements UserInfoRepository {
         user,
       };
     } catch (error) {
-      const err = error as AxiosError<APIErrorResponse>;
-      throw new Error(err.response?.data?.message ?? 'Error al iniciar sesion');
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido iniciar sesion. Revisa los datos y vuelve a intentarlo.'
+        )
+      );
     }
   }
 }

@@ -1,7 +1,7 @@
-import axios, { AxiosError } from 'axios';
+import { API_ENDPOINTS } from '@config/api';
+import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
+import axios from 'axios';
 
-import { API_ENDPOINTS } from '../../../../../../config/api';
-import type { APIErrorResponse } from '../../../../../../shared/api/error-response/APIErrorResponse';
 import type {
   ExerciseRepository,
   ExerciseSearchResult,
@@ -50,10 +50,12 @@ export class APIExerciseRepository implements ExerciseRepository {
       };
     } catch (error) {
       if (axios.isCancel(error)) throw error;
-      const err = error as AxiosError<APIErrorResponse>;
-      const serverMessage =
-        err.response?.data?.message || 'Error al buscar ejercicios';
-      throw new Error(serverMessage);
+      throw new Error(
+        mapAxiosError(
+          error,
+          'No hemos podido buscar ejercicios. Recarga la pagina o intentalo mas tarde.'
+        )
+      );
     }
   }
 }

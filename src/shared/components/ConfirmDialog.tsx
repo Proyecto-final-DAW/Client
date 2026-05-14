@@ -1,5 +1,8 @@
 import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
+import { useEscapeClose } from '../hooks/useEscapeClose';
 import { PixelCorners } from './PixelCorners';
 
 type Variant = 'danger' | 'neutral';
@@ -28,9 +31,19 @@ const VARIANT_GLOW: Record<Variant, string> = {
 
 const VARIANT_TITLE: Record<Variant, string> = {
   danger:
-    "font-['Press_Start_2P'] text-[11px] tracking-widest text-red-400 [text-shadow:0_0_12px_rgba(239,68,68,0.55)]",
+    'font-pixel text-[11px] tracking-widest text-red-400 [text-shadow:0_0_12px_rgba(239,68,68,0.55)]',
   neutral:
-    "font-['Press_Start_2P'] text-[11px] tracking-widest text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.55)]",
+    'font-pixel text-[11px] tracking-widest text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.55)]',
+};
+
+// Bigger / more dramatic title for the description-less compact
+// variant. The compact card has no body copy to carry the moment, so
+// the title shoulders the visual weight.
+const VARIANT_TITLE_HERO: Record<Variant, string> = {
+  danger:
+    'font-pixel text-base sm:text-lg tracking-widest text-red-400 [text-shadow:0_0_18px_rgba(239,68,68,0.7)]',
+  neutral:
+    'font-pixel text-base sm:text-lg tracking-widest text-green-400 [text-shadow:0_0_18px_rgba(34,197,94,0.7)]',
 };
 
 const VARIANT_PREFIX: Record<Variant, string> = {
@@ -40,9 +53,9 @@ const VARIANT_PREFIX: Record<Variant, string> = {
 
 const VARIANT_BUTTON: Record<Variant, string> = {
   danger:
-    "font-['Press_Start_2P'] text-[9px] tracking-widest bg-red-500 text-[#0a0a0f] px-4 py-3 border-b-4 border-red-700 hover:bg-red-400 hover:border-red-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(239,68,68,0.35)]",
+    'font-pixel text-[9px] tracking-widest bg-red-500 text-[#0a0a0f] px-4 py-3 border-b-4 border-red-700 hover:bg-red-400 hover:border-red-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(239,68,68,0.35)]',
   neutral:
-    "font-['Press_Start_2P'] text-[9px] tracking-widest bg-green-500 text-[#0a0a0f] px-4 py-3 border-b-4 border-green-700 hover:bg-green-400 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)]",
+    'font-pixel text-[9px] tracking-widest bg-green-500 text-[#0a0a0f] px-4 py-3 border-b-4 border-green-700 hover:bg-green-400 hover:border-green-600 active:border-b-0 active:mt-1 transition-all duration-150 shadow-[0_0_14px_rgba(34,197,94,0.35)]',
 };
 
 /**
@@ -64,19 +77,17 @@ export const ConfirmDialog = ({
 }: ConfirmDialogProps) => {
   const cancelRef = useRef<HTMLButtonElement | null>(null);
 
+  useBodyScrollLock(open);
+  useEscapeClose(open, onCancel);
+
   useEffect(() => {
     if (!open) return;
     cancelRef.current?.focus();
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onCancel();
-    };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [open, onCancel]);
+  }, [open]);
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -84,41 +95,78 @@ export const ConfirmDialog = ({
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onCancel();
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4"
     >
-      <div
-        className={`relative w-full max-w-md border-2 bg-[#0d0d14] p-6 ${VARIANT_BORDER[variant]} ${VARIANT_GLOW[variant]}`}
-      >
-        <PixelCorners size="md" className={VARIANT_BORDER[variant]} />
-
-        <h3 id="confirm-title" className={VARIANT_TITLE[variant]}>
-          {VARIANT_PREFIX[variant]} {title.toUpperCase()}
-        </h3>
-
-        {description && (
-          <p className="mt-3 font-['VT323'] text-lg leading-snug text-[#a1a1aa]">
+      {description ? (
+        // Standard variant — title left, body, buttons right (macOS
+        // pattern). For multi-line confirmations where the body
+        // copy carries the explanation.
+        <div
+          className={`relative w-full max-w-md border-2 bg-card p-6 ${VARIANT_BORDER[variant]} ${VARIANT_GLOW[variant]}`}
+        >
+          <PixelCorners size="md" className={VARIANT_BORDER[variant]} />
+          <h3 id="confirm-title" className={VARIANT_TITLE[variant]}>
+            {VARIANT_PREFIX[variant]} {title.toUpperCase()}
+          </h3>
+          <p className="mt-3 font-pixel-mono text-lg leading-snug text-ink-muted">
             {description}
           </p>
-        )}
-
-        <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-end">
-          <button
-            ref={cancelRef}
-            type="button"
-            onClick={onCancel}
-            className="font-['Press_Start_2P'] text-[9px] tracking-widest border-2 border-[#27272a] bg-[#0d0d14] text-[#a1a1aa] px-4 py-3 hover:border-[#3f3f46] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 transition-colors"
-          >
-            {cancelLabel}
-          </button>
-          <button
-            type="button"
-            onClick={onConfirm}
-            className={VARIANT_BUTTON[variant]}
-          >
-            ▶ {confirmLabel}
-          </button>
+          <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-end">
+            <button
+              ref={cancelRef}
+              type="button"
+              onClick={onCancel}
+              className="font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted px-4 py-3 hover:border-[#3f3f46] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 transition-colors"
+            >
+              {cancelLabel}
+            </button>
+            <button
+              type="button"
+              onClick={onConfirm}
+              className={VARIANT_BUTTON[variant]}
+            >
+              ▶ {confirmLabel}
+            </button>
+          </div>
         </div>
-      </div>
-    </div>
+      ) : (
+        // Compact "drama" variant — eyebrow + big title stacked
+        // centered, equal-width buttons below in a 1:1 grid. Reads
+        // like an RPG menu choice rather than a quiet two-line
+        // dialog. Tighter card width because there's no body copy
+        // to fill it.
+        <div
+          className={`relative w-full max-w-xs sm:max-w-sm border-2 bg-card px-6 py-7 ${VARIANT_BORDER[variant]} ${VARIANT_GLOW[variant]}`}
+        >
+          <PixelCorners size="md" className={VARIANT_BORDER[variant]} />
+
+          <h3
+            id="confirm-title"
+            className={`text-center leading-relaxed ${VARIANT_TITLE_HERO[variant]}`}
+          >
+            {title.toUpperCase()}
+          </h3>
+
+          <div className="mt-7 grid grid-cols-2 gap-3">
+            <button
+              ref={cancelRef}
+              type="button"
+              onClick={onCancel}
+              className="font-pixel text-[9px] tracking-widest border-2 border-border-muted bg-card text-ink-muted px-3 py-3 hover:border-[#3f3f46] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 transition-colors"
+            >
+              {cancelLabel}
+            </button>
+            <button
+              type="button"
+              onClick={onConfirm}
+              className={VARIANT_BUTTON[variant]}
+            >
+              ▶ {confirmLabel}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>,
+    document.body
   );
 };

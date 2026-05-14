@@ -1,31 +1,108 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { useAuth } from '../../../../context/hooks/useAuth';
 import type { Routine } from '../../../routines/core/domain/models/Routine';
+import {
+  findCardioActivity,
+  type CardioActivity,
+} from '../../core/domain/models/CardioActivity';
 import type { WorkoutSet } from '../../core/domain/models/WorkoutSet';
 import type { WorkoutStatus } from '../../core/domain/models/WorkoutStatus';
 
-export const REST_PRESETS_SECONDS = [60, 90, 120, 180] as const;
+// Preset rest durations exposed in the timer's quick-select row.
+// The previous [60, 90, 120, 180] left two gaps that hurt the UX:
+//   1. Templates frequently specify 30s (fat-loss circuits) and 45s
+//      (isolation / core work), and neither was selectable manually
+//      — the user landed on the timer with no preset highlighted.
+//   2. The lower bound of 60s pushed every circuit-style template out
+//      of the timer's vocabulary, even though that's literally the
+//      rest the routine prescribes.
+//
+// 30s and 45s added as the new low end. 6 buttons still fit a 360-px
+// viewport in a single row at the timer's existing button width.
+export const REST_PRESETS_SECONDS = [30, 45, 60, 90, 120, 180] as const;
 export const DEFAULT_REST_SECONDS = 90;
+
+/** Catalog exercises ride as 'strength' (the server overrides per-id);
+ *  cardio log entries ride as 'cardio' / 'explosive' / 'stretch' and the
+ *  server trusts the client's type because the id won't be in the
+ *  catalog. */
+export type WorkoutPayloadExerciseType =
+  | 'strength'
+  | 'cardio'
+  | 'explosive'
+  | 'stretch';
+
+/**
+ * Wire shape for a single set inside a session payload. The server
+ * validator accepts `duration_seconds` only when the set comes from a
+ * stretch / mobility exercise (reps may be 0 in that case); for
+ * weighted / bodyweight cadence sets the field stays absent.
+ */
+export type WorkoutPayloadSet = {
+  reps: number;
+  weight: number;
+  duration_seconds?: number;
+};
 
 export type WorkoutPayloadExercise = {
   exercise_api_id: string;
   name: string;
-  type: 'strength';
-  sets: WorkoutSet[];
+  type: WorkoutPayloadExerciseType;
+  sets: WorkoutPayloadSet[];
+  duration_minutes?: number;
+  intensity?: 'LOW' | 'MEDIUM' | 'HIGH';
+  distance_km?: number;
+};
+
+const setToWire = (set: WorkoutSet): WorkoutPayloadSet => {
+  if (set.durationSeconds !== undefined && set.durationSeconds !== null) {
+    return {
+      reps: set.reps,
+      weight: set.weight,
+      duration_seconds: set.durationSeconds,
+    };
+  }
+  return { reps: set.reps, weight: set.weight };
 };
 
 type PersistedState = {
   currentExerciseIndex: number;
   completedSetsByExerciseId: Record<string, WorkoutSet[]>;
   restDurationSeconds: number;
+  /** Optional cardio entry the user logged at the summary screen. Persisted
+   *  so resuming a workout after a refresh keeps any partially-typed entry. */
+  cardio?: CardioActivity | null;
 };
 
 const STORAGE_PREFIX = 'gymquest:workout:';
-const storageKey = (routineId: string) => `${STORAGE_PREFIX}${routineId}`;
+// Scope the key by user id so user A's in-progress workout never
+// surfaces to user B on the same browser. Earlier the key was just
+// `gymquest:workout:<routineId>`, and a sequence "user A starts a
+// workout, logs out, user B logs in, opens the same routine id" would
+// hand B user A's sets. Including userId makes the keys disjoint.
+const storageKey = (userId: string | number, routineId: string) =>
+  `${STORAGE_PREFIX}${userId}:${routineId}`;
+const STORAGE_PREFIX_REGEX = /^gymquest:workout:/;
 
-const loadPersisted = (routineId: string): PersistedState | null => {
+/** Wipe every persisted workout key. Called on logout to make sure
+ *  the next user on the same browser gets a clean slate even if
+ *  they happen to open a routine the previous user was working on. */
+export const clearAllPersistedWorkouts = (): void => {
+  const toRemove: string[] = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && STORAGE_PREFIX_REGEX.test(key)) toRemove.push(key);
+  }
+  toRemove.forEach((k) => localStorage.removeItem(k));
+};
+
+const loadPersisted = (
+  userId: string | number,
+  routineId: string
+): PersistedState | null => {
   try {
-    const raw = localStorage.getItem(storageKey(routineId));
+    const raw = localStorage.getItem(storageKey(userId, routineId));
     if (!raw) return null;
     const parsed = JSON.parse(raw) as PersistedState;
     if (
@@ -50,6 +127,12 @@ const buildEmptySetsByExercise = (
   }, {});
 
 export const useWorkoutState = (routine: Routine | null) => {
+  const { user } = useAuth();
+  // No persistence at all when there's no authenticated user — the
+  // hook still works in-memory but won't write anything to
+  // localStorage that another user could later read.
+  const userKey = user?.id ?? null;
+
   const [status, setStatus] = useState<WorkoutStatus>('active');
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [completedSetsByExerciseId, setCompletedSetsByExerciseId] = useState<
@@ -60,6 +143,7 @@ export const useWorkoutState = (routine: Routine | null) => {
   const [restRemainingSeconds, setRestRemainingSeconds] = useState<number>(0);
   const [isResting, setIsResting] = useState<boolean>(false);
   const [resumed, setResumed] = useState<boolean>(false);
+  const [cardio, setCardio] = useState<CardioActivity | null>(null);
 
   // Tracks whether the initial hydration from localStorage has happened for
   // the current routine. Save effects skip until this is true so they can't
@@ -72,7 +156,7 @@ export const useWorkoutState = (routine: Routine | null) => {
     hydratedRef.current = false;
     if (!routine) return;
 
-    const persisted = loadPersisted(routine.id);
+    const persisted = userKey ? loadPersisted(userKey, routine.id) : null;
     if (persisted) {
       const empty = buildEmptySetsByExercise(routine);
       // Only keep sets for exercises that still exist in the routine — if the
@@ -88,42 +172,50 @@ export const useWorkoutState = (routine: Routine | null) => {
         Math.min(persisted.currentExerciseIndex, routine.exercises.length - 1)
       );
       setRestDurationSeconds(persisted.restDurationSeconds);
+      setCardio(persisted.cardio ?? null);
       setStatus('active');
       setResumed(true);
     } else {
       setCompletedSetsByExerciseId(buildEmptySetsByExercise(routine));
       setCurrentExerciseIndex(0);
       setRestDurationSeconds(DEFAULT_REST_SECONDS);
+      setCardio(null);
       setStatus('active');
       setResumed(false);
     }
 
     hydratedRef.current = true;
-  }, [routine]);
+  }, [routine, userKey]);
 
   // Persist on every relevant state change once hydrated. The rest timer
   // (isResting / restRemainingSeconds) is intentionally NOT persisted — when
   // the user resumes, they shouldn't land mid-countdown of a stale rest.
   useEffect(() => {
-    if (!routine || !hydratedRef.current) return;
+    if (!routine || !hydratedRef.current || !userKey) return;
     if (status !== 'active') return;
     try {
       const payload: PersistedState = {
         currentExerciseIndex,
         completedSetsByExerciseId,
         restDurationSeconds,
+        cardio,
       };
-      localStorage.setItem(storageKey(routine.id), JSON.stringify(payload));
+      localStorage.setItem(
+        storageKey(userKey, routine.id),
+        JSON.stringify(payload)
+      );
     } catch {
       // localStorage may be full or unavailable — silently skip; the in-memory
       // state still works for the current session.
     }
   }, [
     routine,
+    userKey,
     status,
     currentExerciseIndex,
     completedSetsByExerciseId,
     restDurationSeconds,
+    cardio,
   ]);
 
   // Tick del temporizador de descanso
@@ -236,9 +328,9 @@ export const useWorkoutState = (routine: Routine | null) => {
   };
 
   const clearPersisted = () => {
-    if (!routine) return;
+    if (!routine || !userKey) return;
     try {
-      localStorage.removeItem(storageKey(routine.id));
+      localStorage.removeItem(storageKey(userKey, routine.id));
     } catch {
       // ignore
     }
@@ -256,14 +348,42 @@ export const useWorkoutState = (routine: Routine | null) => {
 
   const buildPayloadExercises = (): WorkoutPayloadExercise[] => {
     if (!routine) return [];
-    return routine.exercises
+    const strengthEntries: WorkoutPayloadExercise[] = routine.exercises
       .map<WorkoutPayloadExercise>((exercise) => ({
         exercise_api_id: exercise.id,
         name: exercise.name,
         type: 'strength',
-        sets: completedSetsByExerciseId[exercise.id] ?? [],
+        sets: (completedSetsByExerciseId[exercise.id] ?? []).map(setToWire),
       }))
       .filter((exercise) => exercise.sets.length > 0);
+
+    // Append the optional cardio log entry (HIIT, bike, yoga…) as an
+    // extra session_exercise. Synthetic id `cardio:<ID>` so the server
+    // skips the catalog lookup and trusts the client-provided type
+    // (see resolveExerciseTypes on the server).
+    // The form's duration is optional, but a cardio entry only counts
+    // toward XP / session totals when the user actually filled it. The
+    // narrowing here covers both `undefined` and `0` so the payload
+    // never carries a meaningless `duration_minutes: 0` row.
+    const cardioDuration = cardio?.durationMinutes ?? 0;
+    if (cardio && cardioDuration > 0) {
+      const meta = findCardioActivity(cardio.activityId);
+      if (meta) {
+        strengthEntries.push({
+          exercise_api_id: `cardio:${cardio.activityId}`,
+          name: meta.label,
+          type: meta.statType,
+          sets: [],
+          duration_minutes: cardioDuration,
+          intensity: cardio.intensity,
+          ...(cardio.distanceKm !== undefined && cardio.distanceKm > 0
+            ? { distance_km: cardio.distanceKm }
+            : {}),
+        });
+      }
+    }
+
+    return strengthEntries;
   };
 
   return {
@@ -281,6 +401,8 @@ export const useWorkoutState = (routine: Routine | null) => {
     restDurationSeconds,
     completedSetsByExerciseId,
     resumed,
+    cardio,
+    setCardio,
     completeSet,
     removeLastSet,
     nextExercise,

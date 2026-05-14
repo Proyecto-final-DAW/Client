@@ -1,17 +1,18 @@
 import { motion } from 'framer-motion';
 
 import type { Cards } from '../../core/domain/models/Cards';
-import { GlobalLevelCard } from './GlobalLevelCard';
-import { LastWorkoutCard } from './LastWorkoutCard';
 import { StreakCard } from './StreakCard';
 
 type Props = Cards;
 
+// LastWorkoutCard and GlobalLevelCard were retired from this row:
+// - "ULTIMO COMBATE" duplicated information already visible in StreakCard
+//   (today's pixel + the streak count).
+// - "NIVEL GLOBAL" duplicated the LVL badge on the ProfileHeroBanner
+//   rendered at the top of the dashboard.
+// Streak stays alone now and stretches the row, which also lets the calendar
+// breathe.
 export const DashboardCards = (props: Props): React.JSX.Element => {
-  const globalLevel =
-    Object.values(props.stats).reduce((acc, val) => acc + val, 0) /
-    Object.values(props.stats).length;
-
   return (
     <motion.section
       variants={{
@@ -20,11 +21,13 @@ export const DashboardCards = (props: Props): React.JSX.Element => {
       }}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 gap-5 md:grid-cols-3 items-stretch"
     >
-      <StreakCard streak={props.streak} trainingDays={props.trainingDays} />
-      <LastWorkoutCard lastWorkoutDaysAgo={props.lastWorkoutDaysAgo} />
-      <GlobalLevelCard globalLevel={globalLevel} />
+      <StreakCard
+        streak={props.streak}
+        trainingDays={props.trainingDays}
+        sessionsThisWeek={props.sessionsThisWeek}
+        weeklyTarget={props.weeklyTarget}
+      />
     </motion.section>
   );
 };

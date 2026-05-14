@@ -4,14 +4,8 @@
  */
 export interface GetCardsDTO {
   streak: number | null;
+  weeklyTarget: number;
+  sessionsThisWeek: number;
   lastWorkoutDaysAgo: number | null;
   trainingDays: string[];
-  stats: {
-    strength: number;
-    resistance: number;
-    stamina: number;
-    agility: number;
-    tenacity: number;
-    vigor: number;
-  };
 }

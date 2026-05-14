@@ -7,11 +7,12 @@ import type {
   SpecializationClass,
   StatKey,
   VocationClass,
-} from '../../../../domain/models/CharacterClass';
+} from '@features/character/core/domain/models/CharacterClass';
 import type {
   CharacterState,
   PendingChoice,
-} from '../../../../domain/models/CharacterState';
+} from '@features/character/core/domain/models/CharacterState';
+
 import type {
   CharacterStateDTO,
   PendingChoiceDTO,
@@ -215,10 +216,13 @@ const toLegendaryStage = (raw: string | null): ClassTierStage | null => {
 };
 
 const toCurrentTier = (raw: number): ClassTier => {
-  if (!Number.isInteger(raw) || raw < 0 || raw > 6 || raw === 4) {
-    // T4 is a stage (TRANSCENDENT) on top of T3, never the literal current_tier
-    // for a regular class — but the server may surface 4 transiently. Permit it.
-    if (raw === 4) return raw as ClassTier;
+  // T4 is a stage (TRANSCENDENT) on top of T3, not normally the literal
+  // `currentTier` for a regular class — but the server may surface 4
+  // transiently mid-promotion, so we permit it instead of throwing.
+  // Previously the guard ANDed `raw === 4` into the bad-input branch and
+  // included an unreachable `if (raw === 4) return` underneath; the
+  // throw fired before that line could ever run.
+  if (!Number.isInteger(raw) || raw < 0 || raw > 6) {
     throw new MappingError(`currentTier out of range: ${raw}`);
   }
   return raw as ClassTier;

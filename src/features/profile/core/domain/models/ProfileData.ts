@@ -13,6 +13,10 @@ export interface ProfileData {
   equipment: string[];
   days_per_week: string | null;
   injuries: string[];
+  /** Free-text describing an "OTRA" injury when the chip is selected.
+   *  Server stores it in users.injury_notes (max 500 chars). Null
+   *  when the user hasn't filled it in or has only standard chips. */
+  injury_notes: string | null;
   sleep_hours: number | null;
   daily_calories: number | null;
   protein_grams: number | null;
@@ -39,6 +43,9 @@ export interface ProfileUpdateData {
   equipment?: string[];
   days_per_week?: string;
   injuries?: string[];
+  /** Empty string clears the note; null leaves it untouched on the
+   *  partial-update path. */
+  injury_notes?: string | null;
 }
 
 export interface ChangePasswordData {
