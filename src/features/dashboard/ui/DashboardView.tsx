@@ -280,11 +280,6 @@ export const Dashboard = (): React.JSX.Element => {
           open={showTierUpModal}
           pendingChoice={characterState.pendingChoice}
           choosing={characterChoosing}
-          // Surface `chooseClass` failures inline so a network blip or
-          // server rejection doesn't leave the user staring at a modal
-          // that silently re-enabled itself. The same string was
-          // already in the provider; we just had no place to render it
-          // while the modal covered the dashboard.
           error={characterError}
           onConfirm={handleConfirmChoice}
           onClose={handleDismiss}
