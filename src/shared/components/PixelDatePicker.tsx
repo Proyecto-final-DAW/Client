@@ -76,6 +76,204 @@ const compareYmd = (
   return a.day - b.day;
 };
 
+type PixelSelectOption = { value: number; label: string };
+
+/**
+ * Custom select used in the date picker's header. Native `<select>`
+ * only lets CSS style the closed trigger — the open option list is
+ * drawn by the OS (Windows dropdown, macOS popup, iOS wheel picker),
+ * which broke visual continuity with the rest of the pixel calendar.
+ * Portalled to <body> so the list stacks above the date popover and
+ * isn't clipped by its `overflow-y-auto`. Outside-click is
+ * stop-propagated at the list so the parent date picker doesn't
+ * mis-interpret a click on a year/month as "click outside calendar"
+ * and dismiss itself.
+ */
+const PixelSelect = (props: {
+  ariaLabel: string;
+  value: number;
+  options: PixelSelectOption[];
+  onChange: (value: number) => void;
+  className?: string;
+}): React.JSX.Element => {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const selectedItemRef = useRef<HTMLButtonElement>(null);
+
+  type PixelSelectPos =
+    | {
+        placement: 'below';
+        top: number;
+        left: number;
+        width: number;
+        maxHeight: number;
+      }
+    | {
+        placement: 'above';
+        bottom: number;
+        left: number;
+        width: number;
+        maxHeight: number;
+      };
+  const [pos, setPos] = useState<PixelSelectPos>({
+    placement: 'below',
+    top: 0,
+    left: 0,
+    width: 0,
+    maxHeight: 0,
+  });
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    const update = (): void => {
+      if (!triggerRef.current) return;
+      const r = triggerRef.current.getBoundingClientRect();
+      const GAP = 4;
+      const VIEWPORT_PAD = 8;
+      const PREFERRED = 240;
+      const width = Math.max(r.width, 80);
+      const left = Math.min(
+        Math.max(VIEWPORT_PAD, r.left),
+        window.innerWidth - width - VIEWPORT_PAD
+      );
+      const spaceBelow = window.innerHeight - r.bottom - GAP - VIEWPORT_PAD;
+      const spaceAbove = r.top - GAP - VIEWPORT_PAD;
+      const placeBelow = spaceBelow >= 120 || spaceBelow >= spaceAbove;
+      const available = Math.max(80, placeBelow ? spaceBelow : spaceAbove);
+      const maxHeight = Math.min(PREFERRED, available);
+      if (placeBelow) {
+        setPos({
+          placement: 'below',
+          top: r.bottom + GAP,
+          left,
+          width,
+          maxHeight,
+        });
+      } else {
+        setPos({
+          placement: 'above',
+          bottom: window.innerHeight - r.top + GAP,
+          left,
+          width,
+          maxHeight,
+        });
+      }
+    };
+    update();
+    window.addEventListener('scroll', update, true);
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('scroll', update, true);
+      window.removeEventListener('resize', update);
+    };
+  }, [open]);
+
+  // Year lists are ~125 items long — scroll the saved value into the
+  // centre on open so the user lands on their current selection
+  // instead of the top of the list.
+  useLayoutEffect(() => {
+    if (!open) return;
+    selectedItemRef.current?.scrollIntoView({ block: 'center' });
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent): void => {
+      const target = e.target as Node;
+      if (
+        triggerRef.current?.contains(target) ||
+        listRef.current?.contains(target)
+      ) {
+        return;
+      }
+      setOpen(false);
+    };
+    const onEsc = (e: KeyboardEvent): void => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('mousedown', onDoc);
+    document.addEventListener('keydown', onEsc);
+    return () => {
+      document.removeEventListener('mousedown', onDoc);
+      document.removeEventListener('keydown', onEsc);
+    };
+  }, [open]);
+
+  const current = props.options.find((o) => o.value === props.value);
+
+  const list = open ? (
+    <div
+      ref={listRef}
+      role="listbox"
+      aria-label={props.ariaLabel}
+      // Stop propagation so the parent date picker's outside-click
+      // handler doesn't see clicks inside the portalled list (the
+      // list lives outside the calendar's DOM subtree).
+      onMouseDown={(e) => e.stopPropagation()}
+      style={{
+        position: 'fixed',
+        ...(pos.placement === 'below'
+          ? { top: pos.top }
+          : { bottom: pos.bottom }),
+        left: pos.left,
+        width: pos.width,
+        maxHeight: pos.maxHeight,
+        // Above the date popover (z-index 1000) so the list isn't
+        // hidden behind the calendar grid when it expands downward.
+        zIndex: 1001,
+      }}
+      className="bg-card border-2 border-green-500/40 shadow-[0_0_24px_rgba(34,197,94,0.25)] overflow-y-auto"
+    >
+      {props.options.map((o) => {
+        const isSelected = o.value === props.value;
+        return (
+          <button
+            key={o.value}
+            ref={isSelected ? selectedItemRef : undefined}
+            type="button"
+            role="option"
+            aria-selected={isSelected}
+            onClick={() => {
+              props.onChange(o.value);
+              setOpen(false);
+            }}
+            className={`w-full text-center px-2 py-2 font-pixel text-[9px] tracking-widest transition-colors ${
+              isSelected
+                ? 'bg-green-500/15 text-green-300'
+                : 'text-ink hover:bg-green-500/10 hover:text-green-300'
+            }`}
+          >
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  ) : null;
+
+  return (
+    <>
+      <button
+        ref={triggerRef}
+        type="button"
+        aria-label={props.ariaLabel}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        className={`bg-subtle border-2 px-2 py-2 font-pixel text-[9px] tracking-widest text-ink transition-colors flex items-center justify-between gap-2 ${
+          open
+            ? 'border-green-500/70'
+            : 'border-border hover:border-green-500/50'
+        } ${props.className ?? ''}`}
+      >
+        <span className="truncate">{current?.label ?? ''}</span>
+        <span className="text-ink-muted">▼</span>
+      </button>
+      {list && createPortal(list, document.body)}
+    </>
+  );
+};
+
 export const PixelDatePicker = (
   props: PixelDatePickerProps
 ): React.JSX.Element => {
@@ -372,30 +570,19 @@ export const PixelDatePicker = (
         >
           ◀
         </button>
-        <select
-          aria-label="Mes"
+        <PixelSelect
+          ariaLabel="Mes"
           value={viewMonth}
-          onChange={(e) => setViewMonth(Number(e.target.value))}
-          className="flex-1 min-w-0 bg-subtle border-2 border-border px-2 py-2 font-pixel text-[9px] tracking-widest text-ink hover:border-green-500/50 focus:border-green-500/70 focus:outline-none [color-scheme:dark]"
-        >
-          {MONTHS_ES.map((m, i) => (
-            <option key={m} value={i}>
-              {m}
-            </option>
-          ))}
-        </select>
-        <select
-          aria-label="Año"
+          options={MONTHS_ES.map((m, i) => ({ value: i, label: m }))}
+          onChange={setViewMonth}
+          className="flex-1 min-w-0"
+        />
+        <PixelSelect
+          ariaLabel="Año"
           value={viewYear}
-          onChange={(e) => setViewYear(Number(e.target.value))}
-          className="bg-subtle border-2 border-border px-2 py-2 font-pixel text-[9px] tracking-widest text-ink hover:border-green-500/50 focus:border-green-500/70 focus:outline-none [color-scheme:dark]"
-        >
-          {yearOptions.map((y) => (
-            <option key={y} value={y}>
-              {y}
-            </option>
-          ))}
-        </select>
+          options={yearOptions.map((y) => ({ value: y, label: String(y) }))}
+          onChange={setViewYear}
+        />
         <button
           type="button"
           onClick={goNext}
