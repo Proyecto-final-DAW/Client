@@ -23,7 +23,7 @@ export const TARGET_LABEL: Record<string, string> = {
   obliques: 'OBLICUOS',
   quadriceps: 'CUADRICEPS',
   quads: 'CUADRICEPS',
-  hamstrings: 'ISQUIOTIBIALES',
+  hamstrings: 'ISQUIOS',
   glutes: 'GLUTEOS',
   calves: 'GEMELOS',
   abductors: 'ABDUCTORES',

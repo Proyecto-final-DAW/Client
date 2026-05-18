@@ -64,9 +64,9 @@ export const Carousel = (): React.JSX.Element => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="font-pixel text-sm sm:text-lg md:text-xl text-ink leading-relaxed [text-shadow:2px_2px_0_#000,0_0_10px_rgba(0,0,0,0.8)]">
-            ELIGE TU{' '}
+            TU{' '}
             <span className="text-green-500 [text-shadow:2px_2px_0_#000,0_0_12px_rgba(34,197,94,0.5)]">
-              HABILIDAD
+              ARSENAL
             </span>
           </h2>
           <p className="mt-4 text-ink-faint text-[9px] sm:text-[11px] font-pixel tracking-wide leading-loose max-w-md mx-auto">
