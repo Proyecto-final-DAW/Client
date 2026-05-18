@@ -89,7 +89,7 @@ export const StepPreview = ({ data }: StepPreviewProps): React.JSX.Element => {
     >
       <header className="text-center">
         <p className="font-pixel text-[8px] sm:text-[9px] tracking-widest text-green-500">
-          ◆ TU LEYENDA EMPIEZA AQUI
+          TU LEYENDA EMPIEZA AQUI
         </p>
         <h2 className="mt-2 font-pixel text-base sm:text-lg text-green-400 [text-shadow:2px_2px_0_#000,0_0_14px_rgba(34,197,94,0.45)]">
           REVISA Y CONFIRMA
@@ -104,7 +104,7 @@ export const StepPreview = ({ data }: StepPreviewProps): React.JSX.Element => {
       <section className="border-2 border-green-500/40 bg-card p-6 sm:p-8 shadow-[0_0_18px_rgba(34,197,94,0.15)]">
         <PixelCorners size="md" className="border-green-500/40" />
         <p className="font-pixel text-[10px] sm:text-[11px] tracking-widest text-green-500 mb-6 text-center">
-          ◆ TU PERFIL
+          TU PERFIL
         </p>
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-5 text-center">
           <div>

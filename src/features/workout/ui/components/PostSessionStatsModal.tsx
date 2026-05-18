@@ -226,7 +226,7 @@ export const PostSessionStatsModal = (
 
         <header className="text-center">
           <p className="font-pixel text-[9px] tracking-widest text-green-500/80">
-            ◆ EXPERIENCIA GANADA
+            EXPERIENCIA GANADA
           </p>
           <motion.h2
             id="post-session-stats-title"

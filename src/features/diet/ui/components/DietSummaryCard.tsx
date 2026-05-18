@@ -119,7 +119,7 @@ export const DietSummaryCard = ({
         <section className="relative border-2 border-green-500/40 bg-card p-5">
           <PixelCorners size="md" className="border-green-500/40" />
           <p className="font-pixel text-[10px] tracking-widest text-green-500 mb-3">
-            ◆ DIETA
+            DIETA
           </p>
           <h3 className="font-pixel text-base text-green-400 mb-2 [text-shadow:0_0_12px_rgba(34,197,94,0.4)]">
             CALCULA TUS MACROS
@@ -223,12 +223,12 @@ export const DietSummaryCard = ({
           macros on every GET via diet.service.getCurrentMacros, so a
           user-facing refetch button was a no-op for the normal flow.
           The page already re-fetches on mount and on auth user change.
-          The "◆ DIETA" eyebrow was dropped here too — the page header
+          The "DIETA" eyebrow was dropped here too — the page header
           right above the card already says we're in /diet, so a second
           DIETA tag inside felt like a copy-paste. */}
       <header className="mb-4">
         <h2 className="font-pixel text-xs sm:text-sm text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.45)]">
-          ◆ OBJETIVO DIARIO
+          OBJETIVO DIARIO
         </h2>
       </header>
 

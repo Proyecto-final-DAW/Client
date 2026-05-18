@@ -45,7 +45,6 @@ export const DashboardCTAHero = ({
       <PixelCorners size="md" className="border-green-500/60" />
 
       <p className="font-pixel text-[8px] sm:text-[9px] tracking-[0.2em] text-green-500">
-        ◆{' '}
         {trainedToday
           ? 'ENTRENO DE HOY'
           : hasTrainedBefore

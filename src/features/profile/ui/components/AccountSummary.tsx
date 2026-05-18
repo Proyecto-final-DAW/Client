@@ -72,7 +72,7 @@ export const AccountSummary = (
     <section className="relative border-2 border-green-500/40 bg-card p-5">
       <PixelCorners size="md" className="border-green-500/40" />
       <p className="mb-4 font-pixel text-[10px] tracking-widest text-green-500">
-        ◆ RESUMEN
+        RESUMEN
       </p>
       {/* Tighter padding + smaller value font on the smallest viewport
           so 3-digit numbers ("365 DIAS") don't clip the cell border at

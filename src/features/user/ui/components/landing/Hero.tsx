@@ -27,7 +27,7 @@ export const Hero = (): React.JSX.Element => {
           {/* Left — headline + CTA */}
           <div className="text-center lg:text-left flex flex-col items-center lg:items-start">
             <p className="font-pixel text-[9px] sm:text-[10px] tracking-widest text-green-500 mb-4 [text-shadow:0_0_8px_rgba(34,197,94,0.5)]">
-              ◆ GYMQUEST · RPG FITNESS
+              GYMQUEST · RPG FITNESS
             </p>
 
             <h1 className="font-pixel text-xl sm:text-3xl md:text-5xl text-white leading-tight md:leading-[1.15] [text-shadow:3px_3px_0_#000,0_0_22px_rgba(0,0,0,0.85)]">

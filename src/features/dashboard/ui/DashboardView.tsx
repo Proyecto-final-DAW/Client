@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react';
 
 import { useAuth } from '../../../context/hooks/useAuth';
 import { useCharacterState } from '../../../context/hooks/useCharacterState';
+import {
+  ClassRevealModal,
+  type RevealedClass,
+} from '../../character/ui/components/ClassRevealModal';
 import { OriginStoryIntro } from '../../character/ui/components/OriginStoryIntro';
 import { RankUpModal } from '../../character/ui/components/RankUpModal';
 import { TierUpModal } from '../../character/ui/components/TierUpModal';
@@ -146,10 +150,53 @@ export const Dashboard = (): React.JSX.Element => {
     characterState?.pendingChoice !== undefined &&
     dismissedTier !== characterState.pendingChoice.tier;
 
+  // Reveal of the class the user just picked. Captured BEFORE the
+  // chooseClass call resolves because afterwards `pendingChoice`
+  // clears and we'd have no way to look the picked option back up.
+  // Shown once `chooseClass` succeeds and the TierUpModal has had a
+  // beat to exit — the user wanted "una pasada" instead of the modal
+  // silently dismissing.
+  const [revealedClass, setRevealedClass] = useState<RevealedClass | null>(
+    null
+  );
+
   const handleConfirmChoice = async (classId: string): Promise<void> => {
     if (!characterState?.pendingChoice) return;
+
+    // Snapshot the chosen card BEFORE the request — once the server
+    // confirms, `pendingChoice` becomes null and the options vanish.
+    // We need name / frase / stat for the reveal hero.
+    const pending = characterState.pendingChoice;
+    const picked = pending.options.find((option) => option.id === classId);
+    const reveal: RevealedClass | null = picked
+      ? {
+          tier: pending.tier,
+          id: picked.id,
+          name: picked.name,
+          frase: picked.frase,
+          // Same per-tier headline-stat resolution as TierUpModal so the
+          // reveal accent matches the card the user clicked:
+          //   T1 vocation    → dominantStat
+          //   T2 spec        → secondaryStat
+          //   T3 legendary   → first requiredStats entry
+          stat:
+            pending.tier === 1
+              ? (pending.options.find((o) => o.id === classId)?.dominantStat ??
+                null)
+              : pending.tier === 2
+                ? (pending.options.find((o) => o.id === classId)
+                    ?.secondaryStat ?? null)
+                : (pending.options.find((o) => o.id === classId)
+                    ?.requiredStats[0] ?? null),
+        }
+      : null;
+
     try {
-      await chooseClass(characterState.pendingChoice.tier, classId);
+      await chooseClass(pending.tier, classId);
+      // Only show the reveal on success — a failed request keeps the
+      // TierUpModal open with an error message and we don't want to
+      // double-render an "ascent" beat for a choice that didn't land.
+      if (reveal) setRevealedClass(reveal);
     } catch {
       // characterError carries the message; modal stays open for retry.
     }
@@ -216,6 +263,12 @@ export const Dashboard = (): React.JSX.Element => {
               trainingDays={cards.trainingDays}
               sessionsThisWeek={cards.sessionsThisWeek}
               weeklyTarget={cards.weeklyTarget}
+              // Forwarded to the inner TrainingCalendar so the user
+              // can't scroll the month picker back past their account
+              // creation — there's no data there.
+              accountCreatedAt={
+                user?.created_at ? new Date(user.created_at) : null
+              }
               onShowHelp={() => setStreakHelpOpen(true)}
             />
           )}
@@ -227,10 +280,25 @@ export const Dashboard = (): React.JSX.Element => {
           open={showTierUpModal}
           pendingChoice={characterState.pendingChoice}
           choosing={characterChoosing}
+          // Surface `chooseClass` failures inline so a network blip or
+          // server rejection doesn't leave the user staring at a modal
+          // that silently re-enabled itself. The same string was
+          // already in the provider; we just had no place to render it
+          // while the modal covered the dashboard.
+          error={characterError}
           onConfirm={handleConfirmChoice}
           onClose={handleDismiss}
         />
       )}
+
+      {/* Celebration reveal — pops AFTER the TierUpModal exits on a
+          successful choice. Stays mounted while open so the
+          AnimatePresence exit transition is allowed to complete. */}
+      <ClassRevealModal
+        open={revealedClass !== null}
+        reveal={revealedClass}
+        onClose={() => setRevealedClass(null)}
+      />
 
       {pendingCelebration && characterState && !showTierUpModal && (
         <RankUpModal

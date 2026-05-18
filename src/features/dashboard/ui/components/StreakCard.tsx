@@ -12,6 +12,13 @@ type StreakCardProps = {
   /** User's weekly training target. */
   weeklyTarget: number;
   /**
+   * Account-creation date — forwarded to TrainingCalendar so the
+   * "anterior" arrow stops at the month the account was created.
+   * Scrolling further back showed empty grids with no sessions ever
+   * (the user didn't even exist), which read as a bug.
+   */
+  accountCreatedAt?: Date | null;
+  /**
    * Optional handler for the help affordance on the fire icon. When
    * provided, the icon turns into a button that pops the streak
    * rules explainer — same modal that auto-runs on first dashboard
@@ -78,7 +85,10 @@ export const StreakCard = (props: StreakCardProps): React.JSX.Element => {
         </p>
       </div>
 
-      <TrainingCalendar trainingDays={props.trainingDays} />
+      <TrainingCalendar
+        trainingDays={props.trainingDays}
+        accountCreatedAt={props.accountCreatedAt}
+      />
     </motion.article>
   );
 };

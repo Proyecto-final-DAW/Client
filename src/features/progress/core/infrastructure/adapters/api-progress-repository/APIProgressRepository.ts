@@ -1,4 +1,5 @@
-import { API_ENDPOINTS } from '@config/api';
+import { API_BASE_URL, API_ENDPOINTS } from '@config/api';
+import { cachedGet, invalidateCache } from '@shared/api/cachedGet';
 import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
 import { toISODate } from '@shared/utils/date';
 import axios from 'axios';
@@ -26,10 +27,14 @@ import { WeightHistoryFromDTO } from './mappers/WeightHistoryFromDTO';
 export class APIProgressRepository implements ProgressRepository {
   async getPerformedExercises(userId: number): Promise<PerformedExercise[]> {
     try {
-      const response = await axios.get<GetPerformedExercisesDTO>(
-        API_ENDPOINTS.getPerformedExercises(userId)
+      // 60s TTL. The list of weighted exercises the user has ever
+      // logged only grows on a new session save, which already busts
+      // the cache via useFinishWorkout.
+      const data = await cachedGet<GetPerformedExercisesDTO>(
+        API_ENDPOINTS.getPerformedExercises(userId),
+        { ttlMs: 60_000 }
       );
-      return PerformedExercisesFromDTO.fromDTO(response.data);
+      return PerformedExercisesFromDTO.fromDTO(data);
     } catch (error) {
       throw new Error(
         mapAxiosError(
@@ -44,10 +49,13 @@ export class APIProgressRepository implements ProgressRepository {
     exerciseId: string
   ): Promise<ExerciseProgressPoint[]> {
     try {
-      const response = await axios.get<GetExerciseProgressDTO>(
-        API_ENDPOINTS.getExerciseProgress(userId, exerciseId)
+      // 60s TTL. The PR chart for a given exercise only changes after
+      // a new session for that exercise — also busted in useFinishWorkout.
+      const data = await cachedGet<GetExerciseProgressDTO>(
+        API_ENDPOINTS.getExerciseProgress(userId, exerciseId),
+        { ttlMs: 60_000 }
       );
-      return ExerciseProgressFromDTO.fromDTO(response.data);
+      return ExerciseProgressFromDTO.fromDTO(data);
     } catch (error) {
       throw new Error(
         mapAxiosError(
@@ -59,10 +67,11 @@ export class APIProgressRepository implements ProgressRepository {
   }
   async getWeightHistory(userId: number): Promise<Progress[]> {
     try {
-      const response = await axios.get<GetProgressDTO[]>(
-        API_ENDPOINTS.getWeightHistory(userId)
+      const data = await cachedGet<GetProgressDTO[]>(
+        API_ENDPOINTS.getWeightHistory(userId),
+        { ttlMs: 60_000 }
       );
-      return WeightHistoryFromDTO.fromDTOList(response.data);
+      return WeightHistoryFromDTO.fromDTOList(data);
     } catch (error) {
       throw new Error(
         mapAxiosError(
@@ -85,6 +94,18 @@ export class APIProgressRepository implements ProgressRepository {
         API_ENDPOINTS.getWeightHistory(userId),
         body
       );
+      // The weight log feeds the body-weight chart AND triggers a
+      // server-side macro recalc on `users` — drop every cached read
+      // that derives from either so the next mount of /diet, /profile,
+      // or /dashboard reflects the new value the moment the form
+      // resolves instead of waiting out the TTL.
+      invalidateCache(API_ENDPOINTS.getWeightHistory(userId));
+      invalidateCache(API_ENDPOINTS.getStats);
+      invalidateCache(API_ENDPOINTS.profile);
+      invalidateCache(API_ENDPOINTS.getDashboardCards);
+      // Prefix-match every `/diet/...` key (covers both `/diet/:userId`
+      // and `/diet/state`) so the diet macros card refreshes too.
+      invalidateCache(`${API_BASE_URL}/diet/`);
       return WeightHistoryFromDTO.fromDTO(response.data);
     } catch (error) {
       throw new Error(

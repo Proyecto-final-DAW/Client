@@ -161,29 +161,78 @@ export const StatRadarChart = ({
   });
 
   const data: RadarPoint[] = useMemo(() => {
-    // Scale factor for the unreplayed pillars (tenacidad/vigor) on
-    // the comparison polygon. We don't track history for those, so
-    // dropping them at the live level made the previous-state hex
-    // spike toward those two axes (visually misleading: looked like
-    // "you regressed everywhere except ten/vig"). Instead we scale
-    // them by the ratio of avg(replayed-then) / avg(replayed-now) —
-    // a rough "how far along were you overall" multiplier. INICIO
-    // → ~0 → ten/vig collapse to 0. HACE 7D → ~0.95 → stay near
-    // current. Yields a uniform-looking comparison hex.
+    // The replay-based snapshot lives on its own scale: it walks the
+    // session table from level 1 upwards, so its "today" value reflects
+    // what the user *earned* through sessions. The live `stats` row,
+    // on the other hand, can also be set by other code paths (e.g. the
+    // demo seed for the presentation user). When they diverge, the
+    // raw replay snapshot reads as a tiny hex next to a giant live
+    // one — "HACE 7D" looks like the user lost 50 levels overnight.
+    //
+    // Per-stat scaling: each replayed pillar is multiplied by the
+    // ratio `live / latestReplay` for that same stat. Ratio is 1 when
+    // the replay matches the live level (real user) and >1 when the
+    // live value was bumped externally (seeded user) — in that case
+    // the historic curve keeps its *shape* but expands to anchor at
+    // the live level for the most recent snapshot.
+    //
+    // Tenacidad / vigor still use the overall scale factor below
+    // because we don't replay them at all.
+    const latest = history.length > 0 ? history[history.length - 1] : null;
+
+    const liveByKey: Record<
+      'strength' | 'resistance' | 'stamina' | 'agility',
+      number
+    > = {
+      strength: 0,
+      resistance: 0,
+      stamina: 0,
+      agility: 0,
+    };
+    (['strength', 'resistance', 'stamina', 'agility'] as const).forEach((k) => {
+      const p = stats.pillar.find((pp) => pp.name === STAT_CONFIG[k].name);
+      liveByKey[k] = p?.level ?? 0;
+    });
+
+    const replayScale: typeof liveByKey = {
+      strength: 1,
+      resistance: 1,
+      stamina: 1,
+      agility: 1,
+    };
+    if (latest) {
+      if (latest.strength_level > 0) {
+        replayScale.strength = liveByKey.strength / latest.strength_level;
+      }
+      if (latest.endurance_level > 0) {
+        replayScale.resistance = liveByKey.resistance / latest.endurance_level;
+      }
+      if (latest.stamina_level > 0) {
+        replayScale.stamina = liveByKey.stamina / latest.stamina_level;
+      }
+      if (latest.agility_level > 0) {
+        replayScale.agility = liveByKey.agility / latest.agility_level;
+      }
+    }
+
+    // Overall "how far along were you" multiplier for the two
+    // un-replayed pillars (tenacidad/vigor). Average of the per-stat
+    // scaled snapshots over the live levels — keeps the legacy
+    // behaviour where INICIO collapses ten/vig to 0 and recent
+    // windows hold them near current.
     let snapshotScale = 0;
     if (snapshot) {
-      const liveLevels = STAT_ORDER.slice(0, 4).map((k) => {
-        const p = stats.pillar.find((pp) => pp.name === STAT_CONFIG[k].name);
-        return p?.level ?? 0;
-      });
-      const liveAvg = liveLevels.reduce((a, b) => a + b, 0) / 4;
-      const snapAvg =
-        (snapshot.strength_level +
-          snapshot.endurance_level +
-          snapshot.stamina_level +
-          snapshot.agility_level) /
-        4;
-      snapshotScale = liveAvg > 0 ? snapAvg / liveAvg : 0;
+      const scaledSnap =
+        snapshot.strength_level * replayScale.strength +
+        snapshot.endurance_level * replayScale.resistance +
+        snapshot.stamina_level * replayScale.stamina +
+        snapshot.agility_level * replayScale.agility;
+      const liveSum =
+        liveByKey.strength +
+        liveByKey.resistance +
+        liveByKey.stamina +
+        liveByKey.agility;
+      snapshotScale = liveSum > 0 ? scaledSnap / liveSum : 0;
     }
 
     return STAT_ORDER.map((key) => {
@@ -197,11 +246,19 @@ export const StatRadarChart = ({
       // can interpolate between values instead of snapping.
       let previous = 0;
       if (snapshot) {
-        if (key === 'strength') previous = snapshot.strength_level;
-        else if (key === 'resistance') previous = snapshot.endurance_level;
-        else if (key === 'stamina') previous = snapshot.stamina_level;
-        else if (key === 'agility') previous = snapshot.agility_level;
-        else previous = Math.round(liveLevel * snapshotScale);
+        if (key === 'strength') {
+          previous = Math.round(snapshot.strength_level * replayScale.strength);
+        } else if (key === 'resistance') {
+          previous = Math.round(
+            snapshot.endurance_level * replayScale.resistance
+          );
+        } else if (key === 'stamina') {
+          previous = Math.round(snapshot.stamina_level * replayScale.stamina);
+        } else if (key === 'agility') {
+          previous = Math.round(snapshot.agility_level * replayScale.agility);
+        } else {
+          previous = Math.round(liveLevel * snapshotScale);
+        }
       }
 
       const fullName = config.name.toUpperCase();
@@ -212,7 +269,7 @@ export const StatRadarChart = ({
         max: 99,
       };
     });
-  }, [stats, snapshot]);
+  }, [stats, snapshot, history]);
 
   // Per-stat accent color (same palette as the StatBar icons on
   // /inicio) so the radar's labels feel like part of the stat sheet
@@ -310,7 +367,7 @@ export const StatRadarChart = ({
           one control surface for the chart below. */}
       <div className="flex items-center justify-between gap-3">
         <p className="font-pixel text-[10px] tracking-widest text-green-500">
-          ◆ {title}
+          {title}
         </p>
         {visibleOptions.length > 1 && (
           <PixelSelect

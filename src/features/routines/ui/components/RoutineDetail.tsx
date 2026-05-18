@@ -103,7 +103,7 @@ export const RoutineDetail = ({
       <section className="relative border-2 border-border bg-card p-6 text-center">
         <PixelCorners size="md" className="border-green-500/30" />
         <p className="font-pixel text-[10px] tracking-widest text-ink-muted">
-          ◆ SIN SESION SELECCIONADA
+          SIN SESION SELECCIONADA
         </p>
         <p className="mt-3 font-pixel text-base text-ink-muted">
           Selecciona una sesion arriba o crea una nueva.
@@ -122,7 +122,7 @@ export const RoutineDetail = ({
       <header className="border-b-2 border-border pb-5">
         <div className="min-w-0">
           <p className="font-pixel text-[9px] tracking-widest text-green-500">
-            ◆ SESION ACTIVA
+            SESION ACTIVA
           </p>
           <h2 className="mt-2 font-pixel text-base sm:text-lg leading-relaxed text-green-400 [text-shadow:0_0_14px_rgba(34,197,94,0.5)] break-words">
             {formatRoutineName(routine).toUpperCase()}

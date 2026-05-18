@@ -54,7 +54,26 @@ export const useProgress = () => {
       try {
         const created = await progressRepository.registerWeight(user.id, input);
 
-        setWeightHistory((current) => [...(current ?? []), created]);
+        // Server policy: one row per (user, day) — `registerWeight`
+        // DELETEs any existing row for the same date before inserting
+        // the new one. Mirror that here so the local state can't drift
+        // out of sync with the BD: drop any pre-existing entry with
+        // the same calendar day before appending. Without this, tapping
+        // REGISTRAR three times in the same day grew the chart to three
+        // visually distinct points (all "18 may") even though the BD
+        // only kept the last one — confusing the user into thinking the
+        // dedupe wasn't working.
+        const sameDayKey = `${created.date.getFullYear()}-${created.date.getMonth()}-${created.date.getDate()}`;
+        setWeightHistory((current) => {
+          const list = current ?? [];
+          const withoutSameDay = list.filter((entry) => {
+            const k = `${entry.date.getFullYear()}-${entry.date.getMonth()}-${entry.date.getDate()}`;
+            return k !== sameDayKey;
+          });
+          return [...withoutSameDay, created].sort(
+            (a, b) => a.date.getTime() - b.date.getTime()
+          );
+        });
         return true;
       } catch (err) {
         const message =

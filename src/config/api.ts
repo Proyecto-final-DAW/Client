@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { clearAllCache } from '../shared/api/cachedGet';
+
 const LOCAL_API_BASE_URL = import.meta.env.VITE_LOCAL_API_BASE_URL;
 const PROD_API_BASE_URL = import.meta.env.VITE_PROD_API_BASE_URL;
 
@@ -46,6 +48,7 @@ export const API_ENDPOINTS = {
   getWeeklySummary: `${API_BASE_URL}/sessions/weekly-summary`,
   createSession: `${API_BASE_URL}/sessions`,
   getSessionHistory: `${API_BASE_URL}/sessions/history`,
+  getTrainingDays: `${API_BASE_URL}/sessions/training-days`,
   routines: `${API_BASE_URL}/routines`,
   deleteRoutine: (routineId: string) => `${API_BASE_URL}/routines/${routineId}`,
   updateRoutine: (routineId: string) => `${API_BASE_URL}/routines/${routineId}`,
@@ -130,6 +133,10 @@ axios.interceptors.response.use(
       // converge on the same destination.
       localStorage.removeItem('auth_token');
       localStorage.removeItem('auth_user');
+      // Mirror the AuthProvider.logout cleanup — the cached API
+      // responses tied to the expired token must not leak into the
+      // next account on the same browser.
+      clearAllCache();
       if (window.location.pathname !== '/') {
         window.location.href = '/';
       }

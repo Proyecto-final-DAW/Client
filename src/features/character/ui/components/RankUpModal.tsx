@@ -37,7 +37,7 @@ const resolveMeta = (
   switch (rank) {
     case 'B':
       return {
-        eyebrow: '◆ RANGO B ◆',
+        eyebrow: 'RANGO B',
         name:
           state.legendary?.transcendentName ??
           state.legendary?.name ??
@@ -49,7 +49,7 @@ const resolveMeta = (
       };
     case 'A':
       return {
-        eyebrow: '◆ RANGO A ◆',
+        eyebrow: 'RANGO A',
         name: 'Maestro Supremo',
         kind: 'El cuerpo obedece al espiritu',
         flavour: 'Trascendiste el cuerpo. Trascendiste el alma. Ahora ERES.',

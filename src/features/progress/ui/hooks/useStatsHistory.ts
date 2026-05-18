@@ -1,7 +1,7 @@
 import { API_ENDPOINTS } from '@config/api';
 import { useAuth } from '@context/hooks/useAuth';
+import { cachedGet } from '@shared/api/cachedGet';
 import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 /**
@@ -42,11 +42,16 @@ export const useStatsHistory = (): {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    axios
-      .get<StatsHistoryPoint[]>(API_ENDPOINTS.getStatsHistory)
-      .then((response) => {
+    // 60s TTL — the history replay is expensive on the server (walks
+    // every session of the user) and the same snapshots are requested
+    // again every time the user toggles AHORA / HACE 7D / etc. on the
+    // radar. Stale-by-up-to-a-minute is fine; a session save invalidates.
+    cachedGet<StatsHistoryPoint[]>(API_ENDPOINTS.getStatsHistory, {
+      ttlMs: 60_000,
+    })
+      .then((data) => {
         if (cancelled) return;
-        setHistory(response.data);
+        setHistory(data);
       })
       .catch((err: unknown) => {
         if (cancelled) return;

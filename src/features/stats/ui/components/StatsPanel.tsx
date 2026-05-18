@@ -59,7 +59,7 @@ export const StatsPanel = (
     <section className="relative border-2 border-green-500/50 bg-card p-5 shadow-[0_0_18px_rgba(34,197,94,0.18)]">
       <PixelCorners size="md" className="border-green-500/50" />
       <p className="mb-4 font-pixel text-[10px] tracking-widest text-green-500">
-        ◆ STATS DEL PERSONAJE
+        STATS DEL PERSONAJE
       </p>
       {/* Two-column on wider viewports. The panel now sits full-width
           on /perfil (moved out of the aside so the page balances), so

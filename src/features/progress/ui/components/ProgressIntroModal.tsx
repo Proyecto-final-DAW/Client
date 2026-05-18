@@ -46,7 +46,7 @@ export const ProgressIntroModal = ({
             <ChartBarIcon className="h-7 w-7 text-blue-400" />
           </div>
           <p className="mt-3 font-pixel text-[9px] tracking-widest text-ink-muted">
-            ◆ TU PROGRESO
+            TU PROGRESO
           </p>
           <h2 className="mt-2 font-pixel text-base sm:text-lg leading-relaxed text-blue-400 [text-shadow:0_0_18px_rgba(59,130,246,0.6)]">
             COMO FUNCIONA
@@ -77,8 +77,8 @@ export const ProgressIntroModal = ({
               ✓
             </span>
             <span>
-              Despliega <strong>TECNICO</strong> para ver la progresion de un
-              ejercicio concreto.
+              Despliega <strong>PROGRESION POR EJERCICIO</strong> para ver la
+              evolucion de un movimiento concreto.
             </span>
           </li>
           <li className="flex items-start gap-2">

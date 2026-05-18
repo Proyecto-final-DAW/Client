@@ -46,7 +46,7 @@ export const TemplatesIntroModal = ({
             <BookOpenIcon className="h-7 w-7 text-purple-400" />
           </div>
           <p className="mt-3 font-pixel text-[9px] tracking-widest text-ink-muted">
-            ◆ TUS RUTINAS
+            TUS RUTINAS
           </p>
           <h2 className="mt-2 font-pixel text-base sm:text-lg leading-relaxed text-purple-400 [text-shadow:0_0_18px_rgba(168,85,247,0.6)]">
             COMO FUNCIONA

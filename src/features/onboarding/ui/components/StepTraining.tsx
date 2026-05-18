@@ -12,14 +12,14 @@ interface StepTrainingProps {
 
 const experienceChoices: Choice[] = [
   { value: 'BEGINNER', label: 'NOVATO', sub: '< 6 meses' },
-  { value: 'INTERMEDIATE', label: 'INTERMEDIO', sub: '6m - 2 años' },
-  { value: 'ADVANCED', label: 'VETERANO', sub: '2+ años' },
+  { value: 'INTERMEDIATE', label: 'MEDIO', sub: '6m - 2 años' },
+  { value: 'ADVANCED', label: 'VETER.', sub: '2+ años' },
 ];
 
 const equipmentChoices: Choice[] = [
-  { value: 'FULL_GYM', label: 'GIMNASIO', sub: 'Maquinas y pesas' },
-  { value: 'HOME_WEIGHTS', label: 'CASA + PESAS', sub: 'Mancuernas / barras' },
-  { value: 'BODYWEIGHT', label: 'PESO CORPORAL', sub: 'Sin material' },
+  { value: 'FULL_GYM', label: 'GIMNASIO', sub: 'Maq. y pesas' },
+  { value: 'HOME_WEIGHTS', label: 'CASA', sub: 'Mancuernas' },
+  { value: 'BODYWEIGHT', label: 'CORPORAL', sub: 'Sin material' },
 ];
 
 const daysChoices: Choice[] = [
@@ -45,10 +45,14 @@ export const StepTraining = (props: StepTrainingProps): React.JSX.Element => {
 
   return (
     <div>
-      <h2 className="text-center font-pixel text-base sm:text-lg text-ink mb-3 leading-tight tracking-wider [text-shadow:0_0_12px_rgba(34,197,94,0.35)]">
+      {/* Title scales up on desktop — the mobile/sm sizes match the
+          rest of the wizard, but on md+ the step 5 form reads as
+          cramped (lots of vertical white-space around a tiny header)
+          so we bump it gently. Mobile/sm intentionally unchanged. */}
+      <h2 className="text-center font-pixel text-base sm:text-lg md:text-xl lg:text-2xl text-ink mb-3 md:mb-4 leading-tight tracking-wider [text-shadow:0_0_12px_rgba(34,197,94,0.35)]">
         TU <span className="text-green-400">ENTRENAMIENTO</span>
       </h2>
-      <p className="text-center font-pixel-mono text-base text-ink-muted mb-5 leading-tight">
+      <p className="text-center font-pixel-mono text-base md:text-lg lg:text-xl text-ink-muted mb-5 md:mb-7 leading-tight">
         Como, cuando y con que entrenas.
       </p>
 
@@ -58,7 +62,6 @@ export const StepTraining = (props: StepTrainingProps): React.JSX.Element => {
         value={props.data.experienceLevel}
         choices={experienceChoices}
         error={props.errors.experienceLevel}
-        cols={3}
         onChange={handleSingle}
       />
       <ChoiceGroup
@@ -69,7 +72,6 @@ export const StepTraining = (props: StepTrainingProps): React.JSX.Element => {
         value={props.data.equipment}
         choices={equipmentChoices}
         error={props.errors.equipment}
-        cols={3}
         onChange={handleMulti}
       />
       <ChoiceGroup
@@ -78,7 +80,6 @@ export const StepTraining = (props: StepTrainingProps): React.JSX.Element => {
         value={props.data.daysPerWeek}
         choices={daysChoices}
         error={props.errors.daysPerWeek}
-        cols={3}
         onChange={handleSingle}
       />
     </div>

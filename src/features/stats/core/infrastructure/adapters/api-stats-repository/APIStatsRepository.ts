@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from '@config/api';
+import { cachedGet } from '@shared/api/cachedGet';
 import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
-import axios from 'axios';
 
 import type { StatsRepository } from '../../../application/ports/StatsRepository';
 import type { UserStats } from '../../../domain/models/UserStats';
@@ -10,9 +10,12 @@ import { StatsFromDTO } from './mappers/StatsFromDTO';
 export class APIStatsRepository implements StatsRepository {
   async getStats(): Promise<UserStats> {
     try {
-      const response = await axios.get<GetStatsDTO>(API_ENDPOINTS.getStats);
+      // 30s TTL. Workout/diet writes call `invalidateCache` against
+      // `API_ENDPOINTS.getStats` so the next read returns fresh data
+      // immediately after the user logs a session or a meal.
+      const data = await cachedGet<GetStatsDTO>(API_ENDPOINTS.getStats);
 
-      return StatsFromDTO.fromDTO(response.data);
+      return StatsFromDTO.fromDTO(data);
     } catch (error) {
       throw new Error(
         mapAxiosError(

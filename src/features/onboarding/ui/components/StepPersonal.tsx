@@ -16,6 +16,11 @@ export const StepPersonal = (props: StepPersonalProps): React.JSX.Element => {
   // re-prompt. The form state still carries `name` (pre-filled in
   // OnboardingView) so the submit payload is unchanged.
   const todayIso = new Date().toISOString().slice(0, 10);
+  // Birth-date entry skews towards "around 25 years ago" for the
+  // typical sign-up. Without overriding `initialYear` here the
+  // calendar would open on the current year and force every user to
+  // scroll back a couple of decades just to find their birth year.
+  const birthYearAnchor = new Date().getFullYear() - 25;
 
   return (
     <div>
@@ -39,6 +44,7 @@ export const StepPersonal = (props: StepPersonalProps): React.JSX.Element => {
           onChange={(value) => props.onChange('birthDate', value)}
           min="1900-01-01"
           max={todayIso}
+          initialYear={birthYearAnchor}
           error={Boolean(props.errors.birthDate)}
         />
         {props.errors.birthDate && (

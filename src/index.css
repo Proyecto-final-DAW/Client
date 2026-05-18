@@ -6,6 +6,14 @@ html,
 body {
   scroll-behavior: smooth;
   scrollbar-gutter: stable;
+  /* Force the dark UA rendering mode for every browser-painted
+     element — number-input spinners, autofill backgrounds, focus
+     rings, the default scrollbar fallback. Without this, Chrome /
+     Firefox / Safari each themed those bits with their own light
+     defaults, so the same neon-green screen "changed colour" between
+     browsers (the user's report). One declaration pins them all to
+     the dark variant. */
+  color-scheme: dark;
   /* Match the in-app `bg-page` token so route transitions
      (onboarding → dashboard, dashboard → workout, etc.) don't flash
      a white frame between the previous view's unmount and the new
@@ -47,43 +55,9 @@ body {
 }
 
 /* Stat color palette consumed by StatBar via `var(--stat-…)`. Without these
-   vars the bars renders transparent because `color-mix` falls back to nothing. */
-:root {
-  --stat-strength: #ef4444;
-  --stat-resistance: #3b82f6;
-  --stat-stamina: #f97316;
-  --stat-agility: #22c55e;
-  --stat-tenacity: #eab308;
-  --stat-vigor: #a855f7;
-  --muted: #1e1e2e;
-  --foreground: #e4e4e7;
-  --muted-foreground: #71717a;
-  --border: #1e1e2e;
-  --card: #0d0d14;
-  --destructive: #ef4444;
-  --destructive-foreground: #fee2e2;
-}
-
-/* Stat color palette consumed by StatBar via `var(--stat-…)`. Without these
-   vars the bars renders transparent because `color-mix` falls back to nothing. */
-:root {
-  --stat-strength: #ef4444;
-  --stat-resistance: #3b82f6;
-  --stat-stamina: #f97316;
-  --stat-agility: #22c55e;
-  --stat-tenacity: #eab308;
-  --stat-vigor: #a855f7;
-  --muted: #1e1e2e;
-  --foreground: #e4e4e7;
-  --muted-foreground: #71717a;
-  --border: #1e1e2e;
-  --card: #0d0d14;
-  --destructive: #ef4444;
-  --destructive-foreground: #fee2e2;
-}
-
-/* Stat color palette consumed by StatBar via `var(--stat-…)`. Without these
-   vars the bars renders transparent because `color-mix` falls back to nothing. */
+   vars the bars renders transparent because `color-mix` falls back to nothing.
+   (This block was accidentally pasted three times in a past merge — deduped
+   to a single source of truth.) */
 :root {
   --stat-strength: #ef4444;
   --stat-resistance: #3b82f6;
@@ -108,6 +82,24 @@ body {
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+/* Progressive dot reveal used by the recharts Line in the body-weight
+   and per-exercise progress charts. The Line itself uses recharts'
+   default left-to-right draw animation; this keyframe lets each dot
+   fade in synchronised with the line reaching its x position. Without
+   the per-dot delay (set inline via `animationDelay`) the dots all
+   sat at full opacity from frame 0 and the rightmost one looked
+   disconnected from the line that was still tweening toward it. */
+@keyframes chartDotFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 

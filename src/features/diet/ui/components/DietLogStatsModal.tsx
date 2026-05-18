@@ -234,7 +234,7 @@ export const DietLogStatsModal = (
 
         <header className="text-center">
           <p className="font-pixel text-[9px] tracking-widest text-green-500/80">
-            ◆ DIETA COMPLETADA
+            DIETA COMPLETADA
           </p>
           <motion.h2
             id="diet-log-stats-title"

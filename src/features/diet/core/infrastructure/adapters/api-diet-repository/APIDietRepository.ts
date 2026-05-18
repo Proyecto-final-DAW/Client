@@ -1,4 +1,5 @@
 import { API_ENDPOINTS } from '@config/api';
+import { cachedGet, invalidateCache } from '@shared/api/cachedGet';
 import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
 import axios from 'axios';
 
@@ -65,11 +66,14 @@ const gainsFromLogDTO = (dto: DietLogDTO): DietLogGains | null => {
 export class APIDietRepository implements DietRepository {
   async getDiet(userId: number): Promise<Diet> {
     try {
-      const response = await axios.get<GetDietDTO>(
-        API_ENDPOINTS.getDiet(userId)
-      );
+      // Macros / goal don't change between navigations within a single
+      // session — a 60s TTL keeps a tab-toggle from re-fetching the
+      // full diet model.
+      const data = await cachedGet<GetDietDTO>(API_ENDPOINTS.getDiet(userId), {
+        ttlMs: 60_000,
+      });
 
-      return DietFromDTO.fromDTO(response.data);
+      return DietFromDTO.fromDTO(data);
     } catch (error) {
       throw new Error(
         mapAxiosError(
@@ -82,10 +86,8 @@ export class APIDietRepository implements DietRepository {
 
   async getStreakState(): Promise<DietStreakState> {
     try {
-      const response = await axios.get<DietStateDTO>(
-        API_ENDPOINTS.getDietState
-      );
-      return stateFromDTO(response.data);
+      const data = await cachedGet<DietStateDTO>(API_ENDPOINTS.getDietState);
+      return stateFromDTO(data);
     } catch (error) {
       throw new Error(
         mapAxiosError(
@@ -99,6 +101,12 @@ export class APIDietRepository implements DietRepository {
   async logToday(): Promise<DietLogResult> {
     try {
       const response = await axios.post<DietLogDTO>(API_ENDPOINTS.logDietToday);
+      // Diet log bumps vigor XP and the diet-streak triplet. Bust the
+      // cached reads that depend on either so the next dashboard or
+      // diet-card render reflects the new values without staleness.
+      invalidateCache(API_ENDPOINTS.getDietState);
+      invalidateCache(API_ENDPOINTS.getStats);
+      invalidateCache(API_ENDPOINTS.getDashboardCards);
       return {
         state: stateFromLogDTO(response.data),
         gains: gainsFromLogDTO(response.data),

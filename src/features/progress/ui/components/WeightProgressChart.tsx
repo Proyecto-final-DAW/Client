@@ -41,6 +41,14 @@ interface ChartPoint {
   weight: number;
 }
 
+/** Matches the recharts Line default animation duration so each dot
+ *  fades in synced with the line tip passing through its x position
+ *  (delay scaled by index / total). */
+const LINE_ANIM_MS = 1500;
+/** Per-dot fade-in duration — short so dots land cleanly under the
+ *  drawing line rather than slowly materialising. */
+const DOT_FADE_MS = 220;
+
 export const WeightProgressChart = ({
   entries,
 }: WeightProgressChartProps): React.JSX.Element => {
@@ -76,7 +84,17 @@ export const WeightProgressChart = ({
           data={chartData}
           margin={{ top: 12, right: 16, bottom: 8, left: 0 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#1e1e2e" />
+          {/* Horizontal-only, very faint guide lines. The previous
+              full grid (vertical + horizontal at the brighter
+              `#1e1e2e` border tone) drew a cage of "rectangles" that
+              fought the data line for attention. Dropping the
+              verticals and dimming the stroke leaves just enough to
+              read a value off the Y axis. */}
+          <CartesianGrid
+            strokeDasharray="2 4"
+            stroke="#16161f"
+            vertical={false}
+          />
           <XAxis
             dataKey="label"
             stroke="#71717a"
@@ -121,12 +139,51 @@ export const WeightProgressChart = ({
             }}
             formatter={(value) => [`${value} kg`, 'Peso']}
           />
+          {/* Line uses recharts' default left-to-right draw tween
+              (~1.5s). Each dot fades in with a delay proportional to
+              its index so the marker lands as the line tip reaches its
+              x position — no trailing rightmost dot disconnected from
+              a still-crawling line. */}
           <Line
             type="monotone"
             dataKey="weight"
             stroke="#22c55e"
             strokeWidth={2.5}
-            dot={{ r: 4, fill: '#22c55e', stroke: '#0a0a0f', strokeWidth: 2 }}
+            animationDuration={LINE_ANIM_MS}
+            dot={(dotProps: {
+              cx?: number;
+              cy?: number;
+              index?: number;
+              // recharts' DotItemDotProps types `key` as `Key | null`
+              // (React.Key | null); narrowing to just `Key` here trips
+              // the composite `tsc -b` step the CI runs even though the
+              // looser `tsc --noEmit` lets it slide. Accepting null is
+              // the correct shape — recharts emits no key for the
+              // single-series case.
+              key?: React.Key | null;
+            }) => {
+              const { cx, cy, index = 0, key } = dotProps;
+              const total = chartData.length;
+              const delay =
+                total > 1 ? (index / (total - 1)) * LINE_ANIM_MS : 0;
+              return (
+                <circle
+                  key={key ?? `dot-${index}`}
+                  cx={cx}
+                  cy={cy}
+                  r={4}
+                  fill="#22c55e"
+                  stroke="#0a0a0f"
+                  strokeWidth={2}
+                  style={{
+                    opacity: 0,
+                    transformBox: 'fill-box',
+                    transformOrigin: 'center',
+                    animation: `chartDotFadeIn ${DOT_FADE_MS}ms ease-out ${delay}ms forwards`,
+                  }}
+                />
+              );
+            }}
             activeDot={{
               r: 6,
               fill: '#4ade80',

@@ -9,7 +9,7 @@ export const WizardSubmitError = (
   return (
     <p
       role="alert"
-      className="font-pixel-mono text-base sm:text-lg text-red-400 mt-4 leading-snug border-2 border-red-500/40 bg-red-500/10 px-3 py-2"
+      className="font-pixel-mono text-base text-red-400 mt-4 leading-snug border-2 border-red-500/40 bg-red-500/10 px-4 py-3"
     >
       ✕ {props.error}
     </p>

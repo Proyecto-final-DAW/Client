@@ -24,7 +24,7 @@ export const ExerciseSelector = (props: Props): React.JSX.Element => {
   return (
     <div>
       <p className="mb-2 font-pixel text-[9px] tracking-widest text-green-500">
-        ◆ EJERCICIO
+        EJERCICIO
       </p>
       <PixelSelect
         value={props.selectedId ?? ''}

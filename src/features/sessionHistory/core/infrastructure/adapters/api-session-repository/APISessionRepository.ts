@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from '@config/api';
+import { cachedGet } from '@shared/api/cachedGet';
 import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
-import axios from 'axios';
 
 import type { SessionRepository } from '../../../application/ports/SessionRepository';
 import type { Session } from '../../../domain/models/Session';
@@ -10,11 +10,14 @@ import { SessionsFromDTO } from './mappers/SessionsFromDTO';
 export class APISessionRepository implements SessionRepository {
   async getUserSessions(): Promise<Session[]> {
     try {
-      const response = await axios.get<GetSessionHistoryDTO>(
+      // 30s TTL. The session-history page only changes after a new
+      // workout, which busts this cache via the SESSION_CHANGED_EVENT
+      // flow in useFinishWorkout.
+      const data = await cachedGet<GetSessionHistoryDTO>(
         API_ENDPOINTS.getSessionHistory
       );
 
-      return SessionsFromDTO.fromDTOList(response.data.sessions);
+      return SessionsFromDTO.fromDTOList(data.sessions);
     } catch (error) {
       throw new Error(
         mapAxiosError(

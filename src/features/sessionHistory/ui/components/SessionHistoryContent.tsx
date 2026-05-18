@@ -55,7 +55,7 @@ export const SessionHistoryContent = (): React.JSX.Element => {
     <section className="relative border-2 border-green-500/40 bg-card p-4 sm:p-5">
       <PixelCorners size="md" className="border-green-500/40" />
       <p className="mb-4 font-pixel text-[10px] tracking-widest text-green-500">
-        ◆ {sessions.length}{' '}
+        {sessions.length}{' '}
         {sessions.length === 1 ? 'SESION REGISTRADA' : 'SESIONES REGISTRADAS'}
       </p>
       <ul className="flex flex-col gap-3">

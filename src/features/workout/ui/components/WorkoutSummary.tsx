@@ -197,7 +197,7 @@ export const WorkoutSummary = (props: Props): React.JSX.Element => {
         {error && (
           <p
             role="alert"
-            className="font-pixel-mono text-lg text-red-400 border-2 border-red-500/40 bg-red-500/10 px-4 py-3 leading-snug"
+            className="font-pixel-mono text-base text-red-400 border-2 border-red-500/40 bg-red-500/10 px-4 py-3 leading-snug"
           >
             ✕ {error}
           </p>

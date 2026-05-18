@@ -47,7 +47,7 @@ export const RoutinesIntroModal = ({
             <ClipboardDocumentListIcon className="h-7 w-7 text-red-400" />
           </div>
           <p className="mt-3 font-pixel text-[9px] tracking-widest text-ink-muted">
-            ◆ TU COMBATE DIARIO
+            TU COMBATE DIARIO
           </p>
           <h2 className="mt-2 font-pixel text-base sm:text-lg leading-relaxed text-red-400 [text-shadow:0_0_18px_rgba(239,68,68,0.6)]">
             COMO FUNCIONA

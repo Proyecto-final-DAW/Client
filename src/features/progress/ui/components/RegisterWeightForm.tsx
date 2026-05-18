@@ -1,4 +1,5 @@
 import { PixelCorners } from '@shared/components/PixelCorners';
+import { PixelDatePicker } from '@shared/components/PixelDatePicker';
 import type React from 'react';
 
 import type { RegisterWeightInput } from '../../core/domain/models/Progress';
@@ -41,10 +42,16 @@ export const RegisterWeightForm = ({
     >
       <PixelCorners size="sm" className="border-green-500/40" />
 
+      {/* `step="1"` so the up/down spinner buttons change by 1 kg per
+          click — `step="0.1"` (the previous default) made every tap
+          shift the value by 100 g, which is too granular for body
+          weight tracking and forced the user through 10 clicks to
+          move a single kilo. Keyboard input still accepts decimals
+          (e.g. 75.5) for anyone who needs fine-grained resolution. */}
       <input
         type="number"
         inputMode="decimal"
-        step="0.1"
+        step="1"
         min="1"
         max="300"
         placeholder="PESO KG"
@@ -53,13 +60,18 @@ export const RegisterWeightForm = ({
         className={inputClass}
       />
 
-      <input
-        type="date"
+      {/* PixelDatePicker matches the rest of the app's date inputs
+          (onboarding birth date, modals) — the native `type="date"`
+          here was a jarring browser-default calendar that broke the
+          retro theme. Same `value` / `onChange(string)` contract, so
+          the form hook didn't have to change. */}
+      <PixelDatePicker
+        id="register-weight-date"
+        value={date}
+        onChange={(value) => setDate(value)}
         min={minDate}
         max={maxDate}
-        value={date}
-        onChange={(event) => setDate(event.target.value)}
-        className={inputClass}
+        error={Boolean(error)}
       />
 
       <button
@@ -71,7 +83,7 @@ export const RegisterWeightForm = ({
       </button>
 
       {(error || submitError) && (
-        <p className="font-pixel text-base text-red-300 sm:col-span-3">
+        <p className="font-pixel-mono text-base text-red-400 mt-2 tracking-wide leading-snug sm:col-span-3">
           ✕ {error ?? submitError}
         </p>
       )}

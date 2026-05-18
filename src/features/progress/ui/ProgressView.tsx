@@ -1,4 +1,5 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import { PixelSelect } from '@shared/components/PixelSelect';
 import type React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -15,6 +16,25 @@ import { WeightProgressContent } from './components/WeightProgressContent';
 import { useExerciseProgress } from './hooks/useExerciseProgress';
 import { usePerformedExercises } from './hooks/usePerformedExercises';
 import { useStatsHistory } from './hooks/useStatsHistory';
+
+// Time-window options for the per-exercise progression chart. Same
+// shape as the weight chart's selector to keep the two progress widgets
+// reading as one family of controls.
+type ExerciseWindow = '1m' | '3m' | '6m' | '1y' | 'all';
+const EXERCISE_WINDOW_DAYS: Record<ExerciseWindow, number | null> = {
+  '1m': 30,
+  '3m': 90,
+  '6m': 180,
+  '1y': 365,
+  'all': null,
+};
+const EXERCISE_WINDOW_OPTIONS: { value: ExerciseWindow; label: string }[] = [
+  { value: '1m', label: 'ULTIMO MES' },
+  { value: '3m', label: 'ULTIMOS 3M' },
+  { value: '6m', label: 'ULTIMOS 6M' },
+  { value: '1y', label: 'ULTIMO AÑO' },
+  { value: 'all', label: 'TODO' },
+];
 
 export const ProgressView = (): React.JSX.Element => {
   const { user } = useAuth();
@@ -44,11 +64,25 @@ export const ProgressView = (): React.JSX.Element => {
     error: exercisesError,
   } = usePerformedExercises();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [exerciseWindow, setExerciseWindow] = useState<ExerciseWindow>('all');
   const {
     points,
     loading: loadingProgress,
     error: progressError,
   } = useExerciseProgress(selectedId);
+
+  // Apply the active time-window filter to the per-exercise PR series.
+  // The points carry an ISO `YYYY-MM-DD` date string; comparing strings
+  // is safe because the format is lexicographically sortable.
+  const filteredPoints = useMemo(() => {
+    const days = EXERCISE_WINDOW_DAYS[exerciseWindow];
+    if (days === null) return points;
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - days);
+    const pad = (n: number): string => String(n).padStart(2, '0');
+    const cutoffISO = `${cutoff.getFullYear()}-${pad(cutoff.getMonth() + 1)}-${pad(cutoff.getDate())}`;
+    return points.filter((p) => p.date >= cutoffISO);
+  }, [points, exerciseWindow]);
 
   // Per-exercise PR chart still has value for serious users tracking
   // weight progression on a single move, but the headline visuals
@@ -131,8 +165,8 @@ export const ProgressView = (): React.JSX.Element => {
         <WeightProgressContent />
       </div>
 
-      {/* TECNICO — collapsed by default. Useful for users tracking PRs
-          on a specific exercise; not the headline. */}
+      {/* Per-exercise progression — collapsed by default. Useful for users
+          tracking PRs on a specific exercise; not the headline. */}
       <section
         className={`relative mt-6 border-2 transition-colors ${
           advancedOpen
@@ -146,7 +180,7 @@ export const ProgressView = (): React.JSX.Element => {
           aria-expanded={advancedOpen}
           className="w-full flex items-center justify-between px-4 py-3 font-pixel text-[10px] tracking-widest text-ink-muted hover:text-green-400 transition-colors"
         >
-          <span>◆ TECNICO · PROGRESION POR EJERCICIO</span>
+          <span>PROGRESION POR EJERCICIO</span>
           {advancedOpen ? (
             <ChevronUpIcon className="h-4 w-4" />
           ) : (
@@ -168,20 +202,68 @@ export const ProgressView = (): React.JSX.Element => {
             >
               {(exercises) => (
                 <>
-                  <div className="mb-5">
-                    <ExerciseSelector
-                      exercises={exercises}
-                      selectedId={selectedId}
-                      onChange={setSelectedId}
-                    />
-                  </div>
+                  {(() => {
+                    // Mirror the radar's gating: only expose windows
+                    // whose lookback the data actually reaches. With
+                    // three days of points the dropdown used to show
+                    // "ULTIMO AÑO" / "ULTIMOS 6M" — every pick just
+                    // returned the same chart. Hidden entirely when
+                    // only "TODO" remains, so the row collapses to
+                    // just the exercise picker.
+                    const oldestPoint = points[0];
+                    const daysOfHistory = oldestPoint
+                      ? Math.floor(
+                          (Date.now() - new Date(oldestPoint.date).getTime()) /
+                            86_400_000
+                        )
+                      : 0;
+                    const visibleWindowOptions = EXERCISE_WINDOW_OPTIONS.filter(
+                      (option) => {
+                        if (option.value === 'all') return true;
+                        const days = EXERCISE_WINDOW_DAYS[option.value];
+                        return days !== null && daysOfHistory >= days;
+                      }
+                    );
+                    return (
+                      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <ExerciseSelector
+                          exercises={exercises}
+                          selectedId={selectedId}
+                          onChange={setSelectedId}
+                        />
+                        {visibleWindowOptions.length > 1 && (
+                          <PixelSelect
+                            value={exerciseWindow}
+                            options={visibleWindowOptions}
+                            placeholder="TODO"
+                            onChange={(value) =>
+                              setExerciseWindow(value as ExerciseWindow)
+                            }
+                            ariaLabel="Ventana de tiempo del ejercicio"
+                            className="w-36 self-start sm:self-auto"
+                          />
+                        )}
+                      </div>
+                    );
+                  })()}
 
                   {loadingProgress ? (
                     <LoadingPixel label="CARGANDO PROGRESION" />
                   ) : progressError ? (
                     <ErrorState message={progressError} />
                   ) : (
-                    <ExerciseProgressChart points={points} />
+                    // `key` forces a fresh mount whenever the user
+                    // swaps exercise or time window. Recharts would
+                    // otherwise tween the line + dot positions from
+                    // the old dataset to the new one, which read as
+                    // the chart "warping" from one shape to another
+                    // before the intro draw could fire. A clean
+                    // unmount + remount plays the proper draw
+                    // animation from scratch every time.
+                    <ExerciseProgressChart
+                      points={filteredPoints}
+                      key={`${selectedId ?? ''}-${exerciseWindow}-${filteredPoints.length}`}
+                    />
                   )}
                 </>
               )}

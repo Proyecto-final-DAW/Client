@@ -1,4 +1,4 @@
-export type Sex = 'MALE' | 'FEMALE';
+export type Sex = 'MALE' | 'FEMALE' | 'NON_BINARY';
 export type ActivityLevel =
   | 'SEDENTARY'
   | 'LIGHT'

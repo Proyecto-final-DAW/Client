@@ -47,7 +47,7 @@ export const ProfileIntroModal = ({
             <UserCircleIcon className="h-7 w-7 text-teal-400" />
           </div>
           <p className="mt-3 font-pixel text-[9px] tracking-widest text-ink-muted">
-            ◆ TU PERSONAJE
+            TU PERSONAJE
           </p>
           <h2 className="mt-2 font-pixel text-base sm:text-lg leading-relaxed text-teal-400 [text-shadow:0_0_18px_rgba(20,184,166,0.6)]">
             COMO FUNCIONA

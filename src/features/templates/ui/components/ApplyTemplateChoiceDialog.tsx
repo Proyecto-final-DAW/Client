@@ -65,7 +65,7 @@ export const ApplyTemplateChoiceDialog = ({
         <PixelCorners size="md" className="border-green-500/60" />
 
         <p className="font-pixel text-[9px] tracking-widest text-ink-muted text-center">
-          ◆ APLICAR PLANTILLA
+          APLICAR PLANTILLA
         </p>
         <h2 className="mt-2 text-center font-pixel text-base sm:text-lg leading-relaxed text-green-400 [text-shadow:0_0_18px_rgba(34,197,94,0.55)]">
           YA TIENES RUTINAS

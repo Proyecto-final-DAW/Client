@@ -63,14 +63,20 @@ const Chip = ({ label, selected, onClick }: ChipProps): React.JSX.Element => (
 );
 
 export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
-  const { form, handleChange, toggleInArray, handleSubmit } = useProfileForm({
-    profile: props.profile,
-    onSubmit: props.onSubmit,
-  });
+  const { form, errors, handleChange, toggleInArray, handleSubmit } =
+    useProfileForm({
+      profile: props.profile,
+      onSubmit: props.onSubmit,
+    });
 
   return (
     <form
       onSubmit={handleSubmit}
+      // `noValidate` disables the browser's default HTML5 tooltips
+      // ("El valor debe ser inferior o igual a 230") that clashed with
+      // the pixel theme. We run the same range checks in JS via
+      // `useProfileForm` and surface them inline below each field.
+      noValidate
       onKeyDown={(e) => {
         // Block accidental Enter-key submits from any single-line input.
         // The form is long enough that a user tabbing through fields can
@@ -124,20 +130,16 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
         </div>
 
         <div className="mb-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* Edad bloqueada en sólo-lectura, igual que el email. Se
+              calcula en el backend a partir de la fecha de nacimiento
+              recogida en el onboarding, así que dejar al usuario
+              editarla a mano abriría una inconsistencia con
+              birth_date (y con la edad que usa el cálculo de macros). */}
           <div>
-            <label htmlFor="profile-age" className={labelClass}>
-              EDAD
-            </label>
-            <input
-              id="profile-age"
-              type="number"
-              inputMode="numeric"
-              min="14"
-              max="100"
-              value={form.age}
-              onChange={(e) => handleChange('age', e.target.value)}
-              className={inputClass}
-            />
+            <span className={labelClass}>EDAD</span>
+            <p className="border-2 border-border bg-page px-3 py-3 font-pixel-mono text-base text-ink-faint">
+              {form.age || '—'}
+            </p>
           </div>
           <div>
             <label htmlFor="profile-weight" className={labelClass}>
@@ -153,12 +155,15 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
               type="number"
               inputMode="decimal"
               step="1"
-              min="30"
-              max="250"
               value={form.weight}
               onChange={(e) => handleChange('weight', e.target.value)}
-              className={inputClass}
+              className={`${inputClass} ${errors.weight ? 'border-red-500/70 focus:border-red-400' : ''}`}
             />
+            {errors.weight && (
+              <p className="font-pixel-mono text-base text-red-400 mt-2 tracking-wide leading-none">
+                ✕ {errors.weight}
+              </p>
+            )}
           </div>
           <div>
             <label htmlFor="profile-height" className={labelClass}>
@@ -168,12 +173,15 @@ export const ProfileForm = (props: ProfileFormProps): React.JSX.Element => {
               id="profile-height"
               type="number"
               inputMode="numeric"
-              min="120"
-              max="230"
               value={form.height}
               onChange={(e) => handleChange('height', e.target.value)}
-              className={inputClass}
+              className={`${inputClass} ${errors.height ? 'border-red-500/70 focus:border-red-400' : ''}`}
             />
+            {errors.height && (
+              <p className="font-pixel-mono text-base text-red-400 mt-2 tracking-wide leading-none">
+                ✕ {errors.height}
+              </p>
+            )}
           </div>
         </div>
 

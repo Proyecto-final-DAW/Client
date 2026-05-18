@@ -121,7 +121,7 @@ const DataCard = ({
     <PixelCorners size="md" className="border-green-500/40" />
     <header className="mb-5 flex items-center justify-between gap-3">
       <p className="font-pixel text-[11px] sm:text-[12px] tracking-widest text-green-500 [text-shadow:0_0_8px_rgba(34,197,94,0.4)]">
-        ◆ {title}
+        {title}
       </p>
       {onEdit && (
         <button

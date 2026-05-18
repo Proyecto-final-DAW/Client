@@ -47,7 +47,20 @@ export const useDiet = () => {
     return () => {
       cancelled = true;
     };
-  }, [user?.id, token]);
+    // Re-fetch when the macro values in the AuthContext change. The
+    // profile edit flow (`useProfile.updateProfile`) recalculates
+    // macros server-side and pushes them into the AuthContext via
+    // `updateUser`. Depending only on `user?.id` left the diet card
+    // stale until a manual refresh — these extra deps make it follow
+    // the profile save automatically.
+  }, [
+    user?.id,
+    token,
+    user?.daily_calories,
+    user?.protein_grams,
+    user?.fat_grams,
+    user?.carb_grams,
+  ]);
 
   const refetch = async (): Promise<void> => {
     if (!user?.id) return;

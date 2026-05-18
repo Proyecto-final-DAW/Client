@@ -1,5 +1,6 @@
 import { API_BASE_URL } from '@config/api';
 import type { Exercise } from '@features/exercises/core/domain/models/Exercise';
+import { cachedGet, invalidateCache } from '@shared/api/cachedGet';
 import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
 import axios from 'axios';
 
@@ -27,13 +28,16 @@ const toExercisesRequestDTO = (
   }));
 
 export class APIRoutineRepository implements RoutineRepository {
-  async getRoutines(token?: string): Promise<Routine[]> {
+  async getRoutines(_token?: string): Promise<Routine[]> {
     try {
-      const response = await axios.get<GetRoutineDTO[]>(ROUTINES_URL, {
-        headers: authHeaders(token),
-      });
+      // 30s TTL. Every mutation below busts this cache so the list
+      // stays consistent. The token param used to be threaded as an
+      // explicit header but the global axios interceptor already
+      // attaches the bearer — passing it again forced a bypass of
+      // the cache wrapper for no benefit.
+      const data = await cachedGet<GetRoutineDTO[]>(ROUTINES_URL);
 
-      return RoutinesFromDTO.fromDTOList(response.data);
+      return RoutinesFromDTO.fromDTOList(data);
     } catch (error) {
       throw this.handleError(
         error,
@@ -50,6 +54,7 @@ export class APIRoutineRepository implements RoutineRepository {
         { headers: authHeaders(token) }
       );
 
+      invalidateCache(ROUTINES_URL);
       return RoutinesFromDTO.fromDTO(response.data);
     } catch (error) {
       throw this.handleError(
@@ -108,6 +113,7 @@ export class APIRoutineRepository implements RoutineRepository {
       await axios.delete(`${ROUTINES_URL}/${routineId}`, {
         headers: authHeaders(token),
       });
+      invalidateCache(ROUTINES_URL);
     } catch (error) {
       throw this.handleError(
         error,
@@ -133,6 +139,7 @@ export class APIRoutineRepository implements RoutineRepository {
         { headers: authHeaders(token) }
       );
 
+      invalidateCache(ROUTINES_URL);
       return RoutinesFromDTO.fromDTO(response.data);
     } catch (error) {
       throw this.handleError(error, fallbackMessage);

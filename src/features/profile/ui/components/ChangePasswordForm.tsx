@@ -60,7 +60,7 @@ export const ChangePasswordForm = (
       >
         <PixelCorners size="sm" className="border-border-muted" />
         <p className="font-pixel text-[10px] tracking-widest text-ink-muted group-hover:text-green-400">
-          ◆ CAMBIAR CONTRASEÑA
+          CAMBIAR CONTRASEÑA
         </p>
         <p className="mt-2 font-pixel-mono text-lg text-ink-faint leading-snug">
           Tendras que volver a iniciar sesion despues.
@@ -78,7 +78,7 @@ export const ChangePasswordForm = (
 
       <header className="mb-4 flex items-center justify-between">
         <p className="font-pixel text-[10px] tracking-widest text-green-500">
-          ◆ CAMBIAR CONTRASEÑA
+          CAMBIAR CONTRASEÑA
         </p>
         <button
           type="button"

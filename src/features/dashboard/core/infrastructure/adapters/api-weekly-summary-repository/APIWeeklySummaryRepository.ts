@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from '@config/api';
+import { cachedGet } from '@shared/api/cachedGet';
 import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
-import axios from 'axios';
 
 import type { WeeklySummaryRepository } from '../../../application/ports/WeeklySummaryRepository';
 import type { WeeklySummary } from '../../../domain/models/WeeklySummary';
@@ -10,11 +10,13 @@ import { WeeklySummaryFromDTO } from './mappers/WeeklySummaryFromDTO';
 export class APIWeeklySummaryRepository implements WeeklySummaryRepository {
   async getWeeklySummary(): Promise<WeeklySummary> {
     try {
-      const response = await axios.get<GetWeeklySummaryDTO>(
+      // 30s TTL. Workout save calls `invalidateCache` against this URL
+      // so the weekly numbers refresh immediately after a session.
+      const data = await cachedGet<GetWeeklySummaryDTO>(
         API_ENDPOINTS.getWeeklySummary
       );
 
-      return WeeklySummaryFromDTO.fromDTO(response.data);
+      return WeeklySummaryFromDTO.fromDTO(data);
     } catch (error) {
       throw new Error(
         mapAxiosError(

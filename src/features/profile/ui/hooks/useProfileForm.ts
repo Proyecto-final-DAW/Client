@@ -115,16 +115,54 @@ interface UseProfileFormParams {
   onSubmit: (data: ProfileUpdateData) => Promise<void>;
 }
 
+type NumericFieldKey = 'age' | 'weight' | 'height';
+
+// Same ranges and messages used in the onboarding validators so a user
+// editing their profile sees the same UX as during signup. Native HTML
+// validation (`min`/`max`) was triggering the browser's default tooltip
+// ("El valor debe ser inferior o igual a 230") which clashes visually
+// with the rest of the pixel theme — we validate in JS instead and
+// render the error with the same red treatment used in onboarding.
+const validateNumericField = (
+  field: NumericFieldKey,
+  value: string
+): string | null => {
+  if (!value) return null;
+  const num = Number(value);
+  if (Number.isNaN(num)) return 'Introduce un numero valido';
+  if (field === 'age') {
+    if (num < 14 || num > 100) return 'La edad debe estar entre 14 y 100';
+  } else if (field === 'weight') {
+    if (num < 30 || num > 250) return 'El peso debe estar entre 30 y 250 kg';
+  } else if (field === 'height') {
+    if (num < 120 || num > 230)
+      return 'La altura debe estar entre 120 y 230 cm';
+  }
+  return null;
+};
+
 export const useProfileForm = (props: UseProfileFormParams) => {
   const [form, setForm] = useState<ProfileFormState>(() =>
     toFormState(props.profile)
   );
+  const [errors, setErrors] = useState<
+    Partial<Record<NumericFieldKey, string>>
+  >({});
 
   const handleChange = (
     field: keyof Omit<ProfileFormState, 'goals' | 'injuries' | 'equipment'>,
     value: string
   ) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+    if (field === 'age' || field === 'weight' || field === 'height') {
+      const message = validateNumericField(field, value);
+      setErrors((prev) => {
+        const next = { ...prev };
+        if (message) next[field] = message;
+        else delete next[field];
+        return next;
+      });
+    }
   };
 
   // Multi-select helper for array fields. Pass `exclusive` when one value
@@ -153,11 +191,24 @@ export const useProfileForm = (props: UseProfileFormParams) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Re-run validation on submit so a user that ignored the inline
+    // error (or pasted a bad value without changing focus) still gets
+    // blocked here. Without this, the request would reach the server
+    // and bounce on the API-side Zod schema with a less friendly error.
+    const submitErrors: Partial<Record<NumericFieldKey, string>> = {};
+    (['age', 'weight', 'height'] as const).forEach((field) => {
+      const msg = validateNumericField(field, form[field]);
+      if (msg) submitErrors[field] = msg;
+    });
+    if (Object.keys(submitErrors).length > 0) {
+      setErrors(submitErrors);
+      return;
+    }
     const data = buildUpdatePayload(form, props.profile);
     if (Object.keys(data).length > 0) {
       await props.onSubmit(data);
     }
   };
 
-  return { form, handleChange, toggleInArray, handleSubmit };
+  return { form, errors, handleChange, toggleInArray, handleSubmit };
 };

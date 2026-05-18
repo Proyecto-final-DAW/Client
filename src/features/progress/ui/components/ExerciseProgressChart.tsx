@@ -42,6 +42,14 @@ interface ChartPoint {
   reps: number;
 }
 
+/** Matches the recharts Line default animation duration so each dot
+ *  fades in synced with the line tip passing through its x position
+ *  (delay scaled by index / total). */
+const LINE_ANIM_MS = 1500;
+/** Per-dot fade-in duration — short so dots land cleanly under the
+ *  drawing line rather than slowly materialising. */
+const DOT_FADE_MS = 220;
+
 /**
  * RPG-styled max-weight progression chart. Pixel borders, green palette
  * matching the rest of the app, custom tooltip in font-pixel-mono.
@@ -86,7 +94,14 @@ export const ExerciseProgressChart = (props: Props): React.JSX.Element => {
           data={data}
           margin={{ top: 12, right: 16, bottom: 8, left: 0 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#1e1e2e" />
+          {/* Horizontal-only, very faint guide lines — kept in sync
+              with WeightProgressChart so the two progress charts read
+              as one visual family. */}
+          <CartesianGrid
+            strokeDasharray="2 4"
+            stroke="#16161f"
+            vertical={false}
+          />
           <XAxis
             dataKey="label"
             stroke="#71717a"
@@ -133,12 +148,48 @@ export const ExerciseProgressChart = (props: Props): React.JSX.Element => {
               return [String(value), String(name)];
             }}
           />
+          {/* Mirror of WeightProgressChart — line uses recharts'
+              default left-to-right draw; custom dot renderer staggers
+              each PR marker's fade so the rightmost dot lands in sync
+              with the line tip. */}
           <Line
             type="monotone"
             dataKey="maxWeight"
             stroke="#22c55e"
             strokeWidth={2.5}
-            dot={{ r: 4, fill: '#22c55e', stroke: '#0a0a0f', strokeWidth: 2 }}
+            animationDuration={LINE_ANIM_MS}
+            dot={(dotProps: {
+              cx?: number;
+              cy?: number;
+              index?: number;
+              // See WeightProgressChart for context: recharts'
+              // DotItemDotProps types `key` as `Key | null`; the
+              // composite `tsc -b` step CI runs rejects narrowing it
+              // to `Key`.
+              key?: React.Key | null;
+            }) => {
+              const { cx, cy, index = 0, key } = dotProps;
+              const total = data.length;
+              const delay =
+                total > 1 ? (index / (total - 1)) * LINE_ANIM_MS : 0;
+              return (
+                <circle
+                  key={key ?? `dot-${index}`}
+                  cx={cx}
+                  cy={cy}
+                  r={4}
+                  fill="#22c55e"
+                  stroke="#0a0a0f"
+                  strokeWidth={2}
+                  style={{
+                    opacity: 0,
+                    transformBox: 'fill-box',
+                    transformOrigin: 'center',
+                    animation: `chartDotFadeIn ${DOT_FADE_MS}ms ease-out ${delay}ms forwards`,
+                  }}
+                />
+              );
+            }}
             activeDot={{
               r: 6,
               fill: '#4ade80',

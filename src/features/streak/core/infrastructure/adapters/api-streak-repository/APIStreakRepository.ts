@@ -1,24 +1,25 @@
 import { API_ENDPOINTS } from '@config/api';
+import { cachedGet } from '@shared/api/cachedGet';
 import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
-import axios from 'axios';
 
 import type { StreakRepository } from '../../../application/ports/StreakRepository';
 import type { StreakStatus } from '../../../domain/models/StreakStatus';
 import type { GetStreakStatusDTO } from './dtos/GetStreakStatusDTO';
 import { StreakStatusFromDTO } from './mappers/StreakStatusFromDTO';
 
-const authHeaders = (token?: string) =>
-  token ? { Authorization: `Bearer ${token}` } : {};
-
 export class APIStreakRepository implements StreakRepository {
-  async getStatus(token?: string): Promise<StreakStatus> {
+  async getStatus(_token?: string): Promise<StreakStatus> {
     try {
-      const response = await axios.get<GetStreakStatusDTO>(
-        API_ENDPOINTS.getStreakStatus,
-        { headers: authHeaders(token) }
+      // 30s TTL. The token parameter used to be threaded through as an
+      // explicit Authorization header, but the global axios interceptor
+      // in `@config/api` already attaches `Bearer <jwt>` from
+      // localStorage on every request — passing it again here was a
+      // no-op that prevented us from going through the cache wrapper.
+      const data = await cachedGet<GetStreakStatusDTO>(
+        API_ENDPOINTS.getStreakStatus
       );
 
-      return StreakStatusFromDTO.fromDTO(response.data);
+      return StreakStatusFromDTO.fromDTO(data);
     } catch (error) {
       throw new Error(
         mapAxiosError(

@@ -194,7 +194,7 @@ export const PixelSelect = (props: PixelSelectProps): React.JSX.Element => {
                 props.onChange(opt.value);
                 setOpen(false);
               }}
-              className={`w-full text-left px-3 py-2 font-pixel-mono text-base tracking-wide transition-colors ${
+              className={`w-full text-left px-3 py-2.5 font-pixel-mono text-lg tracking-wide transition-colors ${
                 isSelected
                   ? 'bg-green-500/20 text-green-400'
                   : 'text-ink hover:bg-green-500/10 hover:text-green-400'
@@ -217,7 +217,7 @@ export const PixelSelect = (props: PixelSelectProps): React.JSX.Element => {
         aria-label={props.ariaLabel}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className={`w-full flex items-center justify-between gap-2 border-2 ${borderClass} bg-subtle px-3 py-2.5 font-pixel text-[10px] tracking-widest text-left transition-colors focus:outline-none ${
+        className={`w-full flex items-center justify-between gap-2 border-2 ${borderClass} bg-subtle px-3 py-3 font-pixel text-xs tracking-widest text-left transition-colors focus:outline-none ${
           selected ? 'text-ink' : 'text-ink-faint'
         }`}
       >

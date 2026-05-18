@@ -49,7 +49,7 @@ export const AchievementsIntroModal = ({
             <TrophyIcon className="h-7 w-7 text-pink-400" />
           </div>
           <p className="mt-3 font-pixel text-[9px] tracking-widest text-ink-muted">
-            ◆ TU HALL OF FAME
+            TU HALL OF FAME
           </p>
           <h2 className="mt-2 font-pixel text-base sm:text-lg leading-relaxed text-pink-400 [text-shadow:0_0_18px_rgba(236,72,153,0.6)]">
             COMO FUNCIONA

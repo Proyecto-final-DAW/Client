@@ -33,16 +33,28 @@ import { useClassCatalog } from './hooks/useClassCatalog';
 type NodeStatus = 'current' | 'owned' | 'alternate' | 'future';
 
 const STATUS_RING: Record<NodeStatus, string> = {
+  // CURRENT — the user IS this class right now. Loudest treatment:
+  // bright border, double ring, big halo. The card has to read as the
+  // centrepiece of its row at a glance.
   current:
-    'border-green-400 shadow-[0_0_22px_rgba(34,197,94,0.55)] ring-2 ring-green-400/40',
-  owned: 'border-green-500/55',
+    'border-green-400 shadow-[0_0_28px_rgba(34,197,94,0.7),0_0_60px_rgba(34,197,94,0.25)] ring-2 ring-green-400/55',
+  // OWNED — the user passed through this on the way up. Still treated
+  // as "earned" with a strong glow + ring, just shy of `current` so
+  // the visual hierarchy reads "now > then > alternates". Previously
+  // owned only had `border-green-500/55` and no shadow at all, which
+  // made it indistinguishable from `alternate` at a quick scan.
+  owned:
+    'border-green-500/80 shadow-[0_0_22px_rgba(34,197,94,0.45)] ring-1 ring-green-500/35',
+  // ALTERNATE — paths the user didn't take. Dimmed via parent
+  // opacity+saturate (set below in ClassCard) so chosen cards
+  // dominate the row even at a glance.
   alternate: 'border-border',
   future: 'border-border-muted',
 };
 
 const STATUS_BG: Record<NodeStatus, string> = {
-  current: 'bg-green-500/12',
-  owned: 'bg-green-500/[0.06]',
+  current: 'bg-green-500/15',
+  owned: 'bg-green-500/[0.09]',
   alternate: 'bg-card',
   future: 'bg-card/60',
 };
@@ -361,26 +373,90 @@ const ClassCard = ({
         : null;
   const accent = config?.accentColor ?? apexAccent ?? '#22c55e';
 
+  // Visual hierarchy across the panteon row:
+  //   - CURRENT  → scaled 1.06, full saturation, raised above neighbours
+  //   - OWNED    → scaled 1.03, full saturation
+  //   - ALTERNATE → 0.95, dimmed (opacity + slight desaturation) so the
+  //                  chosen tiles dominate the row at a glance
+  //   - FUTURE   → 0.92, very faded (already silhouetted internally)
+  //
+  // Scale + opacity live on the parent motion.div so the entry-animation
+  // tween blends into them. Transform-origin is center so the tile
+  // grows/shrinks symmetrically and doesn't break the grid layout.
+  const isChosen = node.status === 'current' || node.status === 'owned';
+  const restScale =
+    node.status === 'current'
+      ? 1.06
+      : node.status === 'owned'
+        ? 1.03
+        : node.status === 'alternate'
+          ? 0.95
+          : 0.92;
+  const restOpacity =
+    node.status === 'alternate' ? 0.55 : node.status === 'future' ? 0.7 : 1;
+  const restFilter =
+    node.status === 'alternate'
+      ? 'saturate(0.55)'
+      : node.status === 'future'
+        ? 'saturate(0.4)'
+        : 'none';
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 8, scale: 0.92 }}
+      animate={{
+        opacity: restOpacity,
+        y: 0,
+        scale: restScale,
+        filter: restFilter,
+      }}
       transition={{
         duration: 0.35,
         delay: Math.min(index, 12) * 0.04,
         ease: [0.22, 1, 0.36, 1],
       }}
+      // z-index keeps the scaled-up chosen tiles above any minor
+      // overlap with their dimmed-back neighbours. `transformOrigin`
+      // centred so the scale doesn't shift the layout off-axis.
+      style={{
+        transformOrigin: 'center',
+        zIndex: isChosen ? 2 : 1,
+      }}
       className={`relative flex flex-col items-center text-center border-2 p-3 sm:p-4 ${
         compact ? 'w-[calc(50%-0.375rem)] sm:w-[260px]' : 'w-full sm:w-[260px]'
       } ${STATUS_RING[node.status]} ${STATUS_BG[node.status]}`}
     >
+      {/* Pixel corner brackets on the chosen tiles — same visual
+          language as the dashboard hero cards. Reinforces "this is
+          yours" without adding text. Hidden on alternates so the row
+          stays calm. */}
+      {isChosen && (
+        <PixelCorners
+          size="sm"
+          className={
+            node.status === 'current'
+              ? 'border-green-400/80'
+              : 'border-green-500/55'
+          }
+        />
+      )}
+
       {/* Status eyebrow — label only. Drops the leading STATUS_GLYPH
           (◆/●/✕) the previous version prefixed: it shifted the visual
           centre of the eyebrow to the right and made the card look
           asymmetric next to its centred name + frase. The status is
-          carried by colour (STATUS_TONE) anyway. */}
+          carried by colour (STATUS_TONE) anyway. Chosen tiles get a
+          slightly bigger pixel label so the "TU CLASE ACTUAL" /
+          "YA RECORRIDO" line reads from across the row. */}
       <p
-        className={`font-pixel text-[8px] tracking-widest ${STATUS_TONE[node.status]}`}
+        className={`font-pixel tracking-widest ${STATUS_TONE[node.status]} ${
+          isChosen ? 'text-[9px] sm:text-[10px]' : 'text-[8px]'
+        }`}
+        style={
+          node.status === 'current'
+            ? { textShadow: '0 0 10px rgba(34,197,94,0.55)' }
+            : undefined
+        }
       >
         {STATUS_LABEL[node.status]}
       </p>
@@ -411,7 +487,7 @@ const ClassCard = ({
         ) : !isFuture && hasPixelArt(node.id) ? (
           // Custom pixel art for the apex classes (MAESTRO_SUPREMO,
           // LEYENDA) that don't have a stat pillar — replaces the
-          // placeholder ◆ glyph the user called out as bland for
+          // placeholder glyph the user called out as bland for
           // ranks A and S. The art is tinted with the same accent
           // colour the rest of the card uses so it sits naturally
           // in the existing palette.
@@ -644,7 +720,7 @@ const ClassPanteonModal = ({
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="font-pixel text-[8px] tracking-widest text-green-500">
-              ◆ PANTEON
+              PANTEON
             </p>
             <h2
               id="class-panteon-title"
@@ -830,7 +906,7 @@ export const ClassTreeView = (): React.JSX.Element => {
                   </p>
                 </div>
                 {/* TU CLASE — class name only, no decorative diamond
-                  glyph in front (it duplicated the eyebrow's ◆ and
+                  glyph in front (it duplicated the eyebrow's and
                   read as part of the class name). */}
                 <div className="col-span-2 border-2 border-border bg-page p-3 text-center sm:col-span-1">
                   <p className="font-pixel text-[8px] tracking-widest text-ink-faint">

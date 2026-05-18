@@ -1,4 +1,5 @@
 import { API_ENDPOINTS } from '@config/api';
+import { cachedGet, invalidateCache } from '@shared/api/cachedGet';
 import { mapAxiosError } from '@shared/api/error-mapping/mapApiError';
 import axios from 'axios';
 
@@ -27,10 +28,14 @@ const toResult = (dto: GetCharacterStateDTO): CharacterStateOrOnboarding => {
 export class APICharacterRepository implements CharacterRepository {
   async getState(): Promise<CharacterStateOrOnboarding> {
     try {
-      const response = await axios.get<GetCharacterStateDTO>(
+      // 30s TTL. After `chooseClass`, the post-response we return is
+      // authoritative (CharacterProvider stores it locally), but other
+      // mounted components might still hit `getState` — invalidate the
+      // cache there so they pick up the new state immediately.
+      const data = await cachedGet<GetCharacterStateDTO>(
         API_ENDPOINTS.getCharacterState
       );
-      return toResult(response.data);
+      return toResult(data);
     } catch (error) {
       throw surface(
         error,
@@ -48,6 +53,18 @@ export class APICharacterRepository implements CharacterRepository {
         API_ENDPOINTS.chooseCharacterClass,
         { tier, classId }
       );
+      // Class progression is the one piece of state that branches every
+      // dependent panel (rank pill, dashboard hero, ladder). Bust the
+      // cache so a sibling `useCharacterState` reading via getState()
+      // doesn't return the pre-choice payload for the next 30 seconds.
+      invalidateCache(API_ENDPOINTS.getCharacterState);
+      // Confirming a class can unlock the "first class" / "first
+      // specialization" milestones server-side, and the dashboard hero
+      // card renders the chosen class name — drop those caches too so
+      // the achievement list and the dashboard reflect the choice
+      // without a manual refresh.
+      invalidateCache(API_ENDPOINTS.getMilestonesUnlocked);
+      invalidateCache(API_ENDPOINTS.getDashboardCards);
       return toResult(response.data);
     } catch (error) {
       throw surface(
@@ -57,14 +74,14 @@ export class APICharacterRepository implements CharacterRepository {
     }
   }
 
-  // The server emits the catalog using the same shape the domain expects,
-  // so no mapper is needed — only a typed read.
+  // Catalog never changes between deployments — cache aggressively
+  // (5 minutes) so the class-picker modal doesn't re-fetch the whole
+  // 38-class catalog every time the user opens it.
   async getCatalog(): Promise<ClassCatalog> {
     try {
-      const response = await axios.get<ClassCatalog>(
-        API_ENDPOINTS.getCharacterCatalog
-      );
-      return response.data;
+      return await cachedGet<ClassCatalog>(API_ENDPOINTS.getCharacterCatalog, {
+        ttlMs: 5 * 60_000,
+      });
     } catch (error) {
       throw surface(
         error,

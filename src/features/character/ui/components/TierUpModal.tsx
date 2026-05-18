@@ -15,6 +15,11 @@ type Props = {
   open: boolean;
   pendingChoice: PendingChoice;
   choosing: boolean;
+  /** Surfaced by the parent when `onConfirm` rejects (network blip,
+   *  server validation, etc.). Without showing it inline the modal
+   *  silently re-enabled itself and the user had no idea why their
+   *  click did nothing. */
+  error?: string | null;
   onConfirm: (classId: string) => void | Promise<void>;
   onClose: () => void;
 };
@@ -117,6 +122,7 @@ export const TierUpModal = ({
   open,
   pendingChoice,
   choosing,
+  error,
   onConfirm,
   onClose,
 }: Props): React.JSX.Element => {
@@ -368,7 +374,7 @@ export const TierUpModal = ({
               />
 
               {/* Compact header — title + a single-line flavour. The
-                previous "◆ TIER 1 ALCANZADO ◆" decorative ribbon plus
+                previous "TIER 1 ALCANZADO" decorative ribbon plus
                 horizontal lines added ~80px of vertical chrome that
                 pushed the cards off the available body height. The
                 tier number is already implicit in the title copy
@@ -476,6 +482,15 @@ export const TierUpModal = ({
                   </motion.div>
                 ))}
               </motion.div>
+
+              {error && (
+                <p
+                  role="alert"
+                  className="mt-4 font-pixel-mono text-base text-red-400 border-2 border-red-500/40 bg-red-500/10 px-4 py-3"
+                >
+                  ✕ {error}
+                </p>
+              )}
 
               <div className="mt-4 sm:mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <button

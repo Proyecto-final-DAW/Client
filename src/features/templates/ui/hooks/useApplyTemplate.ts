@@ -1,5 +1,6 @@
 import { API_BASE_URL } from '@config/api';
 import { useAuth } from '@context/hooks/useAuth';
+import { invalidateCache } from '@shared/api/cachedGet';
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -127,6 +128,15 @@ export const useApplyTemplate = () => {
           createdRoutineIds.push(response.data.id);
         }
       }
+      // Bust the cached `GET /routines` so the next mount of
+      // `useRoutines` (e.g. when the parent navigates to /routines
+      // right after) fetches fresh and sees the just-created days.
+      // Going through `axios.post` directly skipped the invalidation
+      // that `APIRoutineRepository.createRoutine` would have done,
+      // and the cache still held the empty list the preceding
+      // delete-loop left behind — the user saw "SIN SESIONES" for
+      // 30s after a successful apply.
+      invalidateCache(ROUTINES_URL);
       return true;
     } catch (err) {
       // Compensating rollback. We can't wrap this in a server-side

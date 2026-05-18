@@ -61,7 +61,7 @@ export const DietView = (): React.JSX.Element => {
   };
 
   // Joined with a middle dot — same separator used on the rank label of
-  // the ProfileHeroBanner ("◆ ESPECIALISTA"), keeps the visual rhythm
+  // the ProfileHeroBanner ("ESPECIALISTA"), keeps the visual rhythm
   // consistent across pages.
   const contextLine = [goalText, activityText].filter(Boolean).join(' · ');
 
@@ -79,7 +79,7 @@ export const DietView = (): React.JSX.Element => {
         </h1>
         {contextLine ? (
           <p className="mt-2 font-pixel text-[8px] sm:text-[9px] tracking-widest text-ink-muted">
-            ◆ {contextLine.toUpperCase()}
+            {contextLine.toUpperCase()}
           </p>
         ) : (
           <p className="mt-2 font-pixel-mono text-base leading-snug text-ink-muted">

@@ -3,6 +3,7 @@ import {
   type PixelSelectOption,
 } from '@shared/components/PixelSelect';
 import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
 import {
   CARDIO_CATALOG,
@@ -29,10 +30,21 @@ interface PixelStepperProps {
   ariaLabel: string;
 }
 
+// Hold-to-repeat timing. A quick tap (< HOLD_DELAY) just steps once;
+// keep the button pressed and after HOLD_DELAY it auto-steps every
+// HOLD_INTERVAL ms. 400/80 reads as "deliberate hold → fast count"
+// without a tap ever accidentally double-firing.
+const HOLD_DELAY_MS = 400;
+const HOLD_INTERVAL_MS = 80;
+
 /**
  * Number input flanked by `−` / `+` buttons. Keyboard typing still
  * works (the input remains the source of truth); the buttons are a
  * thumb-friendly path on mobile where typing decimals is fiddly.
+ *
+ * Press-and-hold: holding either button keeps stepping the value
+ * (see HOLD_* constants) so a user going from 0 to 60 minutes isn't
+ * tapping `+` twelve times.
  *
  * `value === undefined` is the empty state for optional fields like
  * distance — `+` from undefined snaps to `min + step`, `−` is a
@@ -50,35 +62,87 @@ const PixelStepper = ({
 }: PixelStepperProps): React.JSX.Element => {
   const display = value === undefined ? '' : String(value);
 
+  // Latest value in a ref so the press-and-hold interval reads the
+  // current number on every tick instead of the stale one captured
+  // when the timer was scheduled — without this, holding `+` would
+  // re-apply the same first step forever.
+  const valueRef = useRef(value);
+  valueRef.current = value;
+
+  const holdTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const holdIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const stopHold = (): void => {
+    if (holdTimeoutRef.current !== null) {
+      clearTimeout(holdTimeoutRef.current);
+      holdTimeoutRef.current = null;
+    }
+    if (holdIntervalRef.current !== null) {
+      clearInterval(holdIntervalRef.current);
+      holdIntervalRef.current = null;
+    }
+  };
+
   const round = (n: number): number =>
     decimal ? Math.round(n * 10) / 10 : Math.floor(n);
 
   const decrement = (): void => {
-    if (value === undefined) return;
-    const next = round(Math.max(min, value - step));
+    const current = valueRef.current;
+    if (current === undefined) return;
+    const next = round(Math.max(min, current - step));
+    // Hit the floor — stop the repeat so the interval doesn't keep
+    // spinning a no-op (and so a button about to go `disabled` mid-
+    // hold doesn't strand a running timer).
+    if (next === current) {
+      stopHold();
+      return;
+    }
     onChange(next);
   };
 
   const increment = (): void => {
-    // First click from empty lands at `step` (5 for minutos, 0.5 for
+    const current = valueRef.current;
+    // First step from empty lands at `step` (5 for minutos, 0.5 for
     // km) rather than `min + step`, so the entry point is a natural
     // round number. With min=1 and step=5 the old code jumped to 6,
     // which felt wrong as the *first* visible value the user sees.
-    if (value === undefined) {
+    if (current === undefined) {
       onChange(round(Math.min(max, step)));
       return;
     }
-    const next = round(Math.min(max, value + step));
+    const next = round(Math.min(max, current + step));
+    if (next === current) {
+      stopHold();
+      return;
+    }
     onChange(next);
   };
+
+  // Pointer events cover mouse + touch + pen with one listener set.
+  // First press fires immediately for instant feedback; the repeat
+  // only kicks in after HOLD_DELAY_MS so a tap stays a single step.
+  const startHold = (action: () => void): void => {
+    stopHold();
+    action();
+    holdTimeoutRef.current = setTimeout(() => {
+      holdIntervalRef.current = setInterval(action, HOLD_INTERVAL_MS);
+    }, HOLD_DELAY_MS);
+  };
+
+  // Belt-and-braces: kill any running timer if the component unmounts
+  // mid-hold (e.g. the cardio form is toggled off while pressing).
+  useEffect(() => stopHold, []);
 
   return (
     <div className="flex items-stretch border-2 border-border bg-subtle focus-within:border-green-500/70 transition-colors">
       <button
         type="button"
-        onClick={decrement}
+        onPointerDown={() => startHold(decrement)}
+        onPointerUp={stopHold}
+        onPointerLeave={stopHold}
+        onPointerCancel={stopHold}
         aria-label={`${ariaLabel}: disminuir`}
-        className="px-4 font-pixel text-lg text-green-500 hover:bg-green-500/10 active:bg-green-500/20 transition-colors border-r-2 border-border disabled:opacity-30 disabled:cursor-not-allowed"
+        className="px-4 font-pixel text-lg text-green-500 hover:bg-green-500/10 active:bg-green-500/20 transition-colors border-r-2 border-border disabled:opacity-30 disabled:cursor-not-allowed select-none touch-none"
         disabled={value === undefined || value <= min}
       >
         −
@@ -106,9 +170,12 @@ const PixelStepper = ({
       />
       <button
         type="button"
-        onClick={increment}
+        onPointerDown={() => startHold(increment)}
+        onPointerUp={stopHold}
+        onPointerLeave={stopHold}
+        onPointerCancel={stopHold}
         aria-label={`${ariaLabel}: aumentar`}
-        className="px-4 font-pixel text-lg text-green-500 hover:bg-green-500/10 active:bg-green-500/20 transition-colors border-l-2 border-border disabled:opacity-30 disabled:cursor-not-allowed"
+        className="px-4 font-pixel text-lg text-green-500 hover:bg-green-500/10 active:bg-green-500/20 transition-colors border-l-2 border-border disabled:opacity-30 disabled:cursor-not-allowed select-none touch-none"
         disabled={value !== undefined && value >= max}
       >
         +
@@ -177,7 +244,7 @@ export const CardioActivityForm = ({
       <header className="flex items-center justify-between gap-3">
         <div>
           <p className="font-pixel text-xs sm:text-sm tracking-widest text-green-400 [text-shadow:0_0_10px_rgba(34,197,94,0.45)]">
-            ◆ ACTIVIDAD CARDIO
+            ACTIVIDAD CARDIO
           </p>
           <p className="mt-2 font-pixel-mono text-base sm:text-lg text-ink-muted">
             ¿Hiciste cardio despues del entreno?

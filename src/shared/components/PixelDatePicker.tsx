@@ -9,6 +9,15 @@ interface PixelDatePickerProps {
   max?: string;
   error?: boolean;
   placeholder?: string;
+  /**
+   * Year the calendar lands on the first time it opens with an empty
+   * `value`. Defaults to the current year, which is the right answer
+   * for almost every use case (e.g. logging today's weight). The
+   * onboarding birth-date step overrides this to ~25 years ago so the
+   * average new user doesn't have to scroll back two and a half
+   * decades just to pick their year of birth.
+   */
+  initialYear?: number;
 }
 
 const MONTHS_ES = [
@@ -128,10 +137,13 @@ export const PixelDatePicker = (
 
   const parsed = parseISO(props.value);
   // Anchor the calendar at the user's saved date when there is one.
-  // Otherwise default to ~25 years ago: the modal use case here is
-  // birth-date entry for a fitness app, so opening on "today" forces
-  // every user to scroll back ~25 years on first interaction.
-  const [viewYear, setViewYear] = useState(parsed?.year ?? today.year - 25);
+  // Otherwise fall back to `initialYear` (defaults to today's year).
+  // The birth-date step in onboarding overrides this with
+  // `today.year - 25` so birth-year entry doesn't start two decades
+  // away from where the typical user is going to land.
+  const [viewYear, setViewYear] = useState(
+    parsed?.year ?? props.initialYear ?? today.year
+  );
   const [viewMonth, setViewMonth] = useState(parsed?.month ?? today.month);
 
   const minP = props.min ? parseISO(props.min) : null;
@@ -162,6 +174,39 @@ export const PixelDatePicker = (
       const GAP = 8;
       const PREFERRED = 380; // header + 7 weekday labels + 6 day rows + padding
       const VIEWPORT_PAD = 12;
+      // Width policy, in priority order:
+      //   1) Never exceed the viewport (minus 2× VIEWPORT_PAD). The
+      //      previous version used Math.max instead of Math.min on
+      //      this constraint, so phones narrower than ~324px ended up
+      //      with a 300px popover that overflowed the right edge.
+      //   2) Aim for at least PREFERRED_WIDTH (300) so the 7-column
+      //      day grid has room for square-ish cells — but step 1 wins
+      //      if the screen is smaller than that.
+      //   3) If the trigger is wider than PREFERRED_WIDTH, match it.
+      //
+      // On a 320px-wide viewport this yields 296px (the screen wins
+      // over the 300px preference); on a 1280px viewport it stays at
+      // 300px (preference wins over the narrow trigger).
+      const PREFERRED_WIDTH = 300;
+      const viewportWidth = window.innerWidth;
+      const viewportCap = Math.max(0, viewportWidth - 2 * VIEWPORT_PAD);
+      const desiredWidth = Math.max(r.width, PREFERRED_WIDTH);
+      const width = Math.min(desiredWidth, viewportCap);
+      // Centre the popover on the trigger's midpoint, then clamp so
+      // it never overflows the viewport. The previous version
+      // anchored on the trigger's left edge — fine when the trigger
+      // was wide, but inside the register-weight form (the date
+      // input is the middle 1fr column, ~120px) the 300px popover
+      // shot off entirely to the right of its anchor, covering the
+      // GUARDAR button without any visible relationship to the
+      // trigger. Centring keeps the calendar visually tethered to
+      // the field that opened it, on both mobile and desktop.
+      const triggerCenter = r.left + r.width / 2;
+      const idealLeft = triggerCenter - width / 2;
+      const left = Math.min(
+        Math.max(VIEWPORT_PAD, idealLeft),
+        viewportWidth - width - VIEWPORT_PAD
+      );
       const spaceBelow = window.innerHeight - r.bottom - GAP - VIEWPORT_PAD;
       const spaceAbove = r.top - GAP - VIEWPORT_PAD;
 
@@ -177,8 +222,8 @@ export const PixelDatePicker = (
         setPos({
           placement: 'below',
           top: r.bottom + GAP,
-          left: r.left,
-          width: r.width,
+          left,
+          width,
           maxHeight,
         });
       } else {
@@ -190,8 +235,8 @@ export const PixelDatePicker = (
         setPos({
           placement: 'above',
           bottom: window.innerHeight - r.top + GAP,
-          left: r.left,
-          width: r.width,
+          left,
+          width,
           maxHeight,
         });
       }

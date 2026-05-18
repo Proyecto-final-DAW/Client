@@ -41,7 +41,7 @@ export const DashboardStatsCard = ({
   <article className="relative flex h-full flex-col border-2 border-green-500/50 bg-card p-5 sm:p-6 shadow-[0_0_24px_rgba(34,197,94,0.2)]">
     <PixelCorners size="md" className="border-green-500/50" />
     <p className="mb-4 text-center font-pixel text-[10px] tracking-widest text-green-500">
-      ◆ PROGRESO DEL HEROE
+      PROGRESO DEL HEROE
     </p>
     {loading && <StatsRowsSkeleton />}
     {!loading && error && (

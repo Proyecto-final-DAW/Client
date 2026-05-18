@@ -193,7 +193,7 @@ const HomeExitDialog = ({
           id="home-exit-title"
           className="font-pixel text-[11px] tracking-widest text-green-400 [text-shadow:0_0_12px_rgba(34,197,94,0.55)]"
         >
-          ◆ SALIR AL INICIO
+          SALIR AL INICIO
         </h3>
         <p className="mt-3 font-pixel text-base leading-tight text-ink-muted">
           ¿Quieres mantener el progreso de esta sesion para retomarla luego o
@@ -348,10 +348,19 @@ export const LiveWorkoutView = (): React.JSX.Element => {
       }
       setValidationError(null);
 
-      const ok = await finish(routine.id, workout.buildPayloadExercises());
-      if (ok) {
+      const result = await finish(routine.id, workout.buildPayloadExercises());
+      if (result.ok) {
         workout.markFinished();
         setShowStatsModal(true);
+        return;
+      }
+      // Server already has today's session — retrying with the same
+      // sets will keep failing. Wipe the persisted workout so the next
+      // mount doesn't reload these orphaned sets, and bounce the user
+      // back to the dashboard with the error visible in the banner.
+      if (result.code === 'SESSION_ALREADY_LOGGED_TODAY') {
+        workout.markFinished();
+        navigate('/dashboard', { replace: true });
       }
     };
 

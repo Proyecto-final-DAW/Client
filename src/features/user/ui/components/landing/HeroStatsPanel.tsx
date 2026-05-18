@@ -119,7 +119,7 @@ export const HeroStatsPanel = (): React.JSX.Element => {
         </div>
         <div className="min-w-0 flex-1 text-left">
           <p className="font-pixel text-[8px] tracking-widest text-green-500">
-            ◆ VOCACION
+            VOCACION
           </p>
           <p className="mt-1 font-pixel text-sm sm:text-base text-green-400 [text-shadow:2px_2px_0_#000,0_0_14px_rgba(34,197,94,0.45)]">
             GUERRERO

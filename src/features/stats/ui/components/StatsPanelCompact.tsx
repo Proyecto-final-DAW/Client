@@ -85,7 +85,7 @@ export const StatsPanelCompact = (
       <PixelCorners size="md" className="border-green-500/50" />
       <div className="mb-3 flex items-baseline justify-between">
         <p className="font-pixel text-[9px] tracking-widest text-green-500">
-          ◆ STATS
+          STATS
         </p>
         <a
           href="/profile"

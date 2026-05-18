@@ -12,9 +12,9 @@ const subtitleFor = (state: CharacterState): string => {
   if (state.isMaestroSupremo) return '✦ MAESTRO SUPREMO';
   if (state.legendaryStage === 'TRANSCENDENT') return '✦ TRASCENDENTE';
   if (state.legendary) return '🜂 LEGENDARIO';
-  if (state.specialization) return '◆ ESPECIALISTA';
-  if (state.vocation) return '◆ VOCACION';
-  return '◆ INICIADO';
+  if (state.specialization) return 'ESPECIALISTA';
+  if (state.vocation) return 'VOCACION';
+  return 'INICIADO';
 };
 
 const displayClass = (state: CharacterState) => {

@@ -3,6 +3,7 @@ import { PixelCorners } from '@shared/components/PixelCorners';
 import { useBodyScrollLock } from '@shared/hooks/useBodyScrollLock';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import {
   RANK_LETTERS,
@@ -217,7 +218,13 @@ export const OriginStoryIntro = ({
     }
   };
 
-  return (
+  // Portaled to <body> — exactly like StreakIntroModal / ProgressIntroModal
+  // and the rest of the intro modals. Rendered inline (as it was), the
+  // `fixed inset-0 z-[60]` overlay was trapped inside the dashboard's
+  // `z-10` stacking-context wrapper, so the `z-30` sticky header painted
+  // *on top* of the modal — "se come el header". The portal lifts it to
+  // the document root where its z-index actually wins.
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -532,6 +539,7 @@ export const OriginStoryIntro = ({
           </button>
         </div>
       </motion.div>
-    </div>
+    </div>,
+    document.body
   );
 };

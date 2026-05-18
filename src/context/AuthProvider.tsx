@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { API_ENDPOINTS } from '../config/api';
 import { clearAllPersistedWorkouts } from '../features/workout/ui/hooks/useWorkoutState';
+import { clearAllCache } from '../shared/api/cachedGet';
 import type { UserInfo } from '../shared/core/domain/models/UserInfo';
 import { AuthContext } from './AuthContext';
 import type { AuthUser } from './AuthContext';
@@ -134,6 +135,11 @@ export const AuthProvider = (props: {
     // Wipe any in-progress workout state so the next user on this
     // browser doesn't inherit the previous user's sets.
     clearAllPersistedWorkouts();
+    // Drop every cached API response. Without this, account B logging
+    // in after account A on the same tab would briefly see A's stats /
+    // streak / cards while the new fetches were in flight — the cache
+    // entries from the previous session are still valid by TTL.
+    clearAllCache();
   }, []);
 
   // useMemo so the value object's identity is stable when its inputs

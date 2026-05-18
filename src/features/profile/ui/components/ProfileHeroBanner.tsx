@@ -76,7 +76,7 @@ const TIER_HINTS: Record<number, string> = {
   3: 'Acercandote a la trascendencia.',
   4: 'Un paso del maestro supremo.',
   5: 'Eres maestro. Solo queda la leyenda.',
-  6: '◆ Eres leyenda.',
+  6: 'Eres leyenda.',
 };
 
 /**
@@ -360,7 +360,7 @@ export const ProfileHeroBanner = ({
       {/* Rank ladder — the 7-tier journey at a glance. */}
       <div className="mt-5 pt-5 border-t-2 border-border">
         <p className="mb-3 font-pixel text-[9px] sm:text-[10px] tracking-widest text-green-500">
-          ◆ PROGRESO DEL HEROE
+          PROGRESO DEL HEROE
         </p>
         <RankLadder tierIndex={tierIndex} />
         <p className="mt-4 font-pixel-mono text-base sm:text-lg leading-snug text-ink-muted">

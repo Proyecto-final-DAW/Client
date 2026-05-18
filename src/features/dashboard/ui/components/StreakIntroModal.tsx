@@ -65,7 +65,7 @@ export const StreakIntroModal = ({
             <FireIcon className="h-7 w-7 text-orange-400" />
           </div>
           <p className="mt-3 font-pixel text-[9px] tracking-widest text-ink-muted">
-            ◆ TU RACHA SEMANAL
+            TU RACHA SEMANAL
           </p>
           <h2 className="mt-2 font-pixel text-base sm:text-lg leading-relaxed text-orange-400 [text-shadow:0_0_18px_rgba(249,115,22,0.6)]">
             COMO FUNCIONA

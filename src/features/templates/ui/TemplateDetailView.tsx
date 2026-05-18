@@ -85,7 +85,7 @@ export const TemplateDetailView = (): React.JSX.Element => {
             {applyError && (
               <p
                 role="alert"
-                className="mt-6 font-pixel text-base text-red-400 border-2 border-red-500/40 bg-red-500/10 px-4 py-3"
+                className="mt-6 font-pixel-mono text-base text-red-400 border-2 border-red-500/40 bg-red-500/10 px-4 py-3 leading-snug"
               >
                 ✕ {applyError}
               </p>
